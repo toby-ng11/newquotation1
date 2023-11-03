@@ -1,0 +1,310 @@
+  <? $session =  Zend_Registry::get('session'); ?>
+  <!-- Title area -->
+    <div class="titleArea">
+        <div class="wrapper">
+            <div class="pageTitle">
+                <h5>Project To Quote WorkSheet</h5>
+                <span>Track project data and events critical to close of sale.</span>
+            </div>
+            <div class="middleNav">
+                <ul>
+                    <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
+                        <ul class="mSub1">
+                            <li><a href="#" title="">Share user</a></li>
+                            <li><a href="#" title="">Show Teamworks</a></li>
+                        </ul>
+                    </li>
+                   
+                    <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
+                        <ul class="mSub4">
+                        	<li><a href="#" title="">Add</a></li>
+                            <li><a href="#" title="">Save</a></li>
+                            <li><a href="#" title="">Edit</a></li>
+                            <li><a href="#" title="">Delete</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    
+    <div class="line"></div>
+    
+ 
+ <!-- Main content wrapper -->
+    <div class="wrapper">
+    
+        <!-- Note -->
+       <!-- <div class="nNote nInformation hideit">
+            <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
+        </div>-->
+        
+        <!-- Form -->
+        <form action="/project/save" method="post" class="form" id='project_content'> 
+                <div class="widget">
+                    <div class="title"><img src="/images/icons/dark/pencil.png" alt="" class="titleIcon" />
+                      <h6>Project Information</h6></div>
+                     <div class="formRow"> 
+                        <div class="formRight" style="width:98%">
+                        	  <span class="oneTwo"><span class="formNote">Project Name</span><input type="text" id='project_name' name='project_name' class="validate[required]" /></span>
+                            <span class="oneFour"><span class="formNote">Centura Location</span><select name="location" id="location" style="width:300px;">
+                            	<? foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['location_id']?>" <? if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
+                               <? } ?>
+                            </select></span>
+                           
+                        </div>
+                        <div class="clear"></div>
+                        <div class="formRight" style="width:98%">
+                            <span class="oneTwo"><span class="formNote">Worksheet Owner</span><input type="text"   value='<?= $session->user['name'] ?>' readonly/></span>
+                            <input type="hidden" name='owner' value='<?= $session->user['id'] ?>' >
+                             <span class="oneFour"><span class="formNote">Project#</span><input type="text" placeholder="Auto Generate" name='quote_no' readonly/></span>
+                            <input name='create_date' type="hidden" value='<?=date('Y-m-d') ?>' readonly/>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="formRight" style="width:98%">
+                            <span class="oneTwo"><span class="formNote">Project Location</span><input type="text" class="validate[required] tipN"  name='project_location_address' original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" id="project_location_address" /></span>
+                            <span class="oneFour"><span class="formNote">Status:</span><select name="status" id='status' class="validate[required]">
+                                <option value="">Select Status</option>
+                                <? foreach($this->status as $s) {?>
+                                <option value="<?=$s['uid']?>"><?=$s['Status'] ?></option>
+                                <? }?>
+                               
+                            </select></span>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="formRight" style="width:98%">
+                            <span class="oneTwo"><span class="formNote">REED#</span><input type="text"  name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" /></span>
+                            <span class="oneFour"><span class="formNote">Market Segment:</span><select name="market_segment" id='market_segment' class="validate[required]" >
+                                <option value="" >Choose Segment</option>
+                                <? foreach($this->seg as $s) {?>
+                                <option value="<?=$s['uid']?>"><?=$s['Market_Segment'] ?></option>
+                                <? }?>
+                               
+                            </select></span>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="formRight" style="width:98%">
+                        	<span class="oneTwo"><span class="formNote">Project Architect/Owner<span class="req">*</span></span>
+                            		<input type='text' name="architect_name" id='architect_name'  class="validate[required] tipN" original-title="Type 2 letter to start or add your own" />
+                                <input type="hidden" name='architect' id='architect' value="<?=$project['architect'] ?>">
+                            </span>
+                             <span class="oneFour"><span class="formNote">Architect Location</span><select id="architect_loc" >
+                            	<? foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <? if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
+                               <? } ?>
+                            </select></span>
+                           
+                        </div>
+                        <div class="clear"></div>
+                       <div class="formRight" style="width:98%">
+                        	 <span class="oneTwo"><span class="formNote">Specifier<span class="req">*</span></span>
+                        	 	<input type='text'  id='specifiler_name' name="specifiler_name" value='<?=$this->spec_name ?>' class="validate[required] tipN"  > 
+                            <input type="hidden" id='specifiler' name="specifiler" value="<?=$project['specifiler'] ?>"> 
+                            </span>
+                            <span class="oneFour"><span class="formNote">Specifier Location</span><select id="specifiler_loc" >
+                            	<? foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <? if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
+                               <? } ?>
+                            </select></span>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="formRight" style="width:98%">
+                            <span class="oneTwo"><span class="formNote">Tender Due Date:</span><input type="text" name='due_date' class="datepicker"/></span>
+                            <span class="oneFour"><span class="formNote">Material Required Date:</span><input type="text" name='required_date'  class="datepicker" /></span>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="formRight" style="width:98%">
+                            <span class="oneTwo"><span class="formNote">General Contractor</span><input type="text" class='tipN' original-title="Type Company Name"  id="gerneral_contractor" /></span>
+                            <span class="oneFour"><span class="formNote">General Contractor Location</span><select id="gerneral_contractor_loc"  style="width:300px;">
+                            	<? foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <? if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
+                               <? } ?>
+                            </select></span>
+                            <input type="hidden" name='gerneral_contractor'>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="formRight" style="width:98%">
+                        	<span class="oneTwo"><span class="formNote">Awarded Sub Contractor:</span><input type="text" class='tipN' original-title="Type Company Name" id="awarded_contractor"/></span>
+                            <span class="oneFour"><span class="formNote">Awarded Contractor Location</span><select id="awarded_contractor_loc" >
+                            	<? foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <? if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
+                               <? } ?>
+                            </select></span>
+                            <input type="hidden" name='awarded_contractor'>
+                        </div>
+                        <div class="clear"></div>
+              </div>
+
+        </form>
+        
+       
+    </div>
+ </div>
+      <div class="statsRow">
+        <div class="wrapper">
+        	<div class="controlB">
+            	<ul>
+                		<!--<li><a href="/project/" class='add_pro' title="add"><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Project</span></a></li>-->
+                    <!--<li><a href="#" class='eidt_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
+                    <!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
+                    <li><a href="#" class='save_pro' title="save"><img src="/images/icons/control/32/save.png" alt="" /><span>Save Project</span></a></li>
+                    <!--<li><a href="#" class='delete_pro' title="delete"><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Project</span></a></li>-->
+                </ul>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+   
+   
+   <style>
+   	div.selector { width: 290px;}
+div.selector select { width: 300px; }
+div.selector span { width: 290px;  }
+   	</style>
+   	
+<script type="text/javascript" >
+	  function getcustomerbyid(id,obj)
+		{
+			$('.loading').show();
+			$.ajax({
+			  url: '/customer/fetchbyid/id/'+id,
+			  type: "get",
+			  success: function(data) {
+			  	 var result = jQuery.parseJSON(data);
+			  	 if(result != null)
+			  	 {
+			  		$(obj).val(result.name);
+			  		$('input[name='+ $(obj).attr('id')+']').val(result.customer_id);			  		
+			  	}
+			  	else
+			  		{
+			  			alert('Can\'t find customer');
+			  			$('#customer_info input').val('');
+			  		}
+			  	$('.loading').hide();
+			  }
+				});
+			}
+			
+		$( "#awarded_contractor" ).autocomplete({
+			source: function(request, response) {
+          $.ajax({
+            url: '/customer/fetchbynamecompany/',
+            dataType: "json",
+            data: {
+              term : request.term,
+              company : $('#awarded_contractor_loc').val()
+            },
+            success: function(data) {
+              response(data);
+            }
+          });
+      },
+			minLength: 2,
+			select: function( event, ul ) {
+				getcustomerbyid(ul.item.customer_id,$('#awarded_contractor'));
+			},
+			
+			}).data( "autocomplete" )._renderItem = function( ul, item ) {
+				return $( "<li></li>" )
+					.data( "item.autocomplete", item )
+					.append( "<a>Company: "  + item.name +  "<br>" + item.fullname + ' ' + item.city+ ' '+ item.tel+"</a>" )
+					.appendTo( ul );
+			};
+		$( "#gerneral_contractor" ).autocomplete({
+			source: function(request, response) {
+          $.ajax({
+            url: '/customer/fetchbynamecompany/',
+            dataType: "json",
+            data: {
+              term : request.term,
+              company : $('#gerneral_contractor_loc').val()
+            },
+            success: function(data) {
+              response(data);
+            }
+          });
+      },
+			minLength: 2,
+			select: function( event, ul ) {
+				getcustomerbyid(ul.item.customer_id,$('#gerneral_contractor'));
+			},
+			
+		}).data( "autocomplete" )._renderItem = function( ul, item ) {
+			return $( "<li></li>" )
+				.data( "item.autocomplete", item )
+				.append( "<a>Company: "  + item.name +  "<br>" + item.fullname + ' ' + item.city+ ' '+ item.tel+"</a>" )
+				.appendTo( ul );
+		};
+			$( "#architect_name" ).autocomplete({
+			source: function(request, response) {
+					$('#architect').val('');
+          $.ajax({
+            url: '/sales/fetchspec/',
+            dataType: "json",
+            data: {
+              term : request.term,
+              loc : $('#architect_loc').val()
+            },
+            success: function(data) {
+              response(data);
+            }
+          });
+      },
+			minLength: 2,
+			select: function( event, ul ) {
+  	  	$("#architect_name").val(ul.item.Specifier);
+				$('#architect').val(ul.item.uid);
+				return false;
+			},
+			
+		}).data( "autocomplete" )._renderItem = function( ul, item ) {
+			return $( "<li></li>" )
+				.data( "item.autocomplete", item )
+				.append( "<a>"  + item.Specifier+"</a>" )
+				.appendTo( ul );
+		};
+		
+		$( "#specifiler_name" ).autocomplete({
+			source: function(request, response) {
+          $.ajax({
+            url: '/sales/fetchspec/',
+            dataType: "json",
+            data: {
+              term : request.term,
+              loc : $('#specifiler_loc').val()
+            },
+            success: function(data) {
+              response(data);
+            }
+          });
+      },
+			minLength: 2,
+			select: function( event, ul ) {
+  	  	$("#specifiler_name").val(ul.item.Specifier);
+				$('#specifiler').val(ul.item.uid);
+				return false;
+			},
+			
+		}).data( "autocomplete" )._renderItem = function( ul, item ) {
+			return $( "<li></li>" )
+				.data( "item.autocomplete", item )
+				.append( "<a>"  + item.Specifier+"</a>" )
+				.appendTo( ul );
+		};
+  	
+  	$('.save_pro').click(function(e){
+  			e.preventDefault();
+				if($("#project_content").validationEngine('validate') ==true)
+				{
+					$('.loading').show();
+	  			$('#project_content').submit();
+	  		}
+  		
+  	});
+  	
+
+   		</script>

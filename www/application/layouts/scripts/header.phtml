@@ -1,0 +1,32 @@
+   <? $session =  Zend_Registry::get('session'); ?>
+<!-- Left side content -->
+<div id="leftSide">
+    <div class="logo"><a href="/"><img src="/images/logo.png" alt="" /></a></div>
+
+    
+    
+    <!-- Left navigation -->
+    <ul id="menu" class="nav">
+    	<? if($session->user['approve_id'] != null || $session->user['sale_role'] == 'admin') {?>
+    		<li class="forms"><a href="/index/index/normal/1/" title="" ><span>Project Manager </span></a>
+        </li>
+      <? } else {?>
+      	<li class="forms"><a href="/" title="" ><span>Project Manager </span></a>
+        </li>
+      <? }?>
+       <!-- <li class="forms"><a href="/index/sales" title="" ><span>Quote Manager</span></a>
+        </li>-->
+        <? if($session->user['approve_id'] != null) {?>
+        <li class="forms"><a href="/index/approval" title="approve"><span>Approval Manager</span></a>
+        </li>
+      	<? }?>
+      	<? if($session->user['sale_role'] == 'admin') {?>
+        <li class="forms"><a href="/index/admin" title="admin"><span>Admin Manager</span></a>
+        </li>
+      	<? }?>
+        <li class="forms"><a target='_blank' href="/project" title=""><span>Add New Project</span></a>
+        </li>
+        
+
+    </ul>
+</div>

@@ -1,0 +1,43 @@
+<?php
+error_reporting(0);
+$url = 'http://quotation.centura.local/index.php/export/mail';
+$username= 'centura\vshen';
+$password = 'Password123';
+if($name == null)
+{
+	$name = 'centura_'.date('y-m-d').'.pdf';
+}
+
+$context = stream_context_create(array(
+    'http' => array(
+        'header'  => "Authorization: Basic " . base64_encode("$username:$password")
+    )
+));
+$html =getUrl($url, $username, $password );
+
+$dompdf = new DOMPDF();
+$dompdf->set_protocol('http://'); 
+$dompdf->set_host('static.centura.local');
+$dompdf->set_base_path('/'); 
+$dompdf->load_html($html);
+
+$dompdf->render();
+$dompdf->stream($name);
+
+function getUrl( $url, $username = false , $password = false ) {
+  $ch = curl_init(); 
+  curl_setopt($ch, CURLOPT_URL, $url); 
+  curl_setopt($ch, CURLOPT_HEADER, FALSE); 
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE); 
+
+  if( $username && $password ) {
+    curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_NTLM);
+    curl_setopt($ch, CURLOPT_USERPWD, "$username:$password"); 
+  }
+
+  $buffer = curl_exec($ch); 
+  curl_close($ch); 
+
+  return $buffer;
+}
+?>

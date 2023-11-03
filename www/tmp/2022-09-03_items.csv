@@ -1,0 +1,23 @@
+﻿"Item ID","Unit Qty",UOM,Unit_Price,Quote_Number,"Sort ID",Note,approve_date
+VB2021,1.00,SF,5.09,29885,1,"PT1 - Showroom Floor",09/02/2022
+VB2021,1.00,SF,5.09,29885,2,"PT1 - Showroom Floor",09/02/2022
+VB2022G,1.00,SF,5.09,29885,3,"PT1A - Service Reception",09/02/2022
+VB2022G,1.00,SF,5.09,29885,4,"PT1A - Service Reception",09/02/2022
+VB2022,1.00,SF,5.99,29885,5,"PT2 - Washrooms / Rear Areas",09/02/2022
+VB2022,1.00,SF,5.99,29885,6,"PT2 - Washrooms / Rear Areas",09/02/2022
+VB2001CB,1.00,PC,5.50,29885,7,"Service Reception",09/02/2022
+VB2001CB,1.00,PC,5.50,29885,8,"Service Reception",09/02/2022
+VB2001ICRN,1.00,PC,11.99,29885,9,"Service Reception",09/02/2022
+VB2001ICRN,1.00,PC,11.99,29885,10,"Service Reception",09/02/2022
+VB2001OCRN,1.00,PC,11.99,29885,11,"Service Reception",09/02/2022
+VB2001OCRN,1.00,PC,11.99,29885,12,"Service Reception",09/02/2022
+VB2001BBAT,1.00,PC,6.19,29885,13,"Service Reception * Special Order",09/02/2022
+VB2001BBAT,1.00,PC,6.19,29885,14,"Service Reception * Special Order",09/02/2022
+A000,1.00,SF,6.79,29885,15,"VB2001 - V&B 8X8 Volkswagon Malaga Matte R11
+Rect - 2023V08A - 8x8 Villeroy & Boch Antracite - PT3/PT4 - Service Reception Alternate",09/02/2022
+A000,1.00,SF,6.79,29885,16,"VB2001 - V&B 8X8 Volkswagon Malaga Matte R11
+Rect - 2023V08A - 8x8 Villeroy & Boch Antracite - PT3/PT4 - Service Reception Alternate",09/02/2022
+A000,1.00,SF,5.59,29885,17,"CT1/CT2 Villeroy 6x12 Snowy White - SPECIAL ORDER",09/02/2022
+A000,1.00,SF,5.59,29885,18,"CT1/CT2 Villeroy 6x12 Snowy White - SPECIAL ORDER",09/02/2022
+A000,1.00,SF,5.59,29885,19,"CT1/CT2 Villeroy 4x12 Grau 50 - SPECIAL ORDER",09/02/2022
+A000,1.00,SF,5.59,29885,20,"CT1/CT2 Villeroy 4x12 Grau 50 - SPECIAL ORDER",09/02/2022

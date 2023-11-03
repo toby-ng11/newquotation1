@@ -1,0 +1,19 @@
+<p><strong>Hi {CUSTOMER}:</strong></p>
+<br/>
+<p><strong>Attached   to this message is a copy of:</strong></p>
+<p><strong> </strong></p>
+<p><strong>Centura   quote {QUOTE_ID}</strong></p>
+<p><strong>Project: {PROJECT_NAME}</strong></p>
+<p><strong>Contact: {CONTACT}</strong></p>
+<p><strong>Email: {EMAIL}</strong></p>
+<p> </p>
+<div>
+  <p><strong>{SALES_NAME}  -  {SALES_ROLE}  </strong></p>
+  <p><strong>53 Apex   Rd. </strong></p>
+  <p><strong>Toronto,   ON. M6A 2V6</strong></p>
+  <p><strong>Tel:   416-785-5165 FAX: 416-783-0636</strong></p>
+  <p><strong><a href="mailto:{SALES_EMAIL}">{SALES_EMAIL}</a></strong></p>
+  <p><strong><a href="http://www.centura.ca/">www.centura.ca</a></strong>  </p>
+  <p>*This message   contains confidential information and is only for the intended recipient. If you   are not the intended recipient you are notified that disclosing, copying,   distributing or taking any action in relation to the contents of this   information is strictly prohibited. E-mail transmission cannot be guaranteed to   be secure or error-free as information could be intercepted, corrupted, lost,   destroyed, arrive late or incomplete, or contain viruses. The sender therefore   does not accept liability for any errors or omissions in the contents of this   message, which arise as a result of e-mail transmission. If verification is   required please request a hard-copy version.</p>
+  <p> </p>
+</div>

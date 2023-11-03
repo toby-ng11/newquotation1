@@ -1,0 +1,248 @@
+<? $project=$this->project;$customer = $this->customer;?> 
+<? $this->headTitle('Project For '.$project['project_name'].' - Centrua','SET'); ?>
+<script type="text/php">
+if ( isset($pdf) ) {
+	//header and footer
+  $obj = $pdf->open_object();
+
+ 	$w = $pdf->get_width();
+  $h = $pdf->get_height();
+  $font = $fontMetrics->getFont("helvetica", "bold");
+  $size = 8;
+  $y1 = $pdf->get_height() - 36;
+  $x = 15 ;
+  $pageText1 = 'TORONTO | VANCOUVER | CALGARY | EDMONTON | LONDON | WINDSOR | HAMILTON | PETERBOROUGH';
+  $w1 = $fontMetrics->get_text_width($pageText1, $font, $size);
+  $pdf->page_text(($w -$w1) / 2, $y1, $pageText1, $font,  $size);
+  
+  $y2 = $pdf->get_height() - 24;
+  $pageText2 = 'OTTWA | MONTREAL | QUEBEC CITY | HALIFAX | MONCTON';
+  $w2 = $fontMetrics->get_text_width($pageText2, $font, $size);
+  $pdf->page_text(($w -$w2) / 2, $y2, $pageText2, $font,  $size);
+  $pdf->page_text($w - 48, $y2, "{PAGE_NUM} of {PAGE_COUNT}", $font, $size, array(0,0,0));
+  
+   // Add a logo
+  $image = 'http://static.centura.local'.'/images/printlogo.png';
+	$img_w = 54; // 2 inches, in points
+  $img_h = 9; // 1 inch, in points -- change these as required
+  $pdf->image($image, "png", null, null, $img_w, $img_h);
+  
+  // add text top 1
+  $top1_y = 4;
+  $top_size = 6;
+  $top_font = $fontMetrics->getFont("helvetica", "normal");
+  $top_text1 = '950 LAWRENCE AVENUE WEST';
+  $top_text1_width = $fontMetrics->get_text_width($top_text1, $top_font, $top_size);
+  $pdf->page_text($w -$top_text1_width -  4, $top1_y, $top_text1, $top_font,  $top_size);
+  
+  // add text top 2
+  $top1_y = 12;
+  $top_size = 6;
+  $top_font = $fontMetrics->getFont("helvetica", "normal");
+  $top_text1 = 'TORONTO, ONTARIO, CANADA M6A 1C4';
+  $top_text1_width = $fontMetrics->get_text_width($top_text1, $top_font, $top_size);
+  $pdf->page_text($w -$top_text1_width -  4, $top1_y, $top_text1, $top_font,  $top_size);
+  
+   // add text top 2
+  $top1_y = 20;
+  $top_size = 6;
+  $top_font = $fontMetrics->getFont("helvetica", "normal");
+  $top_text1 = 'ORDER DESK: 416-785-5151';
+  $top_text1_width = $fontMetrics->get_text_width($top_text1, $top_font, $top_size);
+  $pdf->page_text($w -$top_text1_width -  4, $top1_y, $top_text1, $top_font,  $top_size);
+  
+   
+   // add text 
+  $top1_y = 28;
+  $top_size = 6;
+  $top_font = $fontMetrics->getFont("helvetica", "normal");
+  $top_text1 = 'OFFICE: 416-785-5165';
+  $top_text1_width = $fontMetrics->get_text_width($top_text1, $top_font, $top_size);
+  $pdf->page_text($w -$top_text1_width -  4, $top1_y, $top_text1, $top_font,  $top_size);
+  
+    
+   // add text 
+  $top1_y = 36;
+  $top_size = 6;
+  $top_font = $fontMetrics->getFont("helvetica", "normal");
+  $top_text1 = 'WATTS: 1-800-263-9400';
+  $top_text1_width = $fontMetrics->get_text_width($top_text1, $top_font, $top_size);
+  $pdf->page_text($w -$top_text1_width -  4, $top1_y, $top_text1, $top_font,  $top_size);
+  
+    // add text 
+  $top1_y = 44;
+  $top_size = 6;
+  $top_font = $fontMetrics->getFont("helvetica", "normal");
+  $top_text1 = 'FAX: 416-783-0636';
+  $top_text1_width = $fontMetrics->get_text_width($top_text1, $top_font, $top_size);
+  $pdf->page_text($w -$top_text1_width -  4, $top1_y, $top_text1, $top_font,  $top_size);
+  
+    // add text 
+  $top1_y = 52;
+  $top_size = 6;
+  $top_font = $fontMetrics->getFont("helvetica", "normal");
+  $top_text1 = 'www.centura.ca';
+  $top_text1_width = $fontMetrics->get_text_width($top_text1, $top_font, $top_size);
+  $pdf->page_text($w -$top_text1_width -  4, $top1_y, $top_text1, $top_font,  $top_size);
+  
+  
+  
+  // Close the object (stop capture)
+  $pdf->close_object();
+  $pdf->add_object($obj, 'all');
+
+
+}
+</script>
+
+<style media='print' type="text/css">
+	@page :even{
+  margin-top: 6em;
+  margin-bottom: 3em;
+}
+@page :first{
+  margin-top: 4em;
+  margin-bottom: 3em;
+}
+@page :odd{
+  margin-top: 6em;
+  margin-bottom: 3em;
+}
+	#hiderow, .hiderow
+.delete {
+  display: none;
+}
+.break {padding-left:1em;}
+ div.footer {
+            position: fixed;
+            bottom: 0;
+        }
+body{padding-bottom:20px;}
+#header {font-size:18px;height:30px;line-height:26px; font-family:Arial;font-weight:bold;}
+	#info,#items {border:1px solid grey; margin:10px 0px;}
+	#items th,#items td{border:1px solid grey; text-align:center}
+	#info th,#info td{border:1px solid grey;}
+	#info .th { background: #eee; font-weight:bold; }
+	#items th { background: #eee; font-weight:bold; }
+	.bot_note{font-weight:bold;}
+#total th,#total td{border:none;}
+</style>
+
+<div id="page-wrap">
+<div class="hiderow" style='text-align:center'>
+	<span style='font-size:12px;font-weight:bold;'>Notice:  Please Use IE or FireFox to Print.</span><br/>
+			<a href='javascript:print()'>Print Project</a>   <a href='/project/edit/id/<?=$project['project_id'] ?>'>Back Project</a> <a href='/'>Back Dashboard</a><br/>
+			
+</div>
+<div id='header'>PROJECT SUMMARY</div>	
+   <table id="meta">
+   							 <tr >
+                    <td class="meta-head" width='20%'><strong>Project Name</strong></td>
+                    <td><?=$project['project_name']?></td>
+                </tr>
+                <tr >
+                    <td class="meta-head" width='20%'><strong>Project Location</strong></td>
+                    <td><?=$project['project_location_address']?></td>
+                </tr>
+                 <tr >
+                    <td class="meta-head" width='20%'><strong>Centura Location</strong></td>
+                    <td><? foreach ($this->locations as $l) {?><? if($l['location_id'] == $project['centura_location_id']) echo $l['name']?> <?}?></td>
+                </tr>
+   </table>
+	
+		
+		<table id="info" width="100%">
+		  <tr>
+		      <th width="20%">Worksheet Owner</th>
+		      <th width="20%">Project#</th>
+		      <th width="10%" colspan='2'>Create Date</th>
+		      <th width="10%" colspan='2'>Tender Due Date</th>
+		      <th width="10%" colspan='2'>Material Required Date</th>
+		      <th width="10%">REED</th>
+		  </tr>
+		  <tr>
+		  	<td><?=$project['owner_name'] ?></td>
+		  	<td><?=$project['quote_no']?></td>
+		  	<td colspan='2'><?=$project['create_date']->format('Y-m-d') ?></td>
+		  	<td colspan='2'><?=$project['due_date']->format('Y-m-d') ?></td>
+		  	<td colspan='2'><?=$project['required_date']->format('Y-m-d') ?></td>
+		  	<td> <?=$project['reed']?></td>
+		  </tr>
+		  <tr>
+		  	<th>Market Segment</th>
+		  	<th>Specifier</th>
+		  	<th colspan='2'>Project Architect/Owner</th>
+		  	<th colspan='2'>General Contractor</th>
+		  	<th colspan='2'>Awarded Sub Contractor</th>
+		  	<th>Status</th>
+		  </tr>
+		  <tr>
+		  	<td><? foreach($this->seg as $s) {?>
+                                <? if($s['uid'] == $project['market_segment']) echo $s['Market_Segment']?> 
+        		<? }?>
+        </td>
+		  	<td> 
+		  		<?=$this->spec_name.' - '.$this->architect['Company_ID'] ?>
+        </td>
+        <td colspan='2'>
+        	<?=$this->arch_name.' - '.$this->architect['Company_ID'] ?>
+        </td>
+		  	<td colspan='2'><?= $this->gerneral_contractor['name'].' - '.$this->gerneral_contractor['company_id']?>     </td>
+		  	<td colspan='2'>  <?= $this->awarded_sub_contracotr['name'].' - '.$this->awarded_sub_contracotr['company_id']?>     </td>
+		  	<td>
+		  		 <? foreach($this->status as $s) {?>
+           <? if($s['uid'] == $project['status']) echo $s['Status'] ?> 
+            <?}?>
+		  	</td>
+		  </tr>
+		</table>
+		
+			<table class="items" width='100%'>
+		  <thead>
+		  	<tr>
+		      <th style="text-align:left" width="60%">Project Presented / For Quotation<br/><span class='break'>Item ID</span><br/><span class='break'>Item Description</span><br/><span class='break'>Quote Line Note</span></th>
+		      <th width="13%">Quantity Quoted</th>
+		      <th width="13%">Unit Price</th>
+		      <th width="13%">Unit of Measure</th>
+		      <th width="13%">Price Quoted</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+      <? $subtotal =0; foreach ($this->items as $i) { ?>
+     		<tr >
+     			<td style="text-align:left"><?=$i['product_id']?><br/><span class='break'><?=$i['item_desc'] ?></span><br/><span class='break'>
+     			<?=$i['note']?></span>
+     		  </td>
+     		  <td><?=$i['qty']?></td>
+     		  <td><?='$'.$i['unit_price']?></td>
+     		  <td><?=$i['uom']?></td>
+     		  <td><?='$'.$i['subtotal']?></td>
+     		</tr>
+     <? $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'] ;}?>
+     	<tr>
+     			<td colspan='4' style='text-align:right'><strong>Sub-Total: </strong></td>
+     			<td><?='$'.number_format($subtotal,2) ?></td>
+     	</tr>
+   </tbody>
+		</table>
+		
+		<table class="items" width='100%'>
+		  <thead>
+		  	<tr>
+		      <th width="10%">Log Date</th>
+		      <th width="40%">Action Items Completed</th>
+		      <th width="10%">Follow Up Date</th>
+		      <th width="40%">Next Action Required</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+      <? foreach($this->memo as $l) {?>
+          <tr>
+                     		 <td><?=$l['added']->format('Y-m-d'); ?></td>
+                         <td><?=$l['title']; ?></td>
+                        <td><?=$l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
+                        <td><?=$l['type']; ?></td>
+           </tr>
+      <? } ?>
+     </tbody>
+    </table>

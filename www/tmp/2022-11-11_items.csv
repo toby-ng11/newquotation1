@@ -1,0 +1,58 @@
+﻿"Item ID","Unit Qty",UOM,Unit_Price,Quote_Number,"Sort ID",Note,approve_date
+A000,3200.00,SF,2.86,32105,1,"American Biltrite Sonata Luxury Vinyl Flooring Estate Oak CEO-01 Light Grey tile",11/10/2022
+LOGRG5,1.00,SF,4.49,32104,1,"CT-3 COUNTER BACKWALL",11/10/2022
+NH1406,1.00,SF,3.50,32104,2,"CT-1 WASHROOM WALL/FRONT WALL",11/10/2022
+LOBBL0,1.00,SF,4.49,32104,3,"FRONT OF HOUSE WALL",11/10/2022
+AC3118,1.00,SF,4.49,32104,4,"CT-6 KITCHEN FLOOR",11/10/2022
+AC31148RTC,1.00,PC,4.25,32104,5,"CT-6A KITCHEN FLOOR COVE BASE",11/10/2022
+TA620910W25,1.00,EA,23.00,32104,6,"CT1 / CT2 / CT3A / GT1 / GT2",11/10/2022
+TA650973F25,1.00,EA,23.00,32104,7,CT4,11/10/2022
+TA650961F25,1.00,EA,23.00,32104,8,CT5,11/10/2022
+TA650945F25,1.00,EA,23.00,32104,9,CT6,11/10/2022
+MO00613,1.00,SF,5.89,32104,10,"WT4 & BT1 (BT has been replaced with replaced with BT1)",11/10/2022
+LOROR3,1.00,SF,7.29,32104,11,WT6,11/10/2022
+LOBLBB,1.00,SF,5.39,32104,12,WT7,11/10/2022
+MKG29,1.00,SF,14.09,32104,13,,11/10/2022
+CT01898,1.00,SF,5.39,32104,14,,11/10/2022
+J85886,1.00,SF,9.99,32104,15,"Qty TBD",11/10/2022
+03201,1.00,SF,9.19,32104,16,WT-5,11/10/2022
+A000,1.00,SF,2.99,32103,1,"Vitra 4x4 Pro  - Group 1",11/10/2022
+A000,1.00,SF,3.39,32103,2,"Vitra 4x4 Pro  - Group 2",11/10/2022
+A000,1.00,SF,2.99,32103,3,"Vitra 2x2 Pro  - Group 1",11/10/2022
+A000,1.00,SF,3.05,32103,4,"Vitra 2x2 Pro  - Group 2",11/10/2022
+A000,1.00,SF,3.29,32103,5,"Vitra 2x2 Pro  - Group 3",11/10/2022
+A000,1.00,LF,.96,32103,6,"Roppe 4"" 700 Series - Color TBD ",11/10/2022
+A000,1.00,LF,28.19,32103,7,"Roppe Rubber One Piece w/ Visually Impaired Stair Tread - 96 Vantage with Riser
+",11/10/2022
+4EX600,1.00,EA,85.69,32103,8,"(720-1360 LF coverage)",11/10/2022
+135OZEX610,1.00,EA,45.52,32103,9,"25-50 LF Per Cartridge coverage",11/10/2022
+GEX710,1.00,EA,138.92,32103,10,"(120-150 sqft approx coverage)",11/10/2022
+ST25888N,1.00,SF,5.99,32102,1,"Qty TBD",11/10/2022
+A000,1.00,SF,8.31,32102,2,"Roppe #995 Hammered Design 20x20",11/10/2022
+A000,1.00,LF,25.21,32102,3,"Roppe #95 Hammered tread with riser solid colors",11/10/2022
+A000,1.00,PC,35.55,32102,4,"Roppe #1 Rubber Commercial Stair Nosing -  (9’ pc, 5 pcs/ctn, sold per ctn) *$20 broken carton charge*",11/10/2022
+A000,1.00,LF,.94,32102,5,"Roppe 4” 1/8” Pinnacle Rubber Base",11/10/2022
+4EX510,1.00,EA,170.46,32102,6,"coverage 640sqft/pail",11/10/2022
+ST25888N,1.00,SF,5.99,32101,1,"Qty TBD",11/10/2022
+ST25888N,1.00,SF,5.99,32101,2,"Qty TBD",11/10/2022
+A000,1.00,SF,8.31,32101,3,"Roppe #995 Hammered Design 20x20",11/10/2022
+A000,1.00,SF,8.31,32101,4,"Roppe #995 Hammered Design 20x20",11/10/2022
+A000,1.00,LF,25.21,32101,5,"Roppe #95 Hammered tread with riser solid colors",11/10/2022
+A000,1.00,LF,25.21,32101,6,"Roppe #95 Hammered tread with riser solid colors",11/10/2022
+A000,1.00,PC,35.55,32101,7,"Roppe #1 Rubber Commercial Stair Nosing -  (9’ pc, 5 pcs/ctn, sold per ctn) *$20 broken carton charge*",11/10/2022
+A000,1.00,PC,35.55,32101,8,"Roppe #1 Rubber Commercial Stair Nosing -  (9’ pc, 5 pcs/ctn, sold per ctn) *$20 broken carton charge*",11/10/2022
+A000,1.00,LF,.94,32101,9,"Roppe 4” 1/8” Pinnacle Rubber Base",11/10/2022
+A000,1.00,LF,.94,32101,10,"Roppe 4” 1/8” Pinnacle Rubber Base",11/10/2022
+4EX510,1.00,EA,170.46,32101,11,"coverage 640sqft/pail",11/10/2022
+4EX510,1.00,EA,170.46,32101,12,"coverage 640sqft/pail",11/10/2022
+A000,1.00,SF,2.99,32100,1,"Vitra 4x4 Pro  - Group 1",11/10/2022
+A000,1.00,SF,3.39,32100,2,"Vitra 4x4 Pro  - Group 2",11/10/2022
+A000,1.00,SF,2.99,32100,3,"Vitra 2x2 Pro  - Group 1",11/10/2022
+A000,1.00,SF,3.05,32100,4,"Vitra 2x2 Pro  - Group 2",11/10/2022
+A000,1.00,SF,3.29,32100,5,"Vitra 2x2 Pro  - Group 3",11/10/2022
+A000,1.00,LF,.96,32100,6,"Roppe 4"" 700 Series - Color TBD ",11/10/2022
+A000,1.00,LF,28.19,32100,7,"Roppe Rubber One Piece w/ Visually Impaired Stair Tread - 96 Vantage with Riser
+",11/10/2022
+4EX600,1.00,EA,85.69,32100,8,"(720-1360 LF coverage)",11/10/2022
+135OZEX610,1.00,EA,45.52,32100,9,"25-50 LF Per Cartridge coverage",11/10/2022
+GEX710,1.00,EA,138.92,32100,10,"(120-150 sqft approx coverage)",11/10/2022

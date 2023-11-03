@@ -1,0 +1,64 @@
+[production]
+phpSettings.display_startup_errors = 0
+phpSettings.display_errors = 0
+includePaths.library = APPLICATION_PATH "/../library"
+bootstrap.path = APPLICATION_PATH "/Bootstrap.php"
+bootstrap.class = "Bootstrap"
+appnamespace = "Centura"
+resources.frontController.controllerDirectory = APPLICATION_PATH "/controllers"
+resources.frontController.params.displayExceptions = 0
+resources.layout.layoutPath = APPLICATION_PATH "/layouts/scripts/"
+resources.view[] =
+resources.db.adapter = 'Sqlsrv'
+resources.db.params.host  = '192.168.160.11'
+resources.db.params.username  = 'admin'
+resources.db.params.password  = '696946'
+resources.db.params.dbname  = 'Quotation'
+resources.db.params.driver_options.CharacterSet = 'UTF-8'
+siteurl = 'newquotation.centura.local'
+
+; Bootstrap session resources
+resources.session.save_path = APPLICATION_PATH "/../data/sessions"
+resources.session.use_only_cookies = true
+resources.session.remember_me_seconds = 864000
+
+;smtp server
+resources.mail.config.auth = 'auth'
+;resources.mail.config.username = 'p21alert@centura.ca'
+;resources.mail.config.password = 'aj^Centura!'
+;resources.mail.config.port = 587
+resources.mail.config.port = 25
+;resources.mail.smtp = 'mail.centura.ca'
+resources.mail.smtp = 'centura-ca.mail.protection.outlook.com'
+
+[development]
+phpSettings.display_startup_errors = 0
+phpSettings.display_errors = 0
+includePaths.library = APPLICATION_PATH "/../library"
+bootstrap.path = APPLICATION_PATH "/Bootstrap.php"
+bootstrap.class = "Bootstrap"
+appnamespace = "Centura"
+resources.frontController.controllerDirectory = APPLICATION_PATH "/controllers"
+resources.frontController.params.displayExceptions = 0
+resources.layout.layoutPath = APPLICATION_PATH "/layouts/scripts/"
+resources.view[] =
+resources.db.adapter = 'Sqlsrv'
+resources.db.params.host  = '192.168.160.11'
+resources.db.params.username  = 'admin'
+resources.db.params.password  = '696946'
+resources.db.params.dbname  = 'Quotation'
+resources.db.params.driver_options.CharacterSet = 'UTF-8'
+siteurl = 'centura.ca'
+
+; Bootstrap session resources
+resources.session.save_path = APPLICATION_PATH "/../data/sessions"
+resources.session.use_only_cookies = true
+resources.session.remember_me_seconds = 864000
+
+;smtp server
+resources.mail.config.auth = 'auth'
+resources.mail.config.username = 'p21alert@centura.ca'
+resources.mail.config.password = 'aj^Centura!'
+resources.mail.config.port = 587
+resources.mail.smtp = 'mail.centura.ca'
+

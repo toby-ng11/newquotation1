@@ -1,0 +1,24 @@
+﻿"Item ID","Unit Qty",UOM,Unit_Price,Quote_Number,"Sort ID",Note,approve_date
+VB2021,1.00,SF,5.09,29336,1,"PT1 - Showroom Floor",04/08/2022
+VB2022G,1.00,SF,5.09,29336,2,"PT1A - Service Reception",04/08/2022
+VB2022,1.00,SF,5.99,29336,3,"PT2 - Washrooms / Rear Areas",04/08/2022
+VB2001CB,1.00,PC,5.50,29336,4,"Service Reception",04/08/2022
+VB2001ICRN,1.00,PC,11.99,29336,5,"Service Reception",04/08/2022
+VB2001OCRN,1.00,PC,11.99,29336,6,"Service Reception",04/08/2022
+VB2001BBAT,1.00,PC,6.19,29336,7,"Service Reception * Special Order",04/08/2022
+A000,1.00,SF,6.79,29336,8,"VB2001 - V&B 8X8 Volkswagon Malaga Matte R11
+Rect - 2023V08A - 8x8 Villeroy & Boch Antracite - PT3/PT4 - Service Reception Alternate",04/08/2022
+A000,1.00,SF,4.59,29336,9,"CT1/CT2 Villeroy 6x12 Snowy White - SPECIAL ORDER",04/08/2022
+A000,1.00,SF,4.59,29336,10,"CT1/CT2 Villeroy 4x12 Grau 50 - SPECIAL ORDER",04/08/2022
+A000,700.00,SF,3.64,29335,1,"Amtico 18X18 UltraCeramic - Residential",04/08/2022
+A000,700.00,SF,4.60,29335,2,"Amtico 18X18 UltraCeramic - Commercial ",04/08/2022
+PS3015L,1.00,EA,251.09,29335,3,"Covers appox 250 sf per gal can be grouted or non grouted use but is for residential use only    ",04/08/2022
+AD61015L,1.00,EA,158.77,29335,4,,04/08/2022
+AD6104L,1.00,EA,61.76,29335,5,"Ccovers appox 450 sf with a 1/16 grout joint",04/08/2022
+A000,700.00,SF,3.64,29334,1,"Amtico 18X18 UltraCeramic - Residential",04/08/2022
+A000,700.00,SF,4.60,29334,2,"Amtico 18X18 UltraCeramic - Commercial ",04/08/2022
+PS3015L,1.00,EA,251.09,29334,3,"Covers appox 250 sf per gal can be grouted or non grouted use but is for residential use only    ",04/08/2022
+AD61015L,1.00,EA,158.77,29334,4,,04/08/2022
+AD6104L,1.00,EA,61.76,29334,5,"Ccovers appox 450 sf with a 1/16 grout joint",04/08/2022
+K947086R,850.00,SF,3.30,29333,1,,04/08/2022
+MAIW081410,40.00,SF,4.38,29333,2,,04/08/2022
