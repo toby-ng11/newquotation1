@@ -100,7 +100,7 @@ class Zend_Tool_Project_Context_Zf_ApplicationConfigFile extends Zend_Tool_Proje
         return $this->_content;
     }
 
-    public function getAsZendConfig($section = 'production')
+    public function getAsLaminasConfig($section = 'production')
     {
         return new Zend_Config_Ini($this->getPath(), $section);
     }

@@ -72,7 +72,7 @@ class Zend_Tool_Project_Provider_Layout extends Zend_Tool_Project_Provider_Abstr
             throw new Zend_Tool_Project_Exception('A project with an application config file is required to use this provider.');
         }
 
-        $zc = $applicationConfigResource->getAsZendConfig();
+        $zc = $applicationConfigResource->getAsLaminasConfig();
 
         if (isset($zc->resources) && isset($zc->resources->layout)) {
             $this->_registry->getResponse()->appendContent('A layout resource already exists in this project\'s application configuration file.');
@@ -106,7 +106,7 @@ class Zend_Tool_Project_Provider_Layout extends Zend_Tool_Project_Provider_Abstr
         $profile = $this->_loadProfile(self::NO_PROFILE_THROW_EXCEPTION);
 
         $applicationConfigResource = $this->_getApplicationConfigResource($profile);
-        $zc = $applicationConfigResource->getAsZendConfig();
+        $zc = $applicationConfigResource->getAsLaminasConfig();
 
         if (isset($zc->resources) && !isset($zc->resources->layout)) {
             $this->_registry->getResponse()->appendContent('No layout configuration exists in application config file.');

@@ -1,5 +1,11 @@
 {
     "require": {
-        "laminas/laminas-migration": "^1.5"
+        "laminas/laminas-migration": "^1.5",
+        "laminas/laminas-dependency-plugin": "^2.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "laminas/laminas-dependency-plugin": true
+        }
     }
 }

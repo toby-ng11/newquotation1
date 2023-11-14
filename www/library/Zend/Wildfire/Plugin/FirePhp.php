@@ -527,7 +527,7 @@ class Zend_Wildfire_Plugin_FirePhp implements Zend_Wildfire_Plugin_Interface
             return $trace;
         }
 
-        if (isset($options['fixZendLogOffsetIfApplicable']) && $options['fixZendLogOffsetIfApplicable']) {
+        if (isset($options['fixLaminasLogOffsetIfApplicable']) && $options['fixLaminasLogOffsetIfApplicable']) {
             if (count($trace) >=3 &&
                 isset($trace[0]['file']) && substr($trace[0]['file'], -7, 7)=='Log.php' &&
                 isset($trace[1]['function']) && $trace[1]['function']=='__call') {

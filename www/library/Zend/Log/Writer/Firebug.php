@@ -199,6 +199,6 @@ class Zend_Log_Writer_Firebug extends Zend_Log_Writer_Abstract
                                                           $label,
                                                           $type,
                                                           ['traceOffset'=>4,
-                                                                'fixZendLogOffsetIfApplicable'=>true]);
+                                                                'fixLaminasLogOffsetIfApplicable'=>true]);
     }
 }

@@ -129,6 +129,6 @@ class Zend_Mail_Transport_File extends Zend_Mail_Transport_Abstract
      */
     public function defaultCallback($transport)
     {
-        return 'ZendMail_' . $_SERVER['REQUEST_TIME'] . '_' . mt_rand() . '.tmp';
+        return 'LaminasMail_' . $_SERVER['REQUEST_TIME'] . '_' . mt_rand() . '.tmp';
     }
 }

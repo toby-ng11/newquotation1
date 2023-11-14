@@ -118,7 +118,7 @@ abstract class Zend_Loader_AutoloaderFactory
                         if (!is_subclass_of($class, 'Zend_Loader_SplAutoloader')) {
                         require_once 'Exception/InvalidArgumentException.php';
                         throw new Zend_Loader_Exception_InvalidArgumentException(sprintf(
-                            'Autoloader class %s must implement Zend\\Loader\\SplAutoloader',
+                            'Autoloader class %s must implement Laminas\\Loader\\SplAutoloader',
                             $class
                         ));
                     }

@@ -45,7 +45,7 @@ class Zend_Config_Writer_Xml extends Zend_Config_Writer_FileAbstract
      */
     public function render()
     {
-        $xml         = new SimpleXMLElement('<zend-config xmlns:zf="' . Zend_Config_Xml::XML_NAMESPACE . '"/>');
+        $xml         = new SimpleXMLElement('<laminas-config xmlns:zf="' . Zend_Config_Xml::XML_NAMESPACE . '"/>');
         $extends     = $this->_config->getExtends();
         $sectionName = $this->_config->getSectionName();
 

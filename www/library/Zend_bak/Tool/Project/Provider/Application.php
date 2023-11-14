@@ -49,7 +49,7 @@ class Zend_Tool_Project_Provider_Application
         }
 
         $configFileResource = $profile->search('ApplicationConfigFile');
-        $zc = $configFileResource->getAsZendConfig('production');
+        $zc = $configFileResource->getAsLaminasConfig('production');
         if ($zc->appnamespace == $classNamePrefix) {
             throw new Zend_Tool_Project_Exception('The requested name ' . $classNamePrefix . ' is already the prefix.');
         }

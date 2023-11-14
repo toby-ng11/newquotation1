@@ -284,7 +284,7 @@ class Zend_Text_Figlet
 
         // If no font was defined, load default font
         if (!$this->_fontLoaded) {
-            $this->_loadFont(dirname(__FILE__) . '/Figlet/zend-framework.flf');
+            $this->_loadFont(dirname(__FILE__) . '/Figlet/laminas-project.flf');
         }
     }
 
