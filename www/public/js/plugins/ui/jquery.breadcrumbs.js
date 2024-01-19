@@ -1,6 +1,6 @@
 /*
 	xBreadcrumbs (Extended Breadcrums) jQuery Plugin
-	© 2009 ajaxBlender.com
+	ï¿½ 2009 ajaxBlender.com
 	For any questions please visit www.ajaxblender.com 
 	or email us at support@ajaxblender.com
 */
@@ -26,7 +26,7 @@
 				});
 			}
 			
-            element.children('LI').mouseenter(function(){
+            element.children('LI').on("mouseenter", (function(){
                 if($(this).hasClass('hover')){ return; }
                 
             	_hideAllSubLevels();
@@ -40,16 +40,16 @@
             		var initWidth = $(this).children('A').attr('init-width');
             		$(this).children('A').animate({width: initWidth}, 'normal');
             	}
-            });
+            }));
             
-            element.children('LI').mouseleave(function(){
+            element.children('LI').on("mouseleave", (function(){
                 var subLevel = $(this).children('UL');
                 _showHideSubLevel(subLevel, false);
                 
                 if(settings.collapsible && !$(this).hasClass('current')){
                 	$(this).children('A').animate({width: settings.collapsedWidth}, 'fast');
                 }
-            });
+            }));
 		};
 		
 		function _hideAllSubLevels(){

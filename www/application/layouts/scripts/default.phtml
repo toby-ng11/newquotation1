@@ -1,16 +1,46 @@
 <?php echo $this->doctype() ?>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="light">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <?php echo $this->headTitle() ?>
-	<?php echo $this->headMeta() ?>
-<link href="/css/main.css" rel="stylesheet" type="text/css" />
-<?php echo $this->headLink(); ?>
-<script type="text/javascript" src="/js/jquery.min.js"></script>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <?php echo $this->headTitle() ?>
+    <?php echo $this->headMeta() ?>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico.png">
+    <link href="/css/main.css" rel="stylesheet" type="text/css">
+    <?php echo $this->headLink(); ?>
+
+<!-- jQuery CDN -->
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+  crossorigin="anonymous"></script>
+
+<!-- jMigrate CDN -->
+<script src="https://code.jquery.com/jquery-migrate-3.4.1.js"></script>
+
+<!-- jQuery UI CDN -->
+<script
+  src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+  integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
+  crossorigin="anonymous"></script>
+
+<!-- DataTables CDN -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/v/dt/dt-1.13.8/datatables.min.js"></script>
+
+ <!--
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+
+<script type="text/javascript" src="/js/plugins/ui/jquery.ui.widget.js"></script>        
+<script type="text/javascript" src="/js/plugins/ui/jquery.ui.mouse.js"></script>          
+<script type="text/javascript" src="/js/plugins/ui/jquery.ui.resizable.js"></script>
+-->
+
 
 <script type="text/javascript" src="/js/plugins/spinner/ui.spinner.js"></script>
 <script type="text/javascript" src="/js/plugins/spinner/jquery.mousewheel.js"></script>
-<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+ 
 <script type="text/javascript" src="/js/plugins/charts/excanvas.min.js"></script>
 <script type="text/javascript" src="/js/plugins/charts/jquery.sparkline.min.js"></script>
 <script type="text/javascript" src="/js/plugins/forms/uniform.js"></script>
@@ -33,9 +63,8 @@
 <script type="text/javascript" src="/js/plugins/uploader/plupload.html4.js"></script>
 <script type="text/javascript" src="/js/plugins/uploader/jquery.plupload.queue.js"></script>
 
-<script type="text/javascript" src="/js/plugins/tables/datatable.js"></script>
-<script type="text/javascript" src="/js/plugins/tables/tablesort.min.js"></script>
-<script type="text/javascript" src="/js/plugins/tables/resizable.min.js"></script>
+<!--<script type="text/javascript" src="/js/plugins/tables/tablesort.min.js"></script>
+<script type="text/javascript" src="/js/plugins/tables/resizable.min.js"></script>-->
 
 <script type="text/javascript" src="/js/plugins/ui/jquery.tipsy.js"></script>
 <script type="text/javascript" src="/js/plugins/ui/jquery.collapsible.min.js"></script>
@@ -51,20 +80,26 @@
 <script type="text/javascript" src="/js/plugins/elfinder.min.js"></script>
 
 <script type="text/javascript" src="/js/custom.js"></script>
+
+
 <?php echo $this->headScript(); ?> 
 <style>
-	.loading (z-index:1003; width:100%; height:100%; background: url(../images/loaders/loader4.gif) #AAA center center no-repeat;)
+	.loading {z-index:1003; width:100%; height:100%; background: url(../images/loaders/loader4.gif) #AAA center center no-repeat;}
 </style>
 </head>
-<body>
 
- <?php echo $this->render('header.phtml') ?>
- <div id="rightSide">
- 	 <!-- Top fixed navigation -->
-    <div class="topNav">
-        <div class="wrapper">
-            <div class="welcome"><a href="#" title=""><img src="/images/userPic.png" alt="" /></a><span>Log in As <?php echo $_SERVER['REMOTE_USER'] ?></span></div>
-            <div class="userNav">
+<body>
+<!-- Header -->
+    <div class="sticky-header-container">
+        <header class="topNav">
+            <div class="container">
+                <div class="logo">
+                    <a href="http://devquotation.centura.local" class="logo-picture">
+                        <img src="/images/centura-logo-colour.svg" alt="Centura">
+                    </a>
+                </div>
+                <?php echo $this->render('header.phtml') ?>
+            <!--<div class="userNav">
                 <ul>
                     <li><a href="#" title=""><img src="/images/icons/topnav/profile.png" alt="" /><span>Profile</span></a></li>
                     <li><a href="#" title=""><img src="/images/icons/topnav/tasks.png" alt="" /><span>Tasks</span></a></li>
@@ -79,16 +114,31 @@
                     <li><a href="#" title=""><img src="/images/icons/topnav/settings.png" alt="" /><span>Settings</span></a></li>
                     <li id='nav_logout'><a href="/logout" title=""><img src="/images/icons/topnav/logout.png" alt="" /><span>Logout</span></a></li>
                 </ul>
+            </div>-->
+                <!--<div class="clear"></div>-->
             </div>
-            <div class="clear"></div>
-        </div>
+        </header>
     </div>
 
-<?php echo $this->layout()->content ?>
- <?php echo $this->render('footer.phtml') ?>
-</div>
+    <!-- Main -->
 
+    <div class="main-wrapper">
+ 	    <!-- Left-side panel -->
+         <div></div>
+        <!-- Main content -->
+        <?php echo $this->layout()->content ?>
+        <!-- Right-side panel -->
+        <div></div>
+   </div>
+<!--
 <div class="clear"></div>
-<div class="loading" style="z-index:1003; top:0;left:0; width:100%; height:100%; background: url(/images/loaders/loader4.gif) #AAA center center no-repeat;position:absolute;display:none;opacity: .30;filter: Alpha(Opacity=30);"> </div>
+<div class="loading" style="z-index:1003; top:0;left:0; width:100%; height:100%; background: url(/images/loaders/loader4.gif) #AAA center center no-repeat;position:absolute;display:none;opacity: .30;"> </div>
+-->
 </body>
+
+<!-- Footer -->
+<footer class="footer">
+        <?php echo $this->render('footer.phtml') ?>
+</footer>
+
 </html>

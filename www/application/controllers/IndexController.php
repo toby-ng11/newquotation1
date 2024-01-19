@@ -42,12 +42,12 @@ class IndexController extends Zend_Controller_Action
        	$this->view->otherprojects = $project->fetchothers($this->sale_id,DEFAULT_COMPNAY);
       }
     }
-    
+
     public function adminAction()
     {
     	if($this->session->user['sale_role'] != 'admin' && APPLICATION_ENV == 'production' )
     	{
-    		$this->_redirect('/index/');
+    		$this->redirect('/index/');
     	}
     	
     	$quote = new Centura_Model_Quote();
@@ -57,6 +57,7 @@ class IndexController extends Zend_Controller_Action
     	$this->view->log = null;
     	$this->view->projects = $project->fetchallproject();
     }
+
     public function approvalAction()
     {
     	if($this->session->user['approve_id'] == null && APPLICATION_ENV == 'production')

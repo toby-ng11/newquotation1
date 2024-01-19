@@ -1,0 +1,20 @@
+.footer {
+    background-color: var(--background-secondary);
+    padding: 2rem 1rem;
+    position: relative;
+}
+
+.footer a {
+    color: var(--text-secondary);
+}
+
+.footer-content {
+    display: flex;
+    margin: 0 auto;
+    max-width: 1440px;
+}
+
+.footer-cent-text {
+    font-size: var(--type-tiny-font-size);
+    margin: 0;
+}

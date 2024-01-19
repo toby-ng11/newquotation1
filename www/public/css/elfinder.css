@@ -5,7 +5,7 @@
 .el-finder-undocked { position:absolute; min-width:400px; border:1px solid #ccc; padding:5px; }
 
 /* error messages */
-.el-finder-err { padding: 15px; text-align:center; background: #fee; color: #cc0509; border: 2px #844 solid; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
+.el-finder-err { padding: 15px; text-align:center; background: #fee; color: #cc0509; border: 2px #844 solid; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; }
 
 /* disabled */
 .el-finder-disabled .el-finder-toolbar li, .el-finder-disabled .el-finder-nav, .el-finder-disabled .el-finder-cwd { opacity:0.35; filter:Alpha(Opacity=35); }
@@ -20,7 +20,7 @@
 .el-finder-toolbar ul { padding:6px 7px; margin:0; list-style:none; background: #fafafa; }
 .el-finder-toolbar ul li { display: -moz-inline-stack; display: inline-block; zoom: 1; *display: inline; vertical-align: top; height:22px; width:23px; margin:0 2px; padding:0; background: url(../images/fileManager/toolbar.png) no-repeat; border: 1px solid #efefef; cursor: pointer; }
 .el-finder-toolbar ul li.delim { border:none; width:3px; background-position: 1px -610px; }
-.el-finder-toolbar ul li.el-finder-tb-hover { border:1px solid #d5d5d5; border-radius:2px;  -moz-border-radius:2px;  -webkit-border-radius:2px; }
+.el-finder-toolbar ul li.el-finder-tb-hover { border:1px solid #d5d5d5;  -moz-border-radius:2px;  -webkit-border-radius:2px; border-radius:2px;}
 .el-finder-toolbar ul li.disabled { opacity:0.35; filter:Alpha(Opacity=35); }
 
 .el-finder-toolbar ul li.back       { background-position: 3px -171px; }
@@ -43,7 +43,7 @@
 .el-finder-toolbar ul li.resize     { background-position: 3px -656px; }
 .el-finder-toolbar ul li.quicklook  { background-position: 3px -726px; }
 
-.el-finder-dock-button { width:19px; height:19px; float:right; margin: 2px; border:1px solid #ccc; border-radius:3px;  -moz-border-radius:3px;  -webkit-border-radius:3px; background:url(../images/fileManager/toolbar.png) 2px -705px no-repeat; }
+.el-finder-dock-button { width:19px; height:19px; float:right; margin: 2px; border:1px solid #ccc; -moz-border-radius:3px;  -webkit-border-radius:3px; border-radius:3px; background:url(../images/fileManager/toolbar.png) 2px -705px no-repeat; }
 .ui-dialog .el-finder-dock-button { background-position:2px -681px; }
 .el-finder-dock-button-hover { background-color:#ccc; border:1px solid #fff; }
 
@@ -75,7 +75,7 @@ ul.el-finder-tree, ul.el-finder-places { margin-bottom:1em; margin-top: 5px; }
 .el-finder-nav  div.collapsed { background-position: -1px 7px; }
 .el-finder-nav div.expanded { background-position: -1px -9px; }
 
-.el-finder-nav a { display: block; white-space:nowrap; line-height:20px; color:#444; cursor:default; text-decoration:none; outline:none; border-radius:2px; -moz-border-radius:2px; -webkit-border-radius:2px; background-position: 15px -56px; font-size: 11px; }
+.el-finder-nav a { display: block; white-space:nowrap; line-height:20px; color:#444; cursor:default; text-decoration:none; outline:none; -moz-border-radius:2px; -webkit-border-radius:2px; border-radius:2px; background-position: 15px -56px; font-size: 11px; }
 .el-finder-nav a.dropbox { background-position: 15px -80px; }
 .el-finder-nav a.readonly { background-position: 15px -104px; }
 .el-finder-nav a.noaccess { background-position: 15px -750px; }
@@ -88,8 +88,8 @@ ul.el-finder-tree, ul.el-finder-places { margin-bottom:1em; margin-top: 5px; }
 /* ===== Current working directory ===== */
 
 .el-finder-cwd { border-left: 1px solid #d5d5d5; padding: 3px; background: #fefefe; }
-.el-finder-cwd div { width: 80px; display: -moz-inline-stack; display: inline-block; vertical-align: top; zoom: 1; *display: inline; margin:0 3px 3px 0; padding:1px 0; text-align:center; border-radius:2px; -moz-border-radius:2px; -webkit-border-radius:2px; background-color:transparent; }
-.el-finder-cwd p, .el-finder-ql p { width:48px; height:48px; margin:5px auto; padding:0; border-radius:2px; -moz-border-radius:2px; -webkit-border-radius:2px; background: url(../images/fileManager/icons-big.png) -1px 1px no-repeat; }
+.el-finder-cwd div { width: 80px; display: -moz-inline-stack; display: inline-block; vertical-align: top; zoom: 1; *display: inline; margin:0 3px 3px 0; padding:1px 0; text-align:center; -moz-border-radius:2px; -webkit-border-radius:2px; border-radius:2px; background-color:transparent; }
+.el-finder-cwd p, .el-finder-ql p { width:48px; height:48px; margin:5px auto; padding:0; -moz-border-radius:2px; -webkit-border-radius:2px; border-radius:2px;  background: url(../images/fileManager/icons-big.png) -1px 1px no-repeat; }
 
 
 /* mimetypes */
@@ -245,10 +245,10 @@ tr.el-finder-droppable td.icon  p { background-position:5px -450px; }
 
 /* ===== Context menu ===== */
 
-.el-finder-contextmenu { position:absolute; width:200px; background:#fff;  color:#000; cursor:default; border:1px solid #ccc; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; padding:5px 0; }
+.el-finder-contextmenu { position:absolute; width:200px; background:#fff;  color:#000; cursor:default; border:1px solid #ccc; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; padding:5px 0; }
 .el-finder-contextmenu div { position:relative; display:block; margin:0; padding:4px 29px 4px 29px; white-space:nowrap; font:12px trebuchet ms,lucida grande,verdana,sans-serif; background:url(../images/fileManager/toolbar.png) 0 0 no-repeat; }
 .el-finder-contextmenu  span { float:right; width:9px; height:18px; margin-right:-27px; background:url(../images/fileManager/toolbar.png) -4px 5px no-repeat; }
-.el-finder-contextmenu  div.el-finder-contextmenu-sub { position:absolute; top:0; display:none; margin:0; padding:5px 0; background:#fff; border:1px solid #ccc; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
+.el-finder-contextmenu  div.el-finder-contextmenu-sub { position:absolute; top:0; display:none; margin:0; padding:5px 0; background:#fff; border:1px solid #ccc; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; }
 
 
 .el-finder-contextmenu div.reload     { background-position: 5px -192px; }
@@ -279,12 +279,12 @@ tr.el-finder-droppable td.icon  p { background-position:5px -450px; }
 .el-finder-drag-helper { padding:0; cursor:move; zoom:1; }
 .el-finder-drag-helper div { border:0 solid; margin-left:-57px; }
 .el-finder-drag-copy { background:url(../images/fileManager/toolbar.png) 0 -771px no-repeat; }
-.el-finder-drag-helper label { border:1px solid #ccc; background-color:#eee; border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
+.el-finder-drag-helper label { border:1px solid #ccc; background-color:#eee; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px;}
 
 
 /* ===== Quick look ===== */
 
-.el-finder-ql { position:absolute; width:420px; height:auto; padding:12px 9px; text-align:center; border-radius:9px;  -moz-border-radius:9px; -webkit-border-radius:9px; background:url(../images/fileManager/ql.png); overflow: inherit !important; }
+.el-finder-ql { position:absolute; width:420px; height:auto; padding:12px 9px; text-align:center; -moz-border-radius:9px; -webkit-border-radius:9px; border-radius:9px; background:url(../images/fileManager/ql.png); overflow: inherit !important; }
 .el-finder-ql.directory p { background-position:  0 -50px; }
 
 /* toolbar */

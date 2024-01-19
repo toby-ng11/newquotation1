@@ -1,7 +1,15 @@
 {
     "require": {
         "laminas/laminas-migration": "^1.5",
-        "laminas/laminas-dependency-plugin": "^2.1"
+        "laminas/laminas-dependency-plugin": "^2.1",
+        "laminas/laminas-json": "^3.5",
+        "laminas/laminas-json-server": "^3.8",
+        "laminas/laminas-xml2json": "^3.3",
+        "psr/log": "^2.0",
+        "symfony/event-dispatcher": "^5.4",
+        "symfony/lock": "^5.4",
+        "symfony/process": "^5.4",
+        "laminas/laminas-mvc": "^3.6"
     },
     "config": {
         "allow-plugins": {

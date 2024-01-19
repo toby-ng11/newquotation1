@@ -187,7 +187,7 @@ class QuoteController extends Zend_Controller_Action
     		'OTT' => 'OTTAWA',
     		'HAM' => 'HAMILTON',
     		'VAN' => 'VANCOUVER',
-    		'WES' => 'CALBARY',
+    		'WES' => 'CALGARY',
     		'QUE' => 'MONTREAL'
     	);
     	

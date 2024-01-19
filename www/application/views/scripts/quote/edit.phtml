@@ -3,10 +3,10 @@
   <? $project = $this->project;?>
     <div class="titleArea">
         <div class="wrapper">
-            <div class="pageTitle">
-                <h5>Price Quote</h5>
-                <span>Project Name: <b><?=$project['project_name'] ?></b></span> | <span>Project Quote No: <b><?=$project['quote_no'] ?></b></span>  | <span>Worksheet Owner: <b><?=$project['owner'] ?></b></span> | <span>Status: <b><?=$project['status_name'] ?></b></span>  | <span>Due Date: <b><?=$project['due_date']->format('Y-m-d')  ?></b></span>
-            </div>
+            <header class="pageTitle">
+                <h1>Price Quote</h1>
+                <p>Project Name: <b><?=$project['project_name'] ?></b> | Project Quote No: <b><?=$project['quote_no'] ?></b> | Worksheet Owner: <b><?=$project['owner'] ?></b> | Status: <b><?=$project['status_name'] ?></b> | Due Date: <b><?=$project['due_date']->format('Y-m-d')  ?></b></p>
+			</header>
             <div class="middleNav">
                 <ul>
                     <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
@@ -46,17 +46,16 @@
           	<? }?>
           </div>
         </div>
-    </div>
     
-    <div class="line"></div>
+
  <!-- Page statistics area -->
-    <div class="statsRow">
+   <!-- <div class="statsRow">
         <div class="wrapper">
         	<div class="controlB">
             	<ul>
                 	<!--<li><a href="/quote/index/project/<?=$project['project_id']?>" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add New Quote</span></a></li>-->
                     <!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
-                    <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
+                    <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>
                     <? if($this->quote['approve_status'] != 10 ) {?>
                     <li><a href="#" title="save" class='save_quote'><img src="/images/icons/control/32/save.png" alt="save" /><span>Save Quote</span></a></li>
                     <? } ?>
@@ -64,7 +63,7 @@
                     <? if($this->quote['approve_status'] == 10 ) {?>
                     <li><a href="/mail/quote/id/<?=$this->quote['quote_id']?>" title="mail"><img src="/images/icons/control/32/mail.png" alt="" /><span>Mail Quote</span></a></li>
                   	<? } ?>
-                    <!--<li><a href="/quote/delete/id/<?=$this->quote['quote_id']?>" title="" class='delete_quote'><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>-->
+                    <!--<li><a href="/quote/delete/id/<?=$this->quote['quote_id']?>" title="" class='delete_quote'><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>
                     <? if($this->quote['approve_status'] <= 0 ) {?>
                     	<li><a href="/quote/ready/id/<?=$this->quote['quote_id']?>" title="" class='ready_quote'><img src="/images/icons/control/32/order-149.png" alt="" /><span>Submit Quote For Approval</span></a></li>
                     <? } ?>
@@ -75,9 +74,7 @@
                 <div class="clear"></div>
             </div>
         </div>
-    </div>
-    
-    <div class="line"></div>
+    </div> -->
     
     <!-- Main content wrapper -->
     <div class="wrapper">
@@ -225,6 +222,8 @@
       	</div>
         </div>
         </form>
+
+</div>
             
       <div class="statsRow">
         <div class="wrapper">

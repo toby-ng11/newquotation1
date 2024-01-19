@@ -1,56 +1,84 @@
+function setTheme(themeName){
+	localStorage.setItem('theme', themeName);
+	document.documentElement.className = themeName;
+}
+
+function toggleTheme() {
+	if (localStorage.getItem('theme') === 'dark') {
+		setTheme('light');
+		console.log("Theme is set to light-mode.");
+	} else {
+		setTheme('dark');
+		console.log("Theme is set to dark-mode.");
+	}
+}
+
+(function () {
+	if (localStorage.getItem('theme') === 'dark') {
+		setTheme('dark');
+		console.log("Theme is set to dark-mode.");
+	} else {
+		setTheme('light');
+		console.log("Theme is set to light-mode.");
+	}
+})
+
+
 $(function() {
 	
 	
-    $(".pat1").click(function(){
+    $(".pat1").on("click", (function(){
         $("html").css('background','url(images/backgrounds/patterns/1.png) repeat');
         return false;
-    });
+    }));
     
-    $(".pat2").click(function(){
+    $(".pat2").on("click", (function(){
         $("html").css('background','url(images/backgrounds/patterns/2.png) repeat');
         return false;
-    });
+    }));
     
-    $(".pat3").click(function(){
+    $(".pat3").on("click", (function(){
         $("html").css('background','url(images/backgrounds/patterns/3.png) repeat');
         return false;
-    });
+    }));
 	
-    $(".pat4").click(function(){
+    $(".pat4").on("click", (function(){
         $("html").css('background','url(images/backgrounds/patterns/4.png) repeat');
         return false;
-    });
+    }));
     
-    $(".pat5").click(function(){
+    $(".pat5").on("click",(function(){
         $("html").css('background','url(images/backgrounds/patterns/5.png) repeat');
         return false;
-    });
+    }));
 	
-    $(".pat6").click(function(){
+    $(".pat6").on("click",(function(){
         $("html").css('background','url(images/backgrounds/patterns/6.png) repeat');
         return false;
-    });
+    }));
     
-    $(".pat7").click(function(){
+    $(".pat7").on("click",(function(){
         $("html").css('background','url(images/backgrounds/patterns/7.png) repeat');
         return false;
-    });
+    }));
     
-    $(".pat8").click(function(){
+    $(".pat8").on("click",(function(){
         $("html").css('background','url(images/backgrounds/patterns/8.png) repeat');
         return false;
-    });
+    }));
 	
-    $(".pat9").click(function(){
+    $(".pat9").on("click",(function(){
         $("html").css('background','url(images/backgrounds/patterns/9.png) repeat');
         return false;
-    });
+    }));
     
-    $(".pat10").click(function(){
+    $(".pat10").on("click",(function(){
         $("html").css('background','url(images/backgrounds/bg.jpg) repeat');
         return false;
-    });
-	
+    }));
+
+	$("#leftSide")
+
 	
 /* Form related plugins
 ================================================== */
@@ -276,10 +304,10 @@ $(function() {
 	
 	//===== User nav dropdown =====//		
 	
-	$('.dd').click(function () {
+	$('.dd').on("click",(function () {
 		$('.userDropdown').slideToggle(200);
-	});
-	$(document).bind('click', function(e) {
+	}));
+	$(document).on('click', function(e) {
 		var $clicked = $(e.target);
 		if (! $clicked.parents().hasClass("dd"))
 		$(".userDropdown").slideUp(200);
@@ -289,40 +317,40 @@ $(function() {
 	  
 	//===== Statistics row dropdowns =====//	
 		
-	$('.ticketsStats > h2 a').click(function () {
+	$('.ticketsStats > h2 a').on("click",(function () {
 		$('#s1').slideToggle(150);
-	});
-	$(document).bind('click', function(e) {
+	}));
+	$(document).on('click', function(e) {
 		var $clicked = $(e.target);
 		if (! $clicked.parents().hasClass("ticketsStats"))
 		$("#s1").slideUp(150);
 	});
 	
 	
-	$('.visitsStats > h2 a').click(function () {
+	$('.visitsStats > h2 a').on("click",(function () {
 		$('#s2').slideToggle(150);
-	});
-	$(document).bind('click', function(e) {
+	}));
+	$(document).on('click', function(e) {
 		var $clicked = $(e.target);
 		if (! $clicked.parents().hasClass("visitsStats"))
 		$("#s2").slideUp(150);
 	});
 	
 	
-	$('.usersStats > h2 a').click(function () {
+	$('.usersStats > h2 a').on("click",(function () {
 		$('#s3').slideToggle(150);
-	});
-	$(document).bind('click', function(e) {
+	}));
+	$(document).on('click', function(e) {
 		var $clicked = $(e.target);
 		if (! $clicked.parents().hasClass("usersStats"))
 		$("#s3").slideUp(150);
 	});
 	
 	
-	$('.ordersStats > h2 a').click(function () {
+	$('.ordersStats > h2 a').on("click",(function () {
 		$('#s4').slideToggle(150);
-	});
-	$(document).bind('click', function(e) {
+	}));
+	$(document).on('click', function(e) {
 		var $clicked = $(e.target);
 		if (! $clicked.parents().hasClass("ordersStats"))
 		$("#s4").slideUp(150);
@@ -374,37 +402,37 @@ $(function() {
 	
 	//===== Middle navigation dropdowns =====//
 	
-	$('.mUser').click(function () {
+	$('.mUser').on("click",(function () {
 		$('.mSub1').slideToggle(100);
-	});
-	$(document).bind('click', function(e) {
+	}));
+	$(document).on('click', function(e) {
 		var $clicked = $(e.target);
 		if (! $clicked.parents().hasClass("mUser"))
 		$(".mSub1").slideUp(100);
 	});
 	
-	$('.mMessages').click(function () {
+	$('.mMessages').on("click", (function () {
 		$('.mSub2').slideToggle(100);
-	});
-	$(document).bind('click', function(e) {
+	}));
+	$(document).on('click', function(e) {
 		var $clicked = $(e.target);
 		if (! $clicked.parents().hasClass("mMessages"))
 		$(".mSub2").slideUp(100);
 	});
 	
-	$('.mFiles').click(function () {
+	$('.mFiles').on("click", (function () {
 		$('.mSub3').slideToggle(100);
-	});
-	$(document).bind('click', function(e) {
+	}));
+	$(document).on('click', function(e) {
 		var $clicked = $(e.target);
 		if (! $clicked.parents().hasClass("mFiles"))
 		$(".mSub3").slideUp(100);
 	});
 	
-	$('.mOrders').click(function () {
+	$('.mOrders').on("click", (function () {
 		$('.mSub4').slideToggle(100);
-	});
-	$(document).bind('click', function(e) {
+	}));
+	$(document).on('click', function(e) {
 		var $clicked = $(e.target);
 		if (! $clicked.parents().hasClass("mOrders"))
 		$(".mSub4").slideUp(100);
@@ -414,10 +442,10 @@ $(function() {
 
 	//===== User nav dropdown =====//		
 	
-	$('.sidedd').click(function () {
+	$('.sidedd').on("click", (function () {
 		$('.sideDropdown').slideToggle(200);
-	});
-	$(document).bind('click', function(e) {
+	}));
+	$(document).on('click', function(e) {
 		var $clicked = $(e.target);
 		if (! $clicked.parents().hasClass("sidedd"))
 		$(".sideDropdown").slideUp(200);
@@ -438,7 +466,7 @@ $(function() {
 
 	//===== Check all checbboxes =====//
 	
-	$(".titleIcon input:checkbox").click(function() {
+	$(".titleIcon input:checkbox").on("click", (function() {
 		var checkedStatus = this.checked;
 		$("#checkAll tbody tr td:first-child input:checkbox").each(function() {
 			this.checked = checkedStatus;
@@ -449,7 +477,7 @@ $(function() {
 					$(this).closest('.checker > span').addClass('checked');
 				}
 		});
-	});	
+	}));	
 	
 	$('#checkAll tbody tr td:first-child').next('td').css('border-left-color', '#CBCBCB');
 	
@@ -457,30 +485,26 @@ $(function() {
 	
 	//===== Resizable columns =====//
 	
-	$("#res, #res1").colResizable({
+	/*$("#res, #res1").colResizable({
 		liveDrag:true,
 		draggingClass:"dragging" 
-	});
+	});*/
 	  
 	  
 	  
 	//===== Sortable columns =====//
 	
-	$("table").tablesorter();
+	//$("table").tablesorter();
 	
 	
 	
 	//===== Dynamic data table =====//
 	
-	oTable = $('.dTable').dataTable({
-		"bJQueryUI": true,
-		"sPaginationType": "full_numbers",
-		"sDom": '<""l>t<"F"fp>'
-	});
-
-
-
-
+	//oTable = $('.dTable').DataTable({
+	//	"bJQueryUI": true,
+	//	"sPaginationType": "full_numbers",
+	//	"sDom": '<""l>t<"F"fp>'
+	//});
 
 /* # Pickers
 ================================================== */
@@ -731,10 +755,10 @@ contextmenu : {
 	$('div.menu_body:eq(0)').show();
 	$('.acc .title:eq(0)').show().css({color:"#2B6893"});
 	
-	$(".acc .title").click(function() {	
+	$(".acc .title").on("click", (function() {	
 		$(this).css({color:"#2B6893"}).next("div.menu_body").slideToggle(300).siblings("div.menu_body").slideUp("slow");
 		$(this).siblings().css({color:"#404040"});
-	});
+	}));
 	
 	
 	//===== Tabs =====//
@@ -745,14 +769,14 @@ contextmenu : {
 		$(this).find("ul.tabs li:first").addClass("activeTab").show(); //Activate first tab
 		$(this).find(".tab_content:first").show(); //Show first tab content
 	
-		$("ul.tabs li").click(function() {
+		$("ul.tabs li").on("click", (function() {
 			$(this).parent().parent().find("ul.tabs li").removeClass("activeTab"); //Remove any "active" class
 			$(this).addClass("activeTab"); //Add "active" class to selected tab
 			$(this).parent().parent().find(".tab_content").hide(); //Hide all tab content
 			var activeTab = $(this).find("a").attr("href"); //Find the rel attribute value to identify the active tab + content
 			$(activeTab).show(); //Fade in the active content
 			return false;
-		});
+		}));
 	
 	};
 	$("div[class^='widget']").contentTabs(); //Run function on any div with class name of "Content Tabs"
@@ -761,13 +785,13 @@ contextmenu : {
 	
 	//===== Notification boxes =====//
 	
-	$(".hideit").click(function() {
+	$(".hideit").on("click", (function() {
 		$(this).fadeTo(200, 0.00, function(){ //fade
 			$(this).slideUp(300, function() { //slide up
 				$(this).remove(); //then remove from the DOM
 			});
 		});
-	});	
+	}));	
 	
 	
 	
@@ -779,10 +803,9 @@ contextmenu : {
 	
 	//===== Image gallery control buttons =====//
 	
-	$(".gallery ul li").hover(
-		function() { $(this).children(".actions").show("fade", 200); },
-		function() { $(this).children(".actions").hide("fade", 200); }
-	);
+	$(".gallery ul li").on(
+		"mouseenter", function () { $(this).children(".actions").show("fade", 200); }).on(
+			"mouseleave", function () { $(this).children(".actions").hide("fade", 200); });
 	
 	
 	//===== Spinner options =====//
@@ -828,20 +851,20 @@ contextmenu : {
 	for (var n in opts)
 		$("#"+n).spinner(opts[n]);
 	
-	$("button").click(function(e){
+	$("button").on("click", (function(e){
 		var ns = $(this).attr('id').match(/(s\d)\-(\w+)$/);
 		if (ns != null)
 			$('#'+ns[1]).spinner( (ns[2] == 'create') ? opts[ns[1]] : ns[2]);
-	});
+	}));
 	
 	
 	
 	//===== UI dialog =====//
 	
-	$( "#opener" ).click(function() {
+	$("#opener").on("click", (function() {
 		$( "#dialog-message" ).dialog( "open" );
 		return false;
-	});	
+	}));	
 		
 	
 	

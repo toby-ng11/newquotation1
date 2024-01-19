@@ -1,16 +1,17 @@
    <? $session = Zend_Registry::get('session');?>
+
   <!-- Title area -->
     <div class="titleArea">
         <div class="wrapper">
-            <div class="pageTitle">
-                <h5>My Projects</h5>
+            <header class="pageTitle">
+                <h1>My Projects</h1>
                 <? if ($session->user['sale_role'] == 'sales') {?>
-                <span>Sales Rep. Landing Page.</span>
+                <p>Sales Representative Landing Page.</p>
                 <? }?>
                 <? if ($session->user['sale_role'] == 'manager' || $session->user['sale_role'] == 'admin' ) {?>
-                <span>Sales Manager Landing Page.</span>
+                <p>Sales Manager Landing Page.</p>
                 <? }?>
-            </div>
+                </header>
             <div class="middleNav">
                 <ul>
                     <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
@@ -29,13 +30,9 @@
                         </ul>
                     </li>
                 </ul>
-                <div class="clear"></div>
             </div>
-            <div class="clear"></div>
         </div>
-    </div>
     
-    <div class="line"></div>
     
  
  <!-- Main content wrapper -->
@@ -48,7 +45,7 @@
         
         <!-- Form -->
         <form action="" class="form">
-        <div class="widget">
+        <div class="widget-table">
         <div class="title"><img src="/images/icons/dark/full2.png" alt="" class="titleIcon" /><h6>My Projects : <?= count($this->ownproject ) ?></h6></div>  
           <table cellpadding="0" cellspacing="0" width="100%" class="display"  style="text-align:center;" id='project_table'>
               <thead>
@@ -80,7 +77,7 @@
           </table>
         </div>
         <?  if($session->user['approve_id'] != null ) {?>
-        <div class="widget">
+        <div class="widget-table">
         <div class="title"><img src="/images/icons/dark/full2.png" alt="" class="titleIcon" /><h6>Other Projects At <?=$session->user['company']; ?> : <?= count($this->otherprojects ) ?></h6></div>  
           <table cellpadding="0" cellspacing="0" width="100%" class="display"  style="text-align:left;" id='other_project_table'>
               <thead>
@@ -114,7 +111,7 @@
           </table>
         </div>
         <? } ?>
- 				<div class="widget">
+ 				<div class="widget-table">
         <div class="title"><img src="/images/icons/dark/full2.png" alt="" class="titleIcon" /><h6>My Quotes : <?= count($this->ownquotes ) ?></h6></div>  
           <table cellpadding="0" cellspacing="0" width="100%" class="display"  style="text-align:center;" id='quote_table'>
               <thead>
@@ -157,7 +154,7 @@
         </div>
         </form>
         
-        <div class="widget">
+        <div class="widget-table">
           <div class="title"><img src="/images/icons/dark/frames.png" alt="" class="titleIcon"><h6>Followup Logs : <?= count($this->memo ) ?></h6></div>
             <table cellpadding="0" cellspacing="0" width="100%" class="display" id='project_log'>
                 <thead>
@@ -177,9 +174,10 @@
                     <? } ?>
                 </tbody>
             </table>
-        </div>
-            
+      </div>
     </div>
+     
+
       <div class="statsRow">
         <div class="wrapper">
         	<div class="controlB">
@@ -194,31 +192,28 @@
             </div>
         </div>
     </div>
+                     </div>
 <script>
 	oTable = $('#project_table').dataTable({
-		"bJQueryUI": true,
-		"sPaginationType": "full_numbers",
+		"pagingType": "full_numbers",
 		"sDom": '<""l>t<"F"fp>',
-		"aaSorting": [[ 5, "desc" ]]
+		"order": [[ 5, "desc" ]]
 	});
 	$('#other_project_table').dataTable({
-		"bJQueryUI": true,
-		"sPaginationType": "full_numbers",
+		"pagingType": "full_numbers",
 		"sDom": '<""l>t<"F"fp>',
-		"aaSorting": [[ 6, "desc" ]]
+		"order": [[ 6, "desc" ]]
 	});
 	$('	#quote_table').dataTable({
-		"bJQueryUI": true,
-		"sPaginationType": "full_numbers",
+		"pagingType": "full_numbers",
 		"sDom": '<""l>t<"F"fp>',
-		"aaSorting": [[ 4, "desc" ]]
+		"order": [[ 4, "desc" ]]
 	});
 
 	$('#project_log').dataTable({
-		"bJQueryUI": true,
-		"sPaginationType": "full_numbers",
+		"pagingType": "full_numbers",
 		"sDom": '<""l>t<"F"fp>',
-		"aaSorting": [[ 0, "desc" ]]
+		"order": [[ 0, "desc" ]]
 	});
 	
 	</script>
