@@ -1,5 +1,6 @@
 <?php
 
+
 class Centura_Model_ProductProject extends Centura_Model_DbTable_Products
 {
     

@@ -1,16 +1,16 @@
-   <? $session = Zend_Registry::get('session');?>
+   <?php $session = Zend_Registry::get('session');?>
 
   <!-- Title area -->
     <div class="titleArea">
         <div class="wrapper">
             <header class="pageTitle">
                 <h1>My Projects</h1>
-                <? if ($session->user['sale_role'] == 'sales') {?>
+                <?php if ($session->user['sale_role'] == 'sales') {?>
                 <p>Sales Representative Landing Page.</p>
-                <? }?>
-                <? if ($session->user['sale_role'] == 'manager' || $session->user['sale_role'] == 'admin' ) {?>
+                <?php }?>
+                <?php if ($session->user['sale_role'] == 'manager' || $session->user['sale_role'] == 'admin' ) {?>
                 <p>Sales Manager Landing Page.</p>
-                <? }?>
+                <?php }?>
                 </header>
             <div class="middleNav">
                 <ul>
@@ -61,7 +61,7 @@
                   </tr>
               </thead>
               <tbody>
-              	<? foreach($this->ownproject as $p) {?>
+              	<?php foreach($this->ownproject as $p) {?>
                   <tr class='status_<?=$p['status']?>'>
                   		<td><!--<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>--><a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a><a a target='_blank' href="/quote/index/project/<?=$p['project_id']?>" alt='quote'><img src="/images/icons/dark/money.png" alt="edit" style="margin:0px 4px"></a></td>
                       <td><a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><?=$p['project_name']?></a></td>
@@ -69,14 +69,14 @@
                       <td><?=$p['quote_no']?></td>
                       <td><?=$p['segment']?></td>
                       <td><?=$p['create_date']->format('Y-m-d')?></td>
-                      <td><span class='<? if($p['due_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['due_date']->format('Y-m-d')?></span></td>
+                      <td><span class='<?php if($p['due_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['due_date']->format('Y-m-d')?></span></td>
                       <td class='status_<?=$p['status']?>'><?=$p['status_name']?></td>
                   </tr>
-                <? } ?> 
+                <?php } ?> 
               </tbody>
           </table>
         </div>
-        <?  if($session->user['approve_id'] != null ) {?>
+        <?php  if($session->user['approve_id'] != null ) {?>
         <div class="widget-table">
         <div class="title"><img src="/images/icons/dark/full2.png" alt="" class="titleIcon" /><h6>Other Projects At <?=$session->user['company']; ?> : <?= count($this->otherprojects ) ?></h6></div>  
           <table cellpadding="0" cellspacing="0" width="100%" class="display"  style="text-align:left;" id='other_project_table'>
@@ -94,7 +94,7 @@
                   </tr>
               </thead>
               <tbody>
-              	<? foreach($this->otherprojects as $p) {?>
+              	<?php foreach($this->otherprojects as $p) {?>
                   <tr class='status_<?=$p['status']?>'>
                   		<td><a a target='_blank' href="/quote/index/project/<?=$p['project_id']?>" alt='quote'><img src="/images/icons/dark/money.png" alt="quote" style="margin:0px 4px"></a></td>
                       <td><a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><?=$p['project_name']?></a></td>
@@ -103,14 +103,14 @@
                       <td><?=$p['quote_no']?></td>
                       <td><?=$p['segment']?></td>
                       <td><?=$p['create_date']->format('Y-m-d')?></td>
-                      <td><span class='<? if($p['due_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['due_date']->format('Y-m-d')?></span></td>
+                      <td><span class='<?php if($p['due_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['due_date']->format('Y-m-d')?></span></td>
                       <td class='status_<?=$p['status']?>'><?=$p['status_name']?></td>
                   </tr>
-                <? } ?> 
+                <?php } ?> 
               </tbody>
           </table>
         </div>
-        <? } ?>
+        <?php } ?>
  				<div class="widget-table">
         <div class="title"><img src="/images/icons/dark/full2.png" alt="" class="titleIcon" /><h6>My Quotes : <?= count($this->ownquotes ) ?></h6></div>  
           <table cellpadding="0" cellspacing="0" width="100%" class="display"  style="text-align:center;" id='quote_table'>
@@ -128,27 +128,27 @@
                   </tr>
               </thead>
               <tbody>
-              	<? foreach($this->ownquotes as $p) {?>
+              	<?php foreach($this->ownquotes as $p) {?>
                   <tr class='status_<?=$p['status']?> approval_<?=$p['approve_status']?>'>
                   		<td><!--<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>--><a a target='_blank' href="/quote/edit/id/<?=$p['quote_id']?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
                   	  <td><a a target='_blank' href="/quote/edit/id/<?=$p['quote_id']?>"><?=$p['quote_id']?></a></td>
                       <td><a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><?=$p['project_name']?></a></td>
                       <td><?=$p['customer']?></td>
                       <td><?=$p['quote_date']->format('Y-m-d')?></td>
-                      <td><span class='<? if($p['expire_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['expire_date']->format('Y-m-d')?></span></td>
+                      <td><span class='<?php if($p['expire_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['expire_date']->format('Y-m-d')?></span></td>
                       <td><span><?php if($p['ship_required_date']!= null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01' ) {echo $p['ship_required_date']->format('Y-m-d');}?></span></td>
                       <td ><?=$p['status_name']?></td>
-                      <? if($p['approve_status'] == -1) {?>
+                      <?php if($p['approve_status'] == -1) {?>
                       	<td class='disapproved orange'>Disapproved</td>
-                      <?} else if($p['approve_status'] == 10){?>
+                      <?php } else if($p['approve_status'] == 10){?>
                       	<td class='approved green'>Approved</td>
-                      <?}else if($p['approve_status'] == 1){?>
+                      <?php }else if($p['approve_status'] == 1){?>
                       	<td class='waiting red'>Waiting Approval</td>
-                      <?} else {?>
+                      <?php } else {?>
                       	<td class='init'>Not Submitted</td>
-                    	<? }?>
+                    	<?php }?>
                   </tr>
-                <? } ?> 
+                <?php } ?> 
               </tbody>
           </table>
         </div>
@@ -165,13 +165,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                	 <? foreach($this->memo as $l) {?>
+                	 <?php foreach($this->memo as $l) {?>
                     <tr>  
                     	<td><?=$l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
                        <td><a a target='_blank' href="/project/edit/id/<?=$l['project_id']?>"><?=$l['project_name']?></a></td>
                         <td><?=$l['type']; ?></td>
                     </tr>
-                    <? } ?>
+                    <?php } ?>
                 </tbody>
             </table>
       </div>

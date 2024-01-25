@@ -127,8 +127,8 @@ body{padding-bottom:20px;}
 #footer th,#footer td{border:none;}
 ul li {list-style-type: square;margin-left:12px;}
 </style>
-<? $quote = $this->quote; $project=$this->project;$customer = $this->customer; $type=$this->type?> 
-<? $this->headTitle('Quote For '.$project['project_name'].' - Centrua','SET')?>
+<?php $quote = $this->quote; $project=$this->project;$customer = $this->customer; $type=$this->type?> 
+<?php $this->headTitle('Quote For '.$project['project_name'].' - Centrua','SET')?>
 <div id="page-wrap">
 <div id="hiderow" style='text-align:center'>
 	<span style='font-size:12px;font-weight:bold;'>Notice:  Please Use IE or FireFox to Print.</span><br/>
@@ -196,18 +196,18 @@ ul li {list-style-type: square;margin-left:12px;}
 		  <tr>
 		  	<td colspan="2"><?=$project['project_name']?></td>
 		  	<td colspan="1">
-		  		<? foreach($this->locations as $l) {?>
-                   <? if($l['location_id'] == $project['centura_location_id']) echo $l['name'] ;?>
-            <? } ?>
+		  		<?php foreach($this->locations as $l) {?>
+                   <?php if($l['location_id'] == $project['centura_location_id']) echo $l['name'] ;?>
+            <?php } ?>
         </td>
-		  	<td> <? foreach($this->approval as $a) {?>
-              <? if($a['uid'] == $quote['quote_approval']) echo $a['Name'].' - '.$a['Company_ID'];?>
-             <? }?>
+		  	<td> <?php foreach($this->approval as $a) {?>
+              <?php if($a['uid'] == $quote['quote_approval']) echo $a['Name'].' - '.$a['Company_ID'];?>
+             <?php }?>
         </td>
 		  	<td><?=$customer['sale_rep']?>
         </td>
-		  	<td>  <? foreach($this->arch as $a) {?>
-            <? if($a['id'] == $quote['arch']) echo $a['name'].' - '.$a['default_company'];?><? }?>
+		  	<td>  <?php foreach($this->arch as $a) {?>
+            <?php if($a['id'] == $quote['arch']) echo $a['name'].' - '.$a['default_company'];?><?php }?>
         </td>
 		  </tr>
 		</table>
@@ -223,7 +223,7 @@ ul li {list-style-type: square;margin-left:12px;}
 		   	 </tr>
 		  </thead>
 		  <tbody>
-       <? $subtotal =0; foreach ($this->items as $i) { ?>
+       <?php $subtotal =0; foreach ($this->items as $i) { ?>
      		<tr>
      			<td style="text-align:left"><?=$i['product_id']?><br/><span class='break'><?=$i['item_desc'] ?></span><br/><span class='break'>
      		<?=' '.$i['note']?></span>
@@ -233,7 +233,7 @@ ul li {list-style-type: square;margin-left:12px;}
      		  <td><?=$i['uom']?></td>
      		  <td><?='$'.$i['subtotal']?></td>
      		</tr>
-      <? $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'] ;}?>
+      <?php $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'] ;}?>
       <tr>
      			<td colspan='4' style='text-align:right'><strong>Sub-Total: </strong></td>
      			<td><?='$'.number_format($subtotal,2) ?></td>
@@ -247,9 +247,9 @@ ul li {list-style-type: square;margin-left:12px;}
 			<div id="terms" style='text-align:left'>
 			<div class='bot_note'>Note to Quote:</div>
 			<div  style='font-weight:normal'>Credit Terms: <?=$quote['term']?></div>
-			<div  style='font-weight:normal'>Lead Time:  <? foreach($this->leadtime as $a) {?>
-				                                <? if($this->quote['lead_time'] == $a['uid']) {echo $a['description'];}?>
-				                             		 <? }?></div>
+			<div  style='font-weight:normal'>Lead Time:  <?php foreach($this->leadtime as $a) {?>
+				                                <?php if($this->quote['lead_time'] == $a['uid']) {echo $a['description'];}?>
+				                             		 <?php }?></div>
 		  <div  style='font-weight:normal'><?=$quote['note']?></div>
 		</div>
 		</td>

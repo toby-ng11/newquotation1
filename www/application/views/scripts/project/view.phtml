@@ -1,11 +1,11 @@
-  <? $session =  Zend_Registry::get('session'); ?>
-    <? $project = $this->project; ?>
+  <?php $session =  Zend_Registry::get('session'); ?>
+    <?php $project = $this->project; ?>
   <!-- Title area -->
     <div class="titleArea">
         <div class="wrapper">
             <div class="pageTitle">
                 <h5>Project <?=$project['project_name'] ?> To Quote WorkSheet</h5>
-                <? if($project['status'] != 13) {?><span>Track project data and events critical to close of sales.</span><?}?>
+                <?php if($project['status'] != 13) {?><span>Track project data and events critical to close of sales.</span><?php }?>
             </div>
         </div> 
             <div class="middleNav">
@@ -29,11 +29,11 @@
                 <div class="clear"></div>
             </div>
             <div class="clear"></div>
-            <? if($project['status'] == 13) {?>
+            <?php if($project['status'] == 13) {?>
             <div class="nNote nInformation hideit">
             <p><strong>INFORMATION: </strong>This Project hs been Closed!</p>
          	 </div>
-            <?}?>
+            <?php }?>
         </div>
     
     <div class="line"></div>
@@ -45,9 +45,9 @@
         <div class="wrapper">
         	<div class="controlB">
             	<ul>
-            			<? if($project['status'] != 13) {?>
+            			<?php if($project['status'] != 13) {?>
                 	<li><a href="/quote/index/project/<?=$project['project_id'] ?>" class='add_pro' title="add"><img src="/images/icons/control/32/plus.png" alt="" /><span>Make Quote</span></a></li> 
-                	 <? }?>
+                	 <?php }?>
                 	 <li><a href="<?='http://'.SITEURL."/dompdf/print.php?url=".'http://'.SITEURL."/project/print/id/".$project['project_id']."?company=".substr($project['quote_no'],0,3)."&name=Centura_Project_".preg_replace("![^a-z0-9]+!i", "_", $project['project_name']).'.pdf'?>" title="print"><img src="/images/icons/control/32/pdf.png" alt="" /><span>Print Project</span></a></li>
                 </ul>
                 <div class="clear"></div>
@@ -70,9 +70,9 @@
                         <div class="formRight" style="width:98%">
                         	<span class="oneTwo"><span class="formNote">Project Name</span><input type="text" placeholder="Project Name" name='project_name' value="<?=$project['project_name'] ?>" /></span>
                             <span class="oneFour"><span class="formNote">Centura Location</span><select name="location" id="location" style="width:300px;" disabled>
-                            	<? foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['location_id']?>" <? if($l['location_id'] == $project['centura_location_id']) echo 'selected'?> ><?=$l['name']?></option>
-                               <? } ?>
+                            	<?php foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['location_id']?>" <?php if($l['location_id'] == $project['centura_location_id']) echo 'selected'?> ><?=$l['name']?></option>
+                               <?php } ?>
                             </select></span>
                             
                         </div>
@@ -88,9 +88,9 @@
                             <span class="oneTwo"><span class="formNote">Project Location</span><input type="text" name='project_location_address' id="project_location_address" value='<?= $project['project_location_address'] ?>'/></span>
                             <span class="oneFour"><span class="formNote">Status:</span><select name="status" disabled>
                                 <option >Select Status</option>
-                                <? foreach($this->status as $s) {?>
-                                <option value="<?=$s['uid']?>" <? if($s['uid'] == $project['status']) echo 'selected'?> ><?=$s['Status'] ?></option>
-                                <? }?>
+                                <?php foreach($this->status as $s) {?>
+                                <option value="<?=$s['uid']?>" <?php if($s['uid'] == $project['status']) echo 'selected'?> ><?=$s['Status'] ?></option>
+                                <?php }?>
                                
                             </select></span>
                         </div>
@@ -99,9 +99,9 @@
                             <span class="oneTwo"><span class="formNote">REED#</span><input type="text"  name='reed' placeholder="REED Format" value="<?= $project['reed'] ?>"/></span>
                             <span class="oneFour"><span class="formNote">Market Segment:</span><select name="market_segment" disabled>
                                 <option >Choose Segment</option>
-                                <? foreach($this->seg as $s) {?>
-                                <option value="<?=$s['uid']?>" <? if($s['uid'] == $project['market_segment']) echo 'selected'?>><?=$s['Market_Segment'] ?></option>
-                                <? }?>
+                                <?php foreach($this->seg as $s) {?>
+                                <option value="<?=$s['uid']?>" <?php if($s['uid'] == $project['market_segment']) echo 'selected'?>><?=$s['Market_Segment'] ?></option>
+                                <?php }?>
                                
                             </select></span>
                         </div>
@@ -112,9 +112,9 @@
                                 <input type="hidden" name='architect' id='architect' value="<?=$project['architect'] ?>">
                             </span>
                              <span class="oneFour"><span class="formNote">Architect Location</span><select id="architect_loc" >
-                            	<? foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['company_id']?>" <? if($l['company_id'] == $this->architect['Company_ID']) echo 'selected'?> ><?=$l['name']?></option>
-                               <? } ?>
+                            	<?php foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <?php if($l['company_id'] == $this->architect['Company_ID']) echo 'selected'?> ><?=$l['name']?></option>
+                               <?php } ?>
                             </select></span>
                            
                         </div>
@@ -125,9 +125,9 @@
                             <input type="hidden" id='specifiler' name="specifiler" value="<?=$project['specifiler'] ?>"> 
                             </span>
                             <span class="oneFour"><span class="formNote">Specifier Location</span><select id="specifiler_loc" >
-                            	<? foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['company_id']?>" <? if($l['company_id'] == $this->sepcloc['Company_ID']) echo 'selected'?> ><?=$l['name']?></option>
-                               <? } ?>
+                            	<?php foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <?php if($l['company_id'] == $this->sepcloc['Company_ID']) echo 'selected'?> ><?=$l['name']?></option>
+                               <?php } ?>
                             </select></span>
                         </div>
                         <div class="clear"></div>
@@ -139,9 +139,9 @@
                         <div class="formRight" style="width:98%">
                             <span class="oneTwo"><span class="formNote">General Contractor</span><input type="text"  placeholder="Type Name"  id="gerneral_contractor"  value='<?= $this->gerneral_contractor['name'].' - '.$this->gerneral_contractor['company_id']?>'/></span>
                             <span class="oneFour"><span class="formNote">General Contractor Location</span><select id="gerneral_contractor_loc"  style="width:300px;" disabled>
-                            	<? foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['company_id']?>" <? if($l['company_id'] == $this->gerneral_contractor['company_id']) echo 'selected'?> ><?=$l['name']?></option>
-                               <? } ?>
+                            	<?php foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <?php if($l['company_id'] == $this->gerneral_contractor['company_id']) echo 'selected'?> ><?=$l['name']?></option>
+                               <?php } ?>
                             </select></span>
                             <input type="hidden" name='gerneral_contractor' value="<?= $project['general_contractor_id'] ?>">
                         </div>
@@ -149,9 +149,9 @@
                         <div class="formRight" style="width:98%">
                         	<span class="oneTwo"><span class="formNote">Awarded Sub Contractor:</span><input type="text" placeholder="Type Name" id="awarded_contractor" value='<?= $this->awarded_sub_contracotr['name'].' - '.$this->awarded_sub_contracotr['company_id']?>' /></span>
                             <span class="oneFour"><span class="formNote">Awarded Contractor Location</span><select id="awarded_contractor_loc" disabled>
-                            	<? foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['company_id']?>" <? if($l['company_id'] == $this->awarded_sub_contracotr['company_id']) echo 'selected'?> ><?=$l['name']?></option>
-                               <? } ?>
+                            	<?php foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <?php if($l['company_id'] == $this->awarded_sub_contracotr['company_id']) echo 'selected'?> ><?=$l['name']?></option>
+                               <?php } ?>
                             </select></span>
                             <input type="hidden" name='awarded_contractor' value="<?= $project['awarded_sub_contracotr_id'] ?>">
                         </div>
@@ -162,7 +162,7 @@
         </form>
          <form  method="post" class="form" id='project_log'> 
         <div class="widget">
-        <div class="title"><span class="titleIcon"><input type="checkbox" id="titleCheck" name="titleCheck" /></span><h6>Project Presented / For Quotation</h6><? if($this->owner == 1) {?><a href="#" title="" class="button greenB" style="margin: 5px;" id="add_item"><span>Add New</span></a><a href="#" title="" class="button redB" style="margin: 5px;display:none" id="save_item" ><span>Save</span></a><? }?></div>
+        <div class="title"><span class="titleIcon"><input type="checkbox" id="titleCheck" name="titleCheck" /></span><h6>Project Presented / For Quotation</h6><?php if($this->owner == 1) {?><a href="#" title="" class="button greenB" style="margin: 5px;" id="add_item"><span>Add New</span></a><a href="#" title="" class="button redB" style="margin: 5px;display:none" id="save_item" ><span>Save</span></a><?php }?></div>
         <div class="clear"></div>
            <table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
               <thead>
@@ -177,7 +177,7 @@
                   </tr>
               </thead>
               <tbody id="item_body">
-                 <? foreach ($this->items as $i) { ?>
+                 <?php foreach ($this->items as $i) { ?>
                  		<tr name="item[<?=$i['product_id']?>]"><td><input type="checkbox" name="item[<?=$i['product_id']?>]"></td>
                  			<td><?=$i['product_id']?> - <?=$i['item_desc'] ?>
                  				<textarea rows="1" cols="" name="item[<?=$i['product_id']?>][note]"><?=$i['note']?></textarea>
@@ -191,7 +191,7 @@
 	                 		  <td></a></td>
                  		  
                  		</tr>
-                 <? }?>
+                 <?php }?>
               </tbody>
           </table>
         </div>
@@ -209,15 +209,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                	 <? foreach($this->memo as $l) {?>
+                	 <?php foreach($this->memo as $l) {?>
                     <tr>
                         <td><?=$l['added']->format('Y-m-d'); ?></td>
                          <td><?=$l['title']; ?></td>
                         <td><?=$l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
                         <td><?=$l['type']; ?></td>
-                        <td><? if($this->owner == 1) {?><a href="/memo/delete/id/<?=$l['memo_id']; ?>" class='memo_delete'><img src="/images/icons/dark/close.png" alt="delete"></a><?}?></td>
+                        <td><? if($this->owner == 1) {?><a href="/memo/delete/id/<?=$l['memo_id']; ?>" class='memo_delete'><img src="/images/icons/dark/close.png" alt="delete"></a><?php }?></td>
                     </tr>
-                    <? } ?>
+                    <?php } ?>
                 </tbody>
             </table>
         </div>     
@@ -227,9 +227,9 @@
         <div class="wrapper">
         	<div class="controlB">
             	<ul>
-								<? if($project['status'] != 13) {?>
+								<?php if($project['status'] != 13) {?>
                 	<li><a href="/quote/index/project/<?=$project['project_id'] ?>" class='add_pro' title="add"><img src="/images/icons/control/32/plus.png" alt="" /><span>Make Quote</span></a></li> 
-                	 <? }?>
+                	 <?php }?>
 								  <li><a href="<?='http://'.SITEURL."/dompdf/print.php?url=".'http://'.SITEURL."/project/print/id/".$project['project_id']."?company=".substr($project['quote_no'],0,3)."&name=Centura_Project_".preg_replace("![^a-z0-9]+!i", "_", $project['project_name']).'.pdf'?>" title="print"><img src="/images/icons/control/32/pdf.png" alt="" /><span>Print Project</span></a></li>
                 </ul>
                 <div class="clear"></div>

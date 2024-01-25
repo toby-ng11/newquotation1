@@ -1,6 +1,6 @@
-   <? $session =  Zend_Registry::get('session'); ?>
+   <?php $session =  Zend_Registry::get('session'); ?>
  <!-- Title area -->
-  <? $project = $this->project;?>
+  <?php $project = $this->project;?>
     <div class="titleArea">
         <div class="wrapper">
             <div class="pageTitle">
@@ -29,21 +29,21 @@
             </div>
             <div class="clear"></div>
             <div id='status'>
-            <? if($this->quote['approve_status'] == 1 ) {?>
+            <?php if($this->quote['approve_status'] == 1 ) {?>
             <div class="nNote nInformation hideit">
             <p><strong>INFORMATION: </strong>Quote is waiting for approval.</p>
          	 </div>
-          	<? }?>
-          	<? if($this->quote['approve_status'] == 10 ) {?>
+          	<?php }?>
+          	<?php if($this->quote['approve_status'] == 10 ) {?>
             <div class="nNote nSuccess hideit">
             <p><strong>INFORMATION: </strong>Quote has been approved.</p>
             </div>
-          	<? }?>
-          	<? if($this->quote['approve_status'] == -1 ) {?>
+          	<?php }?>
+          	<?php if($this->quote['approve_status'] == -1 ) {?>
             <div class="nNote nFailure hideit">
             <p><strong>INFORMATION: </strong>Quote is disapproved.</p>
             </div>
-          	<? }?>
+          	<?php }?>
           </div>
         </div>
     </div>
@@ -54,20 +54,20 @@
         <div class="wrapper">
         	<div class="controlB">
             	<ul>
-                    <? if($this->quote['approve_status'] != 10 ) {?>
+                    <?php if($this->quote['approve_status'] != 10 ) {?>
                     	<li><a href="/quote/approve/id/<?=$this->quote['quote_id']?>" title="" class='approve'><img src="/images/icons/control/32/ok.png" alt="" /><span>Approve</span></a></li>
-                  	<? }?>
+                  	<?php }?>
                   	<li><a href="<?='http://'.SITEURL."/dompdf/print.php?url=".'http://'.SITEURL."/quote/print/id/".$this->quote['quote_id']."?company=".substr($this->quote['quote_no'],0,3)."&name=Centura_Quote_".$this->quote['quote_id'].'.pdf'?>" title="print"><img src="/images/icons/control/32/pdf.png" alt="" /><span>Print Quote</span></a></li>
-                    <? if($this->quote['approve_status'] == 10 ) {?>
+                    <?php if($this->quote['approve_status'] == 10 ) {?>
                     <li><a href="/mail/quote/id/<?=$this->quote['quote_id']?>" title="mail"><img src="/images/icons/control/32/mail.png" alt="" /><span>Mail Quote</span></a></li>
                     <li><a href="/quote/approve/id/<?=$this->quote['quote_id']?>" title="" class='approve'><img src="/images/icons/control/32/ok.png" alt="" /><span>Edit And Approve</span></a></li>
-                  	<? } ?>
-                  	 <? if($this->quote['approve_status'] != -1 ) {?>
+                  	<?php } ?>
+                  	 <?php if($this->quote['approve_status'] != -1 ) {?>
                     	<li><a href="/quote/disapprove/id/<?=$this->quote['quote_id']?>" title="" class='disapprove'><img src="/images/icons/control/32/no.png" alt="" /><span>Disapprove</span></a></li>
-                    <? } ?>
-					<? if($this->quote['approve_status'] != 10 ) {?>
+                    <?php } ?>
+					<?php if($this->quote['approve_status'] != 10 ) {?>
                     	<li><a href="/quote/delete/id/<?=$this->quote['quote_id']?>" title="" class='delete'><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete</span></a></li>
-                  	<? }?>
+                  	<?php }?>
                 </ul>
                 <div class="clear"></div>
             </div>
@@ -134,9 +134,9 @@
                             <span class="oneFour"><span class="formNote">Quote Type</span>
                             		<select name="quote_type_id" id='quote_type' class="validate[required]" >
                                 <option value="">Select Quote type</option>
-                                <? foreach($this->type as $t) {?>
-                                <option value="<?=$t['uid'] ?>" <? if($t['uid'] == $this->quote['quote_type_id']) echo 'selected';?>><?=$t['type'] ?></option>
-                                <? } ?>
+                                <?php foreach($this->type as $t) {?>
+                                <option value="<?=$t['uid'] ?>" <?php if($t['uid'] == $this->quote['quote_type_id']) echo 'selected';?>><?=$t['type'] ?></option>
+                                <?php } ?>
                             	</select>
                             </span>
                         </div>
@@ -147,9 +147,9 @@
                             <span class="oneFour"><span class="formNote">Sale Rep</span><input id='sale_rep' name='sale_rep' type="text" value="<?=$this->quote['sales_id'] ?>"readonly/></span>
                             <span class="oneFour"><span class="formNote">Arch Rep.<span class="req">*</span></span>
                             		<select id='arch'  class="validate[required]" >
-                                <? foreach($this->arch as $a) {?>
-                                <option value="<?=$a['id']?>" <? if($a['id'] == $this->quote['arch']) echo 'selected';?>><?=$a['name'].' - '.$a['default_company']?></option>
-                             		 <? }?>
+                                <?php foreach($this->arch as $a) {?>
+                                <option value="<?=$a['id']?>" <?php if($a['id'] == $this->quote['arch']) echo 'selected';?>><?=$a['name'].' - '.$a['default_company']?></option>
+                             		 <?php }?>
                             	</select>
                             </span>
                             <input type="hidden" name="sales_id" value="<?=$session->user['id'] ?>"" />
@@ -158,35 +158,35 @@
                         <div class="formRight" style="width:98%">
                         	<span class="oneFour"><span class="formNote">Segment<span class="req">*</span></span><input type="text" class="validate[required]"  id='Segment' placeholder="123456-" name='quote_segment' value='<?=$this->quote['quote_segment']?>'/></span>
                         	 <span class="oneFour"><span class="formNote">Quote Approval<span class="req">*</span></span>
-                            		<? if ($session->user['approve_id'] != null) {?>
+                            		<?php if ($session->user['approve_id'] != null) {?>
                             		<select name="quote_approval" id="quote_approval" >
 	                                <option value="">Select Approval</option>
-	                                <? foreach($this->approval as $a) {?>
-	                                <option value="<?=$a['uid']?>" <? if($a['uid'] == $this->quote['quote_approval']) echo 'selected';?>><?=$a['Name'].' - '.$a['Company_ID']?></option>
-	                             		 <? }?>
+	                                <?php foreach($this->approval as $a) {?>
+	                                <option value="<?=$a['uid']?>" <?php if($a['uid'] == $this->quote['quote_approval']) echo 'selected';?>><?=$a['Name'].' - '.$a['Company_ID']?></option>
+	                             		 <?php }?>
                             		</select>
-                            		<? } else {?>
+                            		<?php } else {?>
                             		<select name="quote_approval" id="quote_approval" >
-	                                <? foreach($this->approval as $a) {?>
-	                                <? if($a['uid'] == $this->quote['quote_approval']) {?><option value="<?=$a['uid']?>"  selected ><?=$a['Name'].' - '.$a['Company_ID']?></option> <? }?>
-	                             		 <? }?>
+	                                <?php foreach($this->approval as $a) {?>
+	                                <?php if($a['uid'] == $this->quote['quote_approval']) {?><option value="<?=$a['uid']?>"  selected ><?=$a['Name'].' - '.$a['Company_ID']?></option> <?php }?>
+	                             		 <?php }?>
                             		</select>
-                            		<?}?>
+                            		<?php }?>
                             </span>
                             <span class="oneFour"><span class="formNote">Credit Terms<span class="req">*</span></span>
                             		<select name="credit_term" id="credit_term"  class="validate[required]">
 	                                <option value="">Select Terms</option>
-	                                <? foreach($this->terms as $a) {?>
-	                                <option value="<?=$a['terms_desc']?>" <? if($this->userterm == $a['terms_desc'] && $this->quote['term'] == null) {echo 'selected';}  if($this->quote['term'] == $a['terms_desc']) {echo 'selected';}?>><?=$a['terms_desc']?></option>
-	                             		 <? }?>
+	                                <?php foreach($this->terms as $a) {?>
+	                                <option value="<?=$a['terms_desc']?>" <?php if($this->userterm == $a['terms_desc'] && $this->quote['term'] == null) {echo 'selected';}  if($this->quote['term'] == $a['terms_desc']) {echo 'selected';}?>><?=$a['terms_desc']?></option>
+	                             		 <?php }?>
                             		</select>
                             </span>
                             <span class="oneFour"><span class="formNote">Lead Time<span class="req">*</span></span>
                             		<select name="lead_time" id="lead_time"  class="validate[required]">
 	                                <option value="">Select Lead Time</option>
-	                                <? foreach($this->leadtime as $a) {?>
-	                                <option value="<?=$a['uid']?>" <? if($this->quote['lead_time'] == $a['uid']) {echo 'selected';}?>><?=$a['description']?></option>
-	                             		 <? }?>
+	                                <?php foreach($this->leadtime as $a) {?>
+	                                <option value="<?=$a['uid']?>" <?php if($this->quote['lead_time'] == $a['uid']) {echo 'selected';}?>><?=$a['description']?></option>
+	                             		 <?php }?>
                             		</select>
                             </span>
                         </div>
@@ -215,7 +215,7 @@
                   </tr>
               </thead>
               <tbody id="item_body">
-                 <? foreach ($this->items as $i) { ?>
+                 <?php foreach ($this->items as $i) { ?>
                  		<tr name="item[<?=$i['product_id']?>]"><td><input type="checkbox" name="item[<?=$i['product_id']?>]"></td>
                  			<td><?=$i['product_id']?> - <?=$i['item_desc'] ?>
                  				<textarea rows="1" cols="" name="item[<?=$i['product_id']?>][note][]"><?=$i['note']?></textarea>
@@ -227,10 +227,10 @@
 	                 		  <input type="hidden" name="item[<?=$i['product_id']?>][qty][]" value="<?=$i['qty']?>"><input type="hidden" name="item[<?=$i['product_id']?>][unit_price][]" value="<?=$i['unit_price']?>">
 	                 		  <input type="hidden" name="item[<?=$i['product_id']?>][uom][]" value="<?=$i['uom']?>"><input type="hidden" name="item[<?=$i['product_id']?>][total_price][]" value="<?=$i['subtotal']?>">
 	                 		   <input type="hidden" class='sorts' name="item[<?=$i['product_id']?>][sort][]" value="<?=$i['sort_id']?>">
-	                 		<td class="<? if($i['unit_price'] < PRICE_LOW *$i['initprice']) echo 'low'?>"><?=round($i['initprice'],3)?></td>
+	                 		<td class="<?php if($i['unit_price'] < PRICE_LOW *$i['initprice']) echo 'low'?>"><?=round($i['initprice'],3)?></td>
                  		  <td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="delete" href="#"><img src="/images/icons/dark/close.png" alt="delete"></a></td>
                  		</tr>
-                 <? }?>
+                 <?php }?>
               </tbody>
           </table>
           </div>
@@ -251,20 +251,20 @@
         <div class="wrapper">
         	<div class="controlB">
             	<ul>
-                   <? if($this->quote['approve_status'] != 10 ) {?>
+                   <?php if($this->quote['approve_status'] != 10 ) {?>
                     	<li><a href="/quote/approve/id/<?=$this->quote['quote_id']?>" title="" class='approve'><img src="/images/icons/control/32/ok.png" alt="" /><span>Approve</span></a></li>
-                  	<? }?>
+                  	<?php }?>
                   	<li><a href="<?='http://'.SITEURL."/dompdf/print.php?url=".'http://'.SITEURL."/quote/print/id/".$this->quote['quote_id']."?company=".substr($this->quote['quote_no'],0,3)."&name=Centura_Quote_".$this->quote['quote_id'].'.pdf'?>" title="print"><img src="/images/icons/control/32/pdf.png" alt="" /><span>Print Quote</span></a></li>
-                    <? if($this->quote['approve_status'] == 10 ) {?>
+                    <?php if($this->quote['approve_status'] == 10 ) {?>
                     <li><a href="/mail/quote/id/<?=$this->quote['quote_id']?>" title="mail"><img src="/images/icons/control/32/mail.png" alt="" /><span>Mail Quote</span></a></li>
                     <li><a href="/quote/approve/id/<?=$this->quote['quote_id']?>" title="" class='approve'><img src="/images/icons/control/32/ok.png" alt="" /><span>Edit And Approve</span></a></li>
-                  	<? } ?>
-                  	 <? if($this->quote['approve_status'] != -1 ) {?>
+                  	<?php } ?>
+                  	 <?php if($this->quote['approve_status'] != -1 ) {?>
                     	<li><a href="/quote/disapprove/id/<?=$this->quote['quote_id']?>" title="" class='disapprove'><img src="/images/icons/control/32/no.png" alt="" /><span>Disapprove</span></a></li>
-                    <? } ?>
-					<? if($this->quote['approve_status'] != 10 ) {?>
+                    <?php } ?>
+					<?php if($this->quote['approve_status'] != 10 ) {?>
                     	<li><a href="/quote/delete/id/<?=$this->quote['quote_id']?>" title="" class='delete'><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete</span></a></li>
-                  	<? }?>
+                  	<?php }?>
                 </ul>
                 <div class="clear"></div>
             </div>

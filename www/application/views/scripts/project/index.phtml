@@ -1,4 +1,4 @@
-  <? $session =  Zend_Registry::get('session'); ?>
+  <?php $session =  Zend_Registry::get('session'); ?>
   <!-- Title area -->
     <div class="titleArea">
         <div class="wrapper">
@@ -48,9 +48,9 @@
                         <div class="formRight" style="width:98%">
                         	  <span class="oneTwo"><span class="formNote">Project Name</span><input type="text" id='project_name' name='project_name' class="validate[required]" /></span>
                             <span class="oneFour"><span class="formNote">Centura Location</span><select name="location" id="location" style="width:300px;">
-                            	<? foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['location_id']?>" <? if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
-                               <? } ?>
+                            	<?php foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['location_id']?>" <?php if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
+                               <?php } ?>
                             </select></span>
                            
                         </div>
@@ -66,9 +66,9 @@
                             <span class="oneTwo"><span class="formNote">Project Location</span><input type="text" class="validate[required] tipN"  name='project_location_address' original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" id="project_location_address" /></span>
                             <span class="oneFour"><span class="formNote">Status:</span><select name="status" id='status' class="validate[required]">
                                 <option value="">Select Status</option>
-                                <? foreach($this->status as $s) {?>
+                                <?php foreach($this->status as $s) {?>
                                 <option value="<?=$s['uid']?>"><?=$s['Status'] ?></option>
-                                <? }?>
+                                <?php }?>
                                
                             </select></span>
                         </div>
@@ -77,9 +77,9 @@
                             <span class="oneTwo"><span class="formNote">REED#</span><input type="text"  name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" /></span>
                             <span class="oneFour"><span class="formNote">Market Segment:</span><select name="market_segment" id='market_segment' class="validate[required]" >
                                 <option value="" >Choose Segment</option>
-                                <? foreach($this->seg as $s) {?>
+                                <?php foreach($this->seg as $s) {?>
                                 <option value="<?=$s['uid']?>"><?=$s['Market_Segment'] ?></option>
-                                <? }?>
+                                <?php }?>
                                
                             </select></span>
                         </div>
@@ -90,9 +90,9 @@
                                 <input type="hidden" name='architect' id='architect' value="<?=$project['architect'] ?>">
                             </span>
                              <span class="oneFour"><span class="formNote">Architect Location</span><select id="architect_loc" >
-                            	<? foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['company_id']?>" <? if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
-                               <? } ?>
+                            	<?php foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <?php if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
+                               <?php } ?>
                             </select></span>
                            
                         </div>
@@ -103,9 +103,9 @@
                             <input type="hidden" id='specifiler' name="specifiler" value="<?=$project['specifiler'] ?>"> 
                             </span>
                             <span class="oneFour"><span class="formNote">Specifier Location</span><select id="specifiler_loc" >
-                            	<? foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['company_id']?>" <? if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
-                               <? } ?>
+                            	<?php foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <?php if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
+                               <?php } ?>
                             </select></span>
                         </div>
                         <div class="clear"></div>
@@ -117,9 +117,9 @@
                         <div class="formRight" style="width:98%">
                             <span class="oneTwo"><span class="formNote">General Contractor</span><input type="text" class='tipN' original-title="Type Company Name"  id="gerneral_contractor" /></span>
                             <span class="oneFour"><span class="formNote">General Contractor Location</span><select id="gerneral_contractor_loc"  style="width:300px;">
-                            	<? foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['company_id']?>" <? if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
-                               <? } ?>
+                            	<?php foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <?php if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
+                               <?php } ?>
                             </select></span>
                             <input type="hidden" name='gerneral_contractor'>
                         </div>
@@ -127,9 +127,9 @@
                         <div class="formRight" style="width:98%">
                         	<span class="oneTwo"><span class="formNote">Awarded Sub Contractor:</span><input type="text" class='tipN' original-title="Type Company Name" id="awarded_contractor"/></span>
                             <span class="oneFour"><span class="formNote">Awarded Contractor Location</span><select id="awarded_contractor_loc" >
-                            	<? foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['company_id']?>" <? if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
-                               <? } ?>
+                            	<?php foreach ($this->locations as $l) {?>
+                                <option value="<?=$l['company_id']?>" <?php if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
+                               <?php } ?>
                             </select></span>
                             <input type="hidden" name='awarded_contractor'>
                         </div>

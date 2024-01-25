@@ -1,6 +1,6 @@
-   <? $session =  Zend_Registry::get('session'); ?>
+   <?php $session =  Zend_Registry::get('session'); ?>
  <!-- Title area -->
-  <? $project = $this->project;?>
+  <?php $project = $this->project;?>
     <div class="titleArea">
         <div class="wrapper">
             <div class="pageTitle">
@@ -109,9 +109,9 @@
                             <span class="oneFour"><span class="formNote">Quote Type</span>
                             		<select name="quote_type_id" id='quote_type' class="validate[required]">
                                 <option value="">Select Quote type</option>
-                                <? foreach($this->type as $t) {?>
+                                <?php foreach($this->type as $t) {?>
                                 <option value="<?=$t['uid'] ?>"><?=$t['type'] ?></option>
-                                <? } ?>
+                                <?php } ?>
                             	</select>
                             </span>
                         </div>
@@ -122,31 +122,31 @@
                             <span class="oneFour"><span class="formNote">Sale Rep</span><input id='sale_rep' type="text" value="<?=$session->user['name'] ?>"readonly/></span>
                             <span class="oneFour"><span class="formNote">Arch Rep.<span class="req">*</span></span>
                             		<select id='arch' name='arch' class="validate[required]" >
-                              	 <? if($session->user['approve_id'] != null  ) {?>
-	                                <? foreach($this->arch as $a) {?>
-	                                <option value="<?=$a['id']?>" <? if($a['id'] == $this->quote['arch']) echo 'selected';?>><?=$a['name'].' - '.$a['default_company']?></option>
-	                             		 <? }?>
-                             		 <? } else { ?>
-	                             		 <? foreach($this->arch as $a) {?>
-		                                 <? if($a['id'] == $project['owner']){?><option value="<?=$a['id']?>" selected ><?=$a['name'].' - '.$a['default_company']?></option> <? }?>
-		                             		<? }?>
-                             		 <? }?>
+                              	 <?php if($session->user['approve_id'] != null  ) {?>
+	                                <?php foreach($this->arch as $a) {?>
+	                                <option value="<?=$a['id']?>" <?php if($a['id'] == $this->quote['arch']) echo 'selected';?>><?=$a['name'].' - '.$a['default_company']?></option>
+	                             		 <?php }?>
+                             		 <?php } else { ?>
+	                             		 <?php foreach($this->arch as $a) {?>
+		                                 <?php if($a['id'] == $project['owner']){?><option value="<?=$a['id']?>" selected ><?=$a['name'].' - '.$a['default_company']?></option> <?php }?>
+		                             		<?php }?>
+                             		 <?php }?>
                             	</select>
                             </span>
                             <input type="hidden" name="sales_id" value="<?=$session->user['id'] ?>"" />
                         </div>
                         <div class="clear"></div>
                         <div class="formRight" style="width:98%">
-                        	 <? foreach($this->seg as $s) {?>
-                                 <? if($s['uid'] == $project['market_segment']) $seg = $s['Market_Segment'] ?>
-                            <? }?>
+                        	 <?php foreach($this->seg as $s) {?>
+                                 <?php if($s['uid'] == $project['market_segment']) $seg = $s['Market_Segment'] ?>
+                            <?php }?>
                         	<span class="oneFour"><span class="formNote">Segment<span class="req">*</span></span><input type="text"  original-title="Segment Format" name='quote_segment' id='Segment' class='validate[required] tipN' value="<?=$seg ?>"/></span>
                         	 <span class="oneFour"><span class="formNote">Quote Approval<span class="req">*</span></span>
                             		<select id="quote_approval" >
                                 <option value="">Only Approver Can Edit</option>
-                                <!--<? foreach($this->approval as $a) {?>
+                                <!--<?php foreach($this->approval as $a) {?>
                                 <option value="<?=$a['uid']?>"><?=$a['Name'].' - '.$a['Company_ID']?></option>
-                             		 <? }?>-->
+                             		 <?php }?>-->
                             	</select>
                             	
                             </span>
@@ -171,7 +171,7 @@
                   </tr>
               </thead>
               <tbody id="item_body">
-                  <? foreach ($this->items as $i) { ?>
+                  <?php foreach ($this->items as $i) { ?>
                  		<tr name="item[<?=$i['product_id']?>]"><td><input type="checkbox" name="item[<?=$i['product_id']?>]"></td>
                  			<td><?=$i['product_id']?> - <?=$i['item_desc'] ?>
                  				<textarea rows="1" cols="" name="item[<?=$i['product_id']?>][note][]"><?=$i['note']?></textarea>
@@ -186,7 +186,7 @@
 	                 		  <td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="delete" href="#"><img src="/images/icons/dark/close.png" alt="delete"></a></td>
                  		  
                  		</tr>
-                 <? }?>
+                 <?php }?>
               </tbody>
           </table>
           </div>

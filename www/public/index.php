@@ -1,8 +1,11 @@
 <?php
 
 use Laminas\Mvc\Application;
+//require '../../vendor/autoload.php';
 
-error_reporting(0);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Define path to application directory
 defined('APPLICATION_PATH')
     || define('APPLICATION_PATH', realpath(dirname(__FILE__) . '/../application'));

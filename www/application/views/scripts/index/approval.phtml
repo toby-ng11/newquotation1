@@ -1,4 +1,4 @@
- <? $session = Zend_Registry::get('session');?>
+ <?php $session = Zend_Registry::get('session');?>
   <!-- Title area -->
     <div class="titleArea">
         <div class="wrapper">
@@ -61,7 +61,7 @@
                   </tr>
               </thead>
               <tbody>
-              	<? foreach($this->waiting  as $p) {?>
+              	<?php foreach($this->waiting  as $p) {?>
                   <tr>
                   		<td><a  href="/approve/index/id/<?=$p['quote_id']?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
                   	  <td><a  href="/approve/index/id/<?=$p['quote_id']?>"><?=$p['quote_id']?></a></td>
@@ -74,7 +74,7 @@
                        <td><span><?php if($p['ship_required_date']!= null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01' ) {echo $p['ship_required_date']->format('Y-m-d');}?></span></td>
                       <td><?=$p['status_name']?></td>
                   </tr>
-                <? } ?> 
+                <?php } ?> 
               </tbody>
           </table>
         </div>
@@ -97,7 +97,7 @@
                   </tr>
               </thead>
               <tbody>
-              	<? foreach($this->approved as $p) {?>
+              	<?php foreach($this->approved as $p) {?>
                   <tr>
                   		<td><a target='_blank' href="/approve/index/id/<?=$p['quote_id']?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
                   	  <td><a target='_blank' href="/approve/index/id/<?=$p['quote_id']?>"><?=$p['quote_id']?></a></td>
@@ -107,11 +107,11 @@
                       <td><?=$p['arch_name']?></td>
                       <td><?=$p['quote_segment']?></td>
                       <td><?=$p['quote_date']->format('Y-m-d')?></td>
-                      <td><span class='<? if($p['expire_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['expire_date']->format('Y-m-d')?></span></td>
+                      <td><span class='<?php if($p['expire_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['expire_date']->format('Y-m-d')?></span></td>
                       <td><span><?php if($p['ship_required_date']!= null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01' ) {echo $p['ship_required_date']->format('Y-m-d');}?></span></td>
                       <td><?=$p['status_name']?></td>
                   </tr>
-                <? } ?> 
+                <?php } ?> 
               </tbody>
           </table>
         </div>
@@ -137,7 +137,7 @@
                   </tr>
               </thead>
               <tbody>
-              	<? foreach($this->disapproved as $p) {?>
+              	<?php foreach($this->disapproved as $p) {?>
                   <tr>
                   		<td><a target='_blank' href="/approve/index/id/<?=$p['quote_id']?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
                   	  <td><a target='_blank' href="/quote/edit/id/<?=$p['quote_id']?>"><?=$p['quote_id']?></a></td>
@@ -147,11 +147,11 @@
                       <td><?=$p['arch_name']?></td>
                       <td><?=$p['quote_segment']?></td>
                       <td><?=$p['quote_date']->format('Y-m-d')?></td>
-                      <td><span class='<? if($p['expire_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['expire_date']->format('Y-m-d')?></span></td>
+                      <td><span class='<?php if($p['expire_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['expire_date']->format('Y-m-d')?></span></td>
                       <td><span><?php if($p['ship_required_date']!= null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01' ) {echo $p['ship_required_date']->format('Y-m-d');}?></span></td>
                       <td><?=$p['status_name']?></td>
                   </tr>
-                <? } ?> 
+                <?php } ?> 
               </tbody>
           </table>
         </div>
