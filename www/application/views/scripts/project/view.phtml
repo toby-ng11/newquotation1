@@ -5,7 +5,9 @@
         <div class="wrapper">
             <div class="pageTitle">
                 <h5>Project <?=$project['project_name'] ?> To Quote WorkSheet</h5>
-                <?php if($project['status'] != 13) {?><span>Track project data and events critical to close of sales.</span><?php }?>
+                <?php if($project['status'] != 13) {?>
+                    <span>Track project data and events critical to close of sales.</span>
+                <?php }?>
             </div>
         </div> 
             <div class="middleNav">
@@ -114,7 +116,7 @@
                              <span class="oneFour"><span class="formNote">Architect Location</span><select id="architect_loc" >
                             	<?php foreach ($this->locations as $l) {?>
                                 <option value="<?=$l['company_id']?>" <?php if($l['company_id'] == $this->architect['Company_ID']) echo 'selected'?> ><?=$l['name']?></option>
-                               <?php } ?>
+                               <?php }?>
                             </select></span>
                            
                         </div>
@@ -127,7 +129,7 @@
                             <span class="oneFour"><span class="formNote">Specifier Location</span><select id="specifiler_loc" >
                             	<?php foreach ($this->locations as $l) {?>
                                 <option value="<?=$l['company_id']?>" <?php if($l['company_id'] == $this->sepcloc['Company_ID']) echo 'selected'?> ><?=$l['name']?></option>
-                               <?php } ?>
+                               <?php }?>
                             </select></span>
                         </div>
                         <div class="clear"></div>
@@ -141,7 +143,7 @@
                             <span class="oneFour"><span class="formNote">General Contractor Location</span><select id="gerneral_contractor_loc"  style="width:300px;" disabled>
                             	<?php foreach ($this->locations as $l) {?>
                                 <option value="<?=$l['company_id']?>" <?php if($l['company_id'] == $this->gerneral_contractor['company_id']) echo 'selected'?> ><?=$l['name']?></option>
-                               <?php } ?>
+                               <?php }?>
                             </select></span>
                             <input type="hidden" name='gerneral_contractor' value="<?= $project['general_contractor_id'] ?>">
                         </div>
@@ -151,7 +153,7 @@
                             <span class="oneFour"><span class="formNote">Awarded Contractor Location</span><select id="awarded_contractor_loc" disabled>
                             	<?php foreach ($this->locations as $l) {?>
                                 <option value="<?=$l['company_id']?>" <?php if($l['company_id'] == $this->awarded_sub_contracotr['company_id']) echo 'selected'?> ><?=$l['name']?></option>
-                               <?php } ?>
+                               <?php }?>
                             </select></span>
                             <input type="hidden" name='awarded_contractor' value="<?= $project['awarded_sub_contracotr_id'] ?>">
                         </div>
@@ -177,7 +179,7 @@
                   </tr>
               </thead>
               <tbody id="item_body">
-                 <?php foreach ($this->items as $i) { ?>
+                 <?php foreach ($this->items as $i) {?>
                  		<tr name="item[<?=$i['product_id']?>]"><td><input type="checkbox" name="item[<?=$i['product_id']?>]"></td>
                  			<td><?=$i['product_id']?> - <?=$i['item_desc'] ?>
                  				<textarea rows="1" cols="" name="item[<?=$i['product_id']?>][note]"><?=$i['note']?></textarea>
@@ -215,9 +217,9 @@
                          <td><?=$l['title']; ?></td>
                         <td><?=$l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
                         <td><?=$l['type']; ?></td>
-                        <td><? if($this->owner == 1) {?><a href="/memo/delete/id/<?=$l['memo_id']; ?>" class='memo_delete'><img src="/images/icons/dark/close.png" alt="delete"></a><?php }?></td>
+                        <td><?php if($this->owner == 1) {?><a href="/memo/delete/id/<?=$l['memo_id']; ?>" class='memo_delete'><img src="/images/icons/dark/close.png" alt="delete"></a><?php }?></td>
                     </tr>
-                    <?php } ?>
+                    <?php }?>
                 </tbody>
             </table>
         </div>     

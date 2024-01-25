@@ -1,7 +1,5 @@
 <?php
 
-use Zend_Db_Table;
-
 class Centura_Model_Contractor extends Zend_Db_Table
 {
     

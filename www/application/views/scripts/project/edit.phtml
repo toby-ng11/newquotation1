@@ -122,7 +122,7 @@
                             </span>
                             <span class="oneFour"><span class="formNote">Specifier Location</span><select id="specifiler_loc" >
                             	<?php foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['company_id']?>" <? if($l['company_id'] == $this->sepcloc['Company_ID']) echo 'selected'?> ><?=$l['name']?></option>
+                                <option value="<?=$l['company_id']?>" <?php if($l['company_id'] == $this->sepcloc['Company_ID']) echo 'selected'?> ><?=$l['name']?></option>
                                <?php } ?>
                             </select></span>
                         </div>
@@ -212,7 +212,7 @@
                          <td><?=$l['title']; ?></td>
                         <td><?=$l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
                         <td><?=$l['type']; ?></td>
-                        <td><? if($this->owner == 1) {?><a href="/memo/delete/id/<?=$l['memo_id']; ?>" class='memo_delete'><img src="/images/icons/dark/close.png" alt="delete"></a><?}?></td>
+                        <td><?php if($this->owner == 1) {?><a href="/memo/delete/id/<?=$l['memo_id']; ?>" class='memo_delete'><img src="/images/icons/dark/close.png" alt="delete"></a><?php }?></td>
                     </tr>
                     <?php } ?>
                 </tbody>

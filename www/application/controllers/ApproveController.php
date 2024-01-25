@@ -14,7 +14,7 @@ class ApproveController extends Zend_Controller_Action
     	 
     	if($quote_id == null)
     	{
-    		$this->_redirect('/');
+    		$this->redirect('/');
     	}
     	 
     	
