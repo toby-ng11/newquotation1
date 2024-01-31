@@ -1,6 +1,10 @@
 <?php
 
-class Centura_Model_Product extends Centura_Model_DbTable_Products
+namespace Centura\Model;
+
+use Centura\Model\DbTable_Products;
+
+class Product extends DbTable_Products
 {
     
 	public function add($data)

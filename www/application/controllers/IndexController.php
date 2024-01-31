@@ -1,5 +1,9 @@
 <?php
 
+use Centura\Model\Project;
+use Centura\Model\Quote;
+use Centura\Model\ProjectMemo;
+
 class IndexController extends Zend_Controller_Action
 {
 
@@ -21,16 +25,16 @@ class IndexController extends Zend_Controller_Action
 
 	    if($this->session->user['sale_role'] == 'admin' && APPLICATION_ENV == 'production' && $this->_getParam('normal') == null)
 	    {
-	    		$this->_redirect('/index/admin');
+	    		$this->redirect('/index/admin');
 	    }
       if($this->session->user['approve_id'] != null && APPLICATION_ENV == 'production' && $this->_getParam('normal') == null )
       {
-      		$this->_redirect('/index/approval');
+      		$this->redirect('/index/approval');
       }
 
-      $project = new Centura_Model_Project();
-      $quote = new Centura_Model_Quote();
-      $memo = new Centura_Model_ProjectMemo();
+      $project = new Project();
+      $quote = new Quote();
+      $memo = new ProjectMemo();
       
       $this->view->ownproject = $project->fetchbyowner($this->sale_id);
       $this->view->ownquotes = $quote->fetchrelated($this->sale_id);
@@ -50,8 +54,8 @@ class IndexController extends Zend_Controller_Action
     		$this->redirect('/index/');
     	}
     	
-    	$quote = new Centura_Model_Quote();
-    	$project = new Centura_Model_Project();
+    	$quote = new Quote();
+    	$project = new Project();
     	
     	$this->view->ownproject = $quote->fetchtotal();
     	$this->view->log = null;
@@ -62,10 +66,10 @@ class IndexController extends Zend_Controller_Action
     {
     	if($this->session->user['approve_id'] == null && APPLICATION_ENV == 'production')
     	{
-    		$this->_redirect('/index');
+    		$this->redirect('/index');
     	}
-    	$quote = new Centura_Model_Quote();
-    	$project = new Centura_Model_Project();
+    	$quote = new Quote();
+    	$project = new Project();
     	 
     	if($this->session->user['sale_role'] == 'admin')
     	{

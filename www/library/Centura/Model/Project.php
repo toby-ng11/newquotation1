@@ -1,6 +1,14 @@
 <?php
 
-class Centura_Model_Project extends Centura_Model_DbTable_Project
+namespace Centura\Model;
+
+use Centura\Model\DbTable_Project;
+
+use Zend_Registry;
+
+use Exception;
+
+class Project extends DbTable_Project
 {
     
 	public function save($data)

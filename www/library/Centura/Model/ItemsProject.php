@@ -1,7 +1,13 @@
 <?php
 
+namespace Centura\Model;
 
-class Centura_Model_ItemsProject extends Centura_Model_DbTable_Products
+use Centura\Model\DbTable_Products;
+use Zend_Registry;
+use Zend_Date;
+use Exception;
+
+class ItemsProject extends DbTable_Products
 {
     
 	public function add($data,$project_id)

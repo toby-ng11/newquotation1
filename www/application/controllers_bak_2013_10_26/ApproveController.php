@@ -1,6 +1,10 @@
 <?php
 
 use Centura\Model\Customer;
+use Centura\Model\User;
+use Centura\Model\Project;
+use Centura\Model\Quote;
+use Centura\Model\ProductProject;
 
 class ApproveController extends Zend_Controller_Action
 {
@@ -16,15 +20,15 @@ class ApproveController extends Zend_Controller_Action
     	 
     	if($quote_id == null)
     	{
-    		$this->_redirect('/');
+    		$this->redirect('/');
     	}
     	 
     	
     	$customer = new Customer();
-    	$sales = new Centura_Model_User();
-    	$project = new Centura_Model_Project();
-    	$quote = new Centura_Model_Quote();
-    	$products = new Centura_Model_ProductProject();
+    	$sales = new User();
+    	$project = new Project();
+    	$quote = new Quote();
+    	$products = new ProductProject();
     	
     	$quote_detail = $quote->fetchquotebyid($quote_id);
     	$project_detail = $project->fetchbyid($quote_detail['project_id']);

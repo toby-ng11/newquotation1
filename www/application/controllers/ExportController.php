@@ -1,5 +1,8 @@
 <?php
 
+use Centura\Model\Quote;
+use Centura\Model\Mail;
+
 class ExportController extends Zend_Controller_Action
 {
 
@@ -12,7 +15,7 @@ class ExportController extends Zend_Controller_Action
     
     private function getheader($company,$past_days)
     {
-    	$model = new Centura_Model_Quote();
+    	$model = new Quote();
     	
     	$result = $model->fetcsv(null,$past_days);
     	$header = array('Company','Customer','Contact','Job Name','Quote Expire Date','Quote_Number','Note','approve_date');
@@ -50,7 +53,7 @@ class ExportController extends Zend_Controller_Action
     
     private function getlines($company,$past_days)
     {
-    	$model = new Centura_Model_Quote();
+    	$model = new Quote();
     	
     	$result = $model->fetchcsvitems(null,$past_days);
     	
@@ -106,7 +109,7 @@ class ExportController extends Zend_Controller_Action
     		date('Y-m-d').'_'.'headers.csv'=>APPLICATION_PATH . '/../tmp/'.$this->file_appx.'header.csv'
     			
     	);
-    	$mail = new Centura_Model_Mail();
+    	$mail = new Mail();
     	
     	$mail->sendcsv($files);
     	

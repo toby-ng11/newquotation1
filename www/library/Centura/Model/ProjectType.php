@@ -1,6 +1,10 @@
 <?php
 
-class Centura_Model_ProjectType extends Zend_Db_Table
+namespace Centura\Model;
+
+use Zend_Db_Table;
+
+class ProjectType extends Zend_Db_Table
 {
     function fetchAllTypes()
     {

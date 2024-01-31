@@ -1,5 +1,7 @@
 <?php
 
+use Centura\Model\User;
+
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
 	protected function _initDefaultModule(){
@@ -106,7 +108,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             
             define('PRICE_LOW','1.25');
             
-            $model = new Centura_Model_User();
+            $model = new User();
             
            $session = Zend_Registry::get('session');
            $name = str_replace('CENTURA\\', '', $_SERVER['REMOTE_USER']);

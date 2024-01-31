@@ -1,6 +1,10 @@
 <?php
 
-class Centura_Model_Item extends Centura_Model_DbTable_Item
+namespace Centura\Model;
+
+use Centura\Model\DbTable_Item;
+
+class Item extends DbTable_Item
 {
     
 	public function fetchItembyid($item_id,$company=DEFAULT_COMPNAY_ID)

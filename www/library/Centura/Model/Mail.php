@@ -1,8 +1,21 @@
 <?php
 
-use Centura\Model\Customer;
+namespace Centura\Model;
 
-class Centura_Model_Mail extends Zend_Db_Table
+use Centura\Model\Customer;
+use Centura\Model\Quote;
+
+use Zend_Registry;
+use Zend_Db_Table;
+use Zend_Mail;
+use Zend_Config_Ini;
+use Zend_Mail_Transport_Smtp;
+use Zend_Mime_Part;
+use Zend_Mime;
+
+use Exception;
+
+class Mail extends Zend_Db_Table
 {
     
 	
@@ -82,7 +95,7 @@ class Centura_Model_Mail extends Zend_Db_Table
 	{
 		$session =  Zend_Registry::get('session');
 		
-		$quote = new Centura_Model_Quote();
+		$quote = new Quote();
 		
 		$quote_detail = $quote->fetchquotebyid($quote_id);
 		

@@ -1,6 +1,13 @@
 <?php
 
-class Centura_Model_ProjectMemo extends Zend_Db_Table
+namespace Centura\Model;
+
+use Zend_Db_Table;
+use Zend_Registry;
+
+use Exception;
+
+class ProjectMemo extends Zend_Db_Table
 {
 
 	public function add($project_id,$data)

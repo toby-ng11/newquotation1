@@ -1,8 +1,19 @@
 <?php
 
-use Centura\Model\Customer;
+namespace Centura\Model;
 
-class Centura_Model_Quote extends Centura_Model_DbTable_Quote
+use Centura\Model\DbTable_Quote;
+use Centura\Model\Customer;
+use Centura\Model\ProductProject;
+use Centura\Model\Project;
+
+use Zend_Registry;
+use Zend_Db_Select;
+use Zend_Json;
+
+use Exception;
+
+class Quote extends DbTable_Quote
 {
     
 	public function save($data)
@@ -25,7 +36,7 @@ class Centura_Model_Quote extends Centura_Model_DbTable_Quote
 		$info['quote_date']                 = date('Y-m-d h:i:s');
 		if($data['expire_date'] == null || strtotime($data['expire_date']) < time()) 
 		{ 
-			$data['expire_date'] = date('Y-m-d h:i:s',strtotime("+60 days"));
+			$data['expire_date'] = date('Y-m-d h:i:s',strtotime("+90 days"));
 		}
 		$info['expire_date']                = date('Y-m-d h:i:s',strtotime($data['expire_date']));
 		$info['quote_type_id']              = $data['quote_type_id'];
@@ -63,10 +74,10 @@ class Centura_Model_Quote extends Centura_Model_DbTable_Quote
 	    $this->updatequoteno($quote['quote_id']);
 	    
 	    //add products
-	    $products = new Centura_Model_ProductProject();
+	    $products = new ProductProject();
 	    $products->add($data['item'], $quote['quote_id']);
 	    
-	    $project = new Centura_Model_Project();
+	    $project = new Project();
 	    $project->log($data['project_id'],'Quote Add',$quote['quote_id'],serialize($data['item']),$data['note']);
 	    
 	    return $quote['quote_id'];
@@ -93,7 +104,7 @@ class Centura_Model_Quote extends Centura_Model_DbTable_Quote
 		$info['quote_date']                 = date('Y-m-d h:i:s');
 		if($data['expire_date'] == null || strtotime($data['expire_date']) < 1000 ) //fix 1969-12-31
 		{
-			$data['expire_date'] = date('Y-m-d h:i:s',"+60 days");
+			$data['expire_date'] = date('Y-m-d h:i:s',"+90 days");
 		}
 		$info['expire_date']                = date('Y-m-d h:i:s',strtotime($data['expire_date']));
 		$info['quote_type_id']              = $data['quote_type_id'];
@@ -126,10 +137,10 @@ class Centura_Model_Quote extends Centura_Model_DbTable_Quote
 		}
  
 		//edit products
-		$products = new Centura_Model_ProductProject();
+		$products = new ProductProject();
 		$products->edit($data['item'], $quote_id);
 		 
-		$project = new Centura_Model_Project();
+		$project = new Project();
 		$project->log($data['project_id'],'Quote Edit',$quote_id,serialize($data['item']),$data['note']);
 		
 		return $quote_id;
@@ -193,7 +204,7 @@ class Centura_Model_Quote extends Centura_Model_DbTable_Quote
 			return  false;
 		}
 		$quote = $this->fetchquotebyid($quote_id);
-		$project = new Centura_Model_Project();
+		$project = new Project();
 		
 		$project_info = $project->fetchbyid($quote['project_id']);
 		$total = $this->fetchTotalProjectQuotes($quote['project_id']);

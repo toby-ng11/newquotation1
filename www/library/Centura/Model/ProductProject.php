@@ -1,7 +1,10 @@
 <?php
 
+namespace Centura\Model;
 
-class Centura_Model_ProductProject extends Centura_Model_DbTable_Products
+use Centura\Model\DbTable_Products;
+
+class ProductProject extends DbTable_Products
 {
     
 	public function add($data,$quote_id)

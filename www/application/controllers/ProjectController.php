@@ -1,6 +1,14 @@
 <?php
 
 use Centura\Model\Customer;
+use Centura\Model\DbTable_User;
+use Centura\Model\User;
+use Centura\Model\Quote;
+use Centura\Model\Location;
+use Centura\Model\Project;
+use Centura\Model\ProductProject;
+use Centura\Model\ProjectMemo;
+use Centura\Model\ItemsProject;
 
 class ProjectController extends Zend_Controller_Action
 {
@@ -19,18 +27,18 @@ class ProjectController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $db = new Centura_Model_DbTable_User();
+        $db = new DbTable_User();
         
-        $model = new Centura_Model_Quote();
+        $model = new Quote();
         
         $this->view->status = $model->fetchstatus();
         $this->view->seg = $model->fetchseg();
         $this->view->sepc = $model->fetchsepc();
-        $sales = new Centura_Model_User();
+        $sales = new User();
         
         $this->view->arch = $sales->fetchallsales();
         
-        $locations = new Centura_Model_Location();
+        $locations = new Location();
         $this->view->locations = $locations->fetchAllBranches();
     }
     
@@ -40,7 +48,7 @@ class ProjectController extends Zend_Controller_Action
     	{
     		$data = $this->_request->getPost();
     		
-    		$model = new Centura_Model_Project();
+    		$model = new Project();
     		
     		$result = $model->save($data);
     		
@@ -60,17 +68,17 @@ class ProjectController extends Zend_Controller_Action
     	}
     	
     	
-    	$quote = new Centura_Model_Quote();
+    	$quote = new Quote();
     
     	$this->view->status = $quote->fetchstatus();
     	$this->view->seg = $quote->fetchseg();
     	$this->view->sepc = $quote->fetchsepc();
-    	$sales = new Centura_Model_User();
+    	$sales = new User();
     
-    	$locations = new Centura_Model_Location();
+    	$locations = new Location();
     	$this->view->locations = $locations->fetchAllBranches();
     	
-    	$project = new Centura_Model_Project();
+    	$project = new Project();
     	$customer = new Customer();
     	
     	$project_detail = $project->fetchbyid($project_id);
@@ -93,15 +101,15 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->awarded_sub_contracotr = $customer->fetchCustomerById($project_detail['awarded_sub_contracotr_id']);
     	//$this->view->log = $project->fetchlogbyid($project_id);
     	
-    	$product = new Centura_Model_ProductProject();
+    	$product = new ProductProject();
     	
     	$this->view->items = $product->fetchallitemsbyprojectid($project_id);
     	
-    	$mono = new Centura_Model_ProjectMemo();
+    	$mono = new ProjectMemo();
     	$this->view->memo = $mono->fetchmemosbyproject($project_id);
     	//$this->view->memo_type = $mono->fetchalltypes();
     	
-    	$item = new Centura_Model_ItemsProject();
+    	$item = new ItemsProject();
     	$this->view->items = $item->fetchallitems($project_id);
     	
     	if($this->session->user['id'] != $project_detail['owner'] && APPLICATION_ENV == 'production' && $this->session->user['sale_role'] != 'admin' && $this->session->user['approve_id'] == null)
@@ -117,7 +125,7 @@ class ProjectController extends Zend_Controller_Action
     	{
     		$data = $this->_request->getPost();
     
-    		$model = new Centura_Model_Project();
+    		$model = new Project();
     
     		$result = $model->edit($data,$project_id);
     		if($result == true)
@@ -139,17 +147,17 @@ class ProjectController extends Zend_Controller_Action
     		$this->redirect('/project');
     	}
     	
-    	$quote = new Centura_Model_Quote();
+    	$quote = new Quote();
     	
     	$this->view->status = $quote->fetchstatus();
     	$this->view->seg = $quote->fetchseg();
     	$this->view->sepc = $quote->fetchsepc();
-    	$sales = new Centura_Model_User();
+    	$sales = new User();
     	
-    	$locations = new Centura_Model_Location();
+    	$locations = new Location();
     	$this->view->locations = $locations->fetchAllBranches();
     	 
-    	$project = new Centura_Model_Project();
+    	$project = new Project();
     	$customer = new Customer();
     	 
     	$project_detail = $project->fetchbyid($project_id);
@@ -165,15 +173,15 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->awarded_sub_contracotr = $customer->fetchCustomerById($project_detail['awarded_sub_contracotr_id']);
     	$this->view->log = $project->fetchlogbyid($project_id);
     	
-    	$product = new Centura_Model_ProductProject();
+    	$product = new ProductProject();
     	 
     	$this->view->items = $product->fetchallitemsbyprojectid($project_id); 
     	
-    	$mono = new Centura_Model_ProjectMemo();
+    	$mono = new ProjectMemo();
     	$this->view->memo = $mono->fetchmemosbyproject($project_id);
     	//$this->view->memo_type = $mono->fetchalltypes();
     	
-    	$item = new Centura_Model_ItemsProject();
+    	$item = new ItemsProject();
     	$this->view->items = $item->fetchallitems($project_id);
     	 
     }
@@ -187,17 +195,17 @@ class ProjectController extends Zend_Controller_Action
     		$this->redirect('/project');
     	}
     	 
-    	$quote = new Centura_Model_Quote();
+    	$quote = new Quote();
     	 
     	$this->view->status = $quote->fetchstatus();
     	$this->view->seg = $quote->fetchseg();
     	$this->view->sepc = $quote->fetchsepc();
-    	$sales = new Centura_Model_User();
+    	$sales = new User();
     	 
-    	$locations = new Centura_Model_Location();
+    	$locations = new Location();
     	$this->view->locations = $locations->fetchAllBranches();
     
-    	$project = new Centura_Model_Project();
+    	$project = new Project();
     	$customer = new Customer();
     
     	$project_detail = $project->fetchbyid($project_id);
@@ -213,10 +221,10 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->awarded_sub_contracotr = $customer->fetchCustomerById($project_detail['awarded_sub_contracotr_id']);
     	$this->view->log = $project->fetchlogbyid($project_id);
     	
-    	$mono = new Centura_Model_ProjectMemo();
+    	$mono = new ProjectMemo();
     	$this->view->memo = $mono->fetchmemosbyproject($project_id);
     
-    	$item = new Centura_Model_ItemsProject();
+    	$item = new ItemsProject();
     	$this->view->items = $item->fetchallitems($project_id);
     	$this->_helper->layout->setLayout('print');
     	$this->render('print'.'-'.DEFAULT_COMPNAY);
@@ -225,7 +233,7 @@ class ProjectController extends Zend_Controller_Action
     public function deleteAction()
     {
     	$project_id = $this->getRequest()->getParam('id');
-    	$project = new Centura_Model_Project();
+    	$project = new Project();
     	
     	$project->remove($project_id);
     	exit;
@@ -239,7 +247,7 @@ class ProjectController extends Zend_Controller_Action
     	{
     		$data = $this->_request->getPost();
     
-    		$item = new Centura_Model_ItemsProject();
+    		$item = new ItemsProject();
     		echo $item->add( $data,$project_id);
     
     	}
@@ -259,7 +267,7 @@ class ProjectController extends Zend_Controller_Action
     	{
     		
     		$data = $this->_request->getPost();
-    		$item = new Centura_Model_ItemsProject();
+    		$item = new ItemsProject();
     		echo $item->edititem( $data,$project_id);
     
     	}
@@ -281,7 +289,7 @@ class ProjectController extends Zend_Controller_Action
     	
     	if ($project_id != null && $item_id != null)
     	{
-    		$item = new Centura_Model_ItemsProject();
+    		$item = new ItemsProject();
     		echo $item->remove($project_id,$item_id,$uom,$price,$qty);
     	}
     	else

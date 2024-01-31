@@ -1,6 +1,13 @@
 <?php
 
 use Centura\Model\Customer;
+use Centura\Model\User;
+use Centura\Model\Quote;
+use Centura\Model\Location;
+use Centura\Model\Project;
+use Centura\Model\ProductProject;
+use Centura\Model\Item;
+use Centura\Model\ItemsProject;
 
 class QuoteController extends Zend_Controller_Action
 {
@@ -20,11 +27,11 @@ class QuoteController extends Zend_Controller_Action
     		$this->redirect('/');
     	}
     	
-        $model = new Centura_Model_Item();  
+        $model = new Item();  
         
-        $sales = new Centura_Model_User();
-        $project = new Centura_Model_Project();
-        $quote = new Centura_Model_Quote();
+        $sales = new User();
+        $project = new Project();
+        $quote = new Quote();
          
         $project_detail = $project->fetchbyid($project_id);
         
@@ -33,7 +40,7 @@ class QuoteController extends Zend_Controller_Action
         	$this->redirect('/project/view/id/'.$project_id);
         }
         
-        $item = new Centura_Model_ItemsProject();
+        $item = new ItemsProject();
         $this->view->items = $item->fetchallitems($project_id);
         
         $this->view->arch = $sales->fetchallsales();
@@ -84,7 +91,7 @@ class QuoteController extends Zend_Controller_Action
     	{
     		$data = $this->_request->getPost();
     		
-    		$model = new Centura_Model_Quote();
+    		$model = new Quote();
     		
     		
     		$result = $model->save($data);
@@ -95,7 +102,7 @@ class QuoteController extends Zend_Controller_Action
     public function deleteAction()
     {
     	$quote_id = $this->getRequest()->getParam('id');
-    	$quote = new Centura_Model_Quote();
+    	$quote = new Quote();
     	 
     	$quote->remove($quote_id);
     	$this->redirect('/index/approval');
@@ -108,7 +115,7 @@ class QuoteController extends Zend_Controller_Action
     	{
     		return false;
     	}
-    	$quote = new Centura_Model_Quote();
+    	$quote = new Quote();
     	$data['approve_status'] = 1;// waiting approve
     	$quote->update($data, 'quote_id = '.$quote_id);
     	
@@ -122,7 +129,7 @@ class QuoteController extends Zend_Controller_Action
     	{
     		return false;
     	}
-    	$quote = new Centura_Model_Quote();
+    	$quote = new Quote();
     	if ($this->_request->isPost())
     	{
     		$data = $this->_request->getPost();
@@ -164,7 +171,7 @@ class QuoteController extends Zend_Controller_Action
     	{
     		return false;
     	}
-    	$quote = new Centura_Model_Quote();
+    	$quote = new Quote();
     	$data['approve_status'] = -1;// disapproved
     	$data['quote_approval'] = '';// disapproved
     	$quote->update($data, 'quote_id = '.$quote_id);
@@ -183,10 +190,10 @@ class QuoteController extends Zend_Controller_Action
     	 
     	
     	$customer = new Customer();
-    	$sales = new Centura_Model_User();
-    	$project = new Centura_Model_Project();
-    	$quote = new Centura_Model_Quote();
-    	$products = new Centura_Model_ProductProject();
+    	$sales = new User();
+    	$project = new Project();
+    	$quote = new Quote();
+    	$products = new ProductProject();
     	
     	$quote_detail = $quote->fetchquotebyid($quote_id);
     	$project_detail = $project->fetchbyid($quote_detail['project_id']);
@@ -204,7 +211,7 @@ class QuoteController extends Zend_Controller_Action
     	{
     		$data = $this->_request->getPost();
     	
-    		$model = new Centura_Model_Quote();
+    		$model = new Quote();
     	
     		$result = $model->edit($data,$quote_id);
     		$this->redirect('/quote/edit/id/'.$result);
@@ -241,10 +248,10 @@ class QuoteController extends Zend_Controller_Action
     	}
     	
     	$customer = new Customer();
-    	$sales = new Centura_Model_User();
-    	$project = new Centura_Model_Project();
-    	$quote = new Centura_Model_Quote();
-    	$products = new Centura_Model_ProductProject();
+    	$sales = new User();
+    	$project = new Project();
+    	$quote = new Quote();
+    	$products = new ProductProject();
     	 
     	$quote_detail = $quote->fetchquotebyid($quote_id);
     	$project_detail = $project->fetchbyid($quote_detail['project_id']);
@@ -258,7 +265,7 @@ class QuoteController extends Zend_Controller_Action
     	$this->view->items = $products->fetchallitems($quote_id);
     	$this->view->spec_name = $project->fetchspecbyid($project_detail['specifiler']);
     	
-    	$locations = new Centura_Model_Location();
+    	$locations = new Location();
     	$this->view->locations = $locations->fetchAllBranches();
     	
     	$this->view->leadtime = $quote->fetchleadtimes();

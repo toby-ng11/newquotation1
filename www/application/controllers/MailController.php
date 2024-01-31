@@ -1,6 +1,9 @@
 <?php
 
 use Centura\Model\Customer;
+use Centura\Model\Project;
+use Centura\Model\Quote;
+use Centura\Model\Mail;
 
 class MailController extends Zend_Controller_Action
 {
@@ -13,7 +16,7 @@ class MailController extends Zend_Controller_Action
     public function projectAction() //send project 
     {
     	$project_id = $this->getRequest()->getParam('id');
-    	$project = new Centura_Model_Project();
+    	$project = new Project();
     	$project_detail = $project->fetchbyid($project_id);
     	$pdf_url = 'http://'.SITEURL.'/dompdf/print.php?url=http://'.SITEURL.'/project/print/id/'.$project_id."?company=".$this->getProjectCompany($project_detail);
     	
@@ -28,10 +31,10 @@ class MailController extends Zend_Controller_Action
     {
     	$quote_id = $this->getRequest()->getParam('id');
 
-    	$model= new Centura_Model_Quote();
+    	$model= new Quote();
     	$customer = new Customer();
-    	$mail = new Centura_Model_Mail();
-    	$project = new Centura_Model_Project();
+    	$mail = new Mail();
+    	$project = new Project();
     	$quote_detail = $model->fetchquotebyid($quote_id);
     	$project_detail = $project->fetchbyid($quote_detail['project_id']);
     	
@@ -54,7 +57,7 @@ class MailController extends Zend_Controller_Action
     			var_dump($e);exit;
     		}
     		
-    		$this->_redirect('/');
+    		$this->redirect('/');
     		 
     	}
     }
@@ -70,7 +73,7 @@ class MailController extends Zend_Controller_Action
     		$data['from'] = 'quote@centura.ca';
     	}
 	    	
-        $mail = new Centura_Model_Mail();
+        $mail = new Mail();
             
 		    
 		$url = 'http://'.SITEURL.'/dompdf/print.php?url=http://'.SITEURL.'/quote/print/id/'.$id."?company=".DEFAULT_COMPNAY;

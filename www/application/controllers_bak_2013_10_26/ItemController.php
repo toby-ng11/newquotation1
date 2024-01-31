@@ -1,5 +1,7 @@
 <?php
 
+use Centura\Model\Item;
+
 class ItemController extends Zend_Controller_Action
 {
 
@@ -11,7 +13,7 @@ class ItemController extends Zend_Controller_Action
     public function indexAction()
     {
         $patten = $this->getRequest()->getParam('term');
-        $item = new Centura_Model_Item();
+        $item = new Item();
         
         $results = $item->fetchItemByPatten($patten);
         
@@ -23,7 +25,7 @@ class ItemController extends Zend_Controller_Action
     public function uomAction()
     {
         $item_id = $this->getRequest()->getParam('id');
-        $item = new Centura_Model_Item();
+        $item = new Item();
         
         $uom = $item->fetchUomByItemId($item_id);
         echo json_encode(($uom));
@@ -35,7 +37,7 @@ class ItemController extends Zend_Controller_Action
     {
         $item_id = $this->getRequest()->getParam('id');
         $uom = $this->getRequest()->getParam('uom');
-        $item = new Centura_Model_Item();
+        $item = new Item();
         
         $price = $item->fetchItemPrice($item_id, $uom);
         echo json_encode($price);

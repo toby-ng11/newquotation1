@@ -1,5 +1,7 @@
 <?php
 
+use Centura\Model\ProjectMemo;
+
 class MemoController extends Zend_Controller_Action
 {
 
@@ -24,7 +26,7 @@ class MemoController extends Zend_Controller_Action
     	{
     		$data = $this->_request->getPost();
     		
-    		$momo = new Centura_Model_ProjectMemo();
+    		$momo = new ProjectMemo();
     		
     		echo $momo->add($project_id, $data);
     		
@@ -40,7 +42,7 @@ class MemoController extends Zend_Controller_Action
     public function deleteAction()
     {
     	$id = $this->getRequest()->getParam('id');
-    	$memo = new Centura_Model_ProjectMemo();
+    	$memo = new ProjectMemo();
     	
     	$memo->remove($id);
     	

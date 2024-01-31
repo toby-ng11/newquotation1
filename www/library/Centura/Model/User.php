@@ -1,6 +1,10 @@
 <?php
 
-class Centura_Model_User extends Centura_Model_DbTable_User
+namespace Centura\Model;
+
+use Centura\Model\DbTable_User;
+
+class User extends DbTable_User
 {
 
     private $sales_group = array(1,2);

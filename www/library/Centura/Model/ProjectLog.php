@@ -1,6 +1,10 @@
 <?php
 
-class Centura_Model_ProjectLog extends Zend_Db_Table
+namespace Centura\Model;
+
+use Zend_Db_Table;
+
+class ProjectLog extends Zend_Db_Table
 {
     
 	public function save($data)
