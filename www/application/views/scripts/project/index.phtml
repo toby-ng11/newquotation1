@@ -1,89 +1,116 @@
   <?php $session =  Zend_Registry::get('session'); ?>
-  <!-- Title area -->
-    <div class="titleArea">
+
+  <!-- Left panel -->
+<div>
+<div class="statsRow">
         <div class="wrapper">
-            <header class="pageTitle">
-                <h1>Project To Quote WorkSheet</h1>
-                <span>Track project data and events critical to close of sale.</span>
-            </header>
-            <div class="middleNav">
-                <ul>
-                    <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
-                        <ul class="mSub1">
-                            <li><a href="#" title="">Share user</a></li>
-                            <li><a href="#" title="">Show Teamworks</a></li>
-                        </ul>
-                    </li>
-                   
-                    <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
-                        <ul class="mSub4">
-                        	<li><a href="#" title="">Add</a></li>
-                            <li><a href="#" title="">Save</a></li>
-                            <li><a href="#" title="">Edit</a></li>
-                            <li><a href="#" title="">Delete</a></li>
-                        </ul>
-                    </li>
+        	<div class="controlB">
+            	<ul>
+                		<!--<li><a href="/project/" class='add_pro' title="add"><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Project</span></a></li>-->
+                    <!--<li><a href="#" class='eidt_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
+                    <!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
+                    <li><a href="#" class='save_pro' title="save"><img src="/images/icons/control/32/save.png" alt="" /><span>Save Project</span></a></li>
+                    <!--<li><a href="#" class='delete_pro' title="delete"><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Project</span></a></li>-->
                 </ul>
                 <div class="clear"></div>
             </div>
-            <div class="clear"></div>
         </div>
+    </div>
+</div>
+
+<!-- Title area -->
+<main id="content" class="main-content">
+  <div class="main-page-content">
+    <header class="pageTitle">
+      <h1>Project To Quote WorkSheet</h1>
+    </header>
+    <div class="section-content">
+      <p>Track project data and events critical to close of sale.</p>
+    </div>
+    <div class="middleNav">
+      <ul>
+        <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
+          <ul class="mSub1">
+            <li><a href="#" title="">Share user</a></li>
+            <li><a href="#" title="">Show Teamworks</a></li>
+          </ul>
+        </li>
+                   
+        <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
+          <ul class="mSub4">
+            <li><a href="#" title="">Add</a></li>
+            <li><a href="#" title="">Save</a></li>
+            <li><a href="#" title="">Edit</a></li>
+            <li><a href="#" title="">Delete</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
     
+  <!-- Main content wrapper -->
+  <div class="wrapper">
     
- 
- <!-- Main content wrapper -->
-    <div class="wrapper">
-    
-        <!-- Note -->
-       <!-- <div class="nNote nInformation hideit">
-            <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
-        </div>-->
+    <!-- Note -->
+    <!-- <div class="nNote nInformation hideit">
+      <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
+    </div>-->
         
-        <!-- Form -->
-        <form action="/project/save" method="post" class="form" id='project_content'> 
-                <div class="widget-table">
-                    <div class="title"><img src="/images/icons/dark/pencil.png" alt="" class="titleIcon" />
-                      <h6>Project Information</h6></div>
-                     <div class="formRow"> 
-                        <div class="formRight" style="width:98%">
-                        	  <span class="oneTwo"><span class="formNote">Project Name</span><input type="text" id='project_name' name='project_name' class="validate[required]" /></span>
-                            <span class="oneFour"><span class="formNote">Centura Location</span><select name="location" id="location" style="width:300px;">
-                            	<?php foreach ($this->locations as $l) {?>
-                                <option value="<?=$l['location_id']?>" <?php if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
-                               <?php } ?>
-                            </select></span>
-                           
-                        </div>
-                        <div class="clear"></div>
-                        <div class="formRight" style="width:98%">
-                            <span class="oneTwo"><span class="formNote">Worksheet Owner</span><input type="text"   value='<?= $session->user['name'] ?>' readonly/></span>
-                            <input type="hidden" name='owner' value='<?= $session->user['id'] ?>' >
-                             <span class="oneFour"><span class="formNote">Project#</span><input type="text" placeholder="Auto Generate" name='quote_no' readonly/></span>
-                            <input name='create_date' type="hidden" value='<?=date('Y-m-d') ?>' readonly/>
-                        </div>
-                        <div class="clear"></div>
-                        <div class="formRight" style="width:98%">
-                            <span class="oneTwo"><span class="formNote">Project Location</span><input type="text" class="validate[required] tipN"  name='project_location_address' original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" id="project_location_address" /></span>
-                            <span class="oneFour"><span class="formNote">Status:</span><select name="status" id='status' class="validate[required]">
-                                <option value="">Select Status</option>
-                                <?php foreach($this->status as $s) {?>
-                                <option value="<?=$s['uid']?>"><?=$s['Status'] ?></option>
-                                <?php }?>
-                               
-                            </select></span>
-                        </div>
-                        <div class="clear"></div>
-                        <div class="formRight" style="width:98%">
-                            <span class="oneTwo"><span class="formNote">REED#</span><input type="text"  name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" /></span>
-                            <span class="oneFour"><span class="formNote">Market Segment:</span><select name="market_segment" id='market_segment' class="validate[required]" >
-                                <option value="" >Choose Segment</option>
-                                <?php foreach($this->seg as $s) {?>
-                                <option value="<?=$s['uid']?>"><?=$s['Market_Segment'] ?></option>
-                                <?php }?>
-                               
-                            </select></span>
-                        </div>
-                        <div class="clear"></div>
+    <!-- Form -->
+    <form action="/project/save" method="post" class="form" id='project_content'> 
+      <div class="widget-table">
+          <div class="title">
+            <h3>Project Information</h3>
+          </div>
+          <div class="formRow"> 
+            <div class="formRight">
+              <span class="oneTwo">
+                <span class="formNote">Project Name</span>
+                <input type="text" id='project_name' name='project_name' class="validate[required]" />
+              </span>
+
+              <span class="oneFour">
+                <span class="formNote">Centura Location</span>
+                <select name="location" id="location" style="width:300px;">
+                  <?php foreach ($this->locations as $l) {?>
+                    <option value="<?=$l['location_id']?>" <?php if($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected'?> ><?=$l['name']?></option>
+                  <?php } ?>
+                </select>
+              </span>           
+            </div>
+
+            <div class="formRight" style="width:98%">
+              <span class="oneTwo">
+                <span class="formNote">Worksheet Owner</span><input type="text"   value='<?= $session->user['name'] ?>' readonly/></span>
+                  <input type="hidden" name='owner' value='<?= $session->user['id'] ?>' >     
+                  <span class="oneFour"><span class="formNote">Project#</span><input type="text" placeholder="Auto Generate" name='quote_no' readonly/></span>
+                  <input name='create_date' type="hidden" value='<?=date('Y-m-d') ?>' readonly/>
+            </div>
+
+            <div class="formRight" style="width:98%">
+              <span class="oneTwo"><span class="formNote">Project Location</span><input type="text" class="validate[required] tipN"  name='project_location_address' original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" id="project_location_address" /></span>
+                <span class="oneFour"><span class="formNote">Status:</span>
+                <select name="status" id='status' class="validate[required]">
+                  <option value="">Select Status</option>
+                    <?php foreach($this->status as $s) {?>
+                      <option value="<?=$s['uid']?>"><?=$s['Status'] ?></option>
+                    <?php }?>
+                </select>
+              </span>
+            </div>
+
+            <div class="formRight" style="width:98%">
+              <span class="oneTwo"><span class="formNote">REED#</span>
+              <input type="text"  name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" /></span>
+              <span class="oneFour"><span class="formNote">Market Segment:</span>
+                <select name="market_segment" id='market_segment' class="validate[required]" >
+                  <option value="" >Choose Segment</option>
+                    <?php foreach($this->seg as $s) {?>
+                      <option value="<?=$s['uid']?>"><?=$s['Market_Segment'] ?></option>
+                    <?php }?>
+                </select>
+              </span>
+            </div>
+            
                         <div class="formRight" style="width:98%">
                         	<span class="oneTwo"><span class="formNote">Project Architect/Owner<span class="req">*</span></span>
                             		<input type='text' name="architect_name" id='architect_name'  class="validate[required] tipN" original-title="Type 2 letter to start or add your own" />
@@ -141,28 +168,14 @@
        
       </div>
     </div>
-  
-      <div class="statsRow">
-        <div class="wrapper">
-        	<div class="controlB">
-            	<ul>
-                		<!--<li><a href="/project/" class='add_pro' title="add"><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Project</span></a></li>-->
-                    <!--<li><a href="#" class='eidt_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
-                    <!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
-                    <li><a href="#" class='save_pro' title="save"><img src="/images/icons/control/32/save.png" alt="" /><span>Save Project</span></a></li>
-                    <!--<li><a href="#" class='delete_pro' title="delete"><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Project</span></a></li>-->
-                </ul>
-                <div class="clear"></div>
-            </div>
-        </div>
-    </div>
   </div>
-   
-   <style>
-   	div.selector { width: 290px;}
-div.selector select { width: 300px; }
-div.selector span { width: 290px;  }
-   	</style>
+</main>
+
+<style>
+  div.selector { width: 290px;}
+  div.selector select { width: 300px; }
+  div.selector span { width: 290px;  }
+</style>
    	
 <script type="text/javascript" >
 	  function getcustomerbyid(id,obj)
@@ -307,3 +320,7 @@ div.selector span { width: 290px;  }
   	
 
    		</script>
+
+<!-- Right panel -->
+<div>
+</div>

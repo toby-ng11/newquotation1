@@ -1,5 +1,7 @@
 <?php
 
+use Centura\Model\Customer;
+
 class Centura_Model_Mail extends Zend_Db_Table
 {
     
@@ -84,7 +86,7 @@ class Centura_Model_Mail extends Zend_Db_Table
 		
 		$quote_detail = $quote->fetchquotebyid($quote_id);
 		
-		$customer = new Centura_Model_Customer();
+		$customer = new Customer();
 		
 		$customer_info = $customer->fetchCustomerById($quote_detail['customer_id']);
 		

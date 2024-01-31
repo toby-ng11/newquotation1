@@ -1,53 +1,83 @@
-   <?php $session =  Zend_Registry::get('session'); ?>
- <!-- Title area -->
-  <?php $project = $this->project;?>
-    <div class="titleArea">
+<?php $session =  Zend_Registry::get('session'); ?>
+
+<!-- Left panel -->
+<div>
+<div class="statsRow">
         <div class="wrapper">
-            <header class="pageTitle">
-                <h1>Price Quote</h1>
-                <p>Project Name: <b><?=$project['project_name'] ?></b> | Project Quote No: <b><?=$project['quote_no'] ?></b> | Worksheet Owner: <b><?=$project['owner'] ?></b> | Status: <b><?=$project['status_name'] ?></b> | Due Date: <b><?=$project['due_date']->format('Y-m-d')  ?></b></p>
-			</header>
-            <div class="middleNav">
-                <ul>
-                    <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
-                        <ul class="mSub1">
-                            <li><a href="#" title="">Share user</a></li>
-                            <li><a href="#" title="">Show Teamworks</a></li>
-                        </ul>
-                    </li>
-                   
-                    <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
-                        <ul class="mSub4">
-                        	<li><a href="#" title="">Add</a></li>
-                            <li><a href="#" title="">Save</a></li>
-                            <li><a href="#" title="">Edit</a></li>
-                            <li><a href="#" title="">Delete</a></li>
-                        </ul>
-                    </li>
+        	<div class="controlB">
+            	<ul>
+                	<li><a href="/quote/index/project/<?=$project['project_id']?>" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add New Quote</span></a></li>
+                    <!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
+                    <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
+                    <?PHP if($this->quote['approve_status'] != 10 ) {?>
+                    <li><a href="#" title="save" class="save_quote"><img src="/images/icons/control/32/save.png" alt="save" /><span>Save Quote</span></a></li>
+                    <?php } ?>
+                    <li><a href="<?='http://'.SITEURL."/dompdf/print.php?url=".'http://'.SITEURL."/quote/print/id/".$this->quote['quote_id']."?company=".substr($this->quote['quote_no'],0,3)."&name=Centura_Quote_".$this->quote['quote_id'].'.pdf'?>" title="print"><img src="/images/icons/control/32/pdf.png" alt="" /><span>Print Quote</span></a></li>
+                    <?php if($this->quote['approve_status'] == 10 ) {?>
+                    <li><a href="/mail/quote/id/<?=$this->quote['quote_id']?>" title="mail"><img src="/images/icons/control/32/mail.png" alt="" /><span>Mail Quote</span></a></li>
+                  	<?php } ?>
+                    <li><a href="/quote/delete/id/<?=$this->quote['quote_id']?>" title="" class='delete_quote'><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>
+                     <?php if($this->quote['approve_status'] <= 0 ) {?>
+                    	<li><a href="/quote/ready/id/<?=$this->quote['quote_id']?>" title="" class='ready_quote'><img src="/images/icons/control/32/order-149.png" alt="" /><span>Submit Approval</span></a></li>
+                    <?php } ?>
+                    <?php if($this->quote['approve_status'] == 10 ) {?>
+                    	<li><a href="/quote/disapprove/id/<?=$this->quote['quote_id']?>" title="" class='disapprove_quote'><img src="/images/icons/control/32/refresh.png" alt="" /><span>Edit Again</span></a></li>
+                    <?php } ?>
                 </ul>
                 <div class="clear"></div>
             </div>
-            <div class="clear"></div>
-            <div id='status'>
-            <?php if($this->quote['approve_status'] == 1 ) {?>
+        </div>
+    </div>
+</div>
+
+ <!-- Title area -->
+<?php $project = $this->project;?>
+<main id="content" class="main-content">
+<div class="main-page-content">
+    <div class="wrapper">
+        <header class="pageTitle">
+            <h1>Price Quote</h1>
+            <p>Project Name: <b><?=$project['project_name'] ?></b> | Project Quote No: <b><?=$project['quote_no'] ?></b> | Worksheet Owner: <b><?=$project['owner'] ?></b> | Status: <b><?=$project['status_name'] ?></b> | Due Date: <b><?=$project['due_date']->format('Y-m-d')  ?></b></p>
+		</header>
+        <div class="middleNav">
+            <ul>
+                <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
+                    <ul class="mSub1">
+                        <li><a href="#" title="">Share user</a></li>
+                        <li><a href="#" title="">Show Teamworks</a></li>
+                    </ul>
+                </li>
+                   
+                <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
+                    <ul class="mSub4">
+                        <li><a href="#" title="">Add</a></li>
+                        <li><a href="#" title="">Save</a></li>
+                        <li><a href="#" title="">Edit</a></li>
+                        <li><a href="#" title="">Delete</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+            
+		<div id='status'>
+        <?php if($this->quote['approve_status'] == 1 ) {?>
             <div class="nNote nInformation hideit">
-            <p><strong>INFORMATION: </strong>Your quote is waiting for approval.</p>
-         	 </div>
+            	<p><strong>INFORMATION: </strong>Your quote is waiting for approval.</p>
+         	</div>
           	<?php }?>
           	<?php if($this->quote['approve_status'] == 10 ) {?>
             <div class="nNote nSuccess hideit">
-            <p><strong>INFORMATION: </strong>Your quote has been approved.</p>
+            	<p><strong>INFORMATION: </strong>Your quote has been approved.</p>
             </div>
           	<?php }?>
           	<?php if($this->quote['approve_status'] == -1 ) {?>
             <div class="nNote nFailure hideit">
-            <p><strong>INFORMATION: </strong>Your quote is disapproved.</p>
+            	<p><strong>INFORMATION: </strong>Your quote is disapproved.</p>
             </div>
           	<?php }?>
-          </div>
         </div>
+    </div>
     
-
  <!-- Page statistics area -->
    <!-- <div class="statsRow">
         <div class="wrapper">
@@ -87,8 +117,7 @@
         <!-- Form -->
         <form  method='post' class="form" id="quote_content">
             <input type="hidden" name='project_id' value="<?=$project['project_id'] ?>" />
-            <fieldset>
-                <div class="widget" id="customer_info">
+                <div class="widget-table" id="customer_info">
                     <div class="title"><img src="/images/icons/dark/user.png" alt="" class="titleIcon" /><h6>Customer Infomation</h6><a href="javascript:void(0)" title="" class="button greenB" style="margin: 2px;" id="add_new_mode"><span>New Customer</span></a><a href="javascript:void(0)" title="" class="button basic" style='display:none;' style="margin: 2px;" id="discard_new_mode"><span>Discard Adding</span></a></div>
                     <div class="formRow">
                         <label>Quote To:<span class="req">*</span></label>
@@ -121,9 +150,7 @@
                         <div class="clear"></div>
                     </div>
               </div>
-            </fieldset>
-            <fieldset>
-                <div class="widget">
+                <div class="widget-table">
                     <div class="title"><img src="/images/icons/dark/pencil.png" alt="" class="titleIcon" />
                       <h6>Quote Infomation</h6></div>
                      <div class="formRow"> 
@@ -174,8 +201,8 @@
                         <div class="clear"></div>
                     </div>
               </div>
-            </fieldset>
-             <div class="widget">
+			  
+             <div class="widget-table">
         <div class="title"><span class="titleIcon"><input type="checkbox" id="titleCheck" name="titleCheck" /></span><h6>Items</h6><a href="#" title="" class="button greenB" style="margin: 5px;" id="opener"><span>Add new Item</span></a> </a></div>
         <div class="clear"></div>
           <table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
@@ -210,7 +237,7 @@
               </tbody>
           </table>
           </div>
-           <div class="widget">
+           <div class="widget-table">
        <div class="title"><img src="/images/icons/dark/pencil.png" alt="" class="titleIcon" />
        <h6>Comment</h6></div>
         <div class="clear"></div>
@@ -223,34 +250,7 @@
         </div>
         </form>
 
-</div>
-            
-      <div class="statsRow">
-        <div class="wrapper">
-        	<div class="controlB">
-            	<ul>
-                	<li><a href="/quote/index/project/<?=$project['project_id']?>" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add New Quote</span></a></li>
-                    <!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
-                    <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-                    <?PHP if($this->quote['approve_status'] != 10 ) {?>
-                    <li><a href="#" title="save" class="save_quote"><img src="/images/icons/control/32/save.png" alt="save" /><span>Save Quote</span></a></li>
-                    <?php } ?>
-                    <li><a href="<?='http://'.SITEURL."/dompdf/print.php?url=".'http://'.SITEURL."/quote/print/id/".$this->quote['quote_id']."?company=".substr($this->quote['quote_no'],0,3)."&name=Centura_Quote_".$this->quote['quote_id'].'.pdf'?>" title="print"><img src="/images/icons/control/32/pdf.png" alt="" /><span>Print Quote</span></a></li>
-                    <?php if($this->quote['approve_status'] == 10 ) {?>
-                    <li><a href="/mail/quote/id/<?=$this->quote['quote_id']?>" title="mail"><img src="/images/icons/control/32/mail.png" alt="" /><span>Mail Quote</span></a></li>
-                  	<?php } ?>
-                    <li><a href="/quote/delete/id/<?=$this->quote['quote_id']?>" title="" class='delete_quote'><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>
-                     <?php if($this->quote['approve_status'] <= 0 ) {?>
-                    	<li><a href="/quote/ready/id/<?=$this->quote['quote_id']?>" title="" class='ready_quote'><img src="/images/icons/control/32/order-149.png" alt="" /><span>Submit Approval</span></a></li>
-                    <?php } ?>
-                    <?php if($this->quote['approve_status'] == 10 ) {?>
-                    	<li><a href="/quote/disapprove/id/<?=$this->quote['quote_id']?>" title="" class='disapprove_quote'><img src="/images/icons/control/32/refresh.png" alt="" /><span>Edit Again</span></a></li>
-                    <?php } ?>
-                </ul>
-                <div class="clear"></div>
-            </div>
-        </div>
-    </div>
+
     
    <div id="dialog-message" title="Add Item">
         <div class="uiForm">
@@ -273,8 +273,11 @@
             </form>
         </div>
    </div>
+</div>
+</main>
 
-   <script type="text/javascript" >
+
+<script type="text/javascript" >
    	function resetForm($form) {
     $form.find('input:text, input:password, input:file, select, textarea').val('');
     $form.find('input:radio, input:checkbox')
@@ -632,4 +635,8 @@
   	
   	
   });
-   	</script>
+</script>
+
+<!-- Right panel -->
+<div>
+</div>

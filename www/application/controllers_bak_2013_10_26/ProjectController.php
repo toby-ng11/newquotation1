@@ -1,5 +1,7 @@
 <?php
 
+use Centura\Model\Customer;
+
 class ProjectController extends Zend_Controller_Action
 {
 
@@ -42,7 +44,7 @@ class ProjectController extends Zend_Controller_Action
     		
     		$result = $model->save($data);
     		
-    		$this->_redirect('/project/edit/id/'.$result);
+    		$this->redirect('/project/edit/id/'.$result);
     		exit;
     	}
     }
@@ -54,7 +56,7 @@ class ProjectController extends Zend_Controller_Action
     	
     	if($project_id == null)
     	{
-    		$this->_redirect('/project');
+    		$this->redirect('/project');
     	}
     	
     	
@@ -69,13 +71,13 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->locations = $locations->fetchAllBranches();
     	
     	$project = new Centura_Model_Project();
-    	$customer = new Centura_Model_Customer();
+    	$customer = new Customer();
     	
     	$project_detail = $project->fetchbyid($project_id);
     	
     	if($project_detail['status'] == 13)//Project closed
     	{
-    		$this->_redirect('/project/view/id/'.$project_id);
+    		$this->redirect('/project/view/id/'.$project_id);
     	}
     	
     	
@@ -120,7 +122,7 @@ class ProjectController extends Zend_Controller_Action
     		$result = $model->edit($data,$project_id);
     		if($result == true)
     		{
-    			$this->_redirect('/project/edit/id/'.$project_id);
+    			$this->redirect('/project/edit/id/'.$project_id);
     		}
     		else {
     			echo 'false';
@@ -134,7 +136,7 @@ class ProjectController extends Zend_Controller_Action
     	 
     	if($project_id == null)
     	{
-    		$this->_redirect('/project');
+    		$this->redirect('/project');
     	}
     	
     	$quote = new Centura_Model_Quote();
@@ -148,7 +150,7 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->locations = $locations->fetchAllBranches();
     	 
     	$project = new Centura_Model_Project();
-    	$customer = new Centura_Model_Customer();
+    	$customer = new Customer();
     	 
     	$project_detail = $project->fetchbyid($project_id);
     	$this->view->project = $project_detail;
@@ -182,7 +184,7 @@ class ProjectController extends Zend_Controller_Action
     
     	if($project_id == null)
     	{
-    		$this->_redirect('/project');
+    		$this->redirect('/project');
     	}
     	 
     	$quote = new Centura_Model_Quote();
@@ -196,7 +198,7 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->locations = $locations->fetchAllBranches();
     
     	$project = new Centura_Model_Project();
-    	$customer = new Centura_Model_Customer();
+    	$customer = new Customer();
     
     	$project_detail = $project->fetchbyid($project_id);
     	$this->view->project = $project_detail;

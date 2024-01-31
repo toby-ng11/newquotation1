@@ -1,5 +1,7 @@
 <?php
 
+use Centura\Model\Customer;
+
 class MailController extends Zend_Controller_Action
 {
 
@@ -26,7 +28,7 @@ class MailController extends Zend_Controller_Action
     	$pdf_url = 'http://'.SITEURL.'/dompdf/print.php?url=http://'.SITEURL.'/quote/print/id/'.$quote_id;
     	
     	$model= new Centura_Model_Quote();
-    	$customer = new Centura_Model_Customer();
+    	$customer = new Customer();
     	$mail = new Centura_Model_Mail();
     	$project = new Centura_Model_Project();
     	

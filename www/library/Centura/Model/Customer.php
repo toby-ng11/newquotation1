@@ -1,6 +1,12 @@
 <?php
 
-class Centura_Model_Customer extends Centura_Model_DbTable_Customer
+namespace Centura\Model;
+
+use Centura\Model\DbTable_Customer;
+use Zend_Registry;
+use Exception;
+
+class Customer extends DbTable_Customer
 {
     
 	public function fetchCustomerById($id)

@@ -1,5 +1,7 @@
 <?php
 
+use Centura\Model\Customer;
+
 class Centura_Model_Quote extends Centura_Model_DbTable_Quote
 {
     
@@ -13,7 +15,7 @@ class Centura_Model_Quote extends Centura_Model_DbTable_Quote
 		$db = $this->getAdapter();
 		if(empty($data['customer_id']))// if customer id is empty add new customer
 		{
-			$customer = new Centura_Model_Customer();
+			$customer = new Customer();
 			$data['customer_id'] = $customer->newcustomer($data);
 			
 		}
@@ -81,7 +83,7 @@ class Centura_Model_Quote extends Centura_Model_DbTable_Quote
 	
 		if(empty($data['customer_id']))// if customer id is empty add new customer
 		{
-			$customer = new Centura_Model_Customer();
+			$customer = new Customer();
 			$data['customer_id'] = $customer->newcustomer($data);
 				
 		}
@@ -327,6 +329,8 @@ class Centura_Model_Quote extends Centura_Model_DbTable_Quote
 		$select = $db->select()->from('quote')->order('quote_id desc')->join('project', 'project.project_id = quote.project_id','project_name')
 		->join('quote_status','quote_status.uid=project.status',array('status_name'=>'Status'))->where('project.deleted =?','N');
 		
+		$json = Zend_Json::encode($db->fetchAll($select));
+
 		return $db->fetchAll($select);
 		
 	}

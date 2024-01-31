@@ -1,5 +1,7 @@
 <?php
 
+use Centura\Model\Customer;
+
 class ApproveController extends Zend_Controller_Action
 {
 
@@ -18,7 +20,7 @@ class ApproveController extends Zend_Controller_Action
     	}
     	 
     	
-    	$customer = new Centura_Model_Customer();
+    	$customer = new Customer();
     	$sales = new Centura_Model_User();
     	$project = new Centura_Model_Project();
     	$quote = new Centura_Model_Quote();

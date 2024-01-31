@@ -1,5 +1,7 @@
 <?php
 
+use Centura\Model\Customer;
+
 class ProjectController extends Zend_Controller_Action
 {
 
@@ -69,7 +71,7 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->locations = $locations->fetchAllBranches();
     	
     	$project = new Centura_Model_Project();
-    	$customer = new Centura_Model_Customer();
+    	$customer = new Customer();
     	
     	$project_detail = $project->fetchbyid($project_id);
     	
@@ -148,7 +150,7 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->locations = $locations->fetchAllBranches();
     	 
     	$project = new Centura_Model_Project();
-    	$customer = new Centura_Model_Customer();
+    	$customer = new Customer();
     	 
     	$project_detail = $project->fetchbyid($project_id);
     	$this->view->project = $project_detail;
@@ -196,7 +198,7 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->locations = $locations->fetchAllBranches();
     
     	$project = new Centura_Model_Project();
-    	$customer = new Centura_Model_Customer();
+    	$customer = new Customer();
     
     	$project_detail = $project->fetchbyid($project_id);
     	$this->view->project = $project_detail;

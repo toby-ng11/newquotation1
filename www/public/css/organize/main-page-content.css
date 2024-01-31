@@ -1,0 +1,85 @@
+.main-page-content {
+    overflow-wrap: break-word;
+    padding: 3rem 1rem 1rem;
+
+    h1, h2, h3, h4, h5, h6 {
+        a:link, a:visited {
+            color: var(--text-link);
+            text-decoration: none;
+        }
+        
+        a:hover, a:focus {
+            text-decoration: underline;
+        }
+
+        a:active {
+            background-color: transparent;
+        }
+
+        a[href^="#"] {
+            &::before {
+                color: var(--text-inactive);
+                content: "#";
+                display: inline-block;
+                font-size: 0.7em;
+                line-height: 1;
+                margin-left: -0.8em;
+                text-decoration: none;
+                visibility: hidden;
+                width: 0.8em;
+            }
+
+            &::hover {
+                &::before {
+                    visibility: hidden;
+                }
+            }
+        }
+    }
+}
+
+/* Text */
+h1, h2, h3 {
+	letter-spacing: var(--heading-letter-spacing);
+}
+
+h1 {
+	font-size: var(--type-heading-h1-font-size);
+	margin-bottom: 2rem;
+	word-break: break-word;
+}
+
+h2 {
+	font-size: 24px;
+}
+
+h3 {
+	font-size: 20.8px;
+}
+
+h4 {
+	font-size: 18px;
+}
+
+h5 {
+	font-size: 16px;
+}
+
+h6 {
+	font-size: 14px;
+}
+
+
+/*Media Queries*/
+@media screen and (min-width: 769px) {
+    .main-page-content {
+        margin-bottom: .5rem;
+        padding: 0;
+    }
+}
+
+@media screen and (min-width: 426px) {
+    .main-page-content {
+        padding: 1rem;
+    }
+}

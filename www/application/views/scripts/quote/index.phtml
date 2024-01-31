@@ -1,12 +1,32 @@
    <?php $session =  Zend_Registry::get('session'); ?>
- <!-- Title area -->
-  <?php $project = $this->project;?>
-    <div class="titleArea">
-        <div class="wrapper">
-            <div class="pageTitle">
-                <h5>Price Quote</h5>
-                <span>Project Name: <b><?=$project['project_name'] ?></b></span> | <span>Project Quote No: <b><?=$project['quote_no'] ?></b></span>  | <span>Worksheet Owner: <b><?=$project['owner'] ?></b></span> | <span>Status: <b><?=$project['status_name'] ?></b></span>  | <span>Due Date: <b><?=$project['due_date']->format('Y-m-d')  ?></b></span>
+
+   <!-- Left panel -->
+<div>
+<div class="statsRow">
+        	<div class="controlB">
+            	<ul>
+                	<!--<li><a href="#" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Quote</span></a></li>-->
+                    <!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>-->
+                    <!--<li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
+                    <li><a class="save_quote" href="#" title=""><img src="/images/icons/control/32/save.png" alt="" /><span>Save Quote</span></a></li>
+                    <!--<li><a href="#" title=""><img src="/images/icons/control/32/mail.png" alt="" /><span>Email Quote</span></a></li>
+                    <li><a href="#" title=""><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>-->
+                </ul>
             </div>
+    </div>
+</div>
+
+ <!-- Title area -->
+ <?php $project = $this->project;?>
+ <main id="content" class="main-content">
+ <div class="main-page-content">
+    <div class="titleArea">
+            <header>
+                <h1>Price Quote</h1>
+			</header>
+			<div class="section-content">
+			<span>Project Name: <b><?=$project['project_name'] ?></b></span> | <span>Project Quote No: <b><?=$project['quote_no'] ?></b></span>  | <span>Worksheet Owner: <b><?=$project['owner'] ?></b></span> | <span>Status: <b><?=$project['status_name'] ?></b></span>  | <span>Due Date: <b><?=$project['due_date']->format('Y-m-d')  ?></b></span>
+			</div>
             <div class="middleNav">
                 <ul>
                     <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
@@ -25,34 +45,11 @@
                         </ul>
                     </li>
                 </ul>
-                <div class="clear"></div>
             </div>
-            <div class="clear"></div>
-        </div>
     </div>
     
-    <div class="line"></div>
  <!-- Page statistics area -->
-    <div class="statsRow">
-        <div class="wrapper">
-        	<div class="controlB">
-            	<ul>
-                	<!--<li><a href="#" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Quote</span></a></li>-->
-                    <!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>-->
-                     <!--<li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-                    <li><a href="#" title="" class='save_quote'><img src="/images/icons/control/32/save.png" alt="" /><span>Save Quote</span></a></li>
-                     <!--<li><a href="#" title=""><img src="/images/icons/control/32/mail.png" alt="" /><span>Mail Quote</span></a></li>-->
-                    <!--<li><a href="#" title=""><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>-->
-                </ul>
-                <div class="clear"></div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="line"></div>
-    
-    <!-- Main content wrapper -->
-    <div class="wrapper">
+    <!-- Main content wrapper --
     
         <!-- Note -->
        <!-- <div class="nNote nInformation hideit">
@@ -62,9 +59,16 @@
         <!-- Form -->
         <form action="/quote/save" method='post' class="form" id="quote_content">
             <input type="hidden" name='project_id' value="<?=$project['project_id'] ?>" />
-            <fieldset>
-                <div class="widget" id="customer_info">
-                    <div class="title"><img src="/images/icons/dark/user.png" alt="" class="titleIcon" /><h6>Customer Infomation</h6><a href="javascript:void(0)" title="" class="button greenB" style="margin: 2px;" id="add_new_mode"><span>New Customer</span></a><a href="javascript:void(0)" title="" class="button basic" style='display:none;' style="margin: 2px;" id="discard_new_mode"><span>Discard Adding</span></a></div>
+                <div class="widget-table" id="customer_info">
+                    <div class="title">
+						<img src="/images/icons/dark/user.png" alt="" class="titleIcon" />
+						<h6>Customer Infomation</h6>
+						<a href="javascript:void(0)" title="" class="button greenB" style="margin: 2px;" id="add_new_mode">
+							<span>New Customer</span></a>
+						<a href="javascript:void(0)" title="" class="button basic" style='display:none;' style="margin: 2px;" id="discard_new_mode">
+							<span>Discard Adding</span>
+						</a>
+					</div>
                     <div class="formRow">
                         <label>Quote To:<span class="req">*</span></label>
                         <div class="formRight"><input type="text" value="" id='quote' name='name' class='tipN validate[required]' /></div>
@@ -96,9 +100,8 @@
                         <div class="clear"></div>
                     </div>
               </div>
-            </fieldset>
-            <fieldset>
-                <div class="widget">
+
+                <div class="widget-table">
                     <div class="title"><img src="/images/icons/dark/pencil.png" alt="" class="titleIcon" />
                       <h6>Quote Infomation</h6></div>
                      <div class="formRow"> 
@@ -154,8 +157,8 @@
                         <div class="clear"></div>
                     </div>
               </div>
-            </fieldset>
-             <div class="widget">
+
+             <div class="widget-table">
         <div class="title"><span class="titleIcon"><input type="checkbox" id="titleCheck" name="titleCheck" /></span><h6>Items</h6><a href="#" title="" class="button greenB" style="margin: 5px;" id="opener"><span>Add new Item</span></a> </a></div>
         <div class="clear"></div>
           <table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
@@ -190,7 +193,7 @@
               </tbody>
           </table>
           </div>
-           <div class="widget">
+           <div class="widget-table">
        <div class="title"><img src="/images/icons/dark/pencil.png" alt="" class="titleIcon" />
        <h6>Comment</h6></div>
         <div class="clear"></div>
@@ -200,25 +203,8 @@
             <div class="clear"></div>
           </div>
       	</div>
-        </div>
         </form>
             
-      <div class="statsRow">
-        <div class="wrapper">
-        	<div class="controlB">
-            	<ul>
-                	<!--<li><a href="#" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Quote</span></a></li>-->
-                    <!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>-->
-                    <!--<li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-                    <li><a class="save_quote" href="#" title=""><img src="/images/icons/control/32/save.png" alt="" /><span>Save Quote</span></a></li>
-                    <!--<li><a href="#" title=""><img src="/images/icons/control/32/mail.png" alt="" /><span>Email Quote</span></a></li>
-                    <li><a href="#" title=""><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>-->
-                </ul>
-                <div class="clear"></div>
-            </div>
-        </div>
-    </div>
-    
    <div id="dialog-message" title="Add Item">
         <div class="uiForm">
             <form action="" class="dialog" id='item'>
@@ -240,7 +226,9 @@
             </form>
         </div>
    </div>
-   
+</div>
+</main>
+
    <script type="text/javascript" >
    	function resetForm($form) {
     $form.find('input:text, input:password, input:file, select, textarea').val('');
@@ -547,3 +535,7 @@
   	});
   });
    	</script>
+
+	<!-- Right panel -->
+<div>
+</div>

@@ -1,5 +1,7 @@
 <?php
 
+use Centura\Model\Customer;
+
 class MailController extends Zend_Controller_Action
 {
 
@@ -27,7 +29,7 @@ class MailController extends Zend_Controller_Action
     	$quote_id = $this->getRequest()->getParam('id');
 
     	$model= new Centura_Model_Quote();
-    	$customer = new Centura_Model_Customer();
+    	$customer = new Customer();
     	$mail = new Centura_Model_Mail();
     	$project = new Centura_Model_Project();
     	$quote_detail = $model->fetchquotebyid($quote_id);

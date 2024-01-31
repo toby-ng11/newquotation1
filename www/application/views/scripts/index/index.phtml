@@ -1,184 +1,8 @@
-   <?php $session = Zend_Registry::get('session');?>
+<?php $session = Zend_Registry::get('session');?>
 
-  <!-- Title area -->
-    <div class="titleArea">
-        <div class="wrapper">
-            <header class="pageTitle">
-                <h1>My Projects</h1>
-                <?php if ($session->user['sale_role'] == 'sales') {?>
-                <p>Sales Representative Landing Page.</p>
-                <?php }?>
-                <?php if ($session->user['sale_role'] == 'manager' || $session->user['sale_role'] == 'admin' ) {?>
-                <p>Sales Manager Landing Page.</p>
-                <?php }?>
-                </header>
-            <div class="middleNav">
-                <ul>
-                    <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
-                        <ul class="mSub1">
-                            <li><a href="#" title="">Share user</a></li>
-                            <li><a href="#" title="">Show Teamworks</a></li>
-                        </ul>
-                    </li>
-                   
-                    <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
-                        <ul class="mSub4">
-                        	<li><a href="#" title="">Add</a></li>
-                            <li><a href="#" title="">Save</a></li>
-                            <li><a href="#" title="">Edit</a></li>
-                            <li><a href="#" title="">Delete</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    
-    
- 
- <!-- Main content wrapper -->
-    <div class="wrapper">
-    
-        <!-- Note -->
-       <!-- <div class="nNote nInformation hideit">
-            <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
-        </div>-->
-        
-        <!-- Form -->
-        <form action="" class="form">
-        <div class="widget-table">
-        <div class="title"><img src="/images/icons/dark/full2.png" alt="" class="titleIcon" /><h6>My Projects : <?= count($this->ownproject ) ?></h6></div>  
-          <table cellpadding="0" cellspacing="0" width="100%" class="display"  style="text-align:center;" id='project_table'>
-              <thead>
-                  <tr>
-                  	<td class="sortCol action"><div>Action<span></span></div></td>
-                      <td class="sortCol">Project Name<span></span></div></td>
-                      <td class="sortCol"><div>Specifier<span></span></div></td>
-                      <td class="sortCol"><div>Project#<span></span></div></td>
-                      <td class="sortCol"><div>Market Segment<span></span></div></td>
-                      <td class="sortCol"><div>Create Date<span></span></div></td>
-                      <td class="sortCol"><div>Due Date<span></span></div></td>
-                      <td class="sortCol"><div>Status<span></span></div></td>
-                  </tr>
-              </thead>
-              <tbody>
-              	<?php foreach($this->ownproject as $p) {?>
-                  <tr class='status_<?=$p['status']?>'>
-                  		<td><!--<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>--><a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a><a a target='_blank' href="/quote/index/project/<?=$p['project_id']?>" alt='quote'><img src="/images/icons/dark/money.png" alt="edit" style="margin:0px 4px"></a></td>
-                      <td><a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><?=$p['project_name']?></a></td>
-                        <td><?=$p['Specifier_name']?></td>
-                      <td><?=$p['quote_no']?></td>
-                      <td><?=$p['segment']?></td>
-                      <td><?=$p['create_date']->format('Y-m-d')?></td>
-                      <td><span class='<?php if($p['due_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['due_date']->format('Y-m-d')?></span></td>
-                      <td class='status_<?=$p['status']?>'><?=$p['status_name']?></td>
-                  </tr>
-                <?php } ?> 
-              </tbody>
-          </table>
-        </div>
-        <?php  if($session->user['approve_id'] != null ) {?>
-        <div class="widget-table">
-        <div class="title"><img src="/images/icons/dark/full2.png" alt="" class="titleIcon" /><h6>Other Projects At <?=$session->user['company']; ?> : <?= count($this->otherprojects ) ?></h6></div>  
-          <table cellpadding="0" cellspacing="0" width="100%" class="display"  style="text-align:left;" id='other_project_table'>
-              <thead>
-                  <tr>
-                  	<td class="sortCol action"><div>Action<span></span></div></td>
-                      <td class="sortCol">Project Name<span></span></div></td>
-                      <td class="sortCol"><div>Specifier<span></span></div></td>
-                      <td class="sortCol"><div>Worksheet Owner<span></span></div></td>
-                      <td class="sortCol"><div>Project#<span></span></div></td>
-                      <td class="sortCol"><div>Market Segment<span></span></div></td>
-                      <td class="sortCol"><div>Create Date<span></span></div></td>
-                      <td class="sortCol"><div>Due Date<span></span></div></td>
-                      <td class="sortCol"><div>Status<span></span></div></td>
-                  </tr>
-              </thead>
-              <tbody>
-              	<?php foreach($this->otherprojects as $p) {?>
-                  <tr class='status_<?=$p['status']?>'>
-                  		<td><a a target='_blank' href="/quote/index/project/<?=$p['project_id']?>" alt='quote'><img src="/images/icons/dark/money.png" alt="quote" style="margin:0px 4px"></a></td>
-                      <td><a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><?=$p['project_name']?></a></td>
-                      <td><?=$p['Specifier_name']?></td>
-                      <td><?=$p['owner']?></td>
-                      <td><?=$p['quote_no']?></td>
-                      <td><?=$p['segment']?></td>
-                      <td><?=$p['create_date']->format('Y-m-d')?></td>
-                      <td><span class='<?php if($p['due_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['due_date']->format('Y-m-d')?></span></td>
-                      <td class='status_<?=$p['status']?>'><?=$p['status_name']?></td>
-                  </tr>
-                <?php } ?> 
-              </tbody>
-          </table>
-        </div>
-        <?php } ?>
- 				<div class="widget-table">
-        <div class="title"><img src="/images/icons/dark/full2.png" alt="" class="titleIcon" /><h6>My Quotes : <?= count($this->ownquotes ) ?></h6></div>  
-          <table cellpadding="0" cellspacing="0" width="100%" class="display"  style="text-align:center;" id='quote_table'>
-              <thead>
-                  <tr>
-                  	 <td class="sortCol action"><div>Action<span></span></div></td>
-                  	  <td class="sortCol"><div>Quote No<span></span></div></td>
-                      <td class="sortCol"><div>Project Name<span></span></div></td>
-                      <td class="sortCol"><div>Company Name<span></span></div></td>
-                      <td class="sortCol"><div>Quote Date<span></span></div></td>
-                      <td class="sortCol"><div>Expire Date<span></span></div></td>
-                      <td class="sortCol"><div>Ship Required Date<span></span></div></td>
-                      <td class="sortCol"><div>Project Status<span></span></div></td>
-                      <td class="sortCol"><div>Approval Status<span></span></div></td>
-                  </tr>
-              </thead>
-              <tbody>
-              	<?php foreach($this->ownquotes as $p) {?>
-                  <tr class='status_<?=$p['status']?> approval_<?=$p['approve_status']?>'>
-                  		<td><!--<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>--><a a target='_blank' href="/quote/edit/id/<?=$p['quote_id']?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
-                  	  <td><a a target='_blank' href="/quote/edit/id/<?=$p['quote_id']?>"><?=$p['quote_id']?></a></td>
-                      <td><a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><?=$p['project_name']?></a></td>
-                      <td><?=$p['customer']?></td>
-                      <td><?=$p['quote_date']->format('Y-m-d')?></td>
-                      <td><span class='<?php if($p['expire_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['expire_date']->format('Y-m-d')?></span></td>
-                      <td><span><?php if($p['ship_required_date']!= null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01' ) {echo $p['ship_required_date']->format('Y-m-d');}?></span></td>
-                      <td ><?=$p['status_name']?></td>
-                      <?php if($p['approve_status'] == -1) {?>
-                      	<td class='disapproved orange'>Disapproved</td>
-                      <?php } else if($p['approve_status'] == 10){?>
-                      	<td class='approved green'>Approved</td>
-                      <?php }else if($p['approve_status'] == 1){?>
-                      	<td class='waiting red'>Waiting Approval</td>
-                      <?php } else {?>
-                      	<td class='init'>Not Submitted</td>
-                    	<?php }?>
-                  </tr>
-                <?php } ?> 
-              </tbody>
-          </table>
-        </div>
-        </form>
-        
-        <div class="widget-table">
-          <div class="title"><img src="/images/icons/dark/frames.png" alt="" class="titleIcon"><h6>Followup Logs : <?= count($this->memo ) ?></h6></div>
-            <table cellpadding="0" cellspacing="0" width="100%" class="display" id='project_log'>
-                <thead>
-                    <tr>
-                        <td class="sortCol">Follow Up Date</td>
-                        <td class="sortCol" style='width:30%'>Project Name</td>
-                        <td class="sortCol" style='width:30%'>Critical Updates Required</td>
-                    </tr>
-                </thead>
-                <tbody>
-                	 <?php foreach($this->memo as $l) {?>
-                    <tr>  
-                    	<td><?=$l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
-                       <td><a a target='_blank' href="/project/edit/id/<?=$l['project_id']?>"><?=$l['project_name']?></a></td>
-                        <td><?=$l['type']; ?></td>
-                    </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-      </div>
-    </div>
-     
-
-      <div class="statsRow">
+<!-- Left panel -->
+<div>
+<div class="statsRow">
         <div class="wrapper">
         	<div class="controlB">
             	<ul>
@@ -188,32 +12,217 @@
                     <li><a href="#" title=""><img src="images/icons/control/32/save.png" alt="" /><span>Save Project</span></a></li>
                     <li><a href="#" title=""><img src="images/icons/control/32/delete.png" alt="" /><span>Delete Project</span></a></li>-->
                 </ul>
-                <div class="clear"></div>
             </div>
         </div>
     </div>
-                     </div>
+    <div class="middleNav">
+            <ul>
+                <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
+                    <ul class="mSub1">
+                        <li><a href="#" title="">Share user</a></li>
+                        <li><a href="#" title="">Show Teamworks</a></li>
+                    </ul>
+                </li>
+                   
+                <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
+                    <ul class="mSub4">
+                        <li><a href="#" title="">Add</a></li>
+                        <li><a href="#" title="">Save</a></li>
+                        <li><a href="#" title="">Edit</a></li>
+                        <li><a href="#" title="">Delete</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+</div>
+
+<!-- Title area -->
+<main id="content" class="main-content">
+    <div class="main-page-content">
+        <header class="pageTitle">
+            <h1>My Projects</h1>
+        </header>
+        <div class="section-content">
+            <?php if ($session->user['sale_role'] == 'sales') {?>
+                <p>Sales Representative Landing Page.</p>
+            <?php }?>
+            <?php if ($session->user['sale_role'] == 'manager' || $session->user['sale_role'] == 'admin' ) {?>
+                <p>Sales Manager Landing Page.</p>
+            <?php }?>
+        </div>
+    
+        <!-- Main content wrapper -->
+        <!-- Note -->
+        <!-- <div class="nNote nInformation hideit">
+            <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
+        </div>-->
+        
+        <!-- Form -->
+        <form action="" class="form">
+        <div class="title">
+            <h3>My Projects : <?= count($this->ownproject ) ?></h3>
+        </div>
+        <div class="widget-table">  
+            <table width="100%" class="display nowrap" id='project_table'>
+                <thead>
+                    <tr>
+                        <th data-priority="1">Project #</th>
+                        <th data-priority="1">Project Name</th>
+                        <th data-priority="5">Create Date</th>
+                        <th data-priority="3">Due Date</th>
+                        <th data-priority="4">Status</th>
+                        <th>Specifier</th>
+                        <th>Market Segment</th>
+                        <th class="action" data-priority="2">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+              	    <?php foreach($this->ownproject as $p) {?>
+                    <tr class='status_<?=$p['status']?>'>
+                        <td><?=$p['quote_no']?></td>
+                        <td>
+                            <a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><?=$p['project_name']?></a></td>
+                        <td><?=$p['create_date']->format('Y-m-d')?></td>
+                        <td><span class='<?php if($p['due_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['due_date']->format('Y-m-d')?></span></td>
+                        <td class='status_<?=$p['status']?>'><?=$p['status_name']?></td>
+                        <td><?=$p['Specifier_name']?></td>
+                        <td><?=$p['segment']?></td>
+                        <td><!--<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>-->
+                            <a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a>
+                            <a a target='_blank' href="/quote/index/project/<?=$p['project_id']?>" alt='quote'><img src="/images/icons/dark/money.png" alt="edit" style="margin:0px 4px"></a></td>
+                  </tr>
+                <?php } ?> 
+              </tbody>
+          </table>
+        </div>
+        <?php  if($session->user['approve_id'] != null ) {?>
+        <div class="title">
+            <h6>Other Projects At <?=$session->user['company']; ?> : <?= count($this->otherprojects ) ?></h6>
+        </div>
+        <div class="widget-table">  
+          <table width="100%" class="display nowrap" id='other_project_table'>
+              <thead>
+                  <tr>
+                    <th data-priority="1">Project#</th>
+                    <th data-priority="1">Project Name</th>
+                    <th data-priority="5">Create Date</th>
+                    <th data-priority="3">Due Date</th>
+                    <th data-priority="4">Status</th>
+                    <th>Specifier</th>
+                    <th>Worksheet Owner</th>
+                    <th>>Market Segment</th>
+                    <th class="action" data-priority="2">Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+              	<?php foreach($this->otherprojects as $p) {?>
+                  <tr class='status_<?=$p['status']?>'>
+                        <td><?=$p['quote_no']?></td>
+                      <td><a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><?=$p['project_name']?></a></td>
+                      <td><?=$p['create_date']->format('Y-m-d')?></td>
+                      <td><span class='<?php if($p['due_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['due_date']->format('Y-m-d')?></span></td>
+                      <td class='status_<?=$p['status']?>'><?=$p['status_name']?></td>
+                      <td><?=$p['Specifier_name']?></td>
+                      <td><?=$p['owner']?></td>
+                      <td><?=$p['segment']?></td>
+                      <td><a a target='_blank' href="/quote/index/project/<?=$p['project_id']?>" alt='quote'><img src="/images/icons/dark/money.png" alt="quote" style="margin:0px 4px"></a></td>
+                  </tr>
+                <?php } ?> 
+              </tbody>
+          </table>
+        </div>
+        <?php } ?>
+        <div class="title">
+            <h6>My Quotes : <?= count($this->ownquotes ) ?></h6>
+        </div> 
+ 		<div class="widget-table"> 
+          <table width="100%" class="display nowrap" id='quote_table'>
+              <thead>
+                  <tr>
+                  	  <th data-priority="1">Quote #</th>
+                      <th data-priority="1">Project Name</th>
+                      <th data-priority="3">Quote Date</th>
+                      <th data-priority="3">Expire Date</th>
+                      <th data-priority="3">Ship Required Date</th>
+                      <th data-priority="2">Project Status</th>
+                      <th data-priority="2">Approval Status</th>
+                      <th>Company Name</th>
+                      <th class="action">Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+              	<?php foreach($this->ownquotes as $p) {?>
+                  <tr class='status_<?=$p['status']?> approval_<?=$p['approve_status']?>'>
+                  	    <td><a a target='_blank' href="/quote/edit/id/<?=$p['quote_id']?>"><?=$p['quote_id']?></a></td>
+                        <td><a a target='_blank' href="/project/edit/id/<?=$p['project_id']?>"><?=$p['project_name']?></a></td>
+                        <td><?=$p['quote_date']->format('Y-m-d')?></td>
+                        <td><span class='<?php if($p['expire_date']->format('Ymd') <= date('Ymd') ) echo 'red'; ?>'><?=$p['expire_date']->format('Y-m-d')?></span></td>
+                        <td><span><?php if($p['ship_required_date']!= null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01' ) {echo $p['ship_required_date']->format('Y-m-d');}?></span></td>
+                        <td ><?=$p['status_name']?></td>
+                        <?php if($p['approve_status'] == -1) {?>
+                      	    <td class='disapproved orange'>Disapproved</td>
+                        <?php } else if($p['approve_status'] == 10){?>
+                      	    <td class='approved green'>Approved</td>
+                        <?php }else if($p['approve_status'] == 1){?>
+                      	    <td class='waiting red'>Waiting Approval</td>
+                        <?php } else {?>
+                      	    <td class='init'>Not Submitted</td>
+                    	<?php }?>
+                        <td><?=$p['customer']?></td>
+                        <td><!--<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>-->
+                            <a a target='_blank' href="/quote/edit/id/<?=$p['quote_id']?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
+                  </tr>
+                <?php } ?> 
+              </tbody>
+          </table>
+        </div>
+        </form>
+        
+        <div class="title">
+            <h6>Follow Up Logs : <?= count($this->memo ) ?></h6>
+        </div>
+        <div class="widget-table">
+            <table width="100%" class="display nowrap" id='project_log'>
+                <thead>
+                    <tr>
+                        <th>Follow Up Date</th>
+                        <th>Project Name</th>
+                        <th>Critical Updates Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	 <?php foreach($this->memo as $l) {?>
+                    <tr>  
+                    	<td><?=$l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
+                        <td><a a target='_blank' href="/project/edit/id/<?=$l['project_id']?>"><?=$l['project_name']?></a></td>
+                        <td><?=$l['type']; ?></td>
+                    </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+    </div>
+</main>
 <script>
 	oTable = $('#project_table').dataTable({
-		"pagingType": "full_numbers",
-		"sDom": '<""l>t<"F"fp>',
-		"order": [[ 5, "desc" ]]
+        "responsive": true,
+		"order": [[ 0, "desc" ]]
 	});
 	$('#other_project_table').dataTable({
-		"pagingType": "full_numbers",
-		"sDom": '<""l>t<"F"fp>',
-		"order": [[ 6, "desc" ]]
+        "responsive": true,
+		"order": [[ 0, "desc" ]]
 	});
 	$('	#quote_table').dataTable({
-		"pagingType": "full_numbers",
-		"sDom": '<""l>t<"F"fp>',
-		"order": [[ 4, "desc" ]]
+        "responsive": true,
+		"order": [[ 0, "desc" ]]
 	});
 
 	$('#project_log').dataTable({
-		"pagingType": "full_numbers",
-		"sDom": '<""l>t<"F"fp>',
+        "responsive": true,
 		"order": [[ 0, "desc" ]]
 	});
 	
 	</script>
+
+<!-- Right panel -->
+<div>
+</div>

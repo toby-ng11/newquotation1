@@ -1,5 +1,7 @@
 <?php
 
+use Centura\Model\Customer;
+
 class QuoteController extends Zend_Controller_Action
 {
 
@@ -15,7 +17,7 @@ class QuoteController extends Zend_Controller_Action
     	
     	if($project_id == null)
     	{
-    		$this->_redirect('/');
+    		$this->redirect('/');
     	}
     	
         $model = new Centura_Model_Item();  
@@ -28,7 +30,7 @@ class QuoteController extends Zend_Controller_Action
         
         if($project_detail['status'] == 13)//Project closed 
         {
-        	$this->_redirect('/project/view/id/'.$project_id);
+        	$this->redirect('/project/view/id/'.$project_id);
         }
         
         $item = new Centura_Model_ItemsProject();
@@ -51,7 +53,7 @@ class QuoteController extends Zend_Controller_Action
     		
     		
     		$result = $model->save($data);
-    		$this->_redirect('/quote/edit/id/'.$result);
+    		$this->redirect('/quote/edit/id/'.$result);
     	}
     }
     
@@ -61,7 +63,7 @@ class QuoteController extends Zend_Controller_Action
     	$quote = new Centura_Model_Quote();
     	 
     	$quote->remove($quote_id);
-    	$this->_redirect('/');
+    	$this->redirect('/');
     }
     
     public function readyAction()
@@ -139,11 +141,11 @@ class QuoteController extends Zend_Controller_Action
     	 
     	if($quote_id == null)
     	{
-    		$this->_redirect('/');
+    		$this->redirect('/');
     	}
     	 
     	
-    	$customer = new Centura_Model_Customer();
+    	$customer = new Customer();
     	$sales = new Centura_Model_User();
     	$project = new Centura_Model_Project();
     	$quote = new Centura_Model_Quote();
@@ -168,7 +170,7 @@ class QuoteController extends Zend_Controller_Action
     		$model = new Centura_Model_Quote();
     	
     		$result = $model->edit($data,$quote_id);
-    		$this->_redirect('/quote/edit/id/'.$result);
+    		$this->redirect('/quote/edit/id/'.$result);
     	}
 
     }
@@ -179,10 +181,10 @@ class QuoteController extends Zend_Controller_Action
     	
     	if($quote_id == null)
     	{
-    		$this->_redirect('/');
+    		$this->redirect('/');
     	}
     	
-    	$customer = new Centura_Model_Customer();
+    	$customer = new Customer();
     	$sales = new Centura_Model_User();
     	$project = new Centura_Model_Project();
     	$quote = new Centura_Model_Quote();

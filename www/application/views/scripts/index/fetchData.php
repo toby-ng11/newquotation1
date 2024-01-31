@@ -8,7 +8,9 @@ $dbDetails = array(
 );
 
 //DB table to use
-$table = $this->ownproject;
+$db = $this->getAdapter();
+$table = $db->select()->from('quote')->order('quote_id desc')->join('project', 'project.project_id = quote.project_id','project_name')
+		->join('quote_status','quote_status.uid=project.status',array('status_name'=>'Status'))->where('project.deleted =?','N');
 
 // Table's primary key
 $primaryKey = 'quote_id';
@@ -26,6 +28,6 @@ $columns = array(
 
 require 'ssp.class.php';
 
-echo json_encode(
+echo Zend_Json::encode(
     SSP::simple($_GET, $dbDetails, $table, $primaryKey, $columns)
 );
