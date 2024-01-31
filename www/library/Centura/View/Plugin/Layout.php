@@ -1,5 +1,12 @@
 <?php
-class Centura_View_Plugin_Layout extends Zend_Controller_Plugin_Abstract {
+
+namespace Centura\View\Plugin;
+
+use Zend_Controller_Plugin_Abstract;
+use Zend_Controller_Request_Abstract;
+use Zend_Layout;
+
+class Layout extends Zend_Controller_Plugin_Abstract {
 	protected $_moduleLayouts;
 	/**
 	* registration of module layout

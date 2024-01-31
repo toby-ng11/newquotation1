@@ -1,6 +1,7 @@
 <?php
 
 use Centura\Model\User;
+use Centura\View\Plugin\Layout;
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
@@ -81,7 +82,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     		'layout' => 'default'
     		));
     		 
-    		$layoutModulePlugin = new Centura_View_Plugin_Layout();
+    		$layoutModulePlugin = new Layout();
     		//here you can register as many layouts as you need, if no layout is found it will use default one
     		$layoutModulePlugin->registerModuleLayout('admin', APPLICATION_PATH."/layouts/scripts", 'admin');
     		Zend_Controller_Front::getInstance()->registerPlugin($layoutModulePlugin);
