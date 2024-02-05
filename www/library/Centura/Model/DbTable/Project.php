@@ -1,9 +1,9 @@
 <?php
 
-namespace Centura\Model;
+namespace Centura\Model\DbTable;
 use Zend_Db_Table;
 
-class DbTable_Project extends Zend_Db_Table
+class Project extends Zend_Db_Table
 {
     protected $_name = 'project';
 }

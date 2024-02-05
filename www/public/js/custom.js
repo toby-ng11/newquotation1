@@ -1,10 +1,12 @@
 function setTheme(themeName){
-	localStorage.setItem('theme', themeName);
+	window.localStorage.setItem('theme', themeName);
 	document.documentElement.className = themeName;
 }
 
+window.onload = setTheme(window.localStorage.getItem('theme'));
+
 function toggleTheme() {
-	if (localStorage.getItem('theme') === 'dark') {
+	if (window.localStorage.getItem('theme') === 'dark') {
 		setTheme('light');
 		console.log("Theme is set to light-mode.");
 	} else {
@@ -12,17 +14,6 @@ function toggleTheme() {
 		console.log("Theme is set to dark-mode.");
 	}
 }
-
-(function () {
-	if (localStorage.getItem('theme') === 'dark') {
-		setTheme('dark');
-		console.log("Theme is set to dark-mode.");
-	} else {
-		setTheme('light');
-		console.log("Theme is set to light-mode.");
-	}
-})
-
 
 $(function() {
 	
@@ -192,7 +183,7 @@ $(function() {
 		disableUIStyles : true,
 	
 		formOptions :{
-			success: function(data){$("#status1").fadeTo(500,1,function(){ $(this).html("<span>Form was submitted!</span>").fadeTo(5000, 0); })},
+			success: function(_data){$("#status1").fadeTo(500,1,function(){ $(this).html("<span>Form was submitted!</span>").fadeTo(5000, 0); })},
 			beforeSubmit: function(data){$("#w1").html("<span>Form was submitted with ajax. Data sent to the server: " + $.param(data) + "</span>");},
 			resetForm: true
 		}
@@ -205,7 +196,7 @@ $(function() {
 		disableUIStyles : true,
 	
 		formOptions :{
-			success: function(data){$("#status2").fadeTo(500,1,function(){ $(this).html("<span>Form was submitted!</span>").fadeTo(5000, 0); })},
+			success: function(_data){$("#status2").fadeTo(500,1,function(){ $(this).html("<span>Form was submitted!</span>").fadeTo(5000, 0); })},
 			beforeSubmit: function(data){$("#w2").html("<span>Form was submitted with ajax. Data sent to the server: " + $.param(data) + "</span>");},
 			dataType: 'json',
 			resetForm: true
@@ -522,7 +513,7 @@ $(function() {
 			$(colpkr).fadeOut(500);
 			return false;
 		},
-		onChange: function (hsb, hex, rgb) {
+		onChange: function (_hsb, hex, _rgb) {
 			$('#cPicker div').css('backgroundColor', '#' + hex);
 		}
 	});
@@ -836,7 +827,7 @@ contextmenu : {
 			// Two methods of adding external items to the spinner
 			//
 			// method 1: on initalisation call the add method directly and format html manually
-			init: function(e, ui) {
+			init: function(_e, ui) {
 				for (var i=0; i<itemList.length; i++) {
 					ui.add('<a href="'+ itemList[i].url +'" target="_blank">'+ itemList[i].title +'</a>');
 				}
@@ -851,11 +842,11 @@ contextmenu : {
 	for (var n in opts)
 		$("#"+n).spinner(opts[n]);
 	
-	$("button").on("click", (function(e){
+	/*$("button").on("click", (function(e){
 		var ns = $(this).attr('id').match(/(s\d)\-(\w+)$/);
 		if (ns != null)
 			$('#'+ns[1]).spinner( (ns[2] == 'create') ? opts[ns[1]] : ns[2]);
-	}));
+	}));*/
 	
 	
 	
@@ -884,7 +875,7 @@ contextmenu : {
 		min: 0,
 		max: 500,
 		step: 50,
-		slide: function( event, ui ) {
+		slide: function( _event, ui ) {
 			$( "#amount" ).val( "$" + ui.value );
 		}
 	});
@@ -896,7 +887,7 @@ contextmenu : {
 		min: 0,
 		max: 500,
 		values: [ 75, 300 ],
-		slide: function( event, ui ) {
+		slide: function( _event, ui ) {
 			$( "#rangeAmount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
 		}
 	});
@@ -908,7 +899,7 @@ contextmenu : {
 		value: 37,
 		min: 1,
 		max: 700,
-		slide: function( event, ui ) {
+		slide: function( _event, ui ) {
 			$( "#minRangeAmount" ).val( "$" + ui.value );
 		}
 	});
@@ -920,7 +911,7 @@ contextmenu : {
 		min: 1,
 		max: 100,
 		value: 20,
-		slide: function( event, ui ) {
+		slide: function( _event, ui ) {
 			$( "#maxRangeAmount" ).val( ui.value );
 		}
 	});

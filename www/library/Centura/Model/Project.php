@@ -2,13 +2,11 @@
 
 namespace Centura\Model;
 
-use Centura\Model\DbTable_Project;
-
 use Zend_Registry;
 
 use Exception;
 
-class Project extends DbTable_Project
+class Project extends DbTable\Project
 {
     
 	public function save($data)

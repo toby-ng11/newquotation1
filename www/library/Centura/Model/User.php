@@ -2,9 +2,7 @@
 
 namespace Centura\Model;
 
-use Centura\Model\DbTable_User;
-
-class User extends DbTable_User
+class User extends DbTable\User
 {
 
     private $sales_group = array(1,2);

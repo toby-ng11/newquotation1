@@ -2,7 +2,6 @@
 
 namespace Centura\Model;
 
-use Centura\Model\DbTable_Quote;
 use Centura\Model\Customer;
 use Centura\Model\ProductProject;
 use Centura\Model\Project;
@@ -13,7 +12,7 @@ use Zend_Json;
 
 use Exception;
 
-class Quote extends DbTable_Quote
+class Quote extends DbTable\Quote
 {
     
 	public function save($data)

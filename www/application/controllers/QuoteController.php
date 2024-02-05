@@ -9,6 +9,12 @@ use Centura\Model\ProductProject;
 use Centura\Model\Item;
 use Centura\Model\ItemsProject;
 
+use Zend_Controller_Action;
+use Zend_Registry;
+use Zend_Json;
+
+use Exception;
+
 class QuoteController extends Zend_Controller_Action
 {
 

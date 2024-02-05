@@ -2,9 +2,7 @@
 
 namespace Centura\Model;
 
-use Centura\Model\DbTable_Item;
-
-class Item extends DbTable_Item
+class Item extends DbTable\Item
 {
     
 	public function fetchItembyid($item_id,$company=DEFAULT_COMPNAY_ID)

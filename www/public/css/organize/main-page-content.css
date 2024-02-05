@@ -50,25 +50,20 @@ h1 {
 }
 
 h2 {
-	font-size: 24px;
+	font-size: var(--type-heading-h2-font-size);
 }
 
 h3 {
-	font-size: 20.8px;
+	font-size: var(--type-heading-h3-font-size);
 }
 
 h4 {
-	font-size: 18px;
+	font-size: var(--type-heading-h4-font-size);
 }
 
 h5 {
-	font-size: 16px;
+	font-size: var(--type-heading-h5-font-size);
 }
-
-h6 {
-	font-size: 14px;
-}
-
 
 /*Media Queries*/
 @media screen and (min-width: 769px) {
@@ -77,6 +72,8 @@ h6 {
         padding: 0;
     }
 }
+
+
 
 @media screen and (min-width: 426px) {
     .main-page-content {

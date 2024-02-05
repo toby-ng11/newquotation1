@@ -1,7 +1,6 @@
 <?php
 
 use Centura\Model\Customer;
-use Centura\Model\DbTable_User;
 use Centura\Model\User;
 use Centura\Model\Quote;
 use Centura\Model\Location;
@@ -27,7 +26,7 @@ class ProjectController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $db = new DbTable_User();
+        $db = new User();
         
         $model = new Quote();
         
