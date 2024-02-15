@@ -1,5 +1,13 @@
 @use "sass:color";
-@use "../_vars.scss" as *;
+@use "../vars" as *;
+
+$centura-theme-light-widget-background: $mdn-color-neutral-light-70;
+$centura-theme-light-widget-hover: $mdn-color-white;
+$centura-theme-light-widget-box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+
+$centura-theme-dark-widget-background: $mdn-color-neutral-90;
+$centura-theme-dark-widget-hover: $mdn-color-neutral-75;
+$centura-theme-dark-widget-box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
 
 @mixin light-theme {
   --text-primary: #{$mdn-theme-light-text-primary};
@@ -9,6 +17,10 @@
   --text-link: #{$mdn-theme-light-text-link};
   --text-visited: #551a8b; // Source: https://searchfox.org/mozilla-central/rev/02841791400cf7cf5760c0cfaf31f5d772624253/modules/libpref/init/StaticPrefList.yaml#1787-1790
   --text-invert: #{$mdn-theme-light-text-invert};
+
+  --widget-background-primary: #{$centura-theme-light-widget-background};
+  --widget-background-hover: #{$centura-theme-light-widget-hover};
+  --widget-hover-box-shadow: #{$centura-theme-light-widget-box-shadow};
 
   --background-primary: #{$mdn-theme-light-background-primary};
   --background-secondary: #{$mdn-theme-light-background-secondary};
@@ -217,6 +229,10 @@
   --text-link: #{$mdn-theme-dark-text-link};
   --text-visited: #ffadff; // Source: https://searchfox.org/mozilla-central/rev/02841791400cf7cf5760c0cfaf31f5d772624253/modules/libpref/init/StaticPrefList.yaml#1794-1797
   --text-invert: #{$mdn-theme-dark-text-invert};
+
+  --widget-background-primary: #{$centura-theme-dark-widget-background};
+  --widget-background-hover: #{$centura-theme-dark-widget-hover};
+  --widget-hover-box-shadow: #{$centura-theme-dark-widget-box-shadow};
 
   --background-primary: #{$mdn-theme-dark-background-primary};
   --background-secondary: #{$mdn-theme-dark-background-secondary};

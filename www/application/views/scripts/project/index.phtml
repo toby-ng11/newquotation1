@@ -1,9 +1,5 @@
   <?php $session =  Zend_Registry::get('session'); ?>
 
-  <!-- Left panel -->
-<div>
-</div>
-
 <!-- Title area -->
 <main id="content" class="main-content">
   <div class="main-page-content">
@@ -48,7 +44,6 @@
             <h4>Project Information</h4>
           </div>
           <div class="formRow"> 
-            <div class="formRight">
               <div class="oneTwo required-field">
                 <label for="project_name" class="formNote"><strong>Project Name</strong> </label>
                 <input type="text" id='project_name' name='project_name' class="validate[required]" />
@@ -177,24 +172,6 @@
               </div>
               <input type="hidden" name='awarded_contractor'>
 
-            </div>
-            
-            <div class="formLeft">
-              <div class="statsRow">
-                <div class="wrapper">
-        	        <div class="controlB">
-            	      <ul>
-                		<!--<li><a href="/project/" class='add_pro' title="add"><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Project</span></a></li>-->
-                    <!--<li><a href="#" class='eidt_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
-                    <!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
-                    <li><a href="#" class='save_pro' title="save"><img src="/images/icons/control/32/save.png" alt="" /><span>Save Project</span></a></li>
-                    <!--<li><a href="#" class='delete_pro' title="delete"><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Project</span></a></li>-->
-                </ul>
-                <div class="clear"></div>
-            </div>
-        </div>
-    </div>
-            </div>
           </div>
         </div>
     </form>
@@ -351,4 +328,11 @@
 
 <!-- Right panel -->
 <div>
+  <div class="statsRow">
+          <a href="/project/" class='add_pro' title="add"><img src="/images/icons/control/32/plus.png" alt="" />Add Project</a>
+          <a href="#" class='edit_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" />Edit Project</a>
+          <a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" />Update Project</a>
+          <a href="#" class='save_pro' title="save"><img src="/images/icons/control/32/save.png" alt="" />Save Project</a>
+          <a href="#" class='delete_pro' title="delete"><img src="/images/icons/control/32/delete.png" alt="" />Delete Project</a>
+  </div>
 </div>

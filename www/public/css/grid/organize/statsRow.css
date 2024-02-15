@@ -1,0 +1,212 @@
+/* Statistic row
+================================================== */
+
+/* ===== Statistics ===== */
+
+.statsRow {
+	/* background: url(../images/backgrounds/titleRowBg.png); */
+	/* display: flex; */
+	/* position: sticky; */
+	top: 7rem;
+	/* bottom: 12rem; */
+	align-items: center;
+	gap: 1rem;
+	/* width: 100%; */
+	/* margin-top: 7rem; */
+}
+.add_pro, .edit_pro, .update_pro, .save_pro, .delete_pro {
+	position: relative;
+    border: 1px solid var(--border-primary);
+    border-radius: 5px;
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 0.3rem;
+    background: var(--widget-background-primary);
+    color: var(--text-secondary);
+	transition: all 0.3s ease-in-out;
+}
+
+.add_pro:hover, .edit_pro:hover, .update_pro:hover, .save_pro:hover, .delete_pro:hover {
+	background: var(--widget-background-hover);
+	color: var(--category-color);
+}
+
+.add_pro::after, .edit_pro::after, .update_pro::after, .save_pro::after, .delete_pro::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	border-radius: 5px;
+	z-index: -1;
+	box-shadow: var(--widget-hover-box-shadow);
+	transition: opacity 0.3s ease-in-out;
+}
+
+.add_pro:hover::after, .edit_pro:hover::after, .update_pro:hover::after, .save_pro:hover::after, .delete_pro:hover::after {
+	opacity: 1;
+}
+
+
+.statsItems {
+	padding: 20px 0 14px 0;
+	overflow: visible;
+	text-align: center;
+}
+
+.sItem { /*width: 15%; */
+	margin: 0 1%;
+	display: inline-block;
+	border: 1px solid #d5d5d5;
+	position: relative;
+	background: #eee url(../images/backgrounds/stats.png) repeat-x;
+}
+
+	.sItem:first-child {
+	}
+
+	.sItem > span {
+		display: block;
+		color: #626262;
+	}
+
+	.sItem > h2 {
+		float: left;
+	}
+
+		.sItem > h2 a {
+			display: block;
+			color: #626262;
+			background: #eee url(../images/backgrounds/stats.png) repeat-x;
+			cursor: pointer;
+		}
+
+			.sItem > h2 a:hover {
+				background-position: 0 -62px;
+			}
+
+			.sItem > h2 a:active {
+				background-position: 0 -124px;
+			}
+
+.value {
+	text-align: center;
+	padding: 12px 20px 5px 20px;
+	font-weight: bold;
+}
+
+	.value span {
+		display: block;
+		margin-top: 2px;
+		font-size: 12px;
+	}
+
+.changes {
+	text-align: center;
+	font-weight: bold;
+	font-size: 14px;
+	padding: 14px 18px 5px 18px;
+	float: left;
+	border-left: 1px solid #d5d5d5;
+}
+
+	.changes .negative {
+		background: url(../images/negArrow.png) no-repeat 0px 5px;
+		padding-left: 22px;
+		color: #db6464;
+		margin-top: 4px;
+		display: block;
+	}
+
+	.changes .positive {
+		background: url(../images/posArrow.png) no-repeat 0px 6px;
+		padding-left: 22px;
+		color: #6daa24;
+		margin-top: 4px;
+		display: block;
+	}
+
+	.changes .zero {
+		background: url(../images/zero.png) no-repeat 4px 6px;
+		padding-left: 20px;
+		color: #4e8fc6;
+		margin-top: 4px;
+		display: block;
+	}
+
+
+
+/* Stats dropdowns */
+
+.statsContent {
+	border: 2px solid #b0b0b0;
+	margin-top: 6px;
+	background: #f3f3f3;
+}
+
+.statsDetailed .subArrow {
+}
+
+.sElements {
+	background: url(../images/backgrounds/statsElementsBg.png) repeat-x;
+	text-align: center;
+}
+
+.statsDetailed {
+	position: absolute;
+	left: 50%;
+	top: 75px;
+	width: 222px;
+	z-index: 998;
+	background: url(../images/subArrowStats.png) no-repeat 50% 0;
+	display: none;
+	margin-left: -110px;
+}
+
+	.statsDetailed .statsDropBtn {
+		text-align: center;
+		padding: 12px 0 12px 0;
+	}
+
+		.statsDetailed .statsDropBtn a {
+			display: inline-block;
+		}
+
+	.statsDetailed .sDisplay {
+		background: url(../images/backgrounds/darkGreyCircle.png) no-repeat;
+		width: 57px;
+		height: 65px;
+		display: inline-block;
+		margin: 15px 5px 25px 5px;
+		text-align: center;
+	}
+
+		.statsDetailed .sDisplay h4 {
+			padding: 18px 0 30px 0;
+			display: block;
+			color: #fefefe;
+		}
+
+		.statsDetailed .sDisplay span {
+			font-size: 11px;
+		}
+
+.statsUpdate {
+	margin: 8px 12px 2px 12px;
+}
+
+	.statsUpdate span {
+		width: 95px;
+		display: inline-block;
+		text-align: right;
+	}
+
+		.statsUpdate span:first-child {
+			text-align: left;
+		}

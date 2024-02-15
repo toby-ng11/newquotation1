@@ -1,5 +1,3 @@
-
-
 $mdn-color-neutral-light-70: #f9f9fb;
 $mdn-color-neutral-light-80: #f2f1f1;
 $mdn-color-neutral-light-90: #ebeaea;
@@ -153,6 +151,7 @@ $mdn-color-black: #000;
 $mdn-color-white: #fff;
 $mdn-color-ads: #00d0aa;
 
+
 $mdn-theme-light-text-primary: $mdn-color-neutral-90;
 $mdn-theme-light-text-secondary: $mdn-color-neutral-70;
 $mdn-theme-light-text-active: #{$mdn-color-neutral-50};
@@ -252,3 +251,11 @@ $screen-xxl: 1441px;
 
 // screen is to small for sticky placement
 $screen-height-place-limit: 44rem;
+
+$centura-theme-light-widget-background: $mdn-color-neutral-light-70;
+$centura-theme-light-widget-hover: $mdn-color-white;
+$centura-theme-light-widget-box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+
+$centura-theme-dark-widget-background: $mdn-color-neutral-90;
+$centura-theme-dark-widget-hover: $mdn-color-neutral-75;
+$centura-theme-dark-widget-box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);

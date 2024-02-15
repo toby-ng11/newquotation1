@@ -1,6 +1,6 @@
-.sticky-header-container {
-    position: sticky;
-    top: 0;
-    z-index: var(--z-index-main-header);
-    box-shadow: 0px 1px 15px rgba(0,0,0,.2);
-}
+@import "top-navigation/top-navigation.css";
+@import "top-navigation-main/top-navigation-main.css";
+@import "container/container.css";
+@import "main-menu/main-menu.css";
+@import "welcome-menu/welcome-menu.css";
+@import "../logo/logo.css";

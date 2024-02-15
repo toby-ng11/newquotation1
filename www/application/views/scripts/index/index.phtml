@@ -2,19 +2,6 @@
 
 <!-- Left panel -->
 <div>
-<div class="statsRow">
-        <div class="wrapper">
-        	<div class="controlB">
-            	<ul>
-                	<li><a a target='_blank' href="/project" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Project</span></a></li>
-                   <!-- <li><a href="#" title=""><img src="images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>
-                    <li><a href="#" title=""><img src="images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>
-                    <li><a href="#" title=""><img src="images/icons/control/32/save.png" alt="" /><span>Save Project</span></a></li>
-                    <li><a href="#" title=""><img src="images/icons/control/32/delete.png" alt="" /><span>Delete Project</span></a></li>-->
-                </ul>
-            </div>
-        </div>
-    </div>
     <div class="middleNav">
             <ul>
                 <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
@@ -56,9 +43,6 @@
         <!-- <div class="nNote nInformation hideit">
             <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
         </div>-->
-        
-        <!-- Form -->
-        <form action="" class="form">
         <div class="title">
             <h3>My Projects : <?= count($this->ownproject ) ?></h3>
         </div>
@@ -97,7 +81,7 @@
         </div>
         <?php  if($session->user['approve_id'] != null ) {?>
         <div class="title">
-            <h6>Other Projects At <?=$session->user['company']; ?> : <?= count($this->otherprojects ) ?></h6>
+            <h3>Other Projects At <?=$session->user['company']; ?> : <?= count($this->otherprojects ) ?></h3>
         </div>
         <div class="widget-table">  
           <table width="100%" class="display nowrap" id='other_project_table'>
@@ -133,7 +117,7 @@
         </div>
         <?php } ?>
         <div class="title">
-            <h6>My Quotes : <?= count($this->ownquotes ) ?></h6>
+            <h3>My Quotes : <?= count($this->ownquotes ) ?></h3>
         </div> 
  		<div class="widget-table"> 
           <table width="100%" class="display nowrap" id='quote_table'>
@@ -176,10 +160,9 @@
               </tbody>
           </table>
         </div>
-        </form>
         
         <div class="title">
-            <h6>Follow Up Logs : <?= count($this->memo ) ?></h6>
+            <h3>Follow Up Logs : <?= count($this->memo ) ?></h3>
         </div>
         <div class="widget-table">
             <table width="100%" class="display nowrap" id='project_log'>
@@ -225,4 +208,19 @@
 
 <!-- Right panel -->
 <div>
+<div class="statsRow">
+        <div class="wrapper">
+        	<div class="controlB">
+            	<ul>
+                	<li>
+                        <a a target='_blank' href="/project" title="">
+                        <img src="/images/icons/control/32/plus.png" alt="" /><span>Add Project</span></a></li>
+                   <!-- <li><a href="#" title=""><img src="images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>
+                    <li><a href="#" title=""><img src="images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>
+                    <li><a href="#" title=""><img src="images/icons/control/32/save.png" alt="" /><span>Save Project</span></a></li>
+                    <li><a href="#" title=""><img src="images/icons/control/32/delete.png" alt="" /><span>Delete Project</span></a></li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>

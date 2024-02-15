@@ -14,7 +14,33 @@
     //echo Zend_Json::prettyPrint($json, array("indent" => " "));
 ?>
 <!-- Left panel -->
-<div>
+<div class="sidebar-container">
+<div class="toc-container">
+    <aside class="toc">
+        <nav>
+            <div class="document-toc-container">
+                <section class="document-toc">
+                    <header>
+                        <h2 class="document-toc-heading">On this page</h2>
+                    </header>
+                    <ul id="document-toc-list" class="document-toc-list">
+                        <!--<li class="document-toc-item">
+                            <a class="document-toc-link" href="#all_quotes">All quotes</a>
+                        </li>
+                        <li class="document-toc-item">
+                            <a class="document-toc-link" href="#all_projects">All projects</a>
+                        </li>-->
+                    </ul>
+                </section>
+            </div>
+        </nav>
+    </aside>
+    <section class="place side"></section>
+</div>
+</div>
+<!-- Title area -->
+<main id="content" class="main-content">
+
     <div class="middleNav">
         <ul>
             <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
@@ -34,11 +60,9 @@
              </li>
         </ul>
     </div>
-</div>
-<!-- Title area -->
-<main id="content" class="main-content">
+
     <div class="main-page-content">
-        <header>
+        <header class="main-page-content-header">
             <h1>All Quotes and Projects</h1>
         </header>
         <div class="section-content">
@@ -46,27 +70,26 @@
         </div>
 
     <!-- Form -->
-    <div class="title">
-        <h3>All Quotes :</h3>
-    </div>
-    <div class="widget-table">
-        <table width="100%" class="display nowrap" id='quote_table'>
-            <thead>
-                <tr>
-                  	<th data-priority="1">#</th>
-                    <th data-priority="2">Project Name</th>
-                    <th>Quote Seg</th>
-                    <th data-priority="4">Quote Date</th>
-                    <th data-priority="4">Expire Date</th>
-                    <th data-priority="4">Ship Required Date</th>
-                    <th data-priority="3">Project Status</th>
-                    <th data-priority="3">Approval Status</th>
-                </tr>
+    <section aria-labelledby="all_quotes" id="section1" data-nav="All Quotes" class="active">
+        <h2>All Quotes: <?= count($this->ownproject)?></h2>
+        <div class="widget-table">
+            <table width="100%" class="display nowrap" id='quote_table'>
+                <thead>
+                    <tr>
+                  	    <th data-priority="1">#</th>
+                        <th data-priority="2">Project Name</th>
+                        <th>Quote Seg</th>
+                        <th data-priority="4">Quote Date</th>
+                        <th data-priority="4">Expire Date</th>
+                        <th data-priority="4">Ship Required Date</th>
+                        <th data-priority="3">Project Status</th>
+                        <th data-priority="3">Approval Status</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <?php
-                $i = 0;
-                foreach($b as $p) {?>
+                    <?php
+                    $i = 0;
+                    foreach($b as $p) {?>
                     <tr>
                         <!--
                         <td><!<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>--<a target='_blank' href="/quote/edit/id/<?//=$p['quote_id']?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
@@ -91,15 +114,13 @@
                         if ($i >= 50) {break;}
                         ?>
                     </tr>
-                <?php } ?>
+                    <?php } ?>
                 </tbody>
             </table>
-
         </div>
-
-        <div class="title">
-            <h3>All Projects: <?= count($this->projects ) ?></h3>
-        </div>
+    </section>
+    <section aria-labelledby="all_projects" id="section2" data-nav="All Projects">
+        <h2>All Projects: <?= count($this->projects ) ?></h2>
         <div class="widget-table"> 
             <table width="100%" class="display nowrap" id="project_table">
                 <thead>
@@ -142,8 +163,9 @@
                     </tr>
                     <?php } ?> 
                 </tbody>
-                </table>
-            </div>
+            </table>
+        </div>
+    </section>
        
 
  
@@ -171,6 +193,24 @@
         </div>
     </main>
  
+<!-- Right panel -->
+<div class="sidebar-container">
+    <aside id="sidebar-quicklinks" class="sidebar">
+        <nav aria-label="Actions" class="sidebar-inner">
+            <div class="sidebar-inner-nav">
+                <div class="statsRow">
+                    <ol>
+                    <li><a href="/project/" class='add_pro' title="Add new project"><img src="/images/icons/control/32/plus.png" alt="" />Add Project</a></li>
+                    <li><a href="#" class='edit_pro' title="Edit project"><img src="/images/icons/control/32/doc_edit.png" alt="" />Edit Project</a></li>
+                    <li><a href="#" class='update_pro' title="Update project"><img src="/images/icons/control/32/refresh.png" alt="" />Update Project</a></li>
+                    <li><a href="#" class='save_pro' title="Save project"><img src="/images/icons/control/32/save.png" alt="" />Save Project</a></li>
+                    <li><a href="#" class='delete_pro' title="Delete project"><img src="/images/icons/control/32/delete.png" alt="" />Delete Project</a></li>
+                    </ol>
+                </div>
+            </div>
+        </nav>
+    </aside>
+</div>
 
 <script>
     oTable = $('#project_table,#asso_table').dataTable({
@@ -186,6 +226,73 @@
         "order": [[ 0, "desc" ]],
         
     });
+
+    const navList = document.getElementById("document-toc-list");
+    const items = ["All Quotes", "All Projects"];
+    
+    //Build the nav
+    items.forEach((item, i) => {
+        const el = document.createElement("a");
+        el.innerText = item;
+        el.classList.add("document-toc-link");
+        el.setAttribute("id", `menu-${i + 1}`);
+        el.href = `#section${i + 1}`;
+
+        const li = document.createElement("li");
+        li.classList.add("document-toc-item");
+        li.appendChild(el);
+        li.setAttribute("id", `${i + 1}`);
+        li.appendChild(el);
+
+        // Append the list item to the list
+        navList.appendChild(li);
+    });
+
+    //Make Nav Active when Clicked and scrolls down to section
+    navList.addEventListener("click", function(event) {
+        const targetItem = event.target.closest(".document-toc-item");
+        if (targetItem) {
+        const activeItem = navList.querySelector(".active");
+        if (activeItem) {
+            activeItem.classList.remove("active");
+        }
+        targetItem.classList.add("active");
+        window.location.href = `#${targetItem.id}`;
+    }
+    });
+
+    const topMenu = document.getElementById("document-toc-list");
+    const topMenuHeight = topMenu.offsetTop + 1;
+    const menuItems = document.querySelectorAll(".document-toc-link");
+    const scrollItems = document.querySelectorAll("section");
+
+    // Bind to scroll
+    window.addEventListener("scroll", function() {
+        // Get container scroll position
+        const mainHeroHeight = document.querySelector(".main-page-content-header").offsetTop;
+        let fromTop = window.pageYOffset + topMenuHeight + mainHeroHeight;
+        
+        // Get id of current scroll item
+        let id = "";
+
+        [...scrollItems].forEach(item => {
+            if (item.offsetTop < fromTop) {
+                id = item.id;
+            }
+        });
+
+        let lastId;
+
+        if (lastId !== id) {
+            lastId = id;
+
+            // Loop through menuItems and update aria-current accordingly
+            menuItems.forEach(item => {
+            const shouldBeCurrent = item.getAttribute("href") === `#${id}`;
+
+            // Update aria-current attribute
+            item.setAttribute("aria-current", shouldBeCurrent ? "true" : "false");
+            });
+        }
+    });
 </script>
-<!-- Right panel -->
-<div></div>

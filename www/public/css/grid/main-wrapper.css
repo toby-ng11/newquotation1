@@ -1,4 +1,15 @@
-.document-page .main-content, .document-page .metadata, .document-page .page-header, .document-page .sidebar {
+@import "organize/main-page-content1.css";
+@import "organize/statsRow.css";
+@import "sidebar/sidebar.css";
+@import "toc/document-toc.css";
+
+.document-page .article-actions-container,
+.document-page .document-toc-container,
+.document-page .generic-loading,
+.document-page .main-content,
+.document-page .metadata,
+.document-page .page-header,
+.document-page .sidebar {
     display: flex;
 }
 
@@ -7,13 +18,16 @@
     width: 100%;
 }
 
-
 .main-wrapper {
 	/* overflow: hidden; */
 	display: flex;
 	margin: auto;
 	max-width: var(--max-width);
-	/* min-width: 0; */
+	/*min-width: 0; */
+}
+
+.main-wrapper .toc {
+    display: none;
 }
 
 /* Media Queries */
@@ -21,15 +35,19 @@
 	.main-wrapper{
         display: grid;
         gap: 3rem;
-        grid-template-areas: "sidebar main";
-        grid-template-columns: minmax(0,1fr) minmax(0,2fr);
-        padding-left: 1.5rem;
-        padding-right: 3rem;
+        grid-template-areas: "main sidebar";
+        grid-template-columns: minmax(0,7fr) minmax(0,1fr);
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
     .main-wrapper .main-content, .main-wrapper .sidebar, .main-wrapper .toc {
 		padding-top: 2rem;
 		padding-bottom: 2rem;
 	}
+
+    .main-wrapper .sidebar {
+        padding-left: 1rem;
+    }
 
     .main-wrapper .main-content {
         grid-area: main;
@@ -39,12 +57,25 @@
 @media screen and (min-width: 1200px) {
     .main-wrapper {
         display: grid;
-        gap: 3rem;
+        gap: 2rem;
         grid-template-areas:
-            "sidebar main tools";
-        grid-template-columns: minmax(0,0.2fr) minmax(0,2.5fr) minmax(0,0.2fr);
+            "toc main sidebar";
+        grid-template-columns: minmax(0,0.4fr) minmax(0,2.5fr) minmax(0,9rem);
         padding-left: 1rem;
         padding-right: 1rem;
-        /* min-width: 0; */
+    }
+
+    .main-wrapper .toc {
+        --offset: var(--sticky-header-with-actions-height);
+        display: block;
+        grid-area: toc;
+        height:-webkit-fit-content;
+        height:-moz-fit-content;
+        height: fit-content;
+        padding-bottom: 0;
+    }
+
+    .main-wrapper .in-nav-toc {
+        display: none;
     }
 }

@@ -1,0 +1,467 @@
+.sidebar-container {
+    --offset: var(--sticky-header-with-actions-height);
+    --max-height: calc(100vh - var(var(--offset)));
+    max-height: var(--max-height);
+    position: sticky;
+    top:var(--offset);
+    z-index: var(--z-index-sidebar-mobile);
+}
+
+.main-page-content {
+    overflow-wrap: break-word;
+    padding: 3rem 1rem 1rem;
+}
+
+.main-page-content h1 a:link, .main-page-content h1 a:visited,
+.main-page-content h2 a:link, .main-page-content h2 a:visited,
+.main-page-content h3 a:link, .main-page-content h3 a:visited,
+.main-page-content h4 a:link, .main-page-content h4 a:visited,
+.main-page-content h5 a:link, .main-page-content h5 a:visited,
+.main-page-content h6 a:link, .main-page-content h6 a:visited
+{
+    color: var(--text-link);
+    text-decoration: none;
+}
+
+.main-page-content h1 a:hover, .main-page-content h1 a:focus,
+.main-page-content h2 a:hover, .main-page-content h2 a:focus,
+.main-page-content h3 a:hover, .main-page-content h3 a:focus,
+.main-page-content h4 a:hover, .main-page-content h4 a:focus,
+.main-page-content h5 a:hover, .main-page-content h5 a:focus,
+.main-page-content h6 a:hover, .main-page-content h6 a:focus
+{
+    text-decoration: underline;
+}
+
+.main-page-content h1 a:active,
+.main-page-content h2 a:active,
+.main-page-content h3 a:active,
+.main-page-content h4 a:active,
+.main-page-content h5 a:active,
+.main-page-content h6 a:active
+{
+    background-color: transparent;
+}
+
+.main-page-content h1 a[href^="#"]::before,
+.main-page-content h2 a[href^="#"]::before,
+.main-page-content h3 a[href^="#"]::before,
+.main-page-content h4 a[href^="#"]::before,
+.main-page-content h5 a[href^="#"]::before,
+.main-page-content h6 a[href^="#"]::before
+{
+    color: var(--text-inactive);
+    content: "#";
+    display: inline-block;
+    font-size: 0.7em;
+    line-height: 1;
+    margin-left: -0.8em;
+    text-decoration: none;
+    visibility: hidden;
+    width: 0.8em;
+}
+
+.main-page-content h1 a[href^="#"]:hover::before,
+.main-page-content h2 a[href^="#"]:hover::before,
+.main-page-content h3 a[href^="#"]:hover::before,
+.main-page-content h4 a[href^="#"]:hover::before,
+.main-page-content h5 a[href^="#"]:hover::before,
+.main-page-content h6 a[href^="#"]:hover::before
+{
+    visibility: hidden;
+}  
+
+/* Text */
+.main-page-content h1::after {
+    text-decoration-color: var(--category-color);
+}
+
+.main-page-content section h2:first-of-type {
+    margin-top: 2rem;
+}
+
+.main-page-content a:not(.button) {
+    color: var(--text-link);
+    width: fit-content;
+}
+
+.main-page-content a:not(.button):visited:not([href^="#"]) {
+    color: var(--text-visited);
+}
+
+.main-page-content a:not(.button):active,
+.main-page-content a:not(.button):active:visited {
+    background-color: var(--text-link);
+    color: #fff;
+}
+
+.main-page-content a:not(.button):active code,
+.main-page-content a:not(.button):active:visited code  {
+    background-color: transparent;
+    color: #fff;
+}
+
+.main-page-contenta:not(.button)[aria-current] {
+    color: var(--text-link);
+    font-weight: var(--font-body-strong-weight);
+    text-decoration: none;
+}
+
+.main-page-content img {
+    background: #fff;
+    border: 1px solid var(--border-primary) !important;
+    border-radius: var(--elem-radius);
+    /* Required to prevent the border from scaling images, making them look blurry. */
+    box-sizing: content-box;
+    /* Required for alt texts. */
+    color: #1b1b1b;
+    display: inline-block;
+    display: flex;
+    height: auto;
+    margin: 2rem auto;
+}
+
+.main-page-content ul,
+.main-page-content ol {
+    margin: 1rem 0 2rem;
+    padding-left: 2rem;
+}
+
+.main-page-content ul li,
+.main-page-content ol li {
+    margin: 0.5rem 0;
+}
+
+.main-page-content ul {
+    list-style: disc;
+}
+
+.main-page-content ul ul {
+    list-style-type: circle;
+    margin: 0;
+    padding-left: 1rem;
+}
+
+.main-page-content ol {
+    list-style: decimal;
+}
+
+.main-page-content ol ol {
+    list-style: lower-roman;
+    margin: 0;
+}
+
+.main-page-content dd ol,
+.main-page-content dd ul {
+    margin-bottom: 1rem;
+    padding-left: 3rem;
+}
+
+.main-page-content td ol,
+.main-page-content td ul {
+    padding-left: 1rem;
+}
+
+.main-page-content dd li {
+    margin-bottom: 1rem;
+}
+
+.main-page-content td li {
+    margin-bottom: 0.5rem;
+}
+
+.main-page-content dl dt {
+    margin-bottom: 0.5rem;
+    margin-top: 2rem;
+}
+
+.main-page-content dl dt a[href^="#"] {
+    color: inherit;
+    position: relative;
+    text-decoration: none;
+}
+
+.main-page-content dl dt a[href^="#"]:hover,
+.main-page-content dl dt a[href^="#"]:focus {
+    text-decoration: underline;
+}
+
+.main-page-content dl dt a[href^="#"]::before {
+    color: var(--text-inactive);
+    content: "#";
+    display: inline-flex;
+    font-size: 0.7em;
+    line-height: 1;
+    margin-left: -0.8em;
+    text-decoration: none;
+    top: 0.5em;
+    visibility: hidden;
+    width: 0.8em;
+}
+
+.main-page-content dl dt a[href^="#"]:hover::before {
+    visibility: visible;
+}
+
+.main-page-content dl dd {
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}
+
+.main-page-content dl dd .notecard p {
+    padding-left: 0;
+}
+
+.main-page-content dl dd dl {
+    /* Nested definition list. */
+    border-left: 1px solid var(--border-primary);
+    padding-left: 1rem;
+}
+
+.main-page-content dl p {
+    margin: 0 0 1rem;
+}
+
+.main-page-content .section-content p {
+    font: var(--type-article-p);
+}
+
+.main-page-content .section-content p:last-child {
+    margin-bottom: 2rem;
+}
+
+.main-page-content .section-content figure {
+    margin-bottom: 1rem;
+}
+
+/*.prev-next {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
+    list-style: none;
+    margin: 1rem 0;
+    padding: 0;
+    text-align: center;
+
+    li {
+      display: flex;
+      margin: 0;
+    }
+
+    .button {
+      margin: 0;
+      max-width: inherit;
+    }
+
+    .button-wrap {
+      color: inherit;
+    }
+  }
+
+  blockquote > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+@media screen and (min-width: $screen-sm) {
+  padding: 3rem;
+}
+
+@media screen and (min-width: $screen-md) {
+  margin-bottom: 0.5rem;
+  padding: 0;
+}
+}
+
+// Base typography styles. Trying to remove as much as possible from
+// the .main-page-content override.
+b,
+strong {
+font-weight: var(--font-body-strong-weight);
+letter-spacing: 0.02rem;
+}
+
+table {
+border: 1px solid var(--border-primary);
+border-collapse: collapse;
+width: 100%;
+
+th {
+  background: var(--background-tertiary);
+  font-weight: var(--font-body-strong-weight);
+  line-height: 1.5;
+  text-align: left;
+}
+
+td,
+th {
+  border: 1px solid var(--border-primary);
+  padding: 0.5rem 0.75rem;
+  vertical-align: middle;
+}
+
+td {
+  .code-example pre {
+    margin: 0;
+  }
+
+  ul {
+    margin: 0;
+  }
+}
+
+caption {
+  font-weight: var(--font-body-strong-weight);
+  margin: 1rem 0 0.5rem;
+}
+
+&.properties {
+  border: none;
+  font-size: var(--type-base-font-size);
+
+  th,
+  td {
+    border: none;
+  }
+
+  th {
+    background: none;
+  }
+
+  tr {
+    border-bottom: 1px solid var(--border-secondary);
+
+    &:first-child {
+      border-top: 1px solid var(--border-primary);
+    }
+
+    &:last-child {
+      border-bottom: 1px solid var(--border-primary);
+    }
+  }
+}
+
+&.properties,
+&.standard-table {
+  tr {
+    &:nth-child(odd) th,
+    &:nth-child(odd) td {
+      background-color: var(--background-secondary);
+    }
+  }
+}
+}
+
+iframe {
+border: 1px solid var(--border-primary);
+max-width: 100%;
+width: 100%;
+
+/* "Live Samples" discussion here:
+https://github.com/mdn/yari-private/issues/370,
+These src attributes taken from unsafe-html.js 
+&[src*="https://mdn.github.io"],
+&[src*="https://www.youtube-nocookie.com"],
+&[src*="https://jsfiddle.net"],
+&[src*="https://test262.report"],
+&.nobutton,
+&.sample-code-frame {
+  background: #fff;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--elem-radius);
+  box-sizing: content-box;
+  padding: 1rem;
+  width: calc(100% - 2rem - 2px);
+}
+}*/
+
+
+h1 {
+	font-size: var(--type-heading-h1);
+	margin-bottom: 2rem;
+	word-break: break-word;
+}
+
+h2 {
+	font-size: var(--type-heading-h2);
+    margin: 4rem 0 0.5rem;
+}
+
+h3 {
+	font-size: var(--type-heading-h3);
+    margin: 2rem 0 0.5rem;
+}
+
+/* When an h3 immediately follows an h2 we want to use
+ * a smaller top margin. We also make accommodation
+  for situations where there is an empty div
+  between the two elements */
+h2 ~ div ~ h3,
+h2 ~ h3 {
+    margin-top: 1rem;
+}
+
+h4 {
+	font-size: var(--type-heading-h4);
+    letter-spacing: 0.5px;
+    margin: 2rem 0 1rem;
+}
+
+h5 {
+	font-size: var(--type-heading-h5);
+    letter-spacing: 1.5px;
+    margin: 2rem 0 1rem;
+    text-transform: uppercase;
+
+}
+
+h6 {
+	font-size: var(--type-heading-h6);
+    letter-spacing: 1.5px;
+    margin: 2rem 0 1rem;
+    text-transform: uppercase;
+
+}
+
+/*Media Queries*/
+@media screen and (min-width: 1200px) {
+    .sidebar-container {
+        display: contents;
+    }
+
+    .sidebar-container .toc-container, .sidebar-container.toc-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        height: calc(100vh - var(--offset));
+        mask-image: linear-gradient(180deg, transparent 0, #000 3rem calc(100% - 3rem),transparent);
+        overflow:auto;
+        position: sticky;
+        top: var(--offset);
+    }
+}
+
+@media screen and (min-width: 769px) and (not (min-height: 44rem)) {
+    .sidebar-container {
+        overflow: auto;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .sidebar-container {
+        z-index: auto;
+    }
+
+    .main-page-content {
+        margin-bottom: .5rem;
+        padding: 0;
+    }
+}
+
+
+
+@media screen and (min-width: 426px) {
+    .main-page-content {
+        padding: 1rem;
+    }
+}

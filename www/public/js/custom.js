@@ -1,19 +1,3 @@
-function setTheme(themeName){
-	window.localStorage.setItem('theme', themeName);
-	document.documentElement.className = themeName;
-}
-
-window.onload = setTheme(window.localStorage.getItem('theme'));
-
-function toggleTheme() {
-	if (window.localStorage.getItem('theme') === 'dark') {
-		setTheme('light');
-		console.log("Theme is set to light-mode.");
-	} else {
-		setTheme('dark');
-		console.log("Theme is set to dark-mode.");
-	}
-}
 
 $(function() {
 	

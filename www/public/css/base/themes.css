@@ -19,7 +19,10 @@ body,
   --text-link: #0069c2;
   --text-visited: #551a8b;
   --text-invert: #fff;
-  --background-primary: #ffffff;
+  --widget-background-primary: #f9f9fb;
+  --widget-background-hover: #fff;
+  --widget-hover-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  --background-primary: #fff;
   --background-secondary: #f9f9fb;
   --background-tertiary: #fff;
   --background-toc-active: #ebeaea;
@@ -133,20 +136,17 @@ body,
   --form-invalid-focus-effect-color: rgba(255, 42, 81, 0.2);
   --baseline-high-bg: #e6f4ea;
   --baseline-high-engine-bg: #ceead6;
-  --baseline-high-img: url(
-  "../../assets/icons/baseline/high.svg");
+  --baseline-high-img: url("../../assets/icons/baseline/high.svg");
   --baseline-high-check: #099949;
   --baseline-low-bg: #e8f0fe;
   --baseline-low-engine-bg: #d2e3fc;
   --baseline-low-check: #1a73e8;
-  --baseline-low-img: url(
-  "../../assets/icons/baseline/low.svg");
+  --baseline-low-img: url("../../assets/icons/baseline/low.svg");
   --baseline-low-pill-bg: #3367d6;
   --baseline-low-pill-color: #f1f3f4;
   --baseline-limited-bg: #f1f3f4;
   --baseline-limited-engine-bg: #e3e6e8;
-  --baseline-limited-img: url(
-  "../../assets/icons/baseline/limited.svg");
+  --baseline-limited-img: url("../../assets/icons/baseline/limited.svg");
   --baseline-limited-check: #1e8e3e;
   --baseline-limited-cross: #ea8600;
   color-scheme: light;
@@ -160,6 +160,9 @@ body,
   --text-link: #8cb4ff;
   --text-visited: #ffadff;
   --text-invert: #1b1b1b;
+  --widget-background-primary: #1b1b1b;
+  --widget-background-hover: #313131;
+  --widget-hover-box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
   --background-primary: #1b1b1b;
   --background-secondary: #313131;
   --background-tertiary: #1b1b1b;
@@ -299,6 +302,9 @@ body,
     --text-link: #0069c2;
     --text-visited: #551a8b;
     --text-invert: #fff;
+    --widget-background-primary: #f9f9fb;
+    --widget-background-hover: #fff;
+    --widget-hover-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     --background-primary: #fff;
     --background-secondary: #f9f9fb;
     --background-tertiary: #fff;
@@ -438,6 +444,9 @@ body,
     --text-link: #8cb4ff;
     --text-visited: #ffadff;
     --text-invert: #1b1b1b;
+    --widget-background-primary: #1b1b1b;
+    --widget-background-hover: #313131;
+    --widget-hover-box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
     --background-primary: #1b1b1b;
     --background-secondary: #313131;
     --background-tertiary: #1b1b1b;
