@@ -275,4 +275,8 @@ svg.icon {
   margin-top: -0.1rem;
 }
 
+svg.icon-action path {
+  stroke: var(--accent-primary);
+}
+
 /*# sourceMappingURL=icon.css.map */

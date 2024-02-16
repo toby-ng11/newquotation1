@@ -3,7 +3,7 @@
 
 /* ===== Statistics ===== */
 
-.statsRow {
+.quick-links {
 	/* background: url(../images/backgrounds/titleRowBg.png); */
 	/* display: flex; */
 	/* position: sticky; */
@@ -14,12 +14,12 @@
 	/* width: 100%; */
 	/* margin-top: 7rem; */
 }
-.add_pro, .edit_pro, .update_pro, .save_pro, .delete_pro {
+
+.quick-link {
 	position: relative;
     border: 1px solid var(--border-primary);
     border-radius: 5px;
-    padding-top: 1rem;
-    padding-bottom: 0.5rem;
+	padding: 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -30,12 +30,12 @@
 	transition: all 0.3s ease-in-out;
 }
 
-.add_pro:hover, .edit_pro:hover, .update_pro:hover, .save_pro:hover, .delete_pro:hover {
+.quick-link:hover {
 	background: var(--widget-background-hover);
 	color: var(--category-color);
 }
 
-.add_pro::after, .edit_pro::after, .update_pro::after, .save_pro::after, .delete_pro::after {
+.quick-link::after {
 	content: '';
 	position: absolute;
 	top: 0;
@@ -49,7 +49,7 @@
 	transition: opacity 0.3s ease-in-out;
 }
 
-.add_pro:hover::after, .edit_pro:hover::after, .update_pro:hover::after, .save_pro:hover::after, .delete_pro:hover::after {
+.quick-link:hover::after {
 	opacity: 1;
 }
 
@@ -67,9 +67,6 @@
 	position: relative;
 	background: #eee url(../images/backgrounds/stats.png) repeat-x;
 }
-
-	.sItem:first-child {
-	}
 
 	.sItem > span {
 		display: block;
@@ -148,9 +145,6 @@
 	border: 2px solid #b0b0b0;
 	margin-top: 6px;
 	background: #f3f3f3;
-}
-
-.statsDetailed .subArrow {
 }
 
 .sElements {

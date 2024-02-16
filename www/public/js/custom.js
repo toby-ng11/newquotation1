@@ -1,3 +1,74 @@
+function createTocList(itemsArray) {
+	const navList = document.getElementById("document-toc-list");
+    //const items = ["All Quotes", "All Projects"];
+    
+    //Build the nav
+    itemsArray.forEach((item, i) => {
+        const el = document.createElement("a");
+        el.innerText = item;
+        el.classList.add("document-toc-link");
+        el.setAttribute("id", `menu-${i + 1}`);
+        el.href = `#section${i + 1}`;
+
+        const li = document.createElement("li");
+        li.classList.add("document-toc-item");
+        li.appendChild(el);
+        li.setAttribute("id", `${i + 1}`);
+        li.appendChild(el);
+
+        // Append the list item to the list
+        navList.appendChild(li);
+    });
+
+    //Make Nav Active when Clicked and scrolls down to section
+    navList.addEventListener("click", function(event) {
+        const targetItem = event.target.closest(".document-toc-item");
+        if (targetItem) {
+        const activeItem = navList.querySelector(".active");
+        if (activeItem) {
+            activeItem.classList.remove("active");
+        }
+        targetItem.classList.add("active");
+        window.location.href = `#${targetItem.id}`;
+    }
+    });
+
+    const topMenu = document.getElementById("document-toc-list");
+    const topMenuHeight = topMenu.offsetTop + 1;
+    const menuItems = document.querySelectorAll(".document-toc-link");
+    const scrollItems = document.querySelectorAll("section");
+
+    // Bind to scroll
+    window.addEventListener("scroll", function() {
+        // Get container scroll position
+        const mainHeroHeight = document.querySelector(".main-page-content-header").offsetTop;
+        let fromTop = window.scrollY + topMenuHeight + mainHeroHeight;
+        
+        // Get id of current scroll item
+        let id = "";
+
+        [...scrollItems].forEach(item => {
+            if (item.offsetTop < fromTop) {
+                id = item.id;
+            }
+        });
+
+        let lastId;
+
+        if (lastId !== id) {
+            lastId = id;
+
+            // Loop through menuItems and update aria-current accordingly
+            menuItems.forEach(item => {
+            const shouldBeCurrent = item.getAttribute("href") === `#${id}`;
+
+            // Update aria-current attribute
+            item.setAttribute("aria-current", shouldBeCurrent ? "true" : "false");
+            });
+        }
+    });
+}
+
 
 $(function() {
 	

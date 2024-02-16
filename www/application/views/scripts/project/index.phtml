@@ -1,48 +1,67 @@
-  <?php $session =  Zend_Registry::get('session'); ?>
+<?php $session =  Zend_Registry::get('session'); ?>
+
+<!-- Left panel -->
+<div class="sidebar-container">
+<div class="toc-container">
+    <aside class="toc">
+        <nav>
+            <div class="document-toc-container">
+                <section class="document-toc">
+                    <header>
+                        <h2 class="document-toc-heading">On this page</h2>
+                    </header>
+                    <ul id="document-toc-list" class="document-toc-list">
+                        <!--<li class="document-toc-item">
+                            <a class="document-toc-link" href="#all_quotes">All quotes</a>
+                        </li>
+                        <li class="document-toc-item">
+                            <a class="document-toc-link" href="#all_projects">All projects</a>
+                        </li>-->
+                    </ul>
+                </section>
+            </div>
+        </nav>
+    </aside>
+    <section class="place side"></section>
+</div>
+</div>
 
 <!-- Title area -->
 <main id="content" class="main-content">
+
+  <div class="middleNav">
+    <ul>
+      <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
+        <ul class="mSub1">
+          <li><a href="#" title="">Share user</a></li>
+          <li><a href="#" title="">Show Teamworks</a></li>
+        </ul>
+      </li>
+                   
+      <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
+        <ul class="mSub4">
+          <li><a href="#" title="">Add</a></li>
+          <li><a href="#" title="">Save</a></li>
+          <li><a href="#" title="">Edit</a></li>
+          <li><a href="#" title="">Delete</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
   <div class="main-page-content">
-    <header class="pageTitle">
+    <header class="main-page-content-header">
       <h1>Add Project</h1>
     </header>
     <div class="section-content">
-      <p>Add new project.</p>
-    </div>
-    <div class="middleNav">
-      <ul>
-        <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
-          <ul class="mSub1">
-            <li><a href="#" title="">Share user</a></li>
-            <li><a href="#" title="">Show Teamworks</a></li>
-          </ul>
-        </li>
-                   
-        <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
-          <ul class="mSub4">
-            <li><a href="#" title="">Add</a></li>
-            <li><a href="#" title="">Save</a></li>
-            <li><a href="#" title="">Edit</a></li>
-            <li><a href="#" title="">Delete</a></li>
-          </ul>
-        </li>
-      </ul>
+      <p>Add a new project.</p>
     </div>
     
-  <!-- Main content wrapper -->
-  <div class="wrapper">
-    
-    <!-- Note -->
-    <!-- <div class="nNote nInformation hideit">
-      <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
-    </div>-->
-        
-    <!-- Form -->
-    <form action="/project/save" method="post" class="form" id='project_content'> 
-      <div class="widget-table">
-          <div class="title">
-            <h4>Project Information</h4>
-          </div>
+    <!-- Main content wrapper -->
+    <section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
+      <h2>Project Information</h2>
+      <form action="/project/save" method="post" class="form" id='project_content'> 
+        <div class="widget-table">
           <div class="formRow"> 
               <div class="oneTwo required-field">
                 <label for="project_name" class="formNote"><strong>Project Name</strong> </label>
@@ -177,13 +196,36 @@
     </form>
         
        
+    </section>
   </div>
-</div>
 </main>
 
+<!-- Right panel -->
+<div class="sidebar-container">
+    <aside id="sidebar-quicklinks" class="sidebar">
+        <nav aria-label="Actions" class="sidebar-inner">
+            <div class="sidebar-inner-nav">
+                <div class="quick-links">
+                    <ol>
+                    <li><a href="#" class='quick-link save-project' title="Save project">
+                        <svg class="icon-action" width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 19.8935C17.1722 19.7353 18.799 19.4232 19.1111 19.1111C19.5556 18.6667 20 15.5556 20 12C20 11.3687 19.9621 10.4239 19.9316 9.76377C19.9088 9.27176 19.7009 8.80741 19.3526 8.45914L15.5409 4.6474C15.1926 4.29913 14.7282 4.09124 14.2362 4.06844C13.5761 4.03786 12.6313 4 12 4C8.44444 4 5.33333 4.44444 4.88889 4.88889C4.44444 5.33333 4 8.44444 4 12C4 15.5556 4.44444 18.6667 4.88889 19.1111C5.20096 19.4232 6.82776 19.7353 9 19.8935M15 19.8935C14.0786 19.9606 13.059 20 12 20C10.941 20 9.92143 19.9606 9 19.8935M15 19.8935V18C15 18 15 15 12 15C9 15 9 18 9 18V19.8935" stroke="#2D75C3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Save Project</a></li>
+                    </ol>
+                </div>
+            </div>
+        </nav>
+    </aside>
+</div>
+
    	
-<script type="text/javascript" >
-	  function getcustomerbyid(id,obj)
+<script>
+
+  const items = ["Project Information"];
+  createTocList(items);
+
+	function getcustomerbyid(id,obj)
 		{
 			$('.loading').show();
 			$.ajax({
@@ -313,7 +355,7 @@
 				.appendTo( ul );
 		};
   	
-  	$('.save_pro').on("click", function(e){
+  	$('.save-project').on("click", function(e){
   			e.preventDefault();
 				if($("#project_content").validationEngine('validate') ==true)
 				{
@@ -325,14 +367,3 @@
   	
 
    		</script>
-
-<!-- Right panel -->
-<div>
-  <div class="statsRow">
-          <a href="/project/" class='add_pro' title="add"><img src="/images/icons/control/32/plus.png" alt="" />Add Project</a>
-          <a href="#" class='edit_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" />Edit Project</a>
-          <a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" />Update Project</a>
-          <a href="#" class='save_pro' title="save"><img src="/images/icons/control/32/save.png" alt="" />Save Project</a>
-          <a href="#" class='delete_pro' title="delete"><img src="/images/icons/control/32/delete.png" alt="" />Delete Project</a>
-  </div>
-</div>
