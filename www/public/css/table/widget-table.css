@@ -32,6 +32,17 @@
 	opacity: 1;
 }
 
+.widget-information {
+	display: flex;
+	flex: 1;
+	flex-direction: row;
+	gap: 2rem;
+}
+
+.widget-table p {
+	margin: 0;
+}
+
 /* === Numeric data === */
 
 .widget .num {

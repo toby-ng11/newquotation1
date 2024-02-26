@@ -2,71 +2,50 @@
 
 <!-- Left panel -->
 <div class="sidebar-container">
-  <div class="toc-container">
-    <aside class="toc">
-      <nav>
-        <div class="document-toc-container">
-          <section class="document-toc">
-            <header>
-              <h2 class="document-toc-heading">On this page</h2>
-            </header>
-            <ul id="document-toc-list" class="document-toc-list"></ul>
-          </section>
-        </div>
-      </nav>
-    </aside>
-    <section class="place side"></section>
-  </div>
+	<div class="toc-container">
+		<aside class="toc">
+			<nav>
+				<div class="document-toc-container">
+					<section class="document-toc">
+						<header>
+							<h2 class="document-toc-heading">On this page</h2>
+						</header>
+						<ul id="document-toc-list" class="document-toc-list"></ul>
+					</section>
+				</div>
+			</nav>
+		</aside>
+		<section class="place side"></section>
+	</div>
 </div>
 
 <!-- Title area -->
 <?php $project = $this->project; ?>
 <main id="content" class="main-content">
-	<div class="main-page-content">
-		<div class="wrapper">
-			<header class="pageTitle">
-				<h1>Price Quote</h1>
-				<p>Project Name: <b><?= $project['project_name'] ?></b> | Project Quote No: <b><?= $project['quote_no'] ?></b> | Worksheet Owner: <b><?= $project['owner'] ?></b> | Status: <b><?= $project['status_name'] ?></b> | Due Date: <b><?= $project['due_date']->format('Y-m-d')  ?></b></p>
-			</header>
-			<div class="middleNav">
-				<ul>
-					<li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
-						<ul class="mSub1">
-							<li><a href="#" title="">Share user</a></li>
-							<li><a href="#" title="">Show Teamworks</a></li>
-						</ul>
-					</li>
-
-					<li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
-						<ul class="mSub4">
-							<li><a href="#" title="">Add</a></li>
-							<li><a href="#" title="">Save</a></li>
-							<li><a href="#" title="">Edit</a></li>
-							<li><a href="#" title="">Delete</a></li>
-						</ul>
-					</li>
+	<div class="middleNav">
+		<ul>
+			<li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
+				<ul class="mSub1">
+					<li><a href="#" title="">Share user</a></li>
+					<li><a href="#" title="">Show Teamworks</a></li>
 				</ul>
-			</div>
+			</li>
 
-			<div id='status'>
-				<?php if ($this->quote['approve_status'] == 1) { ?>
-					<div class="nNote nInformation hideit">
-						<p><strong>INFORMATION: </strong>Your quote is waiting for approval.</p>
-					</div>
-				<?php } ?>
-				<?php if ($this->quote['approve_status'] == 10) { ?>
-					<div class="nNote nSuccess hideit">
-						<p><strong>INFORMATION: </strong>Your quote has been approved.</p>
-					</div>
-				<?php } ?>
-				<?php if ($this->quote['approve_status'] == -1) { ?>
-					<div class="nNote nFailure hideit">
-						<p><strong>INFORMATION: </strong>Your quote is disapproved.</p>
-					</div>
-				<?php } ?>
-			</div>
-		</div>
+			<li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
+				<ul class="mSub4">
+					<li><a href="#" title="">Add</a></li>
+					<li><a href="#" title="">Save</a></li>
+					<li><a href="#" title="">Edit</a></li>
+					<li><a href="#" title="">Delete</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
 
+	<div class="main-page-content">
+		<header class="main-page-content-header">
+			<h1>Price Quote</h1>
+		</header>
 		<!-- Page statistics area -->
 		<!-- <div class="statsRow">
         <div class="wrapper">
@@ -96,182 +75,234 @@
     </div> -->
 
 		<!-- Main content wrapper -->
-		<div class="wrapper">
+		<section aria-labelledby="project-information" id="section1" data-nav="Project information" class="active">
+			<h2>Project information</h2>
+				<div class="widget-information">
+					<div class="widget-table">
+					<div class="project-information">
+						<p>Project Name: <b><?= $project['project_name'] ?></b><br>
+							Project Quote No: <b><?= $project['quote_no'] ?></b><br>
+							Worksheet Owner: <b><?= $project['owner'] ?></b><br>
+							Status: <b><?= $project['status_name'] ?></b><br>
+							Due Date: <b><?= $project['due_date']->format('Y-m-d') ?></b>
+						</p>
+					</div>
+					</div>
+					<div class="widget-table">
+					<div id="status">
+						<?php if ($this->quote['approve_status'] == 1) { ?>
+							<div class="nNote nInformation hideit">
+								<p><strong>INFORMATION: </strong>Your quote is waiting for approval.</p>
+							</div>
+						<?php } ?>
+						<?php if ($this->quote['approve_status'] == 10) { ?>
+							<div class="nNote nSuccess hideit">
+								<p><strong>INFORMATION: </strong>Your quote has been approved.</p>
+							</div>
+						<?php } ?>
+						<?php if ($this->quote['approve_status'] == -1) { ?>
+							<div class="nNote nFailure hideit">
+								<p><strong>INFORMATION: </strong>Your quote is disapproved.</p>
+							</div>
+						<?php } ?>
+					</div>
+						</div>
+				</div>
+		</section>
 
-			<!-- Note -->
-			<!-- <div class="nNote nInformation hideit">
-            <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
-        </div>-->
-
-			<!-- Form -->
-			<form method='post' class="form" id="quote_content">
-				<input type="hidden" name='project_id' value="<?= $project['project_id'] ?>" />
+		<!-- Form -->
+		<form method='post' class="form" id="quote_content">
+			<section aria-labelledby="customer-information" id="section2" data-nav="Customer information">
+				<h2>Customer infomation</h2>
 				<div class="widget-table" id="customer_info">
-					<div class="title"><img src="/images/icons/dark/user.png" alt="" class="titleIcon" />
-						<h6>Customer Infomation</h6><a href="javascript:void(0)" title="" class="button greenB" style="margin: 2px;" id="add_new_mode"><span>New Customer</span></a><a href="javascript:void(0)" title="" class="button basic" style='display:none;' style="margin: 2px;" id="discard_new_mode"><span>Discard Adding</span></a>
-					</div>
+					<a href="javascript:void(0)" title="" class="button greenB" style="margin: 2px;" id="add_new_mode"><span>New Customer</span></a>
+					<a href="javascript:void(0)" title="" class="button basic" style='display:none;' style="margin: 2px;" id="discard_new_mode"><span>Discard Adding</span></a>
+					<input type="hidden" name='project_id' value="<?= $project['project_id'] ?>" />
 					<div class="formRow">
-						<label>Quote To:<span class="req">*</span></label>
-						<div class="formRight"><input type="text" value="<?= $this->customer['name'] ?>" id='quote' name='name' /></div>
-						<div class="clear"></div>
-					</div>
-					<div class="formRow">
-						<label>Address:<span class="req">*</span></label>
-						<div class="formRight"><input type="text" value="<?= $this->customer['phys_address1'] ?>" id='address' name='phys_address1' readonly /></div>
-						<div class="clear"></div>
-					</div>
-					<div class="formRow">
-						<label>Tel:<span class="req">*</span></label>
-						<div class="formRight"><input type="text" id='tel' name='phone' class="maskPhoneExt" value="<?= $this->customer['tel'] ?>" id='tel' name='tel' readonly /></div>
-						<div class="clear"></div>
-					</div>
-					<div class="formRow">
-						<label>Customer ID :<span class="req">*</span></label>
-						<div class="formRight"><input name='customer_id' type="text" id='customer_id' class="validate[custom[integer]]" value="<?= $this->customer['customer_id'] ?>" placeholder="Leave blank for add new customer" readonly /></div>
-						<div class="clear"></div>
-					</div>
-					<div class="formRow">
-						<label>Contact:<span class="req">*</span></label>
-						<div class="formRight"><input type="text" id='contact' name='fullname' value="<?= $this->customer['fullname'] ?>" class="validate[required]" placeholder="Enter Customer Name to fetch existing customer" /></div>
-						<div class="clear"></div>
-					</div>
-					<div class="formRow">
-						<label>Email:<span class="req">*</span></label>
-						<div class="formRight"><input type="text" value="<?= $this->customer['email'] ?>" id='customer_email' name='Contacts_email' class="validate[custom[email]]" placeholder="Enter Customer Email to fetch existing customer"></div>
-						<div class="clear"></div>
-					</div>
-				</div>
-				<div class="widget-table">
-					<div class="title"><img src="/images/icons/dark/pencil.png" alt="" class="titleIcon" />
-						<h6>Quote Infomation</h6>
-					</div>
-					<div class="formRow">
-						<div class="formRight" style="width:98%">
-							<span class="oneFour"><span class="formNote">Quote Number</span><input type="text" value='<?= $this->quote['quote_id'] ?>' readonly /></span>
-							<span class="oneFour"><span class="formNote">Quote Date</span><input type="text" class="datepicker" value="<?= $this->quote['quote_date']->format('Y-m-d') ?>" /></span>
-							<span class="oneFour"><span class="formNote">Ship Required Date</span><input type="text" class="datepicker" name='ship_required_date' value="<?php if ($this->quote['ship_required_date'] != null && $this->quote['ship_required_date']->format('Y-m-d') > '2000-01-01') {
-																																												echo $this->quote['ship_required_date']->format('Y-m-d');
-																																											} ?>" /></span>
-							<span class="oneFour"><span class="formNote">Quote Type</span>
-								<select name="quote_type_id" id='quote_type' class="validate[required]">
-									<option value="">Select Quote type</option>
-									<?php foreach ($this->type as $t) { ?>
-										<option value="<?= $t['uid'] ?>" <?php if ($t['uid'] == $this->quote['quote_type_id']) echo 'selected'; ?>><?= $t['type'] ?></option>
-									<?php } ?>
-								</select>
-							</span>
+						<div class="oneTwo required-field">
+							<label for="quote"><b>Quote To</b></label>
+							<input type="text" value="<?= $this->customer['name'] ?>" id='quote' name='name' />
 						</div>
-						<div class="clear"></div>
-						<div class="formRight" style="width:98%">
-							<span class="oneFour"><span class="formNote">Project Name</span><input type="text" value="<?= $project['project_name'] ?>" readonly /></span>
-							<span class="oneFour"><span class="formNote">Project Location</span><input type="text" value="<?= $project['project_location_address'] ?>" readonly /></span>
-							<span class="oneFour"><span class="formNote">Sale Rep</span><input id='sale_rep' name='sale_rep' type="text" value="<?= $this->quote['sales_id'] ?>" readonly /></span>
-							<span class="oneFour"><span class="formNote">Arch Rep.<span class="req">*</span></span>
-								<select id='arch' name='arch' class="validate[required]">
-									<?php if ($session->user['approve_id'] != null) { ?>
-										<?php foreach ($this->arch as $a) { ?>
-											<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $this->quote['arch']) echo 'selected'; ?>><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
-										<?php } ?>
-									<?php } else { ?>
-										<?php foreach ($this->arch as $a) { ?>
-											<?php if ($a['id'] == $this->quote['arch']) { ?><option value="<?= $a['id'] ?>" selected><?= $a['name'] . ' - ' . $a['default_company'] ?></option> <?php } ?>
-										<?php } ?>
-									<?php } ?>
-								</select>
-							</span>
-							<input type="hidden" name="sales_id" value="<?= $session->user['id'] ?>"" />
-                        </div>
-                        <div class=" clear">
-						</div>
-						<div class="formRight" style="width:98%">
-							<span class="oneFour"><span class="formNote">Segment<span class="req">*</span></span><input type="text" class="validate[required]" id='Segment' placeholder="123456-" name='quote_segment' value='<?= $this->quote['quote_segment'] ?>' /></span>
-							<span class="oneFour"><span class="formNote">Quote Approval<span class="req">*</span></span>
-								<select id="quote_approval">
-									<?php foreach ($this->approval as $a) { ?>
-										<?php if ($a['uid'] == $this->quote['quote_approval']) { ?><option value="<?= $a['uid'] ?>" selected><?= $a['Name'] . ' - ' . $a['Company_ID'] ?></option> <?php } ?>
-									<?PHP } ?>
-								</select>
-							</span>
-						</div>
-						<div class="clear"></div>
-					</div>
-				</div>
 
-				<div class="widget-table">
-					<div class="title"><span class="titleIcon"><input type="checkbox" id="titleCheck" name="titleCheck" /></span>
-						<h6>Items</h6><a href="#" title="" class="button greenB" style="margin: 5px;" id="opener"><span>Add new Item</span></a> </a>
+						<div class="oneTwo required-field">
+							<label for="address"><b>Address</b></label>
+							<input type="text" value="<?= $this->customer['phys_address1'] ?>" id='address' name='phys_address1' readonly />
+						</div>
+						<div class="oneTwo required-field">
+							<label for="tel"><b>Tel</b></label>
+							<input type="text" id='tel' name='phone' class="maskPhoneExt" value="<?= $this->customer['tel'] ?>" id='tel' name='tel' readonly />
+						</div>
+						<div class="oneTwo required-field">
+							<label for="customer_id"><b>ID</b></label>
+							<input name='customer_id' type="text" id='customer_id' class="validate[custom[integer]]" value="<?= $this->customer['customer_id'] ?>" placeholder="Leave blank for add new customer" readonly />
+						</div>
+						<div class="oneTwo required-field">
+							<label for="contact"><b>Contact</b></label>
+							<input type="text" id='contact' name='fullname' value="<?= $this->customer['fullname'] ?>" class="validate[required]" placeholder="Enter Customer Name to fetch existing customer" />
+						</div>
+						<div class="oneTwo required-field">
+							<label for="customer_email"><b>Email</b></label>
+							<input type="text" value="<?= $this->customer['email'] ?>" id='customer_email' name='Contacts_email' class="validate[custom[email]]" placeholder="Enter Customer Email to fetch existing customer">
+						</div>
 					</div>
-					<div class="clear"></div>
-					<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
-						<thead>
-							<tr>
-								<td></td>
-								<td width="60%">Item ID - Description</td>
-								<td>Quality Quoted</td>
-								<td>Unit Price</td>
-								<td>Unit Of Measure</td>
-								<td>Price Quoted</td>
-								<td>Action</td>
-							</tr>
-						</thead>
-						<tbody id="item_body">
-							<?PHP foreach ($this->items as $i) { ?>
-								<tr name="item[<?= $i['product_id'] ?>]">
-									<td><input type="checkbox" name="item[<?= $i['product_id'] ?>]"></td>
-									<td><?= $i['product_id'] ?> - <?= $i['item_desc'] ?>
-										<textarea rows="1" cols="" name="item[<?= $i['product_id'] ?>][note][]"><?= $i['note'] ?></textarea>
-									</td>
-									<td><?= $i['qty'] ?></td>
-									<td><?= $i['unit_price'] ?></td>
-									<td><?= $i['uom'] ?></td>
-									<td><?= $i['subtotal'] ?></td>
-									<input type="hidden" name="item[<?= $i['product_id'] ?>][qty][]" value="<?= $i['qty'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][unit_price][]" value="<?= $i['unit_price'] ?>">
-									<input type="hidden" name="item[<?= $i['product_id'] ?>][uom][]" value="<?= $i['uom'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][total_price][]" value="<?= $i['subtotal'] ?>">
-									<input type="hidden" class='sorts' name="item[<?= $i['product_id'] ?>][sort][]" value="<?= $i['sort_id'] ?>">
-									<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="delete" href="#"><img src="/images/icons/dark/close.png" alt="delete"></a></td>
+				</div>
+			</section>
 
-								</tr>
-							<?PHP } ?>
-						</tbody>
-					</table>
-				</div>
+			<section aria-labelledby="quote-information" id="section3" data-nav="Quote information">
+				<h2>Quote infomation</h2>
 				<div class="widget-table">
-					<div class="title"><img src="/images/icons/dark/pencil.png" alt="" class="titleIcon" />
-						<h6>Comment</h6>
-					</div>
-					<div class="clear"></div>
 					<div class="formRow">
-						<label>Quote Note:</label>
-						<div class="formRight"><textarea rows="8" cols="" name="note" placeholder="Note Area"><?= $this->quote['note'] ?></textarea></div>
-						<div class="clear"></div>
+						<div class="oneTwo">
+							<label for="quote-number" class="formNote"><b>Quote number</b></label>
+							<input id="quote-number" type="text" value='<?= $this->quote['quote_id'] ?>' readonly />
+						</div>
+						<div class="oneTwo">
+							<label for="quote-date" class="formNote"><b>Quote date</b></label>
+							<input id="quote-date" type="text" class="datepicker" value="<?= $this->quote['quote_date']->format('Y-m-d') ?>" />
+						</div>
+						<div class="oneTwo">
+							<label for='ship_required_date' class="formNote"><b>Ship required date</b></label>
+							<input id='ship_required_date' type="text" class="datepicker" name='ship_required_date' value="<?php if ($this->quote['ship_required_date'] != null && $this->quote['ship_required_date']->format('Y-m-d') > '2000-01-01') {
+																																echo $this->quote['ship_required_date']->format('Y-m-d');
+																															} ?>" />
+						</div>
+						<div class="oneTwo">
+							<label for='quote_type' class="formNote"><b>Quote type</b></label>
+							<select name="quote_type_id" id='quote_type' class="validate[required]">
+								<option value="">Select Quote type</option>
+								<?php foreach ($this->type as $t) { ?>
+									<option value="<?= $t['uid'] ?>" <?php if ($t['uid'] == $this->quote['quote_type_id']) echo 'selected'; ?>><?= $t['type'] ?></option>
+								<?php } ?>
+							</select>
+						</div>
+
+						<div class="oneTwo">
+							<label for="project-name" class="formNote"><b>Project name</b></label>
+							<input id="project-name" type="text" value="<?= $project['project_name'] ?>" readonly />
+						</div>
+
+						<div class="oneTwo">
+							<label for="project-location" class="formNote"><b>Project location</b></label>
+							<input id="project-location" type="text" value="<?= $project['project_location_address'] ?>" readonly />
+						</div>
+
+						<div class="oneTwo">
+							<label for='sale_rep' class="formNote"><b>Sale rep</b></label>
+							<input id='sale_rep' name='sale_rep' type="text" value="<?= $this->quote['sales_id'] ?>" readonly />
+						</div>
+
+						<div class="oneTwo required-field">
+							<label for='arch' class="formNote"><b>Arch rep.</b></label>
+							<select id='arch' name='arch' class="validate[required]">
+								<?php if ($session->user['approve_id'] != null) { ?>
+									<?php foreach ($this->arch as $a) { ?>
+										<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $this->quote['arch']) echo 'selected'; ?>><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
+									<?php } ?>
+								<?php } else { ?>
+									<?php foreach ($this->arch as $a) { ?>
+										<?php if ($a['id'] == $this->quote['arch']) { ?><option value="<?= $a['id'] ?>" selected><?= $a['name'] . ' - ' . $a['default_company'] ?></option> <?php } ?>
+									<?php } ?>
+								<?php } ?>
+							</select>
+						</div>
+						<input type="hidden" name="sales_id" value="<?= $session->user['id'] ?>"" />
+                        
+                        
+							<div class=" oneTwo required-field">
+						<label for='Segment' class="formNote"><b>Segment</b></label>
+						<input type="text" class="validate[required]" id='Segment' placeholder="123456-" name='quote_segment' value='<?= $this->quote['quote_segment'] ?>' />
 					</div>
+
+					<div class="oneTwo required-field">
+						<label for="quote_approval" class="formNote"><b>Quote approval</b></label>
+						<select id="quote_approval">
+							<?php foreach ($this->approval as $a) {
+								if ($a['uid'] == $this->quote['quote_approval']) { ?>
+									<option value="
+												<?= $a['uid'] ?>" selected><?= $a['Name'] . ' - ' . $a['Company_ID'] ?>
+									</option>
+							<?php }
+							} ?>
+						</select>
+					</div>
+
 				</div>
+	</div>
+	</section>
+
+	<section aria-labelledby="items" id="section4" data-nav="Items">
+		<h2>Items</h2>
+		<div class="widget-table">
+			<a href="#" title="" class="button greenB" style="margin: 5px;" id="opener"><span>Add new Item</span></a>
+			<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
+				<thead>
+					<tr>
+						<td></td>
+						<td width="60%">Item ID - Description</td>
+						<td>Quality Quoted</td>
+						<td>Unit Price</td>
+						<td>Unit Of Measure</td>
+						<td>Price Quoted</td>
+						<td>Action</td>
+					</tr>
+				</thead>
+				<tbody id="item_body">
+					<?PHP foreach ($this->items as $i) { ?>
+						<tr name="item[<?= $i['product_id'] ?>]">
+							<td><input type="checkbox" name="item[<?= $i['product_id'] ?>]"></td>
+							<td><?= $i['product_id'] ?> - <?= $i['item_desc'] ?>
+								<textarea rows="1" cols="" name="item[<?= $i['product_id'] ?>][note][]"><?= $i['note'] ?></textarea>
+							</td>
+							<td><?= $i['qty'] ?></td>
+							<td><?= $i['unit_price'] ?></td>
+							<td><?= $i['uom'] ?></td>
+							<td><?= $i['subtotal'] ?></td>
+							<input type="hidden" name="item[<?= $i['product_id'] ?>][qty][]" value="<?= $i['qty'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][unit_price][]" value="<?= $i['unit_price'] ?>">
+							<input type="hidden" name="item[<?= $i['product_id'] ?>][uom][]" value="<?= $i['uom'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][total_price][]" value="<?= $i['subtotal'] ?>">
+							<input type="hidden" class='sorts' name="item[<?= $i['product_id'] ?>][sort][]" value="<?= $i['sort_id'] ?>">
+							<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="delete" href="#"><img src="/images/icons/dark/close.png" alt="delete"></a></td>
+
+						</tr>
+					<?PHP } ?>
+				</tbody>
+			</table>
 		</div>
-		</form>
+	</section>
 
-
-
-		<div id="dialog-message" title="Add Item">
-			<div class="uiForm">
-				<form action="" class="dialog" id='item'>
-					<span class="formNote">Enter Item ID </span>
-					<input type="text" name="item" id='item_input' class="validate[required]" />
-					<input type="hidden" id="item_id" />
-					<span class="formNote">UOM</span>
-					<select name="uom" id='uom' class="validate[required]">
-						<option value=''>Select UOM</option>
-					</select>
-					<div class="clear"></div>
-					<span class="formNote">Price ($)</span>
-					<input type="text" class="validate[required,custom[number]]" name="price" id='price' placeholder="You can override the price" />
-					<span class="formNote">Qty</span>
-					<input type="text" name="qty" id='qty' class="validate[required]" />
-					<input type="hidden" id="is_edit" value='0' />
-					<input type="hidden" id="note" value='' />
-					<input type="hidden" id="sort" value='' />
-				</form>
+	<section aria-labelledby="comment" id="section5" data-nav="Comment">
+		<h2>Comment</h2>
+		<div class="widget-table">
+			<div class="formRow">
+				<div class="oneTwo">
+					<label>Quote Note:</label>
+					<textarea rows="8" cols="" name="note" placeholder="Note Area"><?= $this->quote['note'] ?></textarea>
+				</div>
 			</div>
 		</div>
+	</section>
+	</form>
+
+	<div id="dialog-message" title="Add Item">
+		<div class="uiForm">
+			<form action="" class="dialog" id='item'>
+				<span class="formNote">Enter Item ID </span>
+				<input type="text" name="item" id='item_input' class="validate[required]" />
+				<input type="hidden" id="item_id" />
+				<span class="formNote">UOM</span>
+				<select name="uom" id='uom' class="validate[required]">
+					<option value=''>Select UOM</option>
+				</select>
+				<div class="clear"></div>
+				<span class="formNote">Price ($)</span>
+				<input type="text" class="validate[required,custom[number]]" name="price" id='price' placeholder="You can override the price" />
+				<span class="formNote">Qty</span>
+				<input type="text" name="qty" id='qty' class="validate[required]" />
+				<input type="hidden" id="is_edit" value='0' />
+				<input type="hidden" id="note" value='' />
+				<input type="hidden" id="sort" value='' />
+			</form>
+		</div>
+	</div>
 	</div>
 </main>
 
@@ -306,6 +337,9 @@
 </div>
 
 <script type="text/javascript">
+	const items = ["Project information", "Customer information", "Quote information", "Items", "Comment"];
+	createTocList(items);
+
 	function resetForm($form) {
 		$form.find('input:text, input:password, input:file, select, textarea').val('');
 		$form.find('input:radio, input:checkbox')

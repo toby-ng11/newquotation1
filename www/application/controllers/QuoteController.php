@@ -83,7 +83,6 @@ class QuoteController extends Zend_Controller_Action
 			array('db' => 'approve_status', 'dt' => 7),
 		);
 		
-		require 'ssp.class.php';
 		
 		echo Zend_Json::encode(
 			SSP::simple($_GET, $dbDetails, $table, $primaryKey, $columns)

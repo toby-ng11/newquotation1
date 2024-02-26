@@ -338,11 +338,19 @@ class Quote extends DbTable\Quote
 		$db = $this->getAdapter();
 		$select = $db->select()->from('quote')->order('quote_id desc')->join('project', 'project.project_id = quote.project_id','project_name')
 		->join('quote_status','quote_status.uid=project.status',array('status_name'=>'Status'))->where('project.deleted =?','N');
-		
-		$json = Zend_Json::encode($db->fetchAll($select));
-
+	
 		return $db->fetchAll($select);
+	}
+
+	public function fetchQuoteJson($limit =500) {
+		$db = $this->getAdapter();
 		
+		$select = $db->select()->from('quote')->order('quote_id desc')->join('project', 'project.project_id = quote.project_id','project_name')
+		->join('quote_status','quote_status.uid=project.status',array('status_name'=>'Status'))->where('project.deleted =?','N');
+		
+		$select->limit($limit);
+
+		return Zend_Json::encode($db->fetchAll($select));
 	}
 	
 	public function fetchlogbyid($quote_id)

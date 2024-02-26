@@ -6,17 +6,13 @@
 .formRow {
 	padding: 1rem;
 	display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(30rem, 100%), 1fr));
-    gap: 1rem 4rem;
+	grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+	gap: 1.5rem 3rem;
 }
 
-	.formRow:first-child {
-		border-top: none;
-	}
-
-	.formRow:last-child {
-		/* border-bottom: none; */
-	}
+.formRow:first-child {
+	border-top: none;
+}
 
 .formRow .formRight {
     grid-area: leftcol;
@@ -24,9 +20,6 @@
 
 .formRow .middlecol {
     grid-area: rightcol;
-}
-
-.formRight {
 }
 
 
@@ -90,16 +83,21 @@
     
 }
 
+.form label {
+	font-size: calc(100% + 1px);
+}
+
 .form input[type=text], .form input[type=password], .form textarea, .form select {
-	font-size: inherit;
-	padding: 0.5rem;
+	font-size: calc(100% - 1px);
+	padding: 0.5rem 0.8rem;
+	margin-top: 0.1rem;
 	background: var(--dt-html-background);
 	border: 1px solid var(--border-primary);
 	border-radius: 5px;
 	width: 100%;
 	box-shadow: 0 0 0 2px var(--shadow-01);
 	color: var(--text-secondary);
-	height: 2.5rem;
+	height: 2.8rem;
 }
 
 	.form input[type=text]:hover, .form input[type=password]:hover, .form textarea:hover, .form select:hover {
@@ -133,7 +131,7 @@ input[readonly], input[disabled] {
 
 .required-field label::after {
 	content: "*";
-	color: red;
+	color: var(--text-primary-red);
 }
 
 	.oneTwo:first-child {
@@ -170,5 +168,3 @@ input[readonly], input[disabled] {
 }
 
 	.oneFive:first-child {}
-
-	

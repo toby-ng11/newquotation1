@@ -62,6 +62,18 @@ class IndexController extends Zend_Controller_Action
     	$this->view->projects = $project->fetchallproject();
     }
 
+	public function quoteAction() {
+		$quote = new Quote();
+		echo $quote->fetchQuoteJson();;
+		exit;
+	}
+
+	public function projectAction() {
+		$quote = new Project();
+		echo $quote->fetchallprojectJson();;
+		exit;
+	}
+
     public function approvalAction()
     {
     	if($this->session->user['approve_id'] == null && APPLICATION_ENV == 'production')

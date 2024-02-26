@@ -3,6 +3,7 @@
 namespace Centura\Model;
 
 use Zend_Registry;
+use Zend_Json;
 
 use Exception;
 
@@ -183,6 +184,21 @@ class Project extends DbTable\Project
 			$select->where('owner = ?',$owner);
 		}
 		return $db->fetchAll($select);
+	}
+
+	public function fetchallprojectJson($owner = null, $limit = 7000) {
+		$db = $this->getAdapter();
+		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location', 'centura_location_id = P21_Location.location_id','company_id')
+			->join('quote_status','quote_status.uid=project.status',array('status_name'=>'Status'))
+			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment',array('segment'=>'Market_Segment'))->where('project.deleted =?','N')
+			->join('quote_specifier','quote_specifier.uid = project.specifiler',array('Specifier_name'=>'quote_specifier.Specifier'));
+		
+		if($owner != null)
+		{
+			$select->where('owner = ?',$owner);
+		}
+		$select->limit($limit);
+		return Zend_Json::encode($db->fetchAll($select));
 	}
 	
 	public function fetchbyid($project_id = null)

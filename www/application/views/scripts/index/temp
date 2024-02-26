@@ -1,0 +1,67 @@
+<tbody>
+    <?php
+    $i = 0;
+    foreach ($b as $p) { ?>
+        <tr>
+            <!--
+                        <td><!<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>--<a target='_blank' href="/quote/edit/id/<? //=$p['quote_id']
+                                                                                                                                            ?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
+                        -->
+            <td><a target='_blank' href="/quote/edit/id/<?= $p['quote_id'] ?>"><?= $p['quote_id'] ?></a></td>
+            <td><?= $p['project_name'] ?></td>
+            <td><?= $p['quote_segment'] ?></td>
+            <td><?= $p['quote_date']->format('Y-m-d') ?></td>
+            <td><span class='<?php if ($p['expire_date']->format('Ymd') <= date('Ymd')) echo 'red'; ?>'>
+                    <?= $p['expire_date']->format('Y-m-d') ?>
+                </span></td>
+            <td><span> <?php if ($p['ship_required_date'] != null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01') {
+                            echo $p['ship_required_date']->format('Y-m-d');
+                        } ?></span></td>
+            <td><?= $p['status_name'] ?></td>
+            <?php if ($p['approve_status'] == -1) { ?>
+                <td class='disapproved orange'>Disapproved</td>
+            <?php } else if ($p['approve_status'] == 10) { ?>
+                <td class='approved green'>Approved</td>
+            <?php } else if ($p['approve_status'] == 1) { ?>
+                <td class='waiting red'>Waiting Approval</td>
+            <?php } else { ?>
+                <td class='init'>Not Submitted</td>
+            <?php }
+            $i++;
+            if ($i >= 50) {
+                break;
+            }
+            ?>
+        </tr>
+    <?php } ?>
+</tbody>
+
+
+<tbody>
+    <?php
+    $j = 0;
+    foreach ($this->projects as $p) {
+    ?>
+        <tr>
+            <td><?= $p['quote_no'] ?></td>
+            <?php if ($p['owner'] == $session->user['id']) { ?>
+                <td class='ps_<?= $p['status'] ?>'><a target='_blank' href="/project/edit/id/<?= $p['project_id'] ?>"><?= $p['project_name'] ?></a></td>
+            <?php } else { ?>
+                <td class='ps_<?= $p['status'] ?>'><a target='_blank' href="/project/view/id/<?= $p['project_id'] ?>"><?= $p['project_name'] ?></a></td>
+            <?php } ?>
+            <td><?= $p['Specifier_name'] ?></td>
+            <td><?= $p['segment'] ?></td>
+            <td><?= $p['create_date']->format('Y-m-d') ?></td>
+            <td><span class='<?php if ($p['due_date']->format('Ymd') <= date('Ymd')) echo 'red'; ?>'><?= $p['due_date']->format('Y-m-d') ?></span></td>
+            <td class='stauts_<?= $p['status'] ?>'><?= $p['status_name'] ?></td>
+            <td><a target='_blank' href="/quote/index/project/<?= $p['project_id'] ?>" alt='quote'><img src="/images/icons/dark/money.png" alt="edit" style="margin:0px 4px"></a></td>
+            <td><?= $p['owner'] ?></td>
+            <td><?= $p['company_id'] ?></td>
+            <?php $j++;
+            if ($j >= 50) {
+                break;
+            } ?>
+
+        </tr>
+    <?php } ?>
+</tbody>
