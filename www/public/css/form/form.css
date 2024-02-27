@@ -100,16 +100,16 @@
 	height: 2.8rem;
 }
 
-	.form input[type=text]:hover, .form input[type=password]:hover, .form textarea:hover, .form select:hover {
-		border-color: var(--border-primary);
-		background: var(--background-primary);
-	}
+.form input[type=text]:hover, .form input[type=password]:hover, .form textarea:hover, .form select:hover {
+	border-color: var(--border-primary);
+	background: var(--background-primary);
+}
 
-	.form input[type=text]:focus, .form input[type=password]:focus, .form textarea:focus, .form select:focus {
-		border-color: var(--field-focus-border);
-		background: var(--background-primary);
-		box-shadow: 0 0 0 2px var(--shadow-01);
-	}
+.form input[type=text]:focus, .form input[type=password]:focus, .form textarea:focus, .form select:focus {
+	border-color: var(--field-focus-border);
+	background: var(--background-primary);
+	box-shadow: 0 0 0 2px var(--shadow-01);
+}
 
 input[readonly], input[disabled] {
 	background: #FCFCFC;
@@ -120,6 +120,11 @@ input[readonly], input[disabled] {
 .multiple {
 	width: 100%;
 	padding: 5px;
+}
+
+.form textarea {
+	resize: vertical;
+	height: auto;
 }
 
 /* Widgets grid */

@@ -193,7 +193,9 @@
             {"data": "Specifier_name"},
             {"data": "segment"},
             {"data": "status_name"},
-            {"data": "project_id"},
+            {"data": "project_id", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
+                $(cell).html("<a target='_blank' href='/quote/index/project/"+ rowData.project_id + "'><span class='button-wrap'><span class='icon icon-money'></span></span></a>")
+            }},
         ],
         "columnDefs": [
         {
@@ -202,6 +204,9 @@
                 let d = new Date(data);
                 return d.toLocaleDateString('en-US');
             }
+        },
+        {
+            "targets": [9], "className": 'dt-body-center'
         }
         ],
         "processing": true,

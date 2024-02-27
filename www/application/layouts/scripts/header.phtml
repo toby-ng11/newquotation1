@@ -64,7 +64,7 @@
         </nav>
 
         <div class="theme-switcher-menu">
-          <button type="button" class="button action has-icon theme-switcher-menu small" aria-haspopup="menu" onclick="toggleTheme()">
+          <button type="button" class="button action has-icon theme-switcher-menu small" aria-haspopup="menu">
             <span class="button-wrap">
               <span class="icon icon-theme-light"></span>
               Theme
@@ -84,6 +84,11 @@
 <script>
   const themeBtnIcon = $('.theme-switcher-menu .icon');
 
+  $(function() {
+    setTheme(window.localStorage.getItem('theme'));
+    $('.button.theme-switcher-menu').on("click", toggleTheme);
+  })
+
   function setTheme(themeName) {
     const validThemes = ['light', 'dark']; // Add more themes as needed
     if (!validThemes.includes(themeName)) {
@@ -94,8 +99,6 @@
     document.documentElement.className = themeName;
     updateThemeIcon();
   }
-
-  $(document).ready(setTheme(window.localStorage.getItem('theme')));
 
   function toggleTheme() {
     const currentTheme = window.localStorage.getItem('theme');

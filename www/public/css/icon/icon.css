@@ -255,6 +255,9 @@
 .icon.icon-yes-circle {
   mask-image: url("../../images/icons/assets/yes-circle.svg");
 }
+.icon.icon-money {
+  mask-image: url("../../images/icons/assets/money.svg");
+}
 
 svg.icon {
   background: transparent;

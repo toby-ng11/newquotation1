@@ -115,8 +115,14 @@
 			<section aria-labelledby="customer-information" id="section2" data-nav="Customer information">
 				<h2>Customer infomation</h2>
 				<div class="widget-table" id="customer_info">
-					<a href="javascript:void(0)" title="" class="button greenB" style="margin: 2px;" id="add_new_mode"><span>New Customer</span></a>
-					<a href="javascript:void(0)" title="" class="button basic" style='display:none;' style="margin: 2px;" id="discard_new_mode"><span>Discard Adding</span></a>
+					<div>
+						<button type="button" class="button action has-icon new-customer small" id="add_new_mode">
+							<span>New Customer</span>
+						</button>
+						<button type="button" class="button action has-icon discard-customer small basic" style='display:none;' id="discard_new_mode">
+							<span>Discard Adding</span>
+						</button>
+					</div>
 					<input type="hidden" name='project_id' value="<?= $project['project_id'] ?>" />
 					<div class="formRow">
 						<div class="oneTwo required-field">
@@ -238,7 +244,7 @@
 				<thead>
 					<tr>
 						<td></td>
-						<td width="60%">Item ID - Description</td>
+						<td width="50%">Item ID - Description</td>
 						<td>Quality Quoted</td>
 						<td>Unit Price</td>
 						<td>Unit Of Measure</td>
@@ -251,7 +257,7 @@
 						<tr name="item[<?= $i['product_id'] ?>]">
 							<td><input type="checkbox" name="item[<?= $i['product_id'] ?>]"></td>
 							<td><?= $i['product_id'] ?> - <?= $i['item_desc'] ?>
-								<textarea rows="1" cols="" name="item[<?= $i['product_id'] ?>][note][]"><?= $i['note'] ?></textarea>
+								<textarea rows="3" cols="" name="item[<?= $i['product_id'] ?>][note][]"><?= $i['note'] ?></textarea>
 							</td>
 							<td><?= $i['qty'] ?></td>
 							<td><?= $i['unit_price'] ?></td>
@@ -275,7 +281,7 @@
 			<div class="formRow">
 				<div class="oneTwo">
 					<label>Quote Note:</label>
-					<textarea rows="8" cols="" name="note" placeholder="Note Area"><?= $this->quote['note'] ?></textarea>
+					<textarea rows="8" cols="" name="note" placeholder="Note area"><?= $this->quote['note'] ?></textarea>
 				</div>
 			</div>
 		</div>
@@ -307,11 +313,12 @@
 </main>
 
 <!-- Right panel -->
-<div>
-	<div class="statsRow">
-		<div class="wrapper">
-			<div class="controlB">
-				<ul>
+<div class="sidebar-container">
+<aside id="sidebar-quicklinks" class="sidebar">
+<nav aria-label="Actions" class="sidebar-inner">
+	<div class="sidebar-inner-nav">
+		<div class="quick-links">
+				<ol>
 					<li><a href="/quote/index/project/<?= $project['project_id'] ?>" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add New Quote</span></a></li>
 					<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
                     <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
@@ -329,11 +336,11 @@
 					<?php if ($this->quote['approve_status'] == 10) { ?>
 						<li><a href="/quote/disapprove/id/<?= $this->quote['quote_id'] ?>" title="" class='disapprove_quote'><img src="/images/icons/control/32/refresh.png" alt="" /><span>Edit Again</span></a></li>
 					<?php } ?>
-				</ul>
-				<div class="clear"></div>
-			</div>
+				</ol>
 		</div>
 	</div>
+</nav>
+<aside>
 </div>
 
 <script type="text/javascript">
@@ -343,7 +350,7 @@
 	function resetForm($form) {
 		$form.find('input:text, input:password, input:file, select, textarea').val('');
 		$form.find('input:radio, input:checkbox')
-			.removeAttr('checked').removeAttr('selected');
+			.prop('checked', false).prop('selected', false);
 		$form.find('#sort').val(getmaxsort());
 	}
 
@@ -468,11 +475,11 @@
 				$("#item_input").val(ui.item.item_desc);
 				$("#item_id ").val(ui.item.item_id);
 				getoum(ui.item.item_id);
-				$('#uom').removeAttr('disabled');
+				$('#uom').prop('disabled', false);
 				$('#uniform-uom').removeClass('disabled');
 				return false;
 			}
-		}).data("autocomplete")._renderItem = function(ul, item) {
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
 				.append("<a>" + item.item_id + "<br>" + item.item_desc + "</a>")
@@ -553,7 +560,7 @@
 			});
 		}
 		$('#add_new_mode').on("click", function() {
-			$('#quote,#address, #tel').removeAttr('readonly').val('');
+			$('#quote,#address, #tel').prop('readonly', false).val('');
 			$('#customer_id').attr('readonly', 'readonly').val('');
 			$('#contact,#customer_email').val('');
 			$('#quote, #address, #tel,#customer_email').addClass('validate[required]');
@@ -563,18 +570,19 @@
 		$('#discard_new_mode').on("click", function() {
 			$('#address, #tel').attr('readonly', 'readonly').val('');
 			$('#quote').val('');
-			$('#customer_id').removeAttr('readonly').val('');
+			$('#customer_id').prop('readonly', false).val('');
 			$('#contact,#customer_email').val('');
 			$('#quote, #address, #tel,#customer_email').removeClass('validate[required]');
 			$('#add_new_mode').show();
 			$('#discard_new_mode').hide();
 		});
 
-		$("#uom,#uniform-uom").change(function() {
+		$("#uom,#uniform-uom").on("change", function() {
 			getprice();
 			return false;
 		});
-		$("#item_body .delete").live('click', function(e) {
+
+		$(document).on("click", "#item_body .delete", function(e) {
 			$(this).parent().parent().remove();
 			e.preventDefault();
 		});
@@ -585,7 +593,7 @@
 			select: function(event, ul) {
 				getcustomerbyid(ul.item.customer_id);
 			}
-		}).data("autocomplete")._renderItem = function(ul, item) {
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
 				.append("<a>" + item.email + "<br>" + item.first_name + ' ' + item.last_name + "</a>")
@@ -597,7 +605,7 @@
 			select: function(event, ul) {
 				getcustomerbyid(ul.item.customer_id);
 			}
-		}).data("autocomplete")._renderItem = function(ul, item) {
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
 				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
@@ -610,7 +618,7 @@
 				getcustomerbyid(ul.item.customer_id);
 			},
 
-		}).data("autocomplete")._renderItem = function(ul, item) {
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
 				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
