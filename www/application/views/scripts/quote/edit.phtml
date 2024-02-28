@@ -72,13 +72,13 @@
                 <div class="clear"></div>
             </div>
         </div>
-    </div> -->
+    	</div> -->
 
 		<!-- Main content wrapper -->
 		<section aria-labelledby="project-information" id="section1" data-nav="Project information" class="active">
 			<h2>Project information</h2>
-				<div class="widget-information">
-					<div class="widget-table">
+			<div class="widget-information">
+				<div class="widget-table">
 					<div class="project-information">
 						<p>Project Name: <b><?= $project['project_name'] ?></b><br>
 							Project Quote No: <b><?= $project['quote_no'] ?></b><br>
@@ -87,8 +87,8 @@
 							Due Date: <b><?= $project['due_date']->format('Y-m-d') ?></b>
 						</p>
 					</div>
-					</div>
-					<div class="widget-table">
+				</div>
+				<div class="widget-table">
 					<div id="status">
 						<?php if ($this->quote['approve_status'] == 1) { ?>
 							<div class="nNote nInformation hideit">
@@ -106,8 +106,8 @@
 							</div>
 						<?php } ?>
 					</div>
-						</div>
 				</div>
+			</div>
 		</section>
 
 		<!-- Form -->
@@ -211,17 +211,16 @@
 								<?php } ?>
 							</select>
 						</div>
-						<input type="hidden" name="sales_id" value="<?= $session->user['id'] ?>"" />
+						<input type="hidden" name="sales_id" value="<?= $session->user['id'] ?>"/>
                         
-                        
-							<div class=" oneTwo required-field">
-						<label for='Segment' class="formNote"><b>Segment</b></label>
-						<input type="text" class="validate[required]" id='Segment' placeholder="123456-" name='quote_segment' value='<?= $this->quote['quote_segment'] ?>' />
-					</div>
+						<div class=" oneTwo required-field">
+							<label for='Segment' class="formNote"><b>Segment</b></label>
+							<input type="text" class="validate[required]" id='Segment' placeholder="123456-" name='quote_segment' value='<?= $this->quote['quote_segment'] ?>' />
+						</div>
 
-					<div class="oneTwo required-field">
-						<label for="quote_approval" class="formNote"><b>Quote approval</b></label>
-						<select id="quote_approval">
+						<div class="oneTwo required-field">
+							<label for="quote_approval" class="formNote"><b>Quote approval</b></label>
+							<select id="quote_approval">
 							<?php foreach ($this->approval as $a) {
 								if ($a['uid'] == $this->quote['quote_approval']) { ?>
 									<option value="
@@ -229,12 +228,11 @@
 									</option>
 							<?php }
 							} ?>
-						</select>
+							</select>
+						</div>
 					</div>
-
 				</div>
-	</div>
-	</section>
+			</section>
 
 	<section aria-labelledby="items" id="section4" data-nav="Items">
 		<h2>Items</h2>
@@ -280,8 +278,8 @@
 		<div class="widget-table">
 			<div class="formRow">
 				<div class="oneTwo">
-					<label>Quote Note:</label>
-					<textarea rows="8" cols="" name="note" placeholder="Note area"><?= $this->quote['note'] ?></textarea>
+					<label for="quote-note">Quote Note:</label>
+					<textarea id="quote-note" rows="8" cols="" name="note" placeholder="Note area"><?= $this->quote['note'] ?></textarea>
 				</div>
 			</div>
 		</div>
@@ -314,33 +312,33 @@
 
 <!-- Right panel -->
 <div class="sidebar-container">
-<aside id="sidebar-quicklinks" class="sidebar">
-<nav aria-label="Actions" class="sidebar-inner">
-	<div class="sidebar-inner-nav">
-		<div class="quick-links">
-				<ol>
-					<li><a href="/quote/index/project/<?= $project['project_id'] ?>" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add New Quote</span></a></li>
-					<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
+	<aside id="sidebar-quicklinks" class="sidebar">
+		<nav aria-label="Actions" class="sidebar-inner">
+			<div class="sidebar-inner-nav">
+				<div class="quick-links">
+					<ol>
+						<li><a href="/quote/index/project/<?= $project['project_id'] ?>" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add New Quote</span></a></li>
+						<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
                     <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-					<?PHP if ($this->quote['approve_status'] != 10) { ?>
-						<li><a href="#" title="save" class="save_quote"><img src="/images/icons/control/32/save.png" alt="save" /><span>Save Quote</span></a></li>
-					<?php } ?>
-					<li><a href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $this->quote['quote_id'] . "?company=" . substr($this->quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $this->quote['quote_id'] . '.pdf' ?>" title="print"><img src="/images/icons/control/32/pdf.png" alt="" /><span>Print Quote</span></a></li>
-					<?php if ($this->quote['approve_status'] == 10) { ?>
-						<li><a href="/mail/quote/id/<?= $this->quote['quote_id'] ?>" title="mail"><img src="/images/icons/control/32/mail.png" alt="" /><span>Mail Quote</span></a></li>
-					<?php } ?>
-					<li><a href="/quote/delete/id/<?= $this->quote['quote_id'] ?>" title="" class='delete_quote'><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>
-					<?php if ($this->quote['approve_status'] <= 0) { ?>
-						<li><a href="/quote/ready/id/<?= $this->quote['quote_id'] ?>" title="" class='ready_quote'><img src="/images/icons/control/32/order-149.png" alt="" /><span>Submit Approval</span></a></li>
-					<?php } ?>
-					<?php if ($this->quote['approve_status'] == 10) { ?>
-						<li><a href="/quote/disapprove/id/<?= $this->quote['quote_id'] ?>" title="" class='disapprove_quote'><img src="/images/icons/control/32/refresh.png" alt="" /><span>Edit Again</span></a></li>
-					<?php } ?>
-				</ol>
-		</div>
-	</div>
-</nav>
-<aside>
+						<?PHP if ($this->quote['approve_status'] != 10) { ?>
+							<li><a href="#" title="save" class="save_quote"><img src="/images/icons/control/32/save.png" alt="save" /><span>Save Quote</span></a></li>
+						<?php } ?>
+						<li><a href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $this->quote['quote_id'] . "?company=" . substr($this->quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $this->quote['quote_id'] . '.pdf' ?>" title="print"><img src="/images/icons/control/32/pdf.png" alt="" /><span>Print Quote</span></a></li>
+						<?php if ($this->quote['approve_status'] == 10) { ?>
+							<li><a href="/mail/quote/id/<?= $this->quote['quote_id'] ?>" title="mail"><img src="/images/icons/control/32/mail.png" alt="" /><span>Mail Quote</span></a></li>
+						<?php } ?>
+						<li><a href="/quote/delete/id/<?= $this->quote['quote_id'] ?>" title="" class='delete_quote'><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>
+						<?php if ($this->quote['approve_status'] <= 0) { ?>
+							<li><a href="/quote/ready/id/<?= $this->quote['quote_id'] ?>" title="" class='ready_quote'><img src="/images/icons/control/32/order-149.png" alt="" /><span>Submit Approval</span></a></li>
+						<?php } ?>
+						<?php if ($this->quote['approve_status'] == 10) { ?>
+							<li><a href="/quote/disapprove/id/<?= $this->quote['quote_id'] ?>" title="" class='disapprove_quote'><img src="/images/icons/control/32/refresh.png" alt="" /><span>Edit Again</span></a></li>
+						<?php } ?>
+					</ol>
+				</div>
+			</div>
+		</nav>
+		<aside>
 </div>
 
 <script type="text/javascript">

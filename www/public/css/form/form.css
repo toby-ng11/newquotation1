@@ -135,8 +135,9 @@ input[readonly], input[disabled] {
 }
 
 .required-field label::after {
-	content: "*";
+	content: "      *";
 	color: var(--text-primary-red);
+	display: inline;
 }
 
 	.oneTwo:first-child {
