@@ -22,35 +22,33 @@
 <!-- Title area -->
 <main id="content" class="main-content">
 
-    <div>
-        <div class="middleNav">
-            <ul>
-                <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
-                    <ul class="mSub1">
-                        <li><a href="#" title="">Share user</a></li>
-                        <li><a href="#" title="">Show Teamworks</a></li>
-                    </ul>
-                </li>
+    <div class="middleNav">
+        <ul>
+            <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
+                <ul class="mSub1">
+                    <li><a href="#" title="">Share user</a></li>
+                    <li><a href="#" title="">Show Teamworks</a></li>
+                </ul>
+            </li>
 
-                <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
-                    <ul class="mSub4">
-                        <li><a href="#" title="">Add</a></li>
-                        <li><a href="#" title="">Save</a></li>
-                        <li><a href="#" title="">Edit</a></li>
-                        <li><a href="#" title="">Delete</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+            <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
+                <ul class="mSub4">
+                    <li><a href="#" title="">Add</a></li>
+                    <li><a href="#" title="">Save</a></li>
+                    <li><a href="#" title="">Edit</a></li>
+                    <li><a href="#" title="">Delete</a></li>
+                </ul>
+            </li>
+        </ul>
     </div>
 
     <div class="main-page-content">
         <header class="main-page-content-header">
-            <h1>My Projects</h1>
+            <h1>My projects</h1>
         </header>
         <div class="section-content">
             <?php if ($session->user['sale_role'] == 'sales') { ?>
-                <p>Sales Representative Landing Page.</p>
+                <p>Sales representative landing page.</p>
             <?php } ?>
             <?php if ($session->user['sale_role'] == 'manager' || $session->user['sale_role'] == 'admin') { ?>
                 <p>Sales Manager Landing Page.</p>
@@ -63,181 +61,86 @@
             <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
         </div>-->
         <section aria-labelledby="my_projects" id="section1" data-nav="My Projects" class="active">
-            <h2>My Projects: <?= count($this->ownproject) ?></h2>
+            <h2>My Projects</h2>
             <div class="widget-table">
                 <table width="100%" class="display nowrap" id='project_table'>
                     <thead>
                         <tr>
-                            <th data-priority="1">Project #</th>
-                            <th data-priority="1">Project Name</th>
-                            <th data-priority="5">Create Date</th>
-                            <th data-priority="3">Due Date</th>
-                            <th data-priority="4">Status</th>
+                            <th>Project #</th>
+                            <th>Quote #</th>
+                            <th>Project Name</th>
+                            <th>Create Date</th>
+                            <th>Due Date</th>
                             <th>Specifier</th>
                             <th>Market Segment</th>
-                            <th class="action" data-priority="2">Action</th>
+                            <th>Status</th>
+                            <th>Make Quote</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach ($this->ownproject as $p) { ?>
-                            <tr class='status_<?= $p['status'] ?>'>
-                                <td><?= $p['quote_no'] ?></td>
-                                <td>
-                                    <a a target='_blank' href="/project/edit/id/<?= $p['project_id'] ?>"><?= $p['project_name'] ?></a>
-                                </td>
-                                <td><?= $p['create_date']->format('Y-m-d') ?></td>
-                                <td><span class='<?php if ($p['due_date']->format('Ymd') <= date('Ymd')) echo 'red'; ?>'><?= $p['due_date']->format('Y-m-d') ?></span></td>
-                                <td class='status_<?= $p['status'] ?>'><?= $p['status_name'] ?></td>
-                                <td><?= $p['Specifier_name'] ?></td>
-                                <td><?= $p['segment'] ?></td>
-                                <td><!--<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>-->
-                                    <a a target='_blank' href="/project/edit/id/<?= $p['project_id'] ?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a>
-                                    <a a target='_blank' href="/quote/index/project/<?= $p['project_id'] ?>" alt='quote'><img src="/images/icons/dark/money.png" alt="edit" style="margin:0px 4px"></a>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
                 </table>
             </div>
         </section>
 
         <?php if ($session->user['approve_id'] != null) { ?>
             <section aria-labelledby="other_projects" id="section2" data-nav="Other Projects">
-                <h2>Other Projects At <?= $session->user['company']; ?>: <?= count($this->otherprojects) ?></h2>
+                <h2>Other Projects At <?= $session->user['company']; ?></h2>
                 <div class="widget-table">
                     <table width="100%" class="display nowrap" id='other_project_table'>
                         <thead>
                             <tr>
-                                <th data-priority="1">Project#</th>
-                                <th data-priority="1">Project Name</th>
-                                <th data-priority="5">Create Date</th>
-                                <th data-priority="3">Due Date</th>
-                                <th data-priority="4">Status</th>
+                                <th>Project#</th>
+                                <th>Project Name</th>
+                                <th>Create Date</th>
+                                <th>Due Date</th>
                                 <th>Specifier</th>
                                 <th>Worksheet Owner</th>
                                 <th>>Market Segment</th>
-                                <th class="action" data-priority="2">Action</th>
+                                <th>Status</th>
+                                <th class="action">Make Quote</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php foreach ($this->otherprojects as $p) { ?>
-                                <tr class='status_<?= $p['status'] ?>'>
-                                    <td><?= $p['quote_no'] ?></td>
-                                    <td><a a target='_blank' href="/project/edit/id/<?= $p['project_id'] ?>"><?= $p['project_name'] ?></a></td>
-                                    <td><?= $p['create_date']->format('Y-m-d') ?></td>
-                                    <td><span class='<?php if ($p['due_date']->format('Ymd') <= date('Ymd')) echo 'red'; ?>'><?= $p['due_date']->format('Y-m-d') ?></span></td>
-                                    <td class='status_<?= $p['status'] ?>'><?= $p['status_name'] ?></td>
-                                    <td><?= $p['Specifier_name'] ?></td>
-                                    <td><?= $p['owner'] ?></td>
-                                    <td><?= $p['segment'] ?></td>
-                                    <td><a a target='_blank' href="/quote/index/project/<?= $p['project_id'] ?>" alt='quote'><img src="/images/icons/dark/money.png" alt="quote" style="margin:0px 4px"></a></td>
-                                </tr>
-                            <?php } ?>
-                        </tbody>
                     </table>
                 </div>
             </section>
         <?php } ?>
 
         <section aria-labelledby="my_quotes" <?php if ($session->user['approve_id'] != null) { ?> id="section3" <?php } else { ?> id="section2" <?php } ?> data-nav="My Quotes">
-            <h2>My Quotes: <?= count($this->ownquotes) ?></h2>
+            <h2>My Quotes</h2>
             <div class="widget-table">
                 <table width="100%" class="display nowrap" id='quote_table'>
                     <thead>
                         <tr>
-                            <th data-priority="1">Quote #</th>
-                            <th data-priority="1">Project Name</th>
-                            <th data-priority="3">Quote Date</th>
-                            <th data-priority="3">Expire Date</th>
-                            <th data-priority="3">Ship Required Date</th>
-                            <th data-priority="2">Project Status</th>
-                            <th data-priority="2">Approval Status</th>
+                            <th>Quote #</th>
+                            <th>Project Name</th>
+                            <th>Quote Date</th>
+                            <th>Expire Date</th>
+                            <th>Ship Required Date</th>
                             <th>Company Name</th>
-                            <th class="action">Action</th>
+                            <th>Project Status</th>
+                            <th>Approval Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach ($this->ownquotes as $p) { ?>
-                            <tr class='status_<?= $p['status'] ?> approval_<?= $p['approve_status'] ?>'>
-                                <td><a a target='_blank' href="/quote/edit/id/<?= $p['quote_id'] ?>"><?= $p['quote_id'] ?></a></td>
-                                <td><a a target='_blank' href="/project/edit/id/<?= $p['project_id'] ?>"><?= $p['project_name'] ?></a></td>
-                                <td><?= $p['quote_date']->format('Y-m-d') ?></td>
-                                <td><span class='<?php if ($p['expire_date']->format('Ymd') <= date('Ymd')) echo 'red'; ?>'><?= $p['expire_date']->format('Y-m-d') ?></span></td>
-                                <td><span><?php if ($p['ship_required_date'] != null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01') {
-                                                echo $p['ship_required_date']->format('Y-m-d');
-                                            } ?></span></td>
-                                <td><?= $p['status_name'] ?></td>
-                                <?php if ($p['approve_status'] == -1) { ?>
-                                    <td class='disapproved orange'>Disapproved</td>
-                                <?php } else if ($p['approve_status'] == 10) { ?>
-                                    <td class='approved green'>Approved</td>
-                                <?php } else if ($p['approve_status'] == 1) { ?>
-                                    <td class='waiting red'>Waiting Approval</td>
-                                <?php } else { ?>
-                                    <td class='init'>Not Submitted</td>
-                                <?php } ?>
-                                <td><?= $p['customer'] ?></td>
-                                <td><!--<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>-->
-                                    <a a target='_blank' href="/quote/edit/id/<?= $p['quote_id'] ?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
                 </table>
             </div>
         </section>
 
         <section aria-labelledby="follow_up_logs" <?php if ($session->user['approve_id'] != null) { ?> id="section4" <?php } else { ?> id="section3" <?php } ?> data-nav="Follow Up Logs">
-            <h2>Follow Up Logs: <?= count($this->memo) ?></h2>
+            <h2>Follow Up Logs</h2>
             <div class="widget-table">
                 <table width="100%" class="display nowrap" id='project_log'>
                     <thead>
                         <tr>
-                            <th>Follow Up Date</th>
+                            <th>Log Time</th>
+                            <th>Project ID</th>
                             <th>Project Name</th>
                             <th>Critical Updates Required</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach ($this->memo as $l) { ?>
-                            <tr>
-                                <td><?= $l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
-                                <td><a a target='_blank' href="/project/edit/id/<?= $l['project_id'] ?>"><?= $l['project_name'] ?></a></td>
-                                <td><?= $l['type']; ?></td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
                 </table>
             </div>
         </section>
 </main>
 <script>
-    oTable = $('#project_table').dataTable({
-        "responsive": true,
-        "order": [
-            [0, "desc"]
-        ]
-    });
-    $('#other_project_table').dataTable({
-        "responsive": true,
-        "order": [
-            [0, "desc"]
-        ]
-    });
-    $('	#quote_table').dataTable({
-        "responsive": true,
-        "order": [
-            [0, "desc"]
-        ]
-    });
-
-    $('#project_log').dataTable({
-        "responsive": true,
-        "order": [
-            [0, "desc"]
-        ]
-    });
-
     <?php if ($session->user['approve_id'] != null) { ?>
         const itemsApprove = ["My Projects", "Other Projects", "My Quotes", "Follow Up Logs"];
         createTocList(itemsApprove);
@@ -245,6 +148,271 @@
         const items = ["My Projects", "My Quotes", "Follow Up Logs"];
         createTocList(items);
     <?php } ?>
+
+    $(document).ready(function() {
+        $('#project_table').DataTable({
+            //select: true,
+            ajax: {
+                url: "/index/projectsalesrep",
+                dataSrc: ''
+            },
+            columns: [{
+                    data: "project_id",
+                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                        {
+                            $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.project_id + "'>" + rowData.project_id + "</a>");
+                        }
+                    }
+                },
+                {
+                    data: "quote_no"
+                },
+                {
+                    data: "project_name"
+                },
+                {
+                    data: "create_date.date"
+                },
+                {
+                    data: "due_date.date",
+                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                        let d = new Date(cellData);
+                        let today = new Date();
+                        if (d <= today) {
+                            $(cell).addClass("red");
+                        }
+                    }
+                },
+                {
+                    data: "Specifier_name"
+                },
+                {
+                    data: "segment"
+                },
+                {
+                    data: "status_name"
+                },
+                {
+                    data: "project_id",
+                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                        $(cell).html("<a target='_blank' href='/quote/index/project/" + rowData.project_id + "'><span class='button-wrap'><span class='icon icon-money'></span></span></a>")
+                    }
+                },
+            ],
+            columnDefs: [{
+                    targets: [3, 4],
+                    render: function(data) {
+                        let DateTime = luxon.DateTime;
+                        let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
+                        return d;
+                    }
+                },
+                {
+                    targets: [8],
+                    className: 'dt-body-center'
+                }
+            ],
+            processing: true,
+            order: [
+                [0, "desc"]
+            ],
+            fixedColumns: {
+                start: 1,
+                end: 2
+            },
+            scrollX: true
+        });
+
+        $('#other_project_table').DataTable({
+            ajax: {
+                url: "/index/otherprojects",
+                dataSrc: ''
+            },
+            columns: [{
+                    data: "project_id",
+                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                        $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.project_id + "'>" + rowData.project_id + "</a>");
+                    }
+                },
+                {
+                    data: "quote_no"
+                },
+                {
+                    data: "project_name"
+                },
+                {
+                    data: "create_date.date"
+                },
+                {
+                    data: "due_date.date",
+                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                        let d = new Date(cellData);
+                        let today = new Date();
+                        if (d <= today) {
+                            $(cell).addClass("red");
+                        }
+                    }
+                },
+                {
+                    data: "Specifier_name"
+                },
+                {
+                    data: "owner"
+                },
+                {
+                    data: "segment"
+                },
+                {
+                    data: "project_id",
+                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                        $(cell).html("<a target='_blank' href='/quote/index/project/" + rowData.project_id + "'><span class='button-wrap'><span class='icon icon-money'></span></span></a>")
+                    }
+                },
+            ],
+            columnDefs: [{
+                    targets: [3, 4],
+                    render: function(data) {
+                        let DateTime = luxon.DateTime;
+                        let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
+                        return d;
+                    }
+                },
+                {
+                    targets: [8],
+                    className: 'dt-body-center'
+                }
+            ],
+            processing: true,
+            order: [
+                [0, "desc"]
+            ],
+            fixedColumns: {
+                start: 1,
+                end: 2
+            },
+            scrollX: true
+        });
+
+        $('#quote_table').DataTable({
+            ajax: {
+                url: "/index/quotesalesrep",
+                dataSrc: ''
+            },
+            processing: true,
+            //"serverSide": true,
+            columns: [{
+                    data: "quote_id",
+                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                        $(cell).html("<a target='_blank' href='/quote/edit/id/" + rowData.quote_id + "'>" + rowData.quote_id + "</a>");
+                    }
+                },
+                {
+                    data: "project_id",
+                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                        $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.quote_id + "'>" + rowData.project_name + "</a>");
+                    }
+                },
+                {
+                    data: "quote_date.date"
+                },
+                {
+                    data: "expire_date.date",
+                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                        let d = new Date(cellData);
+                        let today = new Date();
+                        if (d <= today) {
+                            $(cell).addClass("red");
+                        }
+                    }
+                },
+                {
+                    data: "ship_required_date.date"
+                },
+                {
+                    data: "customer"
+                },
+                {
+                    data: "status_name"
+                },
+                {
+                    data: "approve_status",
+                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                        if (cellData == -1) {
+                            $(cell).addClass("disapproved orange");
+                            $(cell).html("Disapproved");
+                        } else if (cellData == 10) {
+                            $(cell).addClass("approved green");
+                            $(cell).html("Approved");
+                        } else if (cellData == 1) {
+                            $(cell).addClass("waiting red");
+                            $(cell).html("Waiting Approval");
+                        } else {
+                            $(cell).addClass("init");
+                            $(cell).html("Not Submitted");
+                        }
+                    }
+                }
+            ],
+            columnDefs: [{
+                targets: [2, 3, 4],
+                render: function(data) {
+                    let DateTime = luxon.DateTime;
+                    let d = DateTime.fromSQL(data).setLocale('en').toFormat('f');
+                    return d;
+                }
+            }],
+            order: [
+                [0, "desc"]
+            ],
+            fixedColumns: {
+                start: 2,
+                end: 2
+            },
+            scrollX: true
+        });
+
+        $('#project_log').DataTable({
+            ajax: {
+                url: "/index/memo",
+                dataSrc: ''
+            },
+            processing: true,
+            columns: [{
+                    data: "added.date"
+                },
+                {
+                    data: "project_id",
+                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                        {
+                            $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.project_id + "'>" + rowData.project_id + "</a>");
+                        }
+                    }
+                },
+                {
+                    data: "project_name"
+                },
+                {
+                    data: "type"
+                },
+            ],
+            columnDefs: [{
+                targets: [0],
+                render: function(data) {
+                    let DateTime = luxon.DateTime;
+                    let d = DateTime.fromSQL(data).setLocale('en').toFormat('f');
+                    return d;
+                }
+            }, {
+                targets: [1],
+                className: 'dt-body-center'
+            }],
+            fixedColumns: {
+                start: 3
+            },
+            order: [],
+            scrollX: true
+        });
+    })
 </script>
 
 <!-- Right panel -->
@@ -254,33 +422,14 @@
             <div class="sidebar-inner-nav">
                 <div class="quick-links">
                     <ol>
-                        <li><a href="/project/" class='quick-link add-project' title="Add new project">
-                                <svg class="icon-action" width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 12H20M12 4V20" stroke="#2D75C3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <li>
+                            <a href="/project/" target="_blank" class='quick-link add_pro' title="Add new project">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12.75 11.25V5C12.75 4.80109 12.671 4.61032 12.5303 4.46967C12.3897 4.32902 12.1989 4.25 12 4.25C11.8011 4.25 11.6103 4.32902 11.4697 4.46967C11.329 4.61032 11.25 4.80109 11.25 5V11.25H5C4.80109 11.25 4.61032 11.329 4.46967 11.4697C4.32902 11.6103 4.25 11.8011 4.25 12C4.25 12.1989 4.32902 12.3897 4.46967 12.5303C4.61032 12.671 4.80109 12.75 5 12.75H11.25V19C11.2526 19.1981 11.3324 19.3874 11.4725 19.5275C11.6126 19.6676 11.8019 19.7474 12 19.75C12.1989 19.75 12.3897 19.671 12.5303 19.5303C12.671 19.3897 12.75 19.1989 12.75 19V12.75H19C19.1989 12.75 19.3897 12.671 19.5303 12.5303C19.671 12.3897 19.75 12.1989 19.75 12C19.7474 11.8019 19.6676 11.6126 19.5275 11.4725C19.3874 11.3324 19.1981 11.2526 19 11.25H12.75Z" />
                                 </svg>
-                                Add Project</a></li>
-                        <!--
-                    <li><a href="#" class='quick-link edit-project' title="Edit project">
-                        <svg class="icon-action" width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14.4443 5.68747L5.44587 14.6859C4.78722 15.3446 4.26719 16.1441 4.10888 17.062C3.94903 17.9888 3.89583 19.139 4.44432 19.6875C4.99281 20.236 6.14299 20.1828 7.0698 20.0229C7.98772 19.8646 8.78722 19.3446 9.44587 18.6859L18.4443 9.68747M14.4443 5.68747C14.4443 5.68747 17.4443 2.68747 19.4443 4.68747C21.4443 6.68747 18.4443 9.68747 18.4443 9.68747M14.4443 5.68747L18.4443 9.68747" stroke="#2D75C3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>    
-                        Edit Project
-                    </a></li>
-                    <li><a href="#" class='quick-link update-project' title="Update project">
-                        <svg class="icon-action" width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 3V9M3 9H9M3 9C5.32744 6.91141 7.48287 4.54676 10.7453 4.08779C12.6777 3.81593 14.6461 4.17941 16.3539 5.12343C18.0617 6.06746 19.4164 7.54091 20.2139 9.32177M21 21V15M21 15H15M21 15C18.6725 17.0886 16.5171 19.4532 13.2547 19.9122C11.3223 20.1841 9.35391 19.8206 7.6461 18.8766C5.93829 17.9325 4.58356 16.4591 3.78604 14.6782" stroke="#2D75C3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Update Project</a></li>
-                    <li><a href="#" class='quick-link save-project' title="Save project">
-                        <svg class="icon-action" width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 19.8935C17.1722 19.7353 18.799 19.4232 19.1111 19.1111C19.5556 18.6667 20 15.5556 20 12C20 11.3687 19.9621 10.4239 19.9316 9.76377C19.9088 9.27176 19.7009 8.80741 19.3526 8.45914L15.5409 4.6474C15.1926 4.29913 14.7282 4.09124 14.2362 4.06844C13.5761 4.03786 12.6313 4 12 4C8.44444 4 5.33333 4.44444 4.88889 4.88889C4.44444 5.33333 4 8.44444 4 12C4 15.5556 4.44444 18.6667 4.88889 19.1111C5.20096 19.4232 6.82776 19.7353 9 19.8935M15 19.8935C14.0786 19.9606 13.059 20 12 20C10.941 20 9.92143 19.9606 9 19.8935M15 19.8935V18C15 18 15 15 12 15C9 15 9 18 9 18V19.8935" stroke="#2D75C3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Save Project</a></li>
-                    <li><a href="#" class='quick-link delete-project' title="Delete project">
-                        <svg class="icon-action" width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5.99999 6C5.99999 11.8587 4.63107 20 12 20C19.3689 20 18 11.8587 18 6M4 6H20M15 6V5C15 3.22496 13.3627 3 12 3C10.6373 3 9 3.22496 9 5V6" stroke="#2D75C3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Delete Project</a></li> -->
+                                Add Project
+                            </a>
+                        </li>
                     </ol>
                 </div>
             </div>

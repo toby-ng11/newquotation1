@@ -332,6 +332,36 @@ class Quote extends DbTable\Quote
 		
 		return $merged_result;
 	}
+
+	public function fetchrelatedJson($owner,$status=1) {
+		if($owner ==null)
+		{
+			return  false;
+		}
+		$db = $this->getAdapter();
+		$select = $db->select()->from('quotes_manager_view')->order('quote_id desc');
+		//$select->where('sales_id = ?',$owner)->where('quote.status = ?',$status);
+		$conditions = $db->select()
+			->orWhere('sales_id = ?',$owner)
+			->orWhere('project_owner = ?', $owner)
+			->orWhere('arch = ?',$owner)
+			->getPart(Zend_Db_Select::WHERE);
+		//$select->reset(Zend_Db_Select::WHERE
+		$select->where($conditions[0].$conditions[1].$conditions[2])
+			->where('status = ?',$status);
+	
+		$result= $db->fetchAll($select);
+
+		$merged_result = array();
+		
+		foreach($result as $r)
+		{
+			$merged_result[$r['quote_id']] = $r;
+		}
+		
+		return Zend_Json::encode($merged_result);
+
+	}
 	
 	public function fetchtotal()
 	{

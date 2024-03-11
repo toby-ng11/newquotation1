@@ -47,6 +47,30 @@ class IndexController extends Zend_Controller_Action
       }
     }
 
+	public function projectsalesrepAction() {
+		$project = new Project();
+		echo $project->fetchbyownerJson($this->sale_id);
+		exit;
+	}
+
+	public function otherprojectsAction() {
+		$project = new Project();
+		echo $project->fetchothersJson($this->sale_id, DEFAULT_COMPNAY);
+		exit;
+	}
+
+	public function quotesalesrepAction() {
+		$quote = new Quote();
+		echo $quote->fetchrelatedJson($this->sale_id);
+		exit;
+	}
+
+	public function memoAction() {
+		$memo = new ProjectMemo();
+		echo $memo->fetchmemobyownerJson($this->sale_id);
+		exit;
+	}
+
     public function adminAction()
     {
     	if($this->session->user['sale_role'] != 'admin' && APPLICATION_ENV == 'production' )
@@ -64,13 +88,13 @@ class IndexController extends Zend_Controller_Action
 
 	public function quoteAction() {
 		$quote = new Quote();
-		echo $quote->fetchQuoteJson();;
+		echo $quote->fetchQuoteJson();
 		exit;
 	}
 
 	public function projectAction() {
 		$quote = new Project();
-		echo $quote->fetchallprojectJson();;
+		echo $quote->fetchallprojectJson();
 		exit;
 	}
 

@@ -72,7 +72,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     	{
     		$autoloader = Zend_Loader_Autoloader::getInstance();
 			$autoloader->registerNamespace('Centura_');
-    		$autoloader->registerNamespace('Centura\\');
+    		$autoloader->registerNamespace('Centura\\'); // for migrate from ZF1 to ZF2
     	}
     	 
     	protected function _initLayout()

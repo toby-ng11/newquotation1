@@ -1,7 +1,8 @@
-@import "organize/main-page-content1.css";
-@import "organize/statsRow.css";
-@import "sidebar/sidebar.css";
-@import "toc/document-toc.css";
+@use "../vars" as *;
+@use "./organize/main-page-content";
+@use "./sidebar/sidebar";
+@use "./toc/document-toc";
+
 
 .document-page .article-actions-container,
 .document-page .document-toc-container,

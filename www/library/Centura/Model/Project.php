@@ -150,6 +150,23 @@ class Project extends DbTable\Project
 
 		return $db->fetchAll($select);	
 	}
+
+	public function fetchbyownerJson($owner = null,$count = 5,$offset =0)
+	{
+		if($owner ==null)
+		{
+			return  false;
+		}
+		$db = $this->getAdapter();
+		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location', 'centura_location_id = P21_Location.location_id','company_id')
+			->join('quote_status','quote_status.uid=project.status',array('status_name'=>'Status'))
+			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment',array('segment'=>'Market_Segment'))
+			->join('quote_specifier','quote_specifier.uid = project.specifiler',array('Specifier_name'=>'quote_specifier.Specifier'));
+		
+		$select->where('owner = ?',$owner)->where('project.deleted =?','N');
+
+		return Zend_Json::encode($db->fetchAll($select));	
+	}
 	
 	public function fetchothers($owner =null,$company_id = DEFAULT_COMPNAY_ID)
 	{
@@ -171,6 +188,26 @@ class Project extends DbTable\Project
 		return $db->fetchAll($select);	
 	}
 	
+	public function fetchothersJson($owner =null, $company_id = DEFAULT_COMPNAY_ID)
+	{
+		if($owner ==null)
+		{
+			return  false;
+		}
+		$db = $this->getAdapter();
+		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location', 'centura_location_id = P21_Location.location_id','company_id')
+			->join('quote_status','quote_status.uid=project.status',array('status_name'=>'Status'))
+			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment',array('segment'=>'Market_Segment'))
+			->join('quote_specifier','quote_specifier.uid = project.specifiler',array('Specifier_name'=>'quote_specifier.Specifier'));
+		
+		$select->where('owner != ?',$owner)->where('project.deleted =?','N');;
+		$select->where('quote_status.uid != 13');
+		$select->where('P21_Location.company_id = ?',$company_id);
+
+
+		return Zend_Json::encode($db->fetchAll($select));
+	}
+
 	public function fetchallproject($owner = null)
 	{
 		$db = $this->getAdapter();
@@ -186,7 +223,7 @@ class Project extends DbTable\Project
 		return $db->fetchAll($select);
 	}
 
-	public function fetchallprojectJson($owner = null, $limit = 7000) {
+	public function fetchallprojectJson($owner = null) {
 		$db = $this->getAdapter();
 		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location', 'centura_location_id = P21_Location.location_id','company_id')
 			->join('quote_status','quote_status.uid=project.status',array('status_name'=>'Status'))
@@ -197,7 +234,6 @@ class Project extends DbTable\Project
 		{
 			$select->where('owner = ?',$owner);
 		}
-		$select->limit($limit);
 		return Zend_Json::encode($db->fetchAll($select));
 	}
 	

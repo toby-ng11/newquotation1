@@ -3,258 +3,267 @@ $session =  Zend_Registry::get('session');
 $project = $this->project; ?>
 
 <!-- Left panel -->
-<div>
+<div class="sidebar-container">
+	<div class="toc-container">
+		<aside class="toc">
+			<nav>
+				<div class="document-toc-container">
+					<section class="document-toc">
+						<header>
+							<h2 class="document-toc-heading">On this page</h2>
+						</header>
+						<ul id="document-toc-list" class="document-toc-list"></ul>
+					</section>
+				</div>
+			</nav>
+		</aside>
+		<section class="place side"></section>
+	</div>
 </div>
 
 <!-- Main content wrapper -->
 <main id="content" class="main-content">
-	<div class="main-page-content">
+	<div class="middleNav">
+		<ul>
+			<li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
+				<ul class="mSub1">
+					<li><a href="#" title="">Share user</a></li>
+					<li><a href="#" title="">Show Teamworks</a></li>
+				</ul>
+			</li>
 
-		<header class="titleArea">
+			<li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
+				<ul class="mSub4">
+					<li><a href="#" title="">Add</a></li>
+					<li><a href="#" title="">Save</a></li>
+					<li><a href="#" title="">Edit</a></li>
+					<li><a href="#" title="">Delete</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<div class="main-page-content">
+		<header class="main-page-content-header">
 			<h1>Project To Quote WorkSheet</h1>
 		</header>
 
 		<div class="section-content">
-			<p>Track project data and events critical to close of sale.
-			<p>
-		</div>
-
-		<div class="middleNav">
-			<ul>
-				<li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
-					<ul class="mSub1">
-						<li><a href="#" title="">Share user</a></li>
-						<li><a href="#" title="">Show Teamworks</a></li>
-					</ul>
-				</li>
-
-				<li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
-					<ul class="mSub4">
-						<li><a href="#" title="">Add</a></li>
-						<li><a href="#" title="">Save</a></li>
-						<li><a href="#" title="">Edit</a></li>
-						<li><a href="#" title="">Delete</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-
-		<!-- Note -->
-		<!-- <div class="nNote nInformation hideit">
-            <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
-        </div>-->
-		<div class="statsRow">
-			<div class="wrapper">
-				<div class="controlB">
-					<ul>
-						<li><a href="/project/" class='add_pro' title="add"><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Project</span></a></li>
-						<!--<li><a href="#" class='edit_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
-						<!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
-						<li><a href="#" class='save_pro' title="save"><img src="/images/icons/control/32/save.png" alt="" /><span>Save Project</span></a></li>
-						<li><a href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/project/print/id/" . $project['project_id'] . "?company=" . substr($project['quote_no'], 0, 3) . "&name=Centura_Project_" . preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print"><img src="/images/icons/control/32/pdf.png" alt="" /><span>Print Project</span></a></li>
-						<li><a href="#" class='delete_pro' title="delete"><img src="/images/icons/control/32/delete.png" alt="" /><span>Close Project</span></a></li>
-					</ul>
-					<div class="clear"></div>
-				</div>
-			</div>
+			<p>Track project data and events critical to close of sale.</p>
 		</div>
 
 		<!-- Form -->
-		<form method="post" class="form" id='project_content'>
-			<div class="widget-table">
-				<input type="hidden" id='project_id' value='<?= $project['project_id'] ?>'>
-				<div class="title"><img src="/images/icons/dark/pencil.png" alt="" class="titleIcon" />
-					<h6>Project Information</h6>
-				</div>
+		<section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
+			<h2>Project Information</h2>
+			<form method="post" class="form" id='project_content'>
+				<div class="widget-table">
+					<input type="hidden" id='project_id' value='<?= $project['project_id'] ?>'>
+					<div class="formRow">
+						<div class="oneTwo">
+							<label for="project_name">Project Name</label>
+							<input type="text" id='project_name' class="validate[required]" placeholder="Project Name" name='project_name' value="<?= $project['project_name'] ?>" />
+						</div>
 
-				<div class="formRow">
-					<div class="formRight" style="width:98%">
-						<span class="oneTwo"><span class="formNote">Project Name</span><input type="text" id='project_name' class="validate[required]" placeholder="Project Name" name='project_name' value="<?= $project['project_name'] ?>" /></span>
-						<span class="oneFour"><span class="formNote">Centura Location</span><select name="location" id="location" style="width:300px;">
+						<div class="oneTwo">
+							<label for="location">Centura Location</label>
+							<select name="location" id="location">
 								<?php foreach ($this->locations as $l) { ?>
 									<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $project['centura_location_id']) echo 'selected' ?>><?= $l['name'] ?></option>
 								<?php } ?>
-							</select></span>
-					</div>
-					<div class="clear"></div>
+							</select>
+						</div>
 
-					<div class="formRight" style="width:98%">
-						<span class="oneTwo"><span class="formNote">Worksheet Owner</span><input type="text" value='<?= $project['owner_name'] ?>' readonly /></span>
-						<input type="hidden" name='owner' value='<?= $project['owner'] ?>'>
-						<span class="oneFour"><span class="formNote">Project#</span><input type="text" placeholder="123456" name='quote_no' value="<?= $project['quote_no'] ?>" readonly /></span>
-						<input name='create_date' type="hidden" value='<?= $project['create_date']->format('Y-m-d') ?>' />
-					</div>
-					<div class="clear"></div>
+						<div class="oneTwo">
+							<label for="owner">Worksheet Owner</label>
+							<input id="owner" type="text" value='<?= $project['owner_name'] ?>' readonly />
+							<input type="hidden" name='owner' value='<?= $project['owner'] ?>'>
+						</div>
 
-					<div class="formRight" style="width:98%">
-						<span class="oneTwo"><span class="formNote">Project Location</span><input type="text" name='project_location_address' id="project_location_address" class="validate[required]" value='<?= $project['project_location_address'] ?>' /></span>
-						<span class="oneFour"><span class="formNote">Status:</span><select name="status" id='status' class="validate[required]">
+						<div class="oneTwo">
+							<label for="quote_no">Project#</label>
+							<input id="quote_no" type="text" placeholder="123456" name='quote_no' value="<?= $project['quote_no'] ?>" readonly />
+							<input name='create_date' type="hidden" value='<?= $project['create_date']->format('Y-m-d') ?>' />
+						</div>
+
+						<div class="oneTwo">
+							<label for="project_location_address">Project Location</label>
+							<input type="text" name='project_location_address' id="project_location_address" class="validate[required]" value='<?= $project['project_location_address'] ?>' />
+						</div>
+
+						<div class="oneTwo">
+							<label for="status">Status:</label>
+							<select name="status" id="status" class="validate[required]">
 								<option value="">Select Status</option>
 								<?php foreach ($this->status as $s) { ?>
 									<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $project['status']) echo 'selected' ?>><?= $s['Status'] ?></option>
 								<?php } ?>
+							</select>
+						</div>
 
-							</select></span>
-					</div>
-					<div class="clear"></div>
+						<div class="oneTwo">
+							<label for="reed">REED#</label>
+							<input type="text" name="reed" id="reed" value="<?= $project['reed'] ?>" class="validate[required]" />
+						</div>
 
-					<div class="formRight" style="width:98%">
-						<span class="oneTwo"><span class="formNote">REED#</span><input type="text" name='reed' id='reed' value="<?= $project['reed'] ?>" class="validate[required]" /></span>
-						<span class="oneFour"><span class="formNote">Market Segment:</span><select name="market_segment" id='market_segment' class="validate[required]">
+						<div class="oneTwo">
+							<label for='market_segment'>Market Segment</label>
+							<select name="market_segment" id='market_segment' class="validate[required]">
 								<option value="">Choose Segment</option>
 								<?php foreach ($this->seg as $s) { ?>
 									<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $project['market_segment']) echo 'selected' ?>><?= $s['Market_Segment'] ?></option>
 								<?php } ?>
+							</select>
+						</div>
 
-							</select></span>
-					</div>
-					<div class="clear"></div>
-
-					<div class="formRight" style="width:98%">
-						<span class="oneTwo"><span class="formNote">Project Architect/Owner<span class="req">*</span></span>
+						<div class="oneTwo">
+							<label for='architect_name'>Project Architect/Owner<span class="req">*</span></label>
 							<input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" value='<?= $this->arch_name ?>' />
 							<input type="hidden" name='architect' id='architect' value="<?= $project['architect'] ?>">
-						</span>
-						<span class="oneFour"><span class="formNote">Architect Location</span><select id="architect_loc">
+						</div>
+
+						<div class="oneTwo">
+							<label for="architect_loc">Architect Location</label>
+							<select id="architect_loc">
 								<?php foreach ($this->locations as $l) { ?>
 									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->architect['Company_ID']) echo 'selected' ?>><?= $l['name'] ?></option>
 								<?php } ?>
-							</select></span>
+							</select>
+						</div>
 
-					</div>
-					<div class="clear"></div>
-
-					<div class="formRight" style="width:98%">
-						<span class="oneTwo"><span class="formNote">Specifier<span class="req">*</span></span>
+						<div class="oneTwo">
+							<label for='specifiler_name'>Specifier<span class="req">*</span></label>
 							<input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN" original-title="Type 2 letter to start or add your own">
 							<input type="hidden" id='specifiler' name="specifiler" value="<?= $project['specifiler'] ?>">
-						</span>
-						<span class="oneFour"><span class="formNote">Specifier Location</span><select id="specifiler_loc">
+						</div>
+
+						<div class="oneTwo">
+							<label for="specifiler_loc">Specifier Location</label>
+							<select id="specifiler_loc">
 								<?php foreach ($this->locations as $l) { ?>
 									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->sepcloc['Company_ID']) echo 'selected' ?>><?= $l['name'] ?></option>
 								<?php } ?>
-							</select></span>
-					</div>
-					<div class="clear"></div>
+							</select>
+						</div>
 
-					<div class="formRight" style="width:98%">
-						<span class="oneTwo"><span class="formNote">Tender Due Date:</span><input type="text" name='due_date' class="datepicker" value='<?= $project['due_date']->format('Y-m-d') ?>' /></span>
-						<span class="oneFour"><span class="formNote">Material Required Date:</span><input type="text" name='required_date' class="datepicker" value='<?= $project['required_date']->format('Y-m-d') ?>' /></span>
-					</div>
-					<div class="clear"></div>
+						<div class="oneTwo">
+							<label for="due_date">Tender Due Date:</label>
+							<input id="due_date" type="text" name='due_date' class="datepicker" value='<?= $project['due_date']->format('Y-m-d') ?>' />
+						</div>
 
-					<div class="formRight" style="width:98%">
-						<span class="oneTwo"><span class="formNote">General Contractor</span><input type="text" placeholder="Type Name" id="gerneral_contractor" value='<?= $this->gerneral_contractor['name'] . ' - ' . $this->gerneral_contractor['company_id'] ?>' /></span>
-						<span class="oneFour"><span class="formNote">General Contractor Location</span><select id="gerneral_contractor_loc" style="width:300px;">
+						<div class="oneTwo">
+							<label for='required_date'>Material Required Date:</label>
+							<input id='required_date' type="text" name='required_date' class="datepicker" value='<?= $project['required_date']->format('Y-m-d') ?>' />
+						</div>
+
+						<div class="oneTwo">
+							<label for="gerneral_contractor">General Contractor</label>
+							<input type="text" placeholder="Type Name" id="gerneral_contractor" value='<?= $this->gerneral_contractor['name'] . ' - ' . $this->gerneral_contractor['company_id'] ?>' />
+						</div>
+
+						<div class="oneTwo">
+							<label for="gerneral_contractor_loc">General Contractor Location</label>
+							<select id="gerneral_contractor_loc">
 								<?php if ($this->gerneral_contractor['company_id'] == null) $this->gerneral_contractor['company_id'] = DEFAULT_COMPNAY; ?>
 								<?php foreach ($this->locations as $l) { ?>
 									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->gerneral_contractor['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
 								<?php } ?>
-							</select></span>
-						<input type="hidden" name='gerneral_contractor' value="<?= $project['general_contractor_id'] ?>">
-					</div>
-					<div class="clear"></div>
+							</select>
+							<input type="hidden" name='gerneral_contractor' value="<?= $project['general_contractor_id'] ?>">
+						</div>
 
-					<div class="formRight" style="width:98%">
-						<span class="oneTwo"><span class="formNote">Awarded Sub Contractor:</span><input type="text" placeholder="Type Name" id="awarded_contractor" value='<?= $this->awarded_sub_contracotr['name'] . ' - ' . $this->awarded_sub_contracotr['company_id'] ?>' /></span>
-						<span class="oneFour"><span class="formNote">Awarded Contractor Location</span><select id="awarded_contractor_loc">
+						<div class="oneTwo">
+							<label id="awarded_contractor">Awarded Sub Contractor:</label>
+							<input type="text" placeholder="Type Name" id="awarded_contractor" value='<?= $this->awarded_sub_contracotr['name'] . ' - ' . $this->awarded_sub_contracotr['company_id'] ?>' />
+						</div>
+
+						<div class="oneTwo">
+							<label for="awarded_contractor_loc">Awarded Contractor Location</label>
+							<select id="awarded_contractor_loc">
 								<?php if ($this->awarded_sub_contracotr['company_id'] == null) $this->awarded_sub_contracotr['company_id'] = DEFAULT_COMPNAY; ?>
 								<?php foreach ($this->locations as $l) { ?>
 									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->awarded_sub_contracotr['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
 								<?php } ?>
-							</select></span>
-						<input type="hidden" name='awarded_contractor' value="<?= $project['awarded_sub_contracotr_id'] ?>">
-					</div>
-					<div class="clear"></div>
-				</div>
-			</div>
-		</form>
+							</select>
+							<input type="hidden" name='awarded_contractor' value="<?= $project['awarded_sub_contracotr_id'] ?>">
+						</div>
 
-		<form method="post" class="form" id='project_log'>
-			<div class="widget-table">
-				<div class="title"><span class="titleIcon"><input type="checkbox" id="titleCheck" name="titleCheck" /></span>
-					<h6>Product Presented / For Quotation</h6><?php if ($this->owner == 1) { ?><a href="#" title="" class="button greenB" style="margin: 5px;" id="add_item"><span>Add New</span></a><a href="#" title="" class="button redB" style="margin: 5px;display:none" id="save_item"><span>Save</span></a><?php } ?>
+					</div>
 				</div>
-				<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
+			</form>
+		</section>
+
+		<section aria-labelledby="quoted-items" id="section2" data-nav="Quoted Items">
+			<h2>Quoted Items</h2>
+			<form method="post" class="form" id='project_log'>
+				<div class="widget-table">
+					<div class="title">
+						<?php if ($this->owner == 1) { ?>
+							<a href="#" title="" class="button greenB" style="margin: 5px;" id="add_item">
+								<span>Add New</span>
+							</a>
+							<a href="#" title="" class="button redB" style="margin: 5px;display:none" id="save_item">
+								<span>Save</span>
+							</a>
+						<?php } ?>
+					</div>
+					<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
+						<thead>
+							<tr>
+								<td></td>
+								<td width="50%">Item ID - Description</td>
+								<td>Quality Quoted</td>
+								<td>Unit Price</td>
+								<td>Unit Of Measure</td>
+								<td>Price Quoted</td>
+								<td>Action</td>
+							</tr>
+						</thead>
+						<tbody id="item_body">
+							<?php foreach ($this->items as $i) { ?>
+								<tr name="item[<?= $i['product_id'] ?>]">
+									<td><input type="checkbox" name="item[<?= $i['product_id'] ?>]"></td>
+									<td><?= $i['product_id'] ?> - <?= $i['item_desc'] ?>
+										<textarea readonly rows="1" cols="" name="item[<?= $i['product_id'] ?>][note]"><?= $i['note'] ?></textarea>
+									</td>
+									<td><?= $i['qty'] ?></td>
+									<td><?= $i['unit_price'] ?></td>
+									<td><?= $i['uom'] ?></td>
+									<td><?= $i['subtotal'] ?></td>
+									<input type="hidden" name="item[<?= $i['product_id'] ?>][qty]" value="<?= $i['qty'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][unit_price]" value="<?= $i['unit_price'] ?>">
+									<input type="hidden" name="item[<?= $i['product_id'] ?>][uom]" value="<?= $i['uom'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][total_price]" value="<?= $i['subtotal'] ?>">
+									<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="item_delete" href="#" index='<?= $i['product_id'] ?>'><img src="/images/icons/dark/close.png" alt="delete"></a></td>
+
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+				</div>
+			</form>
+		</section>
+
+		<section aria-labelledby="project-log" id="section3" data-nav="Project Log">
+			<h2>Project Log</h2>
+			<div class="widget-table">
+				<div class="title">
+					<?php if ($this->owner == 1) { ?>
+						<a href="#" title="" class="button greenB" style="margin: 5px;" id="opener">
+							<span>Add Action</span>
+						</a>
+					<?php } ?>
+				</div>
+				<table cellpadding="0" cellspacing="0" width="100%" class="display no-wrap" id='project_memo'>
 					<thead>
 						<tr>
-							<td></td>
-							<td width="60%">Item ID - Description</td>
-							<td>Quality Quoted</td>
-							<td>Unit Price</td>
-							<td>Unit Of Measure</td>
-							<td>Price Quoted</td>
-							<td>Action</td>
+							<th>Log Time</th>
+							<th>Action Items Completed</th>
+							<th>Follow Up Date</th>
+							<th>Next Action Required</th>
+							<th class="action">Delete</th>
 						</tr>
 					</thead>
-					<tbody id="item_body">
-						<?php foreach ($this->items as $i) { ?>
-							<tr name="item[<?= $i['product_id'] ?>]">
-								<td><input type="checkbox" name="item[<?= $i['product_id'] ?>]"></td>
-								<td><?= $i['product_id'] ?> - <?= $i['item_desc'] ?>
-									<textarea readonly rows="1" cols="" name="item[<?= $i['product_id'] ?>][note]"><?= $i['note'] ?></textarea>
-								</td>
-								<td><?= $i['qty'] ?></td>
-								<td><?= $i['unit_price'] ?></td>
-								<td><?= $i['uom'] ?></td>
-								<td><?= $i['subtotal'] ?></td>
-								<input type="hidden" name="item[<?= $i['product_id'] ?>][qty]" value="<?= $i['qty'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][unit_price]" value="<?= $i['unit_price'] ?>">
-								<input type="hidden" name="item[<?= $i['product_id'] ?>][uom]" value="<?= $i['uom'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][total_price]" value="<?= $i['subtotal'] ?>">
-								<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="item_delete" href="#" index='<?= $i['product_id'] ?>'><img src="/images/icons/dark/close.png" alt="delete"></a></td>
-
-							</tr>
-						<?php } ?>
-					</tbody>
 				</table>
 			</div>
-		</form>
-
-		<div class="widget-table">
-			<div class="title"><img src="/images/icons/dark/frames.png" alt="" class="titleIcon">
-				<h6>Project Log</h6><?php if ($this->owner == 1) { ?><a href="#" title="" class="button greenB" style="margin: 5px;" id="opener"><span>Add Action</span></a><?php } ?>
-			</div>
-			<table cellpadding="0" cellspacing="0" width="100%" class="display" id='project_memo'>
-				<thead>
-					<tr>
-						<td class="sortCol">Log Date</td>
-						<td class="sortCol" style='width:60%'>Action Items Completed</td>
-						<td class="sortCol">Follow Up Date</td>
-						<td class="sortCol">Next Action Required</td>
-						<td class="sortCol action">
-							<div> </div>
-						</td>
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach ($this->memo as $l) { ?>
-						<tr>
-							<td><?= $l['added']->format('Y-m-d'); ?></td>
-							<td><?= $l['title']; ?></td>
-							<td><?= $l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
-							<td><?= $l['type']; ?></td>
-							<td><?php if ($this->owner == 1) { ?><a href="/memo/delete/id/<?= $l['memo_id']; ?>" class='memo_delete'><img src="/images/icons/dark/close.png" alt="delete"></a><?php } ?></td>
-						</tr>
-					<?php } ?>
-				</tbody>
-			</table>
-		</div>
-
-		<div class="statsRow">
-			<div class="wrapper">
-				<div class="controlB">
-					<ul>
-						<li><a href="/project/" class='add_pro' title="add"><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Project</span></a></li>
-						<!--<li><a href="#" class='edit_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
-						<!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
-						<li><a href="#" class='save_pro' title="save"><img src="/images/icons/control/32/save.png" alt="" /><span>Save Project</span></a></li>
-						<li><a href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/project/print/id/" . $project['project_id'] . "?company=" . substr($project['quote_no'], 0, 3) . "&name=Centura_Project_" . preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print"><img src="/images/icons/control/32/pdf.png" alt="" /><span>Print Project</span></a></li>
-						<li><a href="#" class='delete_pro' title="delete"><img src="/images/icons/control/32/delete.png" alt="" /><span>Close Project</span></a></li>
-					</ul>
-					<div class="clear"></div>
-				</div>
-			</div>
-		</div>
-
+		</section>
 
 		<div id="dialog-message" title="Add log -- Auto Save">
 			<div class="uiForm">
@@ -294,6 +303,48 @@ $project = $this->project; ?>
 	</div>
 </main>
 
+<!-- Right panel -->
+<div class="sidebar-container">
+	<aside id="sidebar-quicklinks" class="sidebar">
+		<nav aria-label="Actions" class="sidebar-inner">
+			<div class="sidebar-inner-nav">
+				<div class="quick-links">
+					<ol>
+						<li><a href="/project/" target="_blank" class='quick-link add_pro' title="Add new project">
+								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									<path d="M12.75 11.25V5C12.75 4.80109 12.671 4.61032 12.5303 4.46967C12.3897 4.32902 12.1989 4.25 12 4.25C11.8011 4.25 11.6103 4.32902 11.4697 4.46967C11.329 4.61032 11.25 4.80109 11.25 5V11.25H5C4.80109 11.25 4.61032 11.329 4.46967 11.4697C4.32902 11.6103 4.25 11.8011 4.25 12C4.25 12.1989 4.32902 12.3897 4.46967 12.5303C4.61032 12.671 4.80109 12.75 5 12.75H11.25V19C11.2526 19.1981 11.3324 19.3874 11.4725 19.5275C11.6126 19.6676 11.8019 19.7474 12 19.75C12.1989 19.75 12.3897 19.671 12.5303 19.5303C12.671 19.3897 12.75 19.1989 12.75 19V12.75H19C19.1989 12.75 19.3897 12.671 19.5303 12.5303C19.671 12.3897 19.75 12.1989 19.75 12C19.7474 11.8019 19.6676 11.6126 19.5275 11.4725C19.3874 11.3324 19.1981 11.2526 19 11.25H12.75Z" />
+								</svg>
+								Add Project</a></li>
+						<!--<li><a href="#" class='edit_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
+						<!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
+						<li><a href="#" class='quick-link save_pro' title="Save project">
+								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									<path d="M17 20.75H7C6.27065 20.75 5.57118 20.4603 5.05546 19.9445C4.53973 19.4288 4.25 18.7293 4.25 18V6C4.25 5.27065 4.53973 4.57118 5.05546 4.05546C5.57118 3.53973 6.27065 3.25 7 3.25H14.5C14.6988 3.25018 14.8895 3.32931 15.03 3.47L19.53 8C19.6707 8.14052 19.7498 8.33115 19.75 8.53V18C19.75 18.7293 19.4603 19.4288 18.9445 19.9445C18.4288 20.4603 17.7293 20.75 17 20.75ZM7 4.75C6.66848 4.75 6.35054 4.8817 6.11612 5.11612C5.8817 5.35054 5.75 5.66848 5.75 6V18C5.75 18.3315 5.8817 18.6495 6.11612 18.8839C6.35054 19.1183 6.66848 19.25 7 19.25H17C17.3315 19.25 17.6495 19.1183 17.8839 18.8839C18.1183 18.6495 18.25 18.3315 18.25 18V8.81L14.19 4.75H7Z" />
+									<path d="M16.75 20H15.25V13.75H8.75V20H7.25V13.5C7.25 13.1685 7.3817 12.8505 7.61612 12.6161C7.85054 12.3817 8.16848 12.25 8.5 12.25H15.5C15.8315 12.25 16.1495 12.3817 16.3839 12.6161C16.6183 12.8505 16.75 13.1685 16.75 13.5V20Z" />
+									<path d="M12.47 8.75H8.53001C8.3606 8.74869 8.19311 8.71403 8.0371 8.64799C7.88109 8.58195 7.73962 8.48582 7.62076 8.36511C7.5019 8.24439 7.40798 8.10144 7.34437 7.94443C7.28075 7.78741 7.24869 7.61941 7.25001 7.45V4H8.75001V7.25H12.25V4H13.75V7.45C13.7513 7.61941 13.7193 7.78741 13.6557 7.94443C13.592 8.10144 13.4981 8.24439 13.3793 8.36511C13.2604 8.48582 13.1189 8.58195 12.9629 8.64799C12.8069 8.71403 12.6394 8.74869 12.47 8.75Z" />
+								</svg>
+								Save Project</span></a></li>
+						<li><a class='quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/project/print/id/" . $project['project_id'] . "?company=" . substr($project['quote_no'], 0, 3) . "&name=Centura_Project_" . preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print">
+								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									<path d="M18.53 9L13 3.47C12.8595 3.32931 12.6688 3.25018 12.47 3.25H8C7.27065 3.25 6.57118 3.53973 6.05546 4.05546C5.53973 4.57118 5.25 5.27065 5.25 6V18C5.25 18.7293 5.53973 19.4288 6.05546 19.9445C6.57118 20.4603 7.27065 20.75 8 20.75H16C16.7293 20.75 17.4288 20.4603 17.9445 19.9445C18.4603 19.4288 18.75 18.7293 18.75 18V9.5C18.7421 9.3116 18.6636 9.13309 18.53 9ZM13.25 5.81L16.19 8.75H13.25V5.81ZM16 19.25H8C7.66848 19.25 7.35054 19.1183 7.11612 18.8839C6.8817 18.6495 6.75 18.3315 6.75 18V6C6.75 5.66848 6.8817 5.35054 7.11612 5.11612C7.35054 4.8817 7.66848 4.75 8 4.75H11.75V9.5C11.7526 9.69811 11.8324 9.88737 11.9725 10.0275C12.1126 10.1676 12.3019 10.2474 12.5 10.25H17.25V18C17.25 18.3315 17.1183 18.6495 16.8839 18.8839C16.6495 19.1183 16.3315 19.25 16 19.25Z" />
+									<path d="M13.49 14.85C12.8751 14.4642 12.4124 13.8778 12.18 13.19C12.3953 12.5467 12.4603 11.8625 12.37 11.19C12.3412 11.0206 12.2586 10.865 12.1344 10.7462C12.0102 10.6274 11.8511 10.5518 11.6806 10.5305C11.5101 10.5092 11.3372 10.5433 11.1876 10.6279C11.038 10.7125 10.9197 10.843 10.85 11C10.7362 11.8085 10.822 12.6325 11.1 13.4C10.7202 14.2873 10.2963 15.1551 9.83001 16C9.12001 16.4 8.15001 17 8.00001 17.69C7.88001 18.25 8.93001 19.69 10.72 16.57C11.5159 16.2746 12.3312 16.034 13.16 15.85C13.7727 16.2003 14.4561 16.4088 15.16 16.46C15.3216 16.4642 15.4809 16.4206 15.6178 16.3345C15.7546 16.2484 15.863 16.1238 15.9292 15.9764C15.9955 15.8289 16.0167 15.6651 15.9901 15.5056C15.9636 15.3462 15.8905 15.1981 15.78 15.08C15.36 14.65 14.11 14.77 13.49 14.85ZM8.71001 17.85C8.99025 17.3705 9.36034 16.9495 9.80001 16.61C9.12001 17.69 8.71001 17.88 8.71001 17.86V17.85ZM11.63 11.04C11.89 11.04 11.87 12.19 11.69 12.5C11.5544 12.0285 11.5338 11.5312 11.63 11.05V11.04ZM10.76 15.92C11.0988 15.3019 11.3929 14.6602 11.64 14C11.9049 14.493 12.2734 14.9229 12.72 15.26C12.0491 15.4281 11.3934 15.6522 10.76 15.93V15.92ZM15.46 15.74C15.46 15.74 15.28 15.96 14.13 15.46C15.38 15.38 15.59 15.67 15.46 15.75V15.74Z" />
+								</svg>
+								Print Project</a></li>
+						<li><a href="#" class='quick-link delete_pro' title="delete">
+								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									<path d="M20 8.70007H4C3.90151 8.70007 3.80398 8.68067 3.71299 8.64298C3.62199 8.60529 3.53931 8.55005 3.46967 8.4804C3.40003 8.41076 3.34478 8.32808 3.30709 8.23709C3.2694 8.14609 3.25 8.04856 3.25 7.95007C3.25 7.85158 3.2694 7.75405 3.30709 7.66306C3.34478 7.57207 3.40003 7.48939 3.46967 7.41974C3.53931 7.3501 3.62199 7.29486 3.71299 7.25716C3.80398 7.21947 3.90151 7.20007 4 7.20007H20C20.1989 7.20007 20.3897 7.27909 20.5303 7.41974C20.671 7.5604 20.75 7.75116 20.75 7.95007C20.75 8.14899 20.671 8.33975 20.5303 8.4804C20.3897 8.62106 20.1989 8.70007 20 8.70007Z" />
+									<path d="M16.44 20.75H7.56C7.24309 20.7717 6.92503 20.7303 6.62427 20.6281C6.3235 20.5259 6.04601 20.3651 5.80788 20.1548C5.56975 19.9446 5.37572 19.6892 5.23704 19.4034C5.09836 19.1177 5.01779 18.8072 5 18.49V8.00005C5 7.80113 5.07902 7.61037 5.21967 7.46972C5.36032 7.32906 5.55109 7.25005 5.75 7.25005C5.94891 7.25005 6.13968 7.32906 6.28033 7.46972C6.42098 7.61037 6.5 7.80113 6.5 8.00005V18.49C6.5 18.9 6.97 19.25 7.5 19.25H16.38C16.94 19.25 17.38 18.9 17.38 18.49V8.00005C17.38 7.78522 17.4653 7.57919 17.6172 7.42729C17.7691 7.27538 17.9752 7.19005 18.19 7.19005C18.4048 7.19005 18.6109 7.27538 18.7628 7.42729C18.9147 7.57919 19 7.78522 19 8.00005V18.49C18.9822 18.8072 18.9016 19.1177 18.763 19.4034C18.6243 19.6892 18.4303 19.9446 18.1921 20.1548C17.954 20.3651 17.6765 20.5259 17.3757 20.6281C17.075 20.7303 16.7569 20.7717 16.44 20.75ZM16.56 7.75005C16.4611 7.75139 16.363 7.73291 16.2714 7.6957C16.1798 7.65848 16.0966 7.60329 16.0267 7.53337C15.9568 7.46346 15.9016 7.38024 15.8644 7.28864C15.8271 7.19704 15.8087 7.09891 15.81 7.00005V5.51005C15.81 5.10005 15.33 4.75005 14.81 4.75005H9.22C8.67 4.75005 8.22 5.10005 8.22 5.51005V7.00005C8.22 7.19896 8.14098 7.38972 8.00033 7.53038C7.85968 7.67103 7.66891 7.75005 7.47 7.75005C7.27109 7.75005 7.08032 7.67103 6.93967 7.53038C6.79902 7.38972 6.72 7.19896 6.72 7.00005V5.51005C6.75872 4.88136 7.04203 4.29281 7.50929 3.87041C7.97655 3.44801 8.5906 3.22533 9.22 3.25005H14.78C15.4145 3.21723 16.0362 3.43627 16.51 3.8595C16.9838 4.28273 17.2713 4.87592 17.31 5.51005V7.00005C17.3113 7.09938 17.2929 7.19798 17.2558 7.29013C17.2187 7.38228 17.1637 7.46615 17.0939 7.53685C17.0241 7.60756 16.941 7.6637 16.8493 7.70201C16.7577 7.74033 16.6593 7.76006 16.56 7.76005V7.75005Z" />
+									<path d="M10.22 17.0001C10.0219 16.9975 9.83263 16.9177 9.69253 16.7776C9.55244 16.6375 9.47259 16.4482 9.47 16.2501V11.7201C9.47 11.5212 9.54902 11.3304 9.68967 11.1898C9.83032 11.0491 10.0211 10.9701 10.22 10.9701C10.4189 10.9701 10.6097 11.0491 10.7503 11.1898C10.891 11.3304 10.97 11.5212 10.97 11.7201V16.2401C10.9713 16.3394 10.9529 16.438 10.9158 16.5302C10.8787 16.6223 10.8237 16.7062 10.7539 16.7769C10.6841 16.8476 10.601 16.9037 10.5093 16.9421C10.4177 16.9804 10.3193 17.0001 10.22 17.0001Z" />
+									<path d="M13.78 17.0001C13.5811 17.0001 13.3903 16.9211 13.2497 16.7804C13.109 16.6398 13.03 16.449 13.03 16.2501V11.7201C13.03 11.5212 13.109 11.3304 13.2497 11.1898C13.3903 11.0491 13.5811 10.9701 13.78 10.9701C13.9789 10.9701 14.1697 11.0491 14.3103 11.1898C14.451 11.3304 14.53 11.5212 14.53 11.7201V16.2401C14.53 16.4399 14.4513 16.6317 14.3109 16.774C14.1706 16.9162 13.9798 16.9975 13.78 17.0001Z" />
+								</svg>
+								Close Project</a></li>
+					</ol>
+				</div>
+			</div>
+		</nav>
+	</aside>
+</div>
+
 <style>
 	div.selector {
 		width: 290px;
@@ -307,10 +358,70 @@ $project = $this->project; ?>
 		width: 290px;
 	}
 
+	#memo .ui-datepicker-append {
+		display: none;
+	}
+
 	<?php if ($this->owner == 1) { ?><?php } ?>
 </style>
 
 <script type="text/javascript">
+	const items = ["Project Information", "Quoted Items", "Project Log"];
+	createTocList(items);
+
+	$('#project_memo').DataTable({
+		ajax: {
+			url: "/project/memo/id/" + $('#project_id').val(),
+			dataSrc: ''
+		},
+		processing: true,
+		columns: [{
+				data: "added.date"
+			},
+			{
+				data: "title"
+			},
+			{
+				data: "follow_up_date.date"
+			},
+			{
+				data: "type"
+			},
+			{
+				data: "memo_id",
+				createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+					<?php if ($this->owner == 1) { ?>
+						$(cell).html("<a target='_blank' href='/memo/delete/id/" + rowData.memo_id + "'><img src='/images/icons/dark/close.png' alt='delete'></a>");
+					<?php } else { ?>
+						$(cell).html("null");
+					<?php } ?>
+				}
+			},
+		],
+		columnDefs: [{
+			targets: [0],
+			render: function(data) {
+				let DateTime = luxon.DateTime;
+				let d = DateTime.fromSQL(data).setLocale('en').toFormat('f');
+				return d;
+			}
+		}, {
+			targets: [2],
+			render: function(data) {
+				let DateTime = luxon.DateTime;
+				let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
+				return d;
+			}
+		}],
+		fixedColumns: {
+			start: 1,
+			end: 1
+		},
+		order: [
+			[0, "desc"]
+		]
+	});
+
 	function resetForm($form) {
 		$form.find('input:text, input:password, input:file, select, textarea').val('');
 		$form.find('input:radio, input:checkbox')
@@ -357,7 +468,7 @@ $project = $this->project; ?>
 				getcustomerbyid(ul.item.customer_id, $('#awarded_contractor'));
 			},
 
-		}).data("autocomplete")._renderItem = function(ul, item) {
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
 				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
@@ -382,13 +493,13 @@ $project = $this->project; ?>
 				getcustomerbyid(ul.item.customer_id, $('#gerneral_contractor'));
 			},
 
-		}).data("autocomplete")._renderItem = function(ul, item) {
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
 				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
 				.appendTo(ul);
 		};
-		$('#architect_loc').change(function() {
+		$('#architect_loc').on("change", function() {
 			$('.loading').show();
 			$.ajax({
 				url: '/sales/fetchbylocation/loc/' + $(this).val(),
@@ -405,7 +516,7 @@ $project = $this->project; ?>
 			});
 			$('.loading').show();
 		});
-		$('#specifiler_loc').change(function() {
+		$('#specifiler_loc').on("change", function() {
 			$('.loading').show();
 			$.ajax({
 				url: '/sales/fetchspecbylocation/loc/' + $(this).val(),
@@ -447,7 +558,7 @@ $project = $this->project; ?>
 				return false;
 			},
 
-		}).data("autocomplete")._renderItem = function(ul, item) {
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
 				.append("<a>" + item.Specifier + "</a>")
@@ -475,14 +586,14 @@ $project = $this->project; ?>
 				return false;
 			},
 
-		}).data("autocomplete")._renderItem = function(ul, item) {
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
 				.append("<a>" + item.Specifier + "</a>")
 				.appendTo(ul);
 		};
 
-		$('.save_pro').click(function(e) {
+		$('.save_pro').on("click", function(e) {
 			e.preventDefault();
 			if ($("#project_content").validationEngine('validate') == true) {
 				if ($('#status').val() != 13) {
@@ -498,7 +609,7 @@ $project = $this->project; ?>
 
 		});
 
-		$('.delete_pro').click(function() {
+		$('.delete_pro').on("click", function() {
 			if (confirm("You are trying to close a project. Please add the reason to the log.") == true) {
 				$('.loading').show();
 				$.ajax({
@@ -511,15 +622,6 @@ $project = $this->project; ?>
 					}
 				});
 			}
-		});
-
-		$('#project_memo').dataTable({
-			"bJQueryUI": true,
-			"sPaginationType": "full_numbers",
-			"sDom": '<""l>t<"F"fp>',
-			"aaSorting": [
-				[0, "desc"]
-			]
 		});
 
 
@@ -548,7 +650,7 @@ $project = $this->project; ?>
 
 
 		});
-		$("#add_item").click(function() {
+		$("#add_item").on("click", function() {
 			$("#dialog-item").dialog("open");
 			return false;
 		});
@@ -583,7 +685,7 @@ $project = $this->project; ?>
 
 		});
 
-		$('#add_item').click(function() {
+		$('#add_item').on("click", function() {
 			resetForm($('#item'));
 			$('#is_edit').val(0);
 			return false;
@@ -711,13 +813,13 @@ $project = $this->project; ?>
 				$('#uniform-uom').removeClass('disabled');
 				return false;
 			}
-		}).data("autocomplete")._renderItem = function(ul, item) {
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
 				.append("<a>" + item.item_id + "<br>" + item.item_desc + "</a>")
 				.appendTo(ul);
 		};
-		$(".dialog #item_input").bind('paste', function(e) {
+		$(".dialog #item_input").on('paste', function(e) {
 			alert('paste');
 			$(".dialog #item_input").select();
 		});
@@ -782,11 +884,12 @@ $project = $this->project; ?>
 			});
 		}
 
-		$("#uom,#uniform-uom").change(function() {
+		$("#uom,#uniform-uom").on("change", function() {
 			getprice();
 			return false;
 		});
-		$("#item_body .item_delete").live('click', function(e) {
+
+		$(document).on('click', "#item_body .item_delete", function(e) {
 			e.preventDefault();
 			var data = getolddata($(this).closest('tr'));
 			$(this).parent().parent().remove();
@@ -821,7 +924,8 @@ $project = $this->project; ?>
 				}
 			});
 		}
-		$('.memo_delete').live('click', function(e) {
+
+		$(document).on('click', '.memo_delete', function(e) {
 			e.preventDefault();
 			var obj = $(this);
 			if (confirm("Confirm delete This Log?") == true) {
@@ -841,8 +945,3 @@ $project = $this->project; ?>
 		});
 	});
 </script>
-<style>
-	#memo .ui-datepicker-append {
-		display: none;
-	}
-</style>

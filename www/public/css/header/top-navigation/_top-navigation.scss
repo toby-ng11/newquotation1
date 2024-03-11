@@ -1,13 +1,15 @@
+@use "../../vars" as *;
+
 .top-navigation {
-	background-color: var(--background-primary);
-	border-bottom: 1px solid var(--border-primary);
+	background-color: var(--widget-background-primary);
+	//border-bottom: 1px solid var(--border-primary);
 	position: relative;
 	width: 100%;
 }
 
 .top-navigation .container {
 	align-items: center;
-	background-color: var(--background-primary);
+	background-color: var(--widget-background-primary);
 	display: flex;
 	flex-flow: row wrap;
 	gap: var(--gutter);

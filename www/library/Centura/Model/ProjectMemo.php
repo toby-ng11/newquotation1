@@ -6,6 +6,7 @@ use Zend_Db_Table;
 use Zend_Registry;
 
 use Exception;
+use Zend_Json;
 
 class ProjectMemo extends Zend_Db_Table
 {
@@ -72,7 +73,6 @@ class ProjectMemo extends Zend_Db_Table
 	
 	public function fetchmemosbyproject($project_id)
 	{
-
 		if($project_id == null)
 		{
 			return  false;
@@ -82,6 +82,19 @@ class ProjectMemo extends Zend_Db_Table
 		$select = $db->select()->from('project_memo')->where('project_id =?',$project_id)->where('project_memo.Delete_Flag = ?','N');
 		
 		return $db->fetchAll($select);
+	}
+
+	public function fetchmemosbyprojectJson($project_id)
+	{
+		if($project_id == null)
+		{
+			return  false;
+		}
+		$db = $this->getAdapter();
+		
+		$select = $db->select()->from('project_memo')->where('project_id =?',$project_id)->where('project_memo.Delete_Flag = ?','N');
+		
+		return Zend_Json::encode($db->fetchAll($select));
 	}
 	
 	public function fetchalltypes()
@@ -108,5 +121,19 @@ class ProjectMemo extends Zend_Db_Table
 	
 	}
 	
+	public function fetchmemobyownerJson($owner=null)
+	{
+		if($owner == null)
+		{
+			$session =  Zend_Registry::get('session');
+			$owner = $session->user['id'];
+		}
+		$db = $this->getAdapter();
+	
+		$select =$db->select()->from('project_memo')->join('project', 'project.project_id = project_memo.project_id',array('address'=>'project_location_address','project_name'))
+		->where('project.owner = ?',$owner)->order('added desc');
+		$result = $db->fetchAll($select);
+		return Zend_Json::encode($result);
+	}
 }
 

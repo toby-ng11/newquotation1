@@ -1,3 +1,5 @@
+@use "../vars" as *;
+
 /* Form styles
 ================================================== */
 
@@ -79,15 +81,16 @@
 	margin-top: 4px;
 }
 
-.form select{
+form select{
     
 }
 
-.form label {
+form label {
 	font-size: calc(100% + 1px);
+	font-weight: bold;
 }
 
-.form input[type=text], .form input[type=password], .form textarea, .form select {
+form input[type=text], form input[type=password], form textarea, form select {
 	font-size: calc(100% - 1px);
 	padding: 0.5rem 0.8rem;
 	margin-top: 0.1rem;
@@ -100,12 +103,12 @@
 	height: 2.8rem;
 }
 
-.form input[type=text]:hover, .form input[type=password]:hover, .form textarea:hover, .form select:hover {
+form input[type=text]:hover, form input[type=password]:hover, form textarea:hover, form select:hover {
 	border-color: var(--border-primary);
 	background: var(--background-primary);
 }
 
-.form input[type=text]:focus, .form input[type=password]:focus, .form textarea:focus, .form select:focus {
+form input[type=text]:focus, form input[type=password]:focus, form textarea:focus, form select:focus {
 	border-color: var(--field-focus-border);
 	background: var(--background-primary);
 	box-shadow: 0 0 0 2px var(--shadow-01);
@@ -122,10 +125,11 @@ input[readonly], input[disabled] {
 	padding: 5px;
 }
 
-.form textarea {
+form textarea {
 	resize: vertical;
-	height: auto;
+	height: max-content;
 }
+
 
 /* Widgets grid */
 

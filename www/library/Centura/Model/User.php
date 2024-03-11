@@ -75,7 +75,8 @@ class User extends DbTable\User
 	public function exceptionalUserRoleManager($id)
 	{
 		$exceptionalUserList = array(
-				'VHITCHEN'
+				'VHITCHEN',
+				//'TNGUYEN'
 				);
 			
 		
@@ -110,6 +111,10 @@ class User extends DbTable\User
 		->join('P21_Location','P21_Location.company_id = P21_Users.default_company',null)
 		->where('P21_Roles.role LIKE ? ','%Sales%')->orWhere('role LIKE ?','%Operation Manager%')->orWhere('role LIKE ?','%Accounts Receivable%');; 
 
+		if($company != null)
+		{
+			$select->where('P21_Location.location_id = ?',$company);
+		}
 		return $db->fetchAll($select);
 	}
 	

@@ -88,27 +88,27 @@ $project = $this->project;
 					</div>
 					<div class="formRow">
 						<div class="oneTwo required-field">
-							<label for="quote"><b>Quote To</b></label>
+							<label for="quote">Quote To</label>
 							<input type="text" value="" id='quote' name='name' class='tipN validate[required]' />
 						</div>
 						<div class="oneTwo required-field">
-							<label for="address"><b>Address</b></label>
+							<label for="address">Address</label>
 							<input type="text" value="" id='address' name='phys_address1' readonly />
 						</div>
 						<div class="oneTwo required-field">
-							<label for="tel"><b>Tel</b></label>
+							<label for="tel">Phone Number</label>
 							<input type="text" id='tel' name='phone' class="maskPhoneExt" value="" id='tel' name='tel' readonly />
 						</div>
 						<div class="oneTwo required-field">
-							<label for="customer_id"><b>Customer ID</b></label>
+							<label for="customer_id">Customer ID</label>
 							<input name='customer_id' type="text" id='customer_id' class="validate[custom[integer]] tipN" value="" original-title="Leave blank for add new customer" readonly />
 						</div>
 						<div class="oneTwo required-field">
-							<label for="contact"><b>Contact</b></label>
+							<label for="contact">Contact</label>
 							<input type="text" id='contact' name='fullname' class="validate[required] tipN" value="" original-title="Enter Customer Name to fetch existing customer" />
 						</div>
 						<div class="oneTwo required-field">
-							<label for="customer_email"><b>Email</b></label>
+							<label for="customer_email">Email</label>
 							<input type="text" value="" id='customer_email' name='Contacts_email' class="validate[custom[email]] tipN" original-title="Enter Customer Email to fetch existing customer">
 						</div>
 					</div>
@@ -122,19 +122,19 @@ $project = $this->project;
 					<div class="formRow">
 
 						<div class="oneTwo">
-							<label for="quote-number"><b>Quote Number</b></label>
+							<label for="quote-number">Quote Number</label>
 							<input id="quote-number" type="text" placeholder="Auto Generate" readonly />
 						</div>
 						<div class="oneTwo">
-							<label for="quote_date"><b>Quote Date</b></label>
+							<label for="quote_date">Quote Date</label>
 							<input type="text" class="datepicker" id='quote_date' value='<?= date('Y-m-d') ?>' />
 						</div>
 						<div class="oneTwo">
-							<label for="ship-required-date"><b>Ship Required Date</b></label>
+							<label for="ship-required-date">Shipment Required Date</label>
 							<input id="ship-required-date" type="text" class="datepicker" name='ship_required_date' value="<?php if ($project['required_date'] != null && $project['required_date']->format('Y-m-d') > '2000-01-01') echo $project['required_date']->format('Y-m-d'); ?>" />
 						</div>
 						<div class="oneTwo required-field">
-							<label for="quote_type"><b>Quote Type</b></label>
+							<label for="quote_type">Quote Type</label>
 							<select name="quote_type_id" id="quote_type" class="validate[required]">
 								<option value="">-- Select --</option>
 								<?php foreach ($this->type as $t) { ?>
@@ -143,19 +143,19 @@ $project = $this->project;
 							</select>
 						</div>
 						<div class="oneTwo">
-							<label for="project-name"><b>Project Name</b></label>
+							<label for="project-name">Project Name</label>
 							<input id="project-name" type="text" value="<?= $project['project_name'] ?>" readonly />
 						</div>
 						<div class="oneTwo">
-							<label for="project-location"><b>Project Location</b></label>
+							<label for="project-location">Project Location</label>
 							<input id="project-location" type="text" value="<?= $project['project_location_address'] ?>" readonly />
 						</div>
 						<div class="oneTwo">
-							<label for="sale_rep"><b>Sales Representative</b></label>
+							<label for="sale_rep">Sales Representative</label>
 							<input id="sale_rep" type="text" value="<?= $session->user['name'] ?>" readonly />
 						</div>
 						<div class="oneTwo required-field">
-							<label for="arch"><b>Architect's Representative</b></label>
+							<label for="arch">Architect's Representative</label>
 							<select id="arch" name='arch' class="validate[required]">
 								<?php if ($session->user['approve_id'] != null) { ?>
 									<?php foreach ($this->arch as $a) { ?>
@@ -174,11 +174,11 @@ $project = $this->project;
 							<?php if ($s['uid'] == $project['market_segment']) $seg = $s['Market_Segment'] ?>
 						<?php } ?>
 						<div class="oneTwo required-field">
-							<label for="Segment"><b>Segment</b></label>
+							<label for="Segment">Segment</label>
 							<input type="text" original-title="Segment Format" name='quote_segment' id='Segment' class='validate[required] tipN' value="<?= $seg ?>" />
 						</div>
 						<div class="oneTwo required-field">
-							<label for="quote_approval"><b>Quote Approval</b></label>
+							<label for="quote_approval">Quote Approval</label>
 							<select id="quote_approval">
 								<option value="">Only approver can edit</option>
 								<!--<?php foreach ($this->approval as $a) { ?>
@@ -189,43 +189,43 @@ $project = $this->project;
 					</div>
 				</div>
 			</section>
-			
+
 			<section aria-labelledby="items" id="section4" data-nav="Items">
 				<h2>Items</h2>
 				<div class="widget-table">
 					<a href="#" title="" class="button greenB" style="margin: 5px;" id="opener"><span>Add new Item</span></a>
-				<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
-					<thead>
-						<tr>
-							<td></td>
-							<td width="50%">Item ID - Description</td>
-							<td>Quality Quoted</td>
-							<td>Unit Price</td>
-							<td>Unit Of Measure</td>
-							<td>Price Quoted</td>
-							<td>Action</td>
-						</tr>
-					</thead>
-					<tbody id="item_body">
-						<?php foreach ($this->items as $i) { ?>
-							<tr name="item[<?= $i['product_id'] ?>]">
-								<td><input type="checkbox" name="item[<?= $i['product_id'] ?>]"></td>
-								<td><?= $i['product_id'] ?> - <?= $i['item_desc'] ?>
-									<textarea rows="1" cols="" name="item[<?= $i['product_id'] ?>][note][]"><?= $i['note'] ?></textarea>
-								</td>
-								<td><?= $i['qty'] ?></td>
-								<td><?= $i['unit_price'] ?></td>
-								<td><?= $i['uom'] ?></td>
-								<td><?= $i['subtotal'] ?></td>
-								<input type="hidden" name="item[<?= $i['product_id'] ?>][qty][]" value="<?= $i['qty'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][unit_price][]" value="<?= $i['unit_price'] ?>">
-								<input type="hidden" name="item[<?= $i['product_id'] ?>][uom][]" value="<?= $i['uom'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][total_price][]" value="<?= $i['subtotal'] ?>">
-								<input type="hidden" class='sorts' name="item[<?= $i['product_id'] ?>][sort][]" value="<?= $i['sort_id'] ?>">
-								<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="delete" href="#"><img src="/images/icons/dark/close.png" alt="delete"></a></td>
-
+					<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
+						<thead>
+							<tr>
+								<td></td>
+								<td width="50%">Item ID - Description</td>
+								<td>Quality Quoted</td>
+								<td>Unit Price</td>
+								<td>Unit Of Measure</td>
+								<td>Price Quoted</td>
+								<td>Action</td>
 							</tr>
-						<?php } ?>
-					</tbody>
-				</table>
+						</thead>
+						<tbody id="item_body">
+							<?php foreach ($this->items as $i) { ?>
+								<tr name="item[<?= $i['product_id'] ?>]">
+									<td><input type="checkbox" name="item[<?= $i['product_id'] ?>]"></td>
+									<td><?= $i['product_id'] ?> - <?= $i['item_desc'] ?>
+										<textarea name="item[<?= $i['product_id'] ?>][note][]"><?= $i['note'] ?></textarea>
+									</td>
+									<td><?= $i['qty'] ?></td>
+									<td><?= $i['unit_price'] ?></td>
+									<td><?= $i['uom'] ?></td>
+									<td><?= $i['subtotal'] ?></td>
+									<input type="hidden" name="item[<?= $i['product_id'] ?>][qty][]" value="<?= $i['qty'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][unit_price][]" value="<?= $i['unit_price'] ?>">
+									<input type="hidden" name="item[<?= $i['product_id'] ?>][uom][]" value="<?= $i['uom'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][total_price][]" value="<?= $i['subtotal'] ?>">
+									<input type="hidden" class='sorts' name="item[<?= $i['product_id'] ?>][sort][]" value="<?= $i['sort_id'] ?>">
+									<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="delete" href="#"><img src="/images/icons/dark/close.png" alt="delete"></a></td>
+
+								</tr>
+							<?php } ?>
+						</tbody>
+					</table>
 				</div>
 			</section>
 
@@ -235,7 +235,7 @@ $project = $this->project;
 					<div class="formRow">
 						<div class="oneTwo">
 							<label for="quote-note">Quote Note</label>
-							<textarea id="quote-note" rows="8" cols="" name="note" placeholder="Note area"></textarea>
+							<textarea id="quote-note" name="note" placeholder="Note area"></textarea>
 						</div>
 					</div>
 				</div>
@@ -267,25 +267,32 @@ $project = $this->project;
 </main>
 
 <!-- Right panel -->
-<div>
-	<div>
-		<div class="statsRow">
-			<div class="controlB">
-				<ul>
-					<!--<li><a href="#" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Quote</span></a></li>-->
-					<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>-->
-					<!--<li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-					<li><a class="save_quote" href="#" title=""><img src="/images/icons/control/32/save.png" alt="" /><span>Save Quote</span></a></li>
-					<!--<li><a href="#" title=""><img src="/images/icons/control/32/mail.png" alt="" /><span>Email Quote</span></a></li>
+<div class="sidebar-container">
+	<aside id="sidebar-quicklinks" class="sidebar">
+		<nav aria-label="Actions" class="sidebar-inner">
+			<div class="sidebar-inner-nav">
+				<div class="quick-links">
+					<ol>
+						<!--<li><a href="#" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Quote</span></a></li>-->
+						<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>-->
+						<!--<li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
+						<li><a class="quick-link save_quote" href="#" title="">
+								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									<path d="M17 20.75H7C6.27065 20.75 5.57118 20.4603 5.05546 19.9445C4.53973 19.4288 4.25 18.7293 4.25 18V6C4.25 5.27065 4.53973 4.57118 5.05546 4.05546C5.57118 3.53973 6.27065 3.25 7 3.25H14.5C14.6988 3.25018 14.8895 3.32931 15.03 3.47L19.53 8C19.6707 8.14052 19.7498 8.33115 19.75 8.53V18C19.75 18.7293 19.4603 19.4288 18.9445 19.9445C18.4288 20.4603 17.7293 20.75 17 20.75ZM7 4.75C6.66848 4.75 6.35054 4.8817 6.11612 5.11612C5.8817 5.35054 5.75 5.66848 5.75 6V18C5.75 18.3315 5.8817 18.6495 6.11612 18.8839C6.35054 19.1183 6.66848 19.25 7 19.25H17C17.3315 19.25 17.6495 19.1183 17.8839 18.8839C18.1183 18.6495 18.25 18.3315 18.25 18V8.81L14.19 4.75H7Z" />
+									<path d="M16.75 20H15.25V13.75H8.75V20H7.25V13.5C7.25 13.1685 7.3817 12.8505 7.61612 12.6161C7.85054 12.3817 8.16848 12.25 8.5 12.25H15.5C15.8315 12.25 16.1495 12.3817 16.3839 12.6161C16.6183 12.8505 16.75 13.1685 16.75 13.5V20Z" />
+									<path d="M12.47 8.75H8.53001C8.3606 8.74869 8.19311 8.71403 8.0371 8.64799C7.88109 8.58195 7.73962 8.48582 7.62076 8.36511C7.5019 8.24439 7.40798 8.10144 7.34437 7.94443C7.28075 7.78741 7.24869 7.61941 7.25001 7.45V4H8.75001V7.25H12.25V4H13.75V7.45C13.7513 7.61941 13.7193 7.78741 13.6557 7.94443C13.592 8.10144 13.4981 8.24439 13.3793 8.36511C13.2604 8.48582 13.1189 8.58195 12.9629 8.64799C12.8069 8.71403 12.6394 8.74869 12.47 8.75Z" />
+								</svg>
+							Save Quote</a></li>
+						<!--<li><a href="#" title=""><img src="/images/icons/control/32/mail.png" alt="" /><span>Email Quote</span></a></li>
                     <li><a href="#" title=""><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>-->
-				</ul>
+					</ol>
+				</div>
 			</div>
-		</div>
-	</div>
+		</nav>
+	</aside>
 </div>
 
 <script type="text/javascript">
-
 	const items = ["Project information", "Customer information", "Quote information", "Items", "Comment"];
 	createTocList(items);
 

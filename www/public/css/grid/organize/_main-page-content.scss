@@ -54,7 +54,8 @@
 
   /* reduce the top margin of the interactive example heading */
   section h2:first-of-type {
-    margin-top: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 
   a:not(.button) {
@@ -267,7 +268,7 @@ strong {
 }
 
 table {
-  border: 1px solid var(--border-primary);
+  //border: 1px solid var(--border-primary);
   border-collapse: collapse;
   width: 100%;
 
@@ -280,7 +281,7 @@ table {
 
   td,
   th {
-    border: 1px solid var(--border-primary);
+    //border: 1px solid var(--border-primary);
     padding: 0.5rem 0.75rem;
     vertical-align: middle;
   }

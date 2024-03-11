@@ -1,4 +1,5 @@
 @use "../../vars" as *;
+@use "./sidebar-button";
 
 .sidebar {
   color: var(--text-secondary);
@@ -111,7 +112,7 @@
 
   summary,
   li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
   }
 
   summary {

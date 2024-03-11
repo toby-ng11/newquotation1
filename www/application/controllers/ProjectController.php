@@ -55,8 +55,15 @@ class ProjectController extends Zend_Controller_Action
     		exit;
     	}
     }
+
+	public function memoAction() {
+		$project_id = $this->getRequest()->getParam('id');
+		$mono = new ProjectMemo();
+    	echo $mono->fetchmemosbyprojectJson($project_id);
+		exit;
+	}
     
-    
+
     public function editAction()
     {
     	$project_id = $this->getRequest()->getParam('id');

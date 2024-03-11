@@ -64,12 +64,12 @@
         <div class="widget-table">
           <div class="formRow">
             <div class="oneTwo required-field">
-              <label for="project_name" class="formNote"><strong>Project Name</strong> </label>
+              <label for="project_name">Project Name</label>
               <input type="text" id='project_name' name='project_name' class="validate[required]" />
             </div>
 
-            <div class="oneFour">
-              <label for="location" class="formNote"><strong>Centura Location</strong></label>
+            <div class="oneTwo">
+              <label for="location">Centura Location</label>
               <select name="location" id="location">
                 <?php foreach ($this->locations as $l) { ?>
                   <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
@@ -78,24 +78,24 @@
             </div>
 
             <div class="oneTwo">
-              <label for="owner" class="formNote"><strong>Worksheet Owner</strong></label>
+              <label for="owner">Worksheet Owner</label>
               <input type="text" id="owner" value='<?= $session->user['name'] ?>' readonly />
             </div>
             <input type="hidden" name='owner' value='<?= $session->user['id'] ?>'>
 
-            <div class="oneFour">
-              <label for="quote_no" class="formNote"><strong>Project#</strong></label>
+            <div class="oneTwo">
+              <label for="quote_no">Project ID</label>
               <input type="text" placeholder="Auto Generate" id='quote_no' name='quote_no' readonly />
             </div>
             <input name='create_date' type="hidden" value='<?= date('Y-m-d') ?>' readonly />
 
             <div class="oneTwo required-field">
-              <label for='project_location_address' class="formNote"><strong>Project Location</strong></label>
+              <label for='project_location_address'>Project Location</label>
               <input type="text" class="validate[required] tipN" id='project_location_address' original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" />
             </div>
 
-            <div class="oneFour required-field">
-              <label for="status" class="formNote"><strong>Status</strong></label>
+            <div class="oneTwo required-field">
+              <label for="status">Status</label>
               <select name="status" id='status' class="validate[required]">
                 <option value="">Select Status</option>
                 <?php foreach ($this->status as $s) { ?>
@@ -105,12 +105,12 @@
             </div>
 
             <div class="oneTwo required-field">
-              <label for="reed" class="formNote"><strong>REED#</strong></label>
+              <label for="reed">REED ID</label>
               <input type="text" name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" />
             </div>
 
-            <div class="oneFour">
-              <label for="market_segment" class="formNote"><strong>Market Segment</strong></label>
+            <div class="oneTwo">
+              <label for="market_segment">Market Segment</label>
               <select name="market_segment" id='market_segment' class="validate[required]">
                 <option value="">Choose Segment</option>
                 <?php foreach ($this->seg as $s) { ?>
@@ -120,14 +120,13 @@
             </div>
 
             <div class="oneTwo required-field">
-              <label for="architect_name" class="formNote"><strong>Project Architect/Owner</strong>
-              </label>
+              <label for="architect_name">Project Architect/Owner</label>
               <input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" />
               <input type="hidden" name='architect' id='architect' value="<?= $project['architect'] ?>">
             </div>
 
-            <div class="oneFour">
-              <label for="architect_loc" class="formNote"><strong>Architect Location</strong></label>
+            <div class="oneTwo">
+              <label for="architect_loc">Architect Location</label>
               <select id="architect_loc">
                 <?php foreach ($this->locations as $l) { ?>
                   <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
@@ -136,14 +135,13 @@
             </div>
 
             <div class="oneTwo required-field">
-              <label for="specifiler_name" class="formNote"><strong>Specifier</strong>
-              </label>
+              <label for="specifiler_name">Specifier</label>
               <input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN">
               <input type="hidden" id='specifiler' name="specifiler" value="<?= $project['specifiler'] ?>">
             </div>
 
-            <div class="oneFour">
-              <label for="specifiler_loc" class="formNote"><strong>Specifier Location</strong></label>
+            <div class="oneTwo">
+              <label for="specifiler_loc">Specifier Location</label>
               <select id="specifiler_loc">
                 <?php foreach ($this->locations as $l) { ?>
                   <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
@@ -152,22 +150,22 @@
             </div>
 
             <div class="oneTwo">
-              <label for="due_date" class="formNote"><strong>Tender Due Date</strong></label>
+              <label for="due_date">Tender Due Date</label>
               <input type="text" id="due_date" name='due_date' class="datepicker" />
             </div>
 
-            <div class="oneFour">
-              <label for="required_date" class="formNote"><strong>Material Required Date</strong></label>
+            <div class="oneTwo">
+              <label for="required_date">Material Required Date</label>
               <input type="text" id="required_date" name='required_date' class="datepicker" />
             </div>
 
             <div class="oneTwo">
-              <label for="general_contractor" class="formNote"><strong>General Contractor</strong></label>
+              <label for="general_contractor">General Contractor</label>
               <input type="text" class='tipN' original-title="Type Company Name" id="gerneral_contractor" />
             </div>
 
-            <div class="oneFour">
-              <label for="gerneral_contractor_loc" class="formNote"><strong>General Contractor Location</strong></label>
+            <div class="oneTwo">
+              <label for="gerneral_contractor_loc">General Contractor Location</label>
               <select id="gerneral_contractor_loc">
                 <?php foreach ($this->locations as $l) { ?>
                   <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
@@ -177,12 +175,12 @@
             <input type="hidden" name='gerneral_contractor'>
 
             <div class="oneTwo">
-              <label for="awarded_contractor" class="formNote"><strong>Awarded Contractor</strong></label>
+              <label for="awarded_contractor">Awarded Contractor</label>
               <input type="text" class='tipN' original-title="Type Company Name" id="awarded_contractor" />
             </div>
 
-            <div class="oneFour">
-              <label for="awarded_contractor_loc" class="formNote"><strong>Awarded Contractor Location</strong></label>
+            <div class="oneTwo">
+              <label for="awarded_contractor_loc">Awarded Contractor Location</label>
               <select id="awarded_contractor_loc">
                 <?php foreach ($this->locations as $l) { ?>
                   <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
@@ -194,8 +192,6 @@
           </div>
         </div>
       </form>
-
-
     </section>
   </div>
 </main>
@@ -207,11 +203,18 @@
       <div class="sidebar-inner-nav">
         <div class="quick-links">
           <ol>
-            <li><a href="#" class='quick-link save-project' title="Save project">
-                <svg class="icon-action" width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M15 19.8935C17.1722 19.7353 18.799 19.4232 19.1111 19.1111C19.5556 18.6667 20 15.5556 20 12C20 11.3687 19.9621 10.4239 19.9316 9.76377C19.9088 9.27176 19.7009 8.80741 19.3526 8.45914L15.5409 4.6474C15.1926 4.29913 14.7282 4.09124 14.2362 4.06844C13.5761 4.03786 12.6313 4 12 4C8.44444 4 5.33333 4.44444 4.88889 4.88889C4.44444 5.33333 4 8.44444 4 12C4 15.5556 4.44444 18.6667 4.88889 19.1111C5.20096 19.4232 6.82776 19.7353 9 19.8935M15 19.8935C14.0786 19.9606 13.059 20 12 20C10.941 20 9.92143 19.9606 9 19.8935M15 19.8935V18C15 18 15 15 12 15C9 15 9 18 9 18V19.8935" stroke="#2D75C3" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            <li><a href="/project/" target="_blank" class='quick-link add_pro' title="Add new project">
+								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+									<path d="M12.75 11.25V5C12.75 4.80109 12.671 4.61032 12.5303 4.46967C12.3897 4.32902 12.1989 4.25 12 4.25C11.8011 4.25 11.6103 4.32902 11.4697 4.46967C11.329 4.61032 11.25 4.80109 11.25 5V11.25H5C4.80109 11.25 4.61032 11.329 4.46967 11.4697C4.32902 11.6103 4.25 11.8011 4.25 12C4.25 12.1989 4.32902 12.3897 4.46967 12.5303C4.61032 12.671 4.80109 12.75 5 12.75H11.25V19C11.2526 19.1981 11.3324 19.3874 11.4725 19.5275C11.6126 19.6676 11.8019 19.7474 12 19.75C12.1989 19.75 12.3897 19.671 12.5303 19.5303C12.671 19.3897 12.75 19.1989 12.75 19V12.75H19C19.1989 12.75 19.3897 12.671 19.5303 12.5303C19.671 12.3897 19.75 12.1989 19.75 12C19.7474 11.8019 19.6676 11.6126 19.5275 11.4725C19.3874 11.3324 19.1981 11.2526 19 11.25H12.75Z" />
+								</svg>
+								Add Project</a></li>
+            <li><a href="#" class='quick-link save_pro' title="Save project">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M17 20.75H7C6.27065 20.75 5.57118 20.4603 5.05546 19.9445C4.53973 19.4288 4.25 18.7293 4.25 18V6C4.25 5.27065 4.53973 4.57118 5.05546 4.05546C5.57118 3.53973 6.27065 3.25 7 3.25H14.5C14.6988 3.25018 14.8895 3.32931 15.03 3.47L19.53 8C19.6707 8.14052 19.7498 8.33115 19.75 8.53V18C19.75 18.7293 19.4603 19.4288 18.9445 19.9445C18.4288 20.4603 17.7293 20.75 17 20.75ZM7 4.75C6.66848 4.75 6.35054 4.8817 6.11612 5.11612C5.8817 5.35054 5.75 5.66848 5.75 6V18C5.75 18.3315 5.8817 18.6495 6.11612 18.8839C6.35054 19.1183 6.66848 19.25 7 19.25H17C17.3315 19.25 17.6495 19.1183 17.8839 18.8839C18.1183 18.6495 18.25 18.3315 18.25 18V8.81L14.19 4.75H7Z" />
+                  <path d="M16.75 20H15.25V13.75H8.75V20H7.25V13.5C7.25 13.1685 7.3817 12.8505 7.61612 12.6161C7.85054 12.3817 8.16848 12.25 8.5 12.25H15.5C15.8315 12.25 16.1495 12.3817 16.3839 12.6161C16.6183 12.8505 16.75 13.1685 16.75 13.5V20Z" />
+                  <path d="M12.47 8.75H8.53001C8.3606 8.74869 8.19311 8.71403 8.0371 8.64799C7.88109 8.58195 7.73962 8.48582 7.62076 8.36511C7.5019 8.24439 7.40798 8.10144 7.34437 7.94443C7.28075 7.78741 7.24869 7.61941 7.25001 7.45V4H8.75001V7.25H12.25V4H13.75V7.45C13.7513 7.61941 13.7193 7.78741 13.6557 7.94443C13.592 8.10144 13.4981 8.24439 13.3793 8.36511C13.2604 8.48582 13.1189 8.58195 12.9629 8.64799C12.8069 8.71403 12.6394 8.74869 12.47 8.75Z" />
                 </svg>
-                Save Project</a></li>
+                Save Project</span></a></li>
           </ol>
         </div>
       </div>
