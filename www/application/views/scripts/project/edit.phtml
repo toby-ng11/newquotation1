@@ -59,7 +59,7 @@ $project = $this->project; ?>
 				<div class="widget-table">
 					<input type="hidden" id='project_id' value='<?= $project['project_id'] ?>'>
 					<div class="formRow">
-						<div class="oneTwo">
+						<div class="oneTwo required-field">
 							<label for="project_name">Project Name</label>
 							<input type="text" id='project_name' class="validate[required]" placeholder="Project Name" name='project_name' value="<?= $project['project_name'] ?>" />
 						</div>
@@ -85,27 +85,27 @@ $project = $this->project; ?>
 							<input name='create_date' type="hidden" value='<?= $project['create_date']->format('Y-m-d') ?>' />
 						</div>
 
-						<div class="oneTwo">
+						<div class="oneTwo required-field">
 							<label for="project_location_address">Project Location</label>
 							<input type="text" name='project_location_address' id="project_location_address" class="validate[required]" value='<?= $project['project_location_address'] ?>' />
 						</div>
 
-						<div class="oneTwo">
-							<label for="status">Status:</label>
+						<div class="oneTwo required-field">
+							<label for="status">Status</label>
 							<select name="status" id="status" class="validate[required]">
-								<option value="">Select Status</option>
+								<option value="">-- Select Status --</option>
 								<?php foreach ($this->status as $s) { ?>
 									<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $project['status']) echo 'selected' ?>><?= $s['Status'] ?></option>
 								<?php } ?>
 							</select>
 						</div>
 
-						<div class="oneTwo">
-							<label for="reed">REED#</label>
+						<div class="oneTwo required-field">
+							<label for="reed">REED ID</label>
 							<input type="text" name="reed" id="reed" value="<?= $project['reed'] ?>" class="validate[required]" />
 						</div>
 
-						<div class="oneTwo">
+						<div class="oneTwo required-field">
 							<label for='market_segment'>Market Segment</label>
 							<select name="market_segment" id='market_segment' class="validate[required]">
 								<option value="">Choose Segment</option>
@@ -115,8 +115,8 @@ $project = $this->project; ?>
 							</select>
 						</div>
 
-						<div class="oneTwo">
-							<label for='architect_name'>Project Architect/Owner<span class="req">*</span></label>
+						<div class="oneTwo required-field">
+							<label for='architect_name'>Project Architect/Owner</label>
 							<input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" value='<?= $this->arch_name ?>' />
 							<input type="hidden" name='architect' id='architect' value="<?= $project['architect'] ?>">
 						</div>
@@ -130,8 +130,8 @@ $project = $this->project; ?>
 							</select>
 						</div>
 
-						<div class="oneTwo">
-							<label for='specifiler_name'>Specifier<span class="req">*</span></label>
+						<div class="oneTwo required-field">
+							<label for='specifiler_name'>Specifier</label>
 							<input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN" original-title="Type 2 letter to start or add your own">
 							<input type="hidden" id='specifiler' name="specifiler" value="<?= $project['specifiler'] ?>">
 						</div>
@@ -146,12 +146,12 @@ $project = $this->project; ?>
 						</div>
 
 						<div class="oneTwo">
-							<label for="due_date">Tender Due Date:</label>
+							<label for="due_date">Tender Due Date</label>
 							<input id="due_date" type="text" name='due_date' class="datepicker" value='<?= $project['due_date']->format('Y-m-d') ?>' />
 						</div>
 
 						<div class="oneTwo">
-							<label for='required_date'>Material Required Date:</label>
+							<label for='required_date'>Material Required Date</label>
 							<input id='required_date' type="text" name='required_date' class="datepicker" value='<?= $project['required_date']->format('Y-m-d') ?>' />
 						</div>
 
@@ -172,7 +172,7 @@ $project = $this->project; ?>
 						</div>
 
 						<div class="oneTwo">
-							<label id="awarded_contractor">Awarded Sub Contractor:</label>
+							<label id="awarded_contractor">Awarded Sub Contractor</label>
 							<input type="text" placeholder="Type Name" id="awarded_contractor" value='<?= $this->awarded_sub_contracotr['name'] . ' - ' . $this->awarded_sub_contracotr['company_id'] ?>' />
 						</div>
 
@@ -209,13 +209,13 @@ $project = $this->project; ?>
 					<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
 						<thead>
 							<tr>
-								<td></td>
-								<td width="50%">Item ID - Description</td>
-								<td>Quality Quoted</td>
-								<td>Unit Price</td>
-								<td>Unit Of Measure</td>
-								<td>Price Quoted</td>
-								<td>Action</td>
+								<th></th>
+								<th width="50%">Item ID - Description</td>
+								<th>Quality Quoted</th>
+								<th>Unit Price</th>
+								<th>Unit Of Measure</th>
+								<th>Price Quoted</th>
+								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody id="item_body">
@@ -223,7 +223,7 @@ $project = $this->project; ?>
 								<tr name="item[<?= $i['product_id'] ?>]">
 									<td><input type="checkbox" name="item[<?= $i['product_id'] ?>]"></td>
 									<td><?= $i['product_id'] ?> - <?= $i['item_desc'] ?>
-										<textarea readonly rows="1" cols="" name="item[<?= $i['product_id'] ?>][note]"><?= $i['note'] ?></textarea>
+										<textarea readonly name="item[<?= $i['product_id'] ?>][note]"><?= $i['note'] ?></textarea>
 									</td>
 									<td><?= $i['qty'] ?></td>
 									<td><?= $i['unit_price'] ?></td>
@@ -231,7 +231,20 @@ $project = $this->project; ?>
 									<td><?= $i['subtotal'] ?></td>
 									<input type="hidden" name="item[<?= $i['product_id'] ?>][qty]" value="<?= $i['qty'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][unit_price]" value="<?= $i['unit_price'] ?>">
 									<input type="hidden" name="item[<?= $i['product_id'] ?>][uom]" value="<?= $i['uom'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][total_price]" value="<?= $i['subtotal'] ?>">
-									<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="item_delete" href="#" index='<?= $i['product_id'] ?>'><img src="/images/icons/dark/close.png" alt="delete"></a></td>
+									<td>
+										<div class="row-button">
+										<a class="edit" href="#">
+											<span class='button-wrap'>
+												<span class='icon icon-edit'></span>
+											</span>
+										</a>
+										<a class="item_delete" href="#" index='<?= $i['product_id'] ?>'>
+											<span class='button-wrap'>
+												<span class='icon icon-delete'></span>
+											</span>
+										</a>
+										</div>
+									</td>
 
 								</tr>
 							<?php } ?>
@@ -265,40 +278,60 @@ $project = $this->project; ?>
 			</div>
 		</section>
 
-		<div id="dialog-message" title="Add log -- Auto Save">
-			<div class="uiForm">
-				<form action="" class="dialog" id='memo'>
-					<p style='text-align:left'>Enter Action Items Completed </p>
-					<input type="text" name='title' id='title' class="validate[required]">
-					<p style='text-align:left'>Enter Next Action Required </p>
-					<input type="text" name="type" id='type' class="validate[required]" value='' placeholder="Critical Updates Note">
-					<div class="clear"></div>
-					<p style='text-align:left'>Follow Up Date: </p>
-					<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker" value='<?= $project['due_date']->format('Y-m-d') ?>' style='margin-left:10px;' />
-				</form>
-			</div>
+		<div id="dialog-message" title="Add Log">
+			<form action="" class="dialog" id='memo'>
+				<div class="dialog-form">
+					<div class="oneTwo required-field">
+						<label for="title">Enter Action Items Completed</label>
+						<input type="text" name='title' id='title' class="validate[required]">
+					</div>
+
+					<div class="oneTwo required-field">
+						<label for="type">Enter Next Action Required</label>
+						<input type="text" name="type" id='type' class="validate[required]" value='' placeholder="Critical Updates Note">
+					</div>
+
+					<div class="oneTwo">
+						<label for='follow_up_date'>Follow Up Date</label>
+						<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker" value='<?= $project['due_date']->format('Y-m-d') ?>' />
+					</div>
+				</div>
+			</form>
 		</div>
 
 		<div id="dialog-item" title="Add Item">
-			<div class="uiForm">
-				<form action="" class="dialog" id='item'>
-					<span class="formNote">Enter Item ID </span>
-					<input type="text" name="item" id='item_input' class="validate[required]" />
-					<input type="hidden" id="item_id" name='item_id' />
-					<span class="formNote">UOM</span>
-					<select name="uom" id='uom' class="validate[required]">
-						<option value=''>Select UOM</option>
-					</select>
-					<div class="clear"></div>
-					<span class="formNote">Price ($)</span>
-					<input type="text" class="validate[required,custom[number]]" name="price" id='price' placeholder="You can override the price" />
-					<span class="formNote">Qty</span>
-					<input type="text" name="qty" id='qty' class="validate[required,custom[number]]" />
-					<span class="formNote">Note</span>
-					<textarea name='note' id='note' class="validate[maxSize[255]]"></textarea>
-					<input type="hidden" id="is_edit" value='0' />
-				</form>
-			</div>
+			<form action="" class="dialog" id='item'>
+				<div class="dialog-form">
+					<div class="oneTwo required-field">
+						<label for="item_input">Item ID </label>
+						<input type="text" name="item" id='item_input' class="validate[required]" />
+						<input type="hidden" id="item_id" name='item_id' />
+					</div>
+
+					<div class="oneTwo required-field">
+						<label for='uom'>Unit Of Measure</label>
+						<select name="uom" id='uom' class="validate[required]">
+							<option value=''>-- Select UOM --</option>
+						</select>
+					</div>
+
+					<div class="oneTwo required-field">
+						<label for='price'>Price ($)</label>
+						<input type="text" class="validate[required,custom[number]]" name="price" id='price' placeholder="You can override the price" />
+					</div>
+
+					<div class="oneTwo required-field">
+						<label for='qty'>Quantity</label>
+						<input type="text" name="qty" id='qty' class="validate[required,custom[number]]" />
+					</div>
+
+					<div class="oneTwo dialog-note">
+						<label for='note'>Note</label>
+						<textarea rows="5" name='note' id='note' maxlength="255" class="validate[maxSize[255]]"></textarea>
+						<input type="hidden" id="is_edit" value='0' />
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
 </main>
@@ -345,29 +378,17 @@ $project = $this->project; ?>
 	</aside>
 </div>
 
-<style>
-	div.selector {
-		width: 290px;
-	}
-
-	div.selector select {
-		width: 300px;
-	}
-
-	div.selector span {
-		width: 290px;
-	}
-
-	#memo .ui-datepicker-append {
-		display: none;
-	}
-
-	<?php if ($this->owner == 1) { ?><?php } ?>
-</style>
 
 <script type="text/javascript">
 	const items = ["Project Information", "Quoted Items", "Project Log"];
 	createTocList(items);
+
+	$("textarea").each(function() {
+		this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+	}).on("input", function() {
+		this.style.height = 0;
+		this.style.height = (this.scrollHeight) + "px";
+	});
 
 	$('#project_memo').DataTable({
 		ajax: {
@@ -391,7 +412,7 @@ $project = $this->project; ?>
 				data: "memo_id",
 				createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
 					<?php if ($this->owner == 1) { ?>
-						$(cell).html("<a target='_blank' href='/memo/delete/id/" + rowData.memo_id + "'><img src='/images/icons/dark/close.png' alt='delete'></a>");
+						$(cell).html("<a target='_blank' href='/memo/delete/id/" + rowData.memo_id + "'><span class='button-wrap'><span class='icon icon-delete'></span></span></a>");
 					<?php } else { ?>
 						$(cell).html("null");
 					<?php } ?>
@@ -657,7 +678,10 @@ $project = $this->project; ?>
 		$("#dialog-item").dialog({
 			autoOpen: false,
 			modal: true,
-			minWidth: 500,
+			minWidth: 800,
+			width: 800,
+			//minHeight: 600,
+			dialogClass: 'add-item-dialog',
 			buttons: [{
 					id: "btn-add",
 					text: "Add",

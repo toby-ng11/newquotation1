@@ -10,9 +10,9 @@ $centura-theme-light-widget-background: rgba(255, 255, 255, 0.8);
 $centura-theme-light-widget-hover: $mdn-color-white;
 $centura-theme-light-widget-box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 
-$centura-theme-dark-widget-background: #2b2b2b;
+$centura-theme-dark-widget-background: rgba(255, 255, 255, 0.15);
 $centura-theme-dark-widget-hover: $mdn-color-neutral-75;
-$centura-theme-dark-widget-box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+$centura-theme-dark-widget-box-shadow: 0 5px 15px rgba(0, 0, 0, 1);
 
 @mixin light-theme {
   --text-primary: #{$mdn-theme-light-text-primary};
@@ -27,7 +27,7 @@ $centura-theme-dark-widget-box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
   --widget-background-hover: #{$centura-theme-light-widget-hover};
   --widget-hover-box-shadow: #{$centura-theme-light-widget-box-shadow};
 
-  --background-primary: linear-gradient(132deg, rgba(248,248,248,1) 0%, rgba(219,229,239,1) 100%);
+  --background-primary: #f1f1f1;
   --background-secondary: #{$mdn-theme-light-background-secondary};
   --background-tertiary: #{$mdn-theme-light-background-tertiary};
   --background-toc-active: #{$mdn-theme-light-background-toc-active};
@@ -239,7 +239,7 @@ $centura-theme-dark-widget-box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
   --widget-background-hover: #{$centura-theme-dark-widget-hover};
   --widget-hover-box-shadow: #{$centura-theme-dark-widget-box-shadow};
 
-  --background-primary: linear-gradient(132deg, rgba(73,73,73,1) 0%, rgba(0,0,0,1) 100%);
+  --background-primary: #202020;
   --background-secondary: #{$mdn-theme-dark-background-secondary};
   --background-tertiary: #{$mdn-theme-dark-background-tertiary};
   --background-toc-active: #{$mdn-theme-dark-background-toc-active};

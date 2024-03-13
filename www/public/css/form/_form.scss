@@ -1,29 +1,68 @@
 @use "../vars" as *;
 
-/* Form styles
-================================================== */
+form {
+	label {
+		font-size: calc(100% + 1px);
+		font-weight: bold;
+	}
 
-/* ===== General form styles ===== */
+	input[type=text], input[type=password], textarea, select {
+		font-size: inherit;
+		font-family: inherit;
+		padding: 0.5rem 0.8rem;
+		margin-top: 0.1rem;
+		background: var(--dt-html-background);
+		border: 1px solid var(--border-primary);
+		border-radius: 10px;
+		width: 100%;
+		color: var(--text-secondary);
+		height: 2.8rem;
+		//box-shadow: inset 0px 0px 2px 10px rgb(0 0 0);
+		transition: all 0.2s ease-in-out;
+
+		&:hover {
+			border-color: var(--border-primary);
+			background: var(--background-primary);
+		}
+
+		&:focus {
+			border-color: var(--field-focus-border);
+			//background: var(--background-primary);
+			//box-shadow: 0 0 0 2px var(--shadow-01);
+		}
+		
+	}
+
+	select option {
+		background: var(--widget-background-primary);
+	}
+
+	textarea {
+		resize: vertical;
+		height: auto;
+	}
+
+	.ui-datepicker-append {
+		display: none;
+	}
+}
 
 .formRow {
 	padding: 1rem;
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
 	gap: 1.5rem 3rem;
-}
 
-.formRow:first-child {
-	border-top: none;
-}
+	&:first-child {
+		border-top: none;
+	}
 
-.formRow .formRight {
-    grid-area: leftcol;
+	.required-field label::after {
+		content: "      *";
+		color: var(--text-primary-red);
+		display: inline;
+	}
 }
-
-.formRow .middlecol {
-    grid-area: rightcol;
-}
-
 
 .ui-formwizard .formRow:last-child {
 	border-bottom: 1px solid #E2E2E2;
@@ -31,31 +70,6 @@
 
 .wizButtons {
 	border-top: 1px solid #fff;
-}
-
-.formRow .inputImg {
-	position: absolute;
-	top: 29px;
-	right: 25px;
-}
-
-.formRow .labelImg {
-	float: left;
-	margin: 2px 10px 0 0;
-}
-
-.formRow > label {
-	padding: 4px 0;
-	display: block;
-	float: left;
-}
-
-
-.req {
-	float: right;
-	margin-left: 5px;
-	display: block;
-	color: #DB6464;
 }
 
 .disabled {
@@ -76,105 +90,10 @@
 	color: #595959;
 }
 
-.formRow .checker, .formRow .radio {
-	margin-right: 12px;
-	margin-top: 4px;
-}
-
-form select{
-    
-}
-
-form label {
-	font-size: calc(100% + 1px);
-	font-weight: bold;
-}
-
-form input[type=text], form input[type=password], form textarea, form select {
-	font-size: calc(100% - 1px);
-	padding: 0.5rem 0.8rem;
-	margin-top: 0.1rem;
-	background: var(--dt-html-background);
-	border: 1px solid var(--border-primary);
-	border-radius: 5px;
-	width: 100%;
-	box-shadow: 0 0 0 2px var(--shadow-01);
-	color: var(--text-secondary);
-	height: 2.8rem;
-}
-
-form input[type=text]:hover, form input[type=password]:hover, form textarea:hover, form select:hover {
-	border-color: var(--border-primary);
-	background: var(--background-primary);
-}
-
-form input[type=text]:focus, form input[type=password]:focus, form textarea:focus, form select:focus {
-	border-color: var(--field-focus-border);
-	background: var(--background-primary);
-	box-shadow: 0 0 0 2px var(--shadow-01);
-}
-
 input[readonly], input[disabled] {
 	background: #FCFCFC;
 	border: 1px solid #DADADA;
 	color: #D1D1D1;
 }
 
-.multiple {
-	width: 100%;
-	padding: 5px;
-}
 
-form textarea {
-	resize: vertical;
-	height: max-content;
-}
-
-
-/* Widgets grid */
-
-
-.oneTwo input, .oneFour input {
-	float: right;
-}
-
-.required-field label::after {
-	content: "      *";
-	color: var(--text-primary-red);
-	display: inline;
-}
-
-	.oneTwo:first-child {
-		/* float: left; */
-	}
-
-.oneThree {
-	
-}
-
-	.oneThree:first-child {
-		
-	}
-
-.twoOne {
-	
-}
-
-	.twoOne:first-child {
-		
-	}
-
-.oneFour {
-	/* width: 22%; */
-	/* float: left; */
-	/* margin-left: 2.7%; */
-}
-
-	.oneFour:first-child {
-		/* margin-left: 0; */
-	}
-
-.oneFive {
-}
-
-	.oneFive:first-child {}

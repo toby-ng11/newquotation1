@@ -2,7 +2,7 @@
 
 use Centura\Model\ProjectMemo;
 
-use Zend_Controller_Action;
+//use Zend_Controller_Action;
 
 class MemoController extends Zend_Controller_Action
 {

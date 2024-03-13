@@ -1,12 +1,13 @@
 @use "./vars" as *;
 @use "./mixin";
 
-//@use "./jquery-ui.css";
+@use "./jquery-ui.css";
 
 @use "./base/themes";
 @use "./icon/icon";
 @use "./logo/logo";
 @use "./header/header";
+@use "./dialog/dialog";
 @use "./theme-switcher/theme-switcher";
 @use "./button/button";
 @use "./grid/main-wrapper";
@@ -197,6 +198,7 @@ body {
     //background: rgb(34,195,194);
     background: var(--background-primary);
 	scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
+	transition: all 0.3s ease-in-out;
 }
 
 :focus-visible {
@@ -275,7 +277,7 @@ u {
     position: sticky;
     top: 0;
     z-index: var(--z-index-main-header);
-    box-shadow: var(--shadow-02);
+    //box-shadow: var(--shadow-02);
 }
 
 .contentWrapper {

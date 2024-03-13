@@ -310,7 +310,7 @@
             form.find('[class*=validate]').not(':hidden').not(":disabled").each( function() {
                 var field = $(this);
                 errorFound |= methods._validateField(field, options, skipAjaxValidation);
-				field.focus();
+                field.trigger("focus");
                 if (options.doNotShowAllErrosOnSubmit)
                     return false;
 		    if (errorFound && first_err==null) first_err=field; 
@@ -357,12 +357,12 @@
                                     scrollTop: destination,
                                     scrollLeft: fixleft
                                  }, 1100, function(){
-                                    if(options.focusFirstField) first_err.focus();      
+                                    if(options.focusFirstField) first_err.trigger("focus");      
                                 });
                         }
                  
 				} else if(options.focusFirstField)
-				 	first_err.focus();
+				 	first_err.trigger("focus");
                 return false;
             }
             return true;

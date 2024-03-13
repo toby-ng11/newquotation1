@@ -1,0 +1,23 @@
+@use "../vars" as *;
+
+.ui-dialog {
+    &.add-item-dialog {
+        font-family: inherit;
+        font-size: inherit;
+    }
+    
+    .ui-dialog-titlebar {
+        font-size: calc(100% + 2px);
+    }
+
+    .dialog-form {
+        padding: 1rem;
+        display: grid;
+        gap: 1rem 2rem;
+        grid-template-columns: repeat(2, 1fr);
+
+        .dialog-note {
+            grid-column: 1 / 3;
+        }
+    }
+}

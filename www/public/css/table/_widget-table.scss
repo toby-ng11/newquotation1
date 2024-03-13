@@ -1,38 +1,37 @@
 @use "../vars" as *;
 
-.main-content .widget-table {
-	background-color: var(--widget-background-primary);
-	/*border: 1px solid var(--border-primary);*/
-    backdrop-filter: blur(10px);
-	margin-top: 1.5rem;
-	margin-bottom: 1.5rem;
-	/* clear: both; */
-	padding: 1.5rem;
-	border-radius: 10px;
-	position: relative;
-	transition: all 0.3s ease-in-out;
-}
+.main-content {
+	.widget-table {
+		background-color: var(--widget-background-primary);
+		/*border: 1px solid var(--border-primary);*/
+		backdrop-filter: blur(10px);
+		margin-top: 1.5rem;
+		margin-bottom: 1.5rem;
+		/* clear: both; */
+		padding: 1.5rem;
+		border-radius: 10px;
+		position: relative;
+		box-shadow: var(--widget-hover-box-shadow);
+		transition: all 0.3s ease-in-out;
 
-.main-content .widget-table:hover {
-	background: var(--widget-background-hover);
-}
+		&::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			border-radius: 10px;
+			z-index: -1;
+			box-shadow: var(--widget-hover-box-shadow);
+			transition: opacity 0.3s ease-in-out;
+		}
 
-.main-content .widget-table::after {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	opacity: 0;
-	border-radius: 10px;
-	z-index: -1;
-	box-shadow: var(--widget-hover-box-shadow);
-	transition: opacity 0.3s ease-in-out;
-}
-
-.main-content .widget-table:hover::after{
-	opacity: 1;
+		&:hover::after {
+			opacity: 1;
+		}
+	}
 }
 
 .widget-information {
@@ -42,9 +41,23 @@
 	gap: 2rem;
 }
 
-.widget-table p {
-	margin: 0;
+.widget-table {
+	p {
+		margin: 0;
+	}
+
+	.row-button {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 1rem;
+
+		.button-wrap {
+			border: 1px solid var(--border-primary);
+		}
+	}
 }
+
 
 /* === Numeric data === */
 
@@ -56,78 +69,78 @@
 	font-size: 11px;
 }
 
-	.widget .num span {
-		margin-right: 10px;
-	}
+.widget .num span {
+	margin-right: 10px;
+}
 
-	.widget .num a {
-		background: url(../images/ui/numDataBg.png) repeat-x;
-		height: 19px;
-		padding: 2px 5px;
-		color: #fefefe;
-	}
+.widget .num a {
+	background: url(../images/ui/numDataBg.png) repeat-x;
+	height: 19px;
+	padding: 2px 5px;
+	color: #fefefe;
+}
 
-		.widget .num a.blueNum {
-			background-position: 0 -114px;
-			border: 1px solid #4b8bc4;
-		}
+.widget .num a.blueNum {
+	background-position: 0 -114px;
+	border: 1px solid #4b8bc4;
+}
 
-			.widget .num a.blueNum:hover {
-				background-position: 0 -133px;
-			}
+.widget .num a.blueNum:hover {
+	background-position: 0 -133px;
+}
 
-			.widget .num a.blueNum:active {
-				background-position: 0 -152px;
-			}
+.widget .num a.blueNum:active {
+	background-position: 0 -152px;
+}
 
-		.widget .num a.redNum {
-			background-position: 0 -171px;
-			border: 1px solid #c83e3e;
-		}
+.widget .num a.redNum {
+	background-position: 0 -171px;
+	border: 1px solid #c83e3e;
+}
 
-			.widget .num a.redNum:hover {
-				background-position: 0 -190px;
-			}
+.widget .num a.redNum:hover {
+	background-position: 0 -190px;
+}
 
-			.widget .num a.redNum:active {
-				background-position: 0 -209px;
-			}
+.widget .num a.redNum:active {
+	background-position: 0 -209px;
+}
 
-		.widget .num a.greenNum {
-			background-position: 0 0;
-			border: 1px solid #84b550;
-		}
+.widget .num a.greenNum {
+	background-position: 0 0;
+	border: 1px solid #84b550;
+}
 
-			.widget .num a.greenNum:hover {
-				background-position: 0 -19px;
-			}
+.widget .num a.greenNum:hover {
+	background-position: 0 -19px;
+}
 
-			.widget .num a.greenNum:active {
-				background-position: 0 -38px;
-			}
+.widget .num a.greenNum:active {
+	background-position: 0 -38px;
+}
 
-		.widget .num a.greyishNum {
-			background-position: 0 -57px;
-			border: 1px solid #587787;
-		}
+.widget .num a.greyishNum {
+	background-position: 0 -57px;
+	border: 1px solid #587787;
+}
 
-			.widget .num a.greyishNum:hover {
-				background-position: 0 -76px;
-			}
+.widget .num a.greyishNum:hover {
+	background-position: 0 -76px;
+}
 
-			.widget .num a.greyishNum:active {
-				background-position: 0 -95px;
-			}
+.widget .num a.greyishNum:active {
+	background-position: 0 -95px;
+}
 
-		.widget .num a.greyNum {
-			background-position: 0 -228px;
-			border: 1px solid #585858;
-		}
+.widget .num a.greyNum {
+	background-position: 0 -228px;
+	border: 1px solid #585858;
+}
 
-			.widget .num a.greyNum:hover {
-				background-position: 0 -247px;
-			}
+.widget .num a.greyNum:hover {
+	background-position: 0 -247px;
+}
 
-			.widget .num a.greyNum:active {
-				background-position: 0 -266px;
-            }
+.widget .num a.greyNum:active {
+	background-position: 0 -266px;
+}
