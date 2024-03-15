@@ -194,55 +194,46 @@
 
     let sessionUser = "<?php echo $session->user['id']?>";
 
-    oTable = $('#project_table,#asso_table').dataTable({
-        "ajax": {
-            "url": "/index/project",
-            "dataSrc": ''
+    oTable = $('#project_table,#asso_table').DataTable({
+        ajax: {
+            url: "/index/project",
+            dataSrc: ''
         },
-        "columns": [
-            {"data": "project_id", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
+        columns: [
+            { data: "project_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
                 if(rowData.owner == sessionUser) { $(cell).html("<a target='_blank' href='/project/edit/id/"+rowData.project_id+"'>"+rowData.project_id+"</a>");}
                 else { $(cell).html("<a target='_blank' href='/project/view/id/"+rowData.project_id+"'>"+rowData.project_id+"</a>");}
             } },
-            {"data": "quote_no"},
-            {"data": "project_name"},
-            {"data": "owner"},
-            {"data": "create_date.date"},
-            {"data": "due_date.date", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
+            { data: "quote_no"},
+            { data: "project_name"},
+            { data: "owner"},
+            { data: "create_date.date"},
+            { data: "due_date.date", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
                 let d = new Date(cellData);
                 let today = new Date(); 
                 if (d <= today) {$(cell).addClass("red");}
             }},
-            {"data": "Specifier_name"},
-            {"data": "segment"},
-            {"data": "status_name"},
-            {"data": "project_id", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
+            { data: "Specifier_name"},
+            { data: "segment"},
+            { data: "status_name"},
+            { data: "project_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
                 $(cell).html("<a target='_blank' href='/quote/index/project/"+ rowData.project_id + "'><span class='button-wrap'><span class='icon icon-money'></span></span></a>")
             }},
         ],
-        "columnDefs": [
-        {
-            "targets": [4, 5],
-            "render": function (data) {
+        columnDefs: [{
+            targets: [4, 5],
+            render: function (data) {
                 let DateTime = luxon.DateTime;
                 let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
                 return d;
-            }
-        },
-        {
-            "targets": [9], "className": 'dt-body-center'
-        }
+            }},
+        { targets: [9], "className": 'dt-body-center'}
         ],
-        "processing": true,
+        processing: true,
         //"responsive": true,
-        "order": [
-            [0, "desc"]
-        ],
-        "fixedColumns": {
-            "start": 1,
-            "end": 2
-        },
-        "scrollX": true
+        order: [[0, "desc"]],
+        fixedColumns: { start: 1, end: 2},
+        scrollX: true
     });
 
     $('#quote_table').dataTable({

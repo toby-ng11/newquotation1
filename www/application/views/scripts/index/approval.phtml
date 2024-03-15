@@ -46,193 +46,63 @@
         </header>
 
         <!-- Form -->
-        <form action="" class="form">
-            <div class="widget">
-                <div class="title"><img src="/images/icons/dark/timer.png" alt="" class="titleIcon" />
-                    <h6>Quotes Waiting for Approval : <?= count($this->waiting) ?></h6>
-                </div>
-                <table cellpadding="0" cellspacing="0" width="100%" class="display" style="text-align:left;" id='waiting'>
+            <h2>Quotes Waiting for Approval: <?= count($this->waiting) ?></h2>
+            <div class="widget-table">
+                <table width="100%" class="display nowrap" id='waiting'>
                     <thead>
                         <tr>
-                            <td class="sortCol action">
-                                <div>Action<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Quote No<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Project Name<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Sales Rep<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Contractor/Company<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Arch Sale Rep<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Quote Seg<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Quote Date<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Ship Required Date<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Status<span></span></div>
-                            </td>
+                            <th>Quote ID</th>
+                            <th>Project Name</th>
+                            <th>Sales Rep.</th>
+                            <th>Contractor</th>
+                            <th>Arch. Sales Rep.</th>
+                            <th>Segment</th>
+                            <th>Date</td>
+                            <th>Ship Required Date</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <?php foreach ($this->waiting  as $p) { ?>
-                            <tr>
-                                <td><a href="/approve/index/id/<?= $p['quote_id'] ?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
-                                <td><a href="/approve/index/id/<?= $p['quote_id'] ?>"><?= $p['quote_id'] ?></a></td>
-                                <td><?= $p['project_name'] ?></td>
-                                <td><?= $p['sale_name'] ?></td>
-                                <td><?= $p['customer'] ?></td>
-                                <td><?= $p['arch_name'] ?></td>
-                                <td><?= $p['quote_segment'] ?></td>
-                                <td><?= $p['quote_date']->format('Y-m-d') ?></td>
-                                <td><span><?php if ($p['ship_required_date'] != null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01') {
-                                                echo $p['ship_required_date']->format('Y-m-d');
-                                            } ?></span></td>
-                                <td><?= $p['status_name'] ?></td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-            <div class="widget">
-                <div class="title"><img src="/images/icons/dark/check.png" alt="" class="titleIcon" />
-                    <h6>Approved Quotes : <?= count($this->approved) ?></h6>
-                </div>
-                <table cellpadding="0" cellspacing="0" width="100%" class="display" style="text-align:left;" id='approved'>
-                    <thead>
-                        <tr>
-                            <td class="sortCol action">
-                                <div>Action<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Quote No<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Project Name<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Sales Rep<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Contractor/Company<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Arch Sale Rep<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Quote Seg<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Quote Date<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Expire Date<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Ship Required Date<span></span></div>
-                            </td>
-                            <td class="sortCol">
-                                <div>Status<span></span></div>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($this->approved as $p) { ?>
-                            <tr>
-                                <td><a target='_blank' href="/approve/index/id/<?= $p['quote_id'] ?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
-                                <td><a target='_blank' href="/approve/index/id/<?= $p['quote_id'] ?>"><?= $p['quote_id'] ?></a></td>
-                                <td><?= $p['project_name'] ?></td>
-                                <td><?= $p['sale_name'] ?></td>
-                                <td><?= $p['customer'] ?></td>
-                                <td><?= $p['arch_name'] ?></td>
-                                <td><?= $p['quote_segment'] ?></td>
-                                <td><?= $p['quote_date']->format('Y-m-d') ?></td>
-                                <td><span class='<?php if ($p['expire_date']->format('Ymd') <= date('Ymd')) echo 'red'; ?>'><?= $p['expire_date']->format('Y-m-d') ?></span></td>
-                                <td><span><?php if ($p['ship_required_date'] != null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01') {
-                                                echo $p['ship_required_date']->format('Y-m-d');
-                                            } ?></span></td>
-                                <td><?= $p['status_name'] ?></td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
                 </table>
             </div>
 
-        </form>
-
-        <div class="widget">
-            <div class="title"><img src="/images/icons/dark/close.png" alt="" class="titleIcon">
-                <h6>Disapproved Quotes : <?= count($this->disapproved) ?></h6>
+            <h2>Approved Quotes: <?= count($this->approved) ?></h2>
+            <div class="widget-table">
+                <table width="100%" class="display nowrap" id='approved'>
+                    <thead>
+                        <tr>
+                            <th>Quote ID</th>
+                            <th>Project Name</th>
+                            <th>Sales Rep.</th>
+                            <th>Contractor/Company</th>
+                            <th>Arch. Sale Rep.</th>
+                            <th>Segment</th>
+                            <th>Quote Date</th>
+                            <th>Expire Date</th>
+                            <th>Ship Required Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
-            <table cellpadding="0" cellspacing="0" width="100%" class="display" style="text-align:center;" id='disapproved'>
+
+        <h2>Disapproved Quotes: <?= count($this->disapproved) ?></h2>
+        <div class="widget-table">
+            <table width="100%" class="display nowrap" id='disapproved'>
                 <thead>
                     <tr>
-                        <td class="sortCol action">
-                            <div>Action<span></span></div>
-                        </td>
-                        <td class="sortCol">
-                            <div>Quote No<span></span></div>
-                        </td>
-                        <td class="sortCol">
-                            <div>Project Name<span></span></div>
-                        </td>
-                        <td class="sortCol">
-                            <div>Sales Rep<span></span></div>
-                        </td>
-                        <td class="sortCol">
-                            <div>Contractor/Company<span></span></div>
-                        </td>
-                        <td class="sortCol">
-                            <div>Arch Sale Rep<span></span></div>
-                        </td>
-                        <td class="sortCol">
-                            <div>Quote Seg<span></span></div>
-                        </td>
-                        <td class="sortCol">
-                            <div>Quote Date<span></span></div>
-                        </td>
-                        <td class="sortCol">
-                            <div>Expire Date<span></span></div>
-                        </td>
-                        <td class="sortCol">
-                            <div>Ship Required Date<span></span></div>
-                        </td>
-                        <td class="sortCol">
-                            <div>Status<span></span></div>
-                        </td>
+                        <th>Action</th>
+                        <th>Quote ID</th>
+                        <th>Project Name</th>
+                        <th>Sales Rep.</th>
+                        <th>Contractor/Company</th>
+                        <th>Arch. Sale Rep.</th>
+                        <th>Segment</th>
+                        <th>Quote Date</th>
+                        <th>Expire Date</th>
+                        <th>Ship Required Date</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <?php foreach ($this->disapproved as $p) { ?>
-                        <tr>
-                            <td><a target='_blank' href="/approve/index/id/<?= $p['quote_id'] ?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
-                            <td><a target='_blank' href="/quote/edit/id/<?= $p['quote_id'] ?>"><?= $p['quote_id'] ?></a></td>
-                            <td><?= $p['project_name'] ?></td>
-                            <td><?= $p['sale_name'] ?></td>
-                            <td><?= $p['customer'] ?></td>
-                            <td><?= $p['arch_name'] ?></td>
-                            <td><?= $p['quote_segment'] ?></td>
-                            <td><?= $p['quote_date']->format('Y-m-d') ?></td>
-                            <td><span class='<?php if ($p['expire_date']->format('Ymd') <= date('Ymd')) echo 'red'; ?>'><?= $p['expire_date']->format('Y-m-d') ?></span></td>
-                            <td><span><?php if ($p['ship_required_date'] != null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01') {
-                                            echo $p['ship_required_date']->format('Y-m-d');
-                                        } ?></span></td>
-                            <td><?= $p['status_name'] ?></td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
             </table>
         </div>
     </div>
@@ -255,12 +125,114 @@
 </div>
 
 <script>
-    oTable = $('#waiting,#approved,#disapproved').dataTable({
-        "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "sDom": '<""l>t<"F"fp>',
-        "aaSorting": [
-            [2, "desc"]
-        ]
+    $('#waiting').DataTable({
+        ajax: {
+            url: "/index/approvalwaiting",
+            dataSrc: ''
+        },
+        columns: [
+            { data: "quote_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                $(cell).html("<a target='_blank' href='/approve/index/id/"+rowData.quote_id+"'>"+rowData.quote_id+"</a>");
+            }},
+            { data: "project_name"},
+            { data: "sale_name"},
+            { data: "customer"},
+            { data: "arch_name"},
+            { data: "quote_segment"},
+            { data: "quote_date.date"},
+            { data: "ship_required_date.date"},
+            { data: "status_name"}
+        ],
+        columnDefs: [{
+            targets: [6, 7],
+            render: function (data) {
+                let DateTime = luxon.DateTime;
+                let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
+                return d;
+            }}
+        ],
+        processing: true,
+        //serverSide: true,
+        order: [[0, "desc"]],
+        fixedColumns: { start: 1, end: 1},
+        scrollX: true
     });
+
+    $('#approved').DataTable({
+        ajax: {
+            url: "/index/approvalapproved",
+            dataSrc: ''
+        },
+        columns: [
+            { data: "quote_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                $(cell).html("<a target='_blank' href='/approve/index/id/"+rowData.quote_id+"'>"+rowData.quote_id+"</a>");
+            }},
+            { data: "project_name"},
+            { data: "sale_name"},
+            { data: "customer"},
+            { data: "arch_name"},
+            { data: "quote_segment"},
+            { data: "quote_date.date"},
+            { data: "expire_date.date", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
+                let d = new Date(cellData);
+                let today = new Date(); 
+                if (d <= today) {$(cell).addClass("red");}
+            }},
+            { data: "ship_required_date.date"},
+            { data: "status_name"}
+        ],
+        columnDefs: [{
+            targets: [6, 7, 8],
+            render: function (data) {
+                let DateTime = luxon.DateTime;
+                let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
+                return d;
+            }}
+        ],
+        processing: true,
+        order: [[0, "desc"]],
+        fixedColumns: { start: 1, end: 1},
+        scrollX: true
+    });
+
+    $('#disapproved').DataTable({
+        ajax: {
+            url: "/index/approvaldisapproved",
+            dataSrc: ''
+        },
+        columns: [
+            { data: "quote_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                $(cell).html("<a target='_blank' href='/approve/index/id/"+rowData.quote_id+"'>"+rowData.quote_id+"</a>");
+            }},
+            { data: "quote_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                $(cell).html("<a target='_blank' href='/quote/edit/id/"+rowData.quote_id+"'>"+rowData.quote_id+"</a>");
+            }},
+            { data: "project_name"},
+            { data: "sale_name"},
+            { data: "customer"},
+            { data: "arch_name"},
+            { data: "quote_segment"},
+            { data: "quote_date.date"},
+            { data: "expire_date.date", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
+                let d = new Date(cellData);
+                let today = new Date(); 
+                if (d <= today) {$(cell).addClass("red");}
+            }},
+            { data: "ship_required_date.date"},
+            { data: "status_name"}
+        ],
+        columnDefs: [{
+            targets: [7, 8, 9],
+            render: function (data) {
+                let DateTime = luxon.DateTime;
+                let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
+                return d;
+            }}
+        ],
+        processing: true,
+        order: [[0, "desc"]],
+        fixedColumns: { start: 1, end: 1},
+        scrollX: true
+    });
+
 </script>

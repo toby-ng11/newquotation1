@@ -1,87 +1,93 @@
 <tbody>
-                        <?php foreach ($this->ownproject as $p) { ?>
-                            <tr class='status_<?= $p['status'] ?>'>
-                                <td><?= $p['quote_no'] ?></td>
-                                <td>
-                                    <a a target='_blank' href="/project/edit/id/<?= $p['project_id'] ?>"><?= $p['project_name'] ?></a>
-                                </td>
-                                <td><?= $p['create_date']->format('Y-m-d') ?></td>
-                                <td><span class='<?php if ($p['due_date']->format('Ymd') <= date('Ymd')) echo 'red'; ?>'><?= $p['due_date']->format('Y-m-d') ?></span></td>
-                                <td class='status_<?= $p['status'] ?>'><?= $p['status_name'] ?></td>
-                                <td><?= $p['Specifier_name'] ?></td>
-                                <td><?= $p['segment'] ?></td>
-                                <td><!--<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>-->
-                                    <a a target='_blank' href="/project/edit/id/<?= $p['project_id'] ?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a>
-                                    <a a target='_blank' href="/quote/index/project/<?= $p['project_id'] ?>" alt='quote'><img src="/images/icons/dark/money.png" alt="edit" style="margin:0px 4px"></a>
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
+    <?php foreach ($this->waiting  as $p) { ?>
+        <tr>
+            <td><a href="/approve/index/id/<?= $p['quote_id'] ?>"><?= $p['quote_id'] ?></a></td>
+            <td><?= $p['project_name'] ?></td>
+            <td><?= $p['sale_name'] ?></td>
+            <td><?= $p['customer'] ?></td>
+            <td><?= $p['arch_name'] ?></td>
+            <td><?= $p['quote_segment'] ?></td>
+            <td><?= $p['quote_date']->format('Y-m-d') ?></td>
+            <td>
+                <span>
+                    <?php 
+                    if ($p['ship_required_date'] != null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01') {
+                        echo $p['ship_required_date']->format('Y-m-d');
+                    } ?></span></td>
+            <td><?= $p['status_name'] ?></td>
+        </tr>
+    <?php } ?>
+</tbody>
 
 
-                    <tbody>
-                            <?php foreach ($this->otherprojects as $p) { ?>
-                                <tr class='status_<?= $p['status'] ?>'>
-                                    <td><?= $p['quote_no'] ?></td>
-                                    <td><a a target='_blank' href="/project/edit/id/<?= $p['project_id'] ?>"><?= $p['project_name'] ?></a></td>
-                                    <td><?= $p['create_date']->format('Y-m-d') ?></td>
-                                    <td><span class='<?php if ($p['due_date']->format('Ymd') <= date('Ymd')) echo 'red'; ?>'><?= $p['due_date']->format('Y-m-d') ?></span></td>
-                                    <td class='status_<?= $p['status'] ?>'><?= $p['status_name'] ?></td>
-                                    <td><?= $p['Specifier_name'] ?></td>
-                                    <td><?= $p['owner'] ?></td>
-                                    <td><?= $p['segment'] ?></td>
-                                    <td><a a target='_blank' href="/quote/index/project/<?= $p['project_id'] ?>" alt='quote'><img src="/images/icons/dark/money.png" alt="quote" style="margin:0px 4px"></a></td>
-                                </tr>
-                            <?php } ?>
-                        </tbody>
-
-
-                        <tbody>
-                        <?php foreach ($this->ownquotes as $p) { ?>
-                            <tr class='status_<?= $p['status'] ?> approval_<?= $p['approve_status'] ?>'>
-                                <td><a a target='_blank' href="/quote/edit/id/<?= $p['quote_id'] ?>"><?= $p['quote_id'] ?></a></td>
-                                <td><a a target='_blank' href="/project/edit/id/<?= $p['project_id'] ?>"><?= $p['project_name'] ?></a></td>
+<tbody>
+                        <?php foreach ($this->approved as $p) { ?>
+                            <tr>
+                                <td><a target='_blank' href="/approve/index/id/<?= $p['quote_id'] ?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
+                                <td><a target='_blank' href="/approve/index/id/<?= $p['quote_id'] ?>"><?= $p['quote_id'] ?></a></td>
+                                <td><?= $p['project_name'] ?></td>
+                                <td><?= $p['sale_name'] ?></td>
+                                <td><?= $p['customer'] ?></td>
+                                <td><?= $p['arch_name'] ?></td>
+                                <td><?= $p['quote_segment'] ?></td>
                                 <td><?= $p['quote_date']->format('Y-m-d') ?></td>
                                 <td><span class='<?php if ($p['expire_date']->format('Ymd') <= date('Ymd')) echo 'red'; ?>'><?= $p['expire_date']->format('Y-m-d') ?></span></td>
                                 <td><span><?php if ($p['ship_required_date'] != null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01') {
                                                 echo $p['ship_required_date']->format('Y-m-d');
                                             } ?></span></td>
                                 <td><?= $p['status_name'] ?></td>
-                                <?php if ($p['approve_status'] == -1) { ?>
-                                    <td class='disapproved orange'>Disapproved</td>
-                                <?php } else if ($p['approve_status'] == 10) { ?>
-                                    <td class='approved green'>Approved</td>
-                                <?php } else if ($p['approve_status'] == 1) { ?>
-                                    <td class='waiting red'>Waiting Approval</td>
-                                <?php } else { ?>
-                                    <td class='init'>Not Submitted</td>
-                                <?php } ?>
-                                <td><?= $p['customer'] ?></td>
-                                <td><!--<a href="#"><img src="images/icons/dark/close.png" alt="delete"></a>-->
-                                    <a a target='_blank' href="/quote/edit/id/<?= $p['quote_id'] ?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a>
-                                </td>
                             </tr>
                         <?php } ?>
                     </tbody>
 
-                    <tbody>
-                        <?php foreach ($this->memo as $l) { ?>
-                            <tr>
-                                <td><?= $l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
-                                <td><a a target='_blank' href="/project/edit/id/<?= $l['project_id'] ?>"><?= $l['project_name'] ?></a></td>
-                                <td><?= $l['type']; ?></td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
 
                     <tbody>
-						<?php foreach ($this->memo as $l) { ?>
-							<tr>
-								<td><?= $l['added']->format('Y-m-d'); ?></td>
-								<td><?= $l['title']; ?></td>
-								<td><?= $l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
-								<td><?= $l['type']; ?></td>
-								<td><?php if ($this->owner == 1) { ?><a href="/memo/delete/id/<?= $l['memo_id']; ?>" class='memo_delete'><img src="/images/icons/dark/close.png" alt="delete"></a><?php } ?></td>
-							</tr>
-						<?php } ?>
-					</tbody>
+                    <?php foreach ($this->disapproved as $p) { ?>
+                        <tr>
+                            <td><a target='_blank' href="/approve/index/id/<?= $p['quote_id'] ?>"><img src="/images/icons/dark/pencil.png" alt="edit" style="margin:0px 4px"></a></td>
+                            <td><a target='_blank' href="/quote/edit/id/<?= $p['quote_id'] ?>"><?= $p['quote_id'] ?></a></td>
+                            <td><?= $p['project_name'] ?></td>
+                            <td><?= $p['sale_name'] ?></td>
+                            <td><?= $p['customer'] ?></td>
+                            <td><?= $p['arch_name'] ?></td>
+                            <td><?= $p['quote_segment'] ?></td>
+                            <td><?= $p['quote_date']->format('Y-m-d') ?></td>
+                            <td><span class='<?php if ($p['expire_date']->format('Ymd') <= date('Ymd')) echo 'red'; ?>'><?= $p['expire_date']->format('Y-m-d') ?></span></td>
+                            <td><span><?php if ($p['ship_required_date'] != null && $p['ship_required_date']->format('Y-m-d') > '2000-01-01') {
+                                            echo $p['ship_required_date']->format('Y-m-d');
+                                        } ?></span></td>
+                            <td><?= $p['status_name'] ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+
+
+                ajax: {
+            url: "/index/approvalwaiting",
+            dataSrc: ''
+        },
+        columns: [
+            { data: "quote_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                $(cell).html("<a target='_blank' href='/approve/index/id/"+rowData.quote_id+"'>"+rowData.quote_id+"</a>");
+            }},
+            { data: "project_name"},
+            { data: "sale_name"},
+            { data: "customer"},
+            { data: "arch_name"},
+            { data: "quote_segment"},
+            { data: "quote_date.date"},
+            { data: "ship_required_date.date"},
+            { data: "status_name"}
+        ],
+        columnDefs: [{
+            targets: [5, 6],
+            render: function (data) {
+                let DateTime = luxon.DateTime;
+                let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
+                return d;
+            }}
+        ],
+        processing: true,
+        order: [[0, "desc"]],
+        fixedColumns: { start: 1, end: 1},
+        scrollX: true
