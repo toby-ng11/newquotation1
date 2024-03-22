@@ -1,24 +1,5 @@
 <?php $session = Zend_Registry::get('session'); ?>
 
-<!-- Left panel -->
-<div class="sidebar-container">
-    <div class="toc-container">
-        <aside class="toc">
-            <nav>
-                <div class="document-toc-container">
-                    <section class="document-toc">
-                        <header>
-                            <h2 class="document-toc-heading">On this page</h2>
-                        </header>
-                        <ul id="document-toc-list" class="document-toc-list"></ul>
-                    </section>
-                </div>
-            </nav>
-        </aside>
-        <section class="place side"></section>
-    </div>
-</div>
-
 <!-- Title area -->
 <main id="content" class="main-content">
 
@@ -44,30 +25,17 @@
 
     <div class="main-page-content">
         <header class="main-page-content-header">
-            <h1>My projects</h1>
+            <h1>Welcome Back, <span style="font-weight: 300;"><?php echo $session->user['name'] ?></span></h1>
+            <p>Here's the quick summary your projects and quotes</p>
         </header>
-        <div class="section-content">
-            <?php if ($session->user['sale_role'] == 'sales') { ?>
-                <p>Sales representative landing page.</p>
-            <?php } ?>
-            <?php if ($session->user['sale_role'] == 'manager' || $session->user['sale_role'] == 'admin') { ?>
-                <p>Sales Manager Landing Page.</p>
-            <?php } ?>
-        </div>
 
-        <!-- Main content wrapper -->
-        <!-- Note -->
-        <!-- <div class="nNote nInformation hideit">
-            <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
-        </div>-->
         <section aria-labelledby="my_projects" id="section1" data-nav="My Projects" class="active">
-            <h2>My Projects</h2>
             <div class="widget-table">
                 <table width="100%" class="display nowrap" id='project_table'>
                     <thead>
                         <tr>
-                            <th>Project #</th>
-                            <th>Quote #</th>
+                            <th>Project ID</th>
+                            <th>Quote ID</th>
                             <th>Project Name</th>
                             <th>Create Date</th>
                             <th>Due Date</th>
@@ -83,19 +51,18 @@
 
         <?php if ($session->user['approve_id'] != null) { ?>
             <section aria-labelledby="other_projects" id="section2" data-nav="Other Projects">
-                <h2>Other Projects At <?= $session->user['company']; ?></h2>
                 <div class="widget-table">
                     <table width="100%" class="display nowrap" id='other_project_table'>
                         <thead>
                             <tr>
-                                <th>Project#</th>
+                                <th>Project ID</th>
+                                <th>Quote ID</th>
                                 <th>Project Name</th>
                                 <th>Create Date</th>
                                 <th>Due Date</th>
                                 <th>Specifier</th>
                                 <th>Worksheet Owner</th>
-                                <th>>Market Segment</th>
-                                <th>Status</th>
+                                <th>Market Segment</th>
                                 <th class="action">Make Quote</th>
                             </tr>
                         </thead>
@@ -105,7 +72,6 @@
         <?php } ?>
 
         <section aria-labelledby="my_quotes" <?php if ($session->user['approve_id'] != null) { ?> id="section3" <?php } else { ?> id="section2" <?php } ?> data-nav="My Quotes">
-            <h2>My Quotes</h2>
             <div class="widget-table">
                 <table width="100%" class="display nowrap" id='quote_table'>
                     <thead>
@@ -125,7 +91,6 @@
         </section>
 
         <section aria-labelledby="follow_up_logs" <?php if ($session->user['approve_id'] != null) { ?> id="section4" <?php } else { ?> id="section3" <?php } ?> data-nav="Follow Up Logs">
-            <h2>Follow Up Logs</h2>
             <div class="widget-table">
                 <table width="100%" class="display nowrap" id='project_log'>
                     <thead>
@@ -141,13 +106,6 @@
         </section>
 </main>
 <script>
-    <?php if ($session->user['approve_id'] != null) { ?>
-        const itemsApprove = ["My Projects", "Other Projects", "My Quotes", "Follow Up Logs"];
-        createTocList(itemsApprove);
-    <?php } else { ?>
-        const items = ["My Projects", "My Quotes", "Follow Up Logs"];
-        createTocList(items);
-    <?php } ?>
 
     $(document).ready(function() {
         $('#project_table').DataTable({
@@ -220,7 +178,12 @@
                 start: 1,
                 end: 2
             },
-            scrollX: true
+            scrollX: true,
+            layout: { topStart: function() {
+                let info= document.createElement('div');
+                info.innerHTML = '<h2>My Projects</h2><p><?= count($this->ownproject) ?> projects';
+                return info;
+            } }
         });
 
         $('#other_project_table').DataTable({
@@ -288,9 +251,14 @@
             ],
             fixedColumns: {
                 start: 1,
-                end: 2
+                end: 1
             },
-            scrollX: true
+            scrollX: true,
+            layout: { topStart: function() {
+                let info= document.createElement('div');
+                info.innerHTML = '<h2>Other Projects At <?= $session->user['company'] ?></h2><p> <?= count($this->otherprojects) ?> projects at <?= $session->user['company'] ?>';
+                return info;
+            } }
         });
 
         $('#quote_table').DataTable({
@@ -368,7 +336,12 @@
                 start: 2,
                 end: 2
             },
-            scrollX: true
+            scrollX: true,
+            layout: { topStart: function() {
+                let info= document.createElement('div');
+                info.innerHTML = '<h2>My Quotes</h2><p> <?= count($this->ownquotes) ?> quotes';
+                return info;
+            } }
         });
 
         $('#project_log').DataTable({
@@ -410,7 +383,12 @@
                 start: 3
             },
             order: [],
-            scrollX: true
+            scrollX: true,
+            layout: { topStart: function() {
+                let info= document.createElement('div');
+                info.innerHTML = '<h2>Follow Up Logs</h2><p> <?= count($this->memo) ?> logs';
+                return info;
+            } }
         });
     })
 </script>

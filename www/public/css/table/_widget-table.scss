@@ -5,14 +5,18 @@
 		background-color: var(--widget-background-primary);
 		/*border: 1px solid var(--border-primary);*/
 		backdrop-filter: blur(10px);
-		margin-top: 1.5rem;
-		margin-bottom: 1.5rem;
+		margin-top: 2rem;
+		margin-bottom: 2rem;
 		/* clear: both; */
-		padding: 1.5rem;
-		border-radius: 10px;
+		padding: 2rem;
+		border-radius: 15px;
 		position: relative;
-		box-shadow: var(--widget-hover-box-shadow);
+		box-shadow: var(--widget-box-shadow);
 		transition: all 0.3s ease-in-out;
+
+		&:hover {
+			background: var(--widget-background-hover);
+		}
 
 		&::after {
 			content: '';
@@ -22,9 +26,9 @@
 			width: 100%;
 			height: 100%;
 			opacity: 0;
-			border-radius: 10px;
+			border-radius: 15px;
 			z-index: -1;
-			box-shadow: var(--widget-hover-box-shadow);
+			box-shadow: var(--widget-box-shadow);
 			transition: opacity 0.3s ease-in-out;
 		}
 
@@ -34,30 +38,158 @@
 	}
 }
 
-.widget-information {
-	display: flex;
-	flex: 1;
-	flex-direction: row;
-	gap: 2rem;
-}
-
 .widget-table {
-	p {
-		margin: 0;
+	
+	label {
+		font-size: calc(100% + 1px);
+		font-weight: bold;
 	}
 
-	.row-button {
+	input {
+		font-size: inherit;
+		font-family: inherit;
+		padding: 0.5rem 0.8rem;
+		margin-top: 0.1rem;
+		background: var(--dt-html-background);
+		border: 1px solid var(--border-primary);
+		border-radius: 15px;
+		color: var(--text-secondary);
+		height: 2.8rem;
+		//box-shadow: inset 0px 0px 2px 10px rgb(0 0 0);
+		transition: all 0.2s ease-in-out;
+
+		&:hover {
+			border-color: var(--border-primary);
+			background: var(--background-primary);
+		}
+
+		&:focus {
+			border-color: var(--field-focus-border);
+			//background: var(--background-primary);
+			//box-shadow: 0 0 0 2px var(--shadow-01);
+		}
+	}
+
+	.widget-button {
+		float: right;
+	}
+
+	.row-button { // for edit/delete items button
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		align-items: center;
 		gap: 1rem;
 
 		.button-wrap {
-			border: 1px solid var(--border-primary);
+			border-radius: 15px;
+			box-shadow: var(--widget-box-shadow);
+			padding: 0.5rem;
+			transition: all 0.3s ease-in-out;
+
+			&::after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				opacity: 0;
+				border-radius: 15px;
+				z-index: -1;
+				box-shadow: var(--widget-box-shadow);
+				transition: opacity 0.3s ease-in-out;
+			}
+
+			&:hover {
+				background: var(--widget-background-hover);
+				color: var(--category-color);
+
+				&::after {
+					opacity: 1;
+				}
+			}
+
+			.icon {
+				height: 1.5rem;
+				width: 1.5rem;
+			}
 		}
+	}
+
+	h1, h2, h3, h4, h5, h6, p {
+		margin: 0;
+	}
+
+	h2 {
+		line-height: 3rem;
+		letter-spacing: .05rem;
+	}
+
+	svg {
+		float: right;
+		background: transparent;
+		color: rgba(0, 0, 0, 0.2);
 	}
 }
 
+.widget-information {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 2rem;
+
+	.widget-table {
+		margin: 0;
+
+		p + h2, h2 + p {
+			margin-top: 2rem;
+		}
+
+		&:nth-of-type(1) {
+			background: var(--widget-background-blue-20);
+			grid-row: 1 / 3;
+		}
+
+		&:nth-of-type(2) {
+			background: var(--widget-background-blue-60);
+		}
+
+		&:nth-of-type(3) {
+			background: var(--widget-background-blue-40);
+		}
+
+		&:nth-of-type(4) {
+			background: var(--widget-background-blue-70);
+		}
+	}
+
+	.status-approved {
+		background: var(--widget-background-green);
+		box-shadow: 0px 10px 20px 0px rgba(6,214,160,0.6);
+
+		&:hover {
+			background: var(--widget-background-green);
+		}
+	}
+
+	.status-waiting {
+		background: var(--widget-background-yellow);
+		box-shadow: 0px 10px 20px 0px rgba(255,209,102,0.6);
+
+		&:hover {
+			background: var(--widget-background-yellow);
+		}
+	}
+
+	.status-disapproved {
+		background: var(--widget-background-red);
+		box-shadow: 0px 10px 20px 0px rgba(239,77,111,0.6);
+
+		&:hover {
+			background: var(--widget-background-red);
+		}
+	}
+
+}
 
 /* === Numeric data === */
 
@@ -143,4 +275,122 @@
 
 .widget .num a.greyNum:active {
 	background-position: 0 -266px;
+}
+
+/* Tables
+================================================== */
+
+/* ===== Static table ===== */
+
+.sTable {
+	margin-top: 1rem;
+
+	tbody tr {
+		border-top: 1px solid var(--border-primary);
+		transition: all 0.3s ease-out;
+
+		&:nth-child(even) {
+			background-color: rgba(215, 215, 215, 0.1);
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			z-index: -1;
+			box-shadow: var(--widget-box-shadow);
+			transition: opacity 0.3s ease-in-out;
+		}
+
+		&:hover {
+			background: rgba(129, 163, 214, 0.383);
+
+			&::after {
+				opacity: 1;
+			}
+		}
+	}
+
+	td, th {
+		border-left: 1px solid var(--border-primary);
+		padding: 0.5rem 0.5rem;
+		vertical-align: middle;
+
+		&:first-child {
+			border-left: none;
+		}
+
+		textarea {
+			height: auto;
+		}
+	}
+
+}
+.withCheck tbody tr td:first-child, .withCheck tbody tr th:first-child {
+	padding: 11px;
+}
+
+.withCheck thead tr td:first-child {
+	vertical-align: middle;
+	width: 37px !important;
+	padding: 0;
+}
+
+
+/* ===== Notification messages ===== */
+
+.nNote {
+	
+}
+
+	.nNote strong {
+		//margin-right: 5px;
+	}
+
+	.nNote p {
+		//font-size: 11px;
+		//padding: 10px 25px 10px 54px;
+		//margin: 0px;
+		color: #565656;
+	}
+
+
+.nWarning {
+	background: #ffe9ad url(../images/icons/notifications/error.png) no-repeat 15px center;
+	border: 1px solid #eac572;
+	color: #826200;
+}
+
+.nSuccess {
+	//background: #effeb9 url(../images/icons/notifications/accept.png) no-repeat 15px center;
+	border: 1px solid #c1d779;
+	color: #3C5A01;
+}
+
+.nFailure {
+	background: #fccac1 url(../images/icons/notifications/exclamation.png) no-repeat 15px center;
+	border: 1px solid #e18b7c;
+	color: #AC260F;
+}
+
+.nInformation {
+	background: #deeefa url(../images/icons/notifications/information.png) no-repeat 15px center;
+	border: 1px solid #afd3f2;
+	color: #235685;
+}
+
+.nLightbulb {
+	background: #FEF0CB url(../images/icons/notifications/lightbulb.html) no-repeat 15px center;
+	border: 1px solid #D3A350;
+	color: #835F21;
+}
+
+.nMessages {
+	background: #9DDFFF url(../images/icons/notifications/email.html) no-repeat 15px center;
+	border: 1px solid #42B4FF;
+	color: #835F21;
 }

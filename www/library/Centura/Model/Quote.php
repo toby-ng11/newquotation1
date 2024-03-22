@@ -340,14 +340,14 @@ class Quote extends DbTable\Quote
 		return $db->fetchAll($select);
 	}
 
-	public function fetchQuoteJson($limit = 500)
+	public function fetchQuoteJson()
 	{
 		$db = $this->getAdapter();
 
 		$select = $db->select()->from('quote')->order('quote_id desc')->join('project', 'project.project_id = quote.project_id', 'project_name')
 			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))->where('project.deleted =?', 'N');
 
-		$select->limit($limit);
+		//$select->limit($limit);
 
 		return Zend_Json::encode($db->fetchAll($select));
 	}

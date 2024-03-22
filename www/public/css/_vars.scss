@@ -162,7 +162,7 @@ $mdn-theme-light-background-primary: $mdn-color-white;
 $mdn-theme-light-background-secondary: $mdn-color-neutral-light-70;
 $mdn-theme-light-background-tertiary: $mdn-color-white;
 $mdn-theme-light-background-toc-active: $mdn-color-neutral-light-90;
-$mdn-theme-light-border-primary: $mdn-color-neutral-20;
+$mdn-theme-light-border-primary: $mdn-color-neutral-10;
 $mdn-theme-light-border-secondary: $mdn-color-neutral-20;
 $mdn-theme-light-border-success: $mdn-color-light-theme-green-20;
 $mdn-theme-light-button-primary-default: $mdn-color-neutral-90;
@@ -209,7 +209,7 @@ $mdn-theme-dark-background-primary: $mdn-color-neutral-90;
 $mdn-theme-dark-background-secondary: $mdn-color-neutral-75;
 $mdn-theme-dark-background-tertiary: $mdn-color-neutral-90;
 $mdn-theme-dark-background-toc-active: $mdn-color-neutral-80;
-$mdn-theme-dark-border-primary: $mdn-color-neutral-50;
+$mdn-theme-dark-border-primary: $mdn-color-neutral-70;
 $mdn-theme-dark-border-secondary: $mdn-color-neutral-60;
 $mdn-theme-dark-border-success: $mdn-color-dark-theme-green-20;
 $mdn-theme-dark-button-primary-default: $mdn-color-white;
@@ -252,10 +252,3 @@ $screen-xxl: 1441px;
 // screen is to small for sticky placement
 $screen-height-place-limit: 44rem;
 
-$centura-theme-light-widget-background: $mdn-color-neutral-light-70;
-$centura-theme-light-widget-hover: $mdn-color-white;
-$centura-theme-light-widget-box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-
-$centura-theme-dark-widget-background: $mdn-color-neutral-90;
-$centura-theme-dark-widget-hover: $mdn-color-neutral-75;
-$centura-theme-dark-widget-box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);

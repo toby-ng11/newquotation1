@@ -1,24 +1,5 @@
 <?php $session = Zend_Registry::get('session'); ?>
 
-<!-- Left panel -->
-<div class="sidebar-container">
-    <div class="toc-container">
-        <aside class="toc">
-            <nav>
-                <div class="document-toc-container">
-                    <section class="document-toc">
-                        <header>
-                            <h2 class="document-toc-heading">On this page</h2>
-                        </header>
-                        <ul id="document-toc-list" class="document-toc-list"></ul>
-                    </section>
-                </div>
-            </nav>
-        </aside>
-        <section class="place side"></section>
-    </div>
-</div>
-
 <!-- Main page -->
 <main id="content" class="main-content">
     <div class="middleNav">
@@ -42,55 +23,33 @@
     </div>
     <div class="main-page-content">
         <header class="main-page-content-header">
-            <h1>Quote Approval</h1>
+            <h1>Welcome Back, <span style="font-weight: 300;"><?php echo $session->user['name'] ?></span></h1>
+            <p>Here's the quick summary of quotes</p>
         </header>
 
         <!-- Form -->
-            <h2>Quotes Waiting for Approval: <?= count($this->waiting) ?></h2>
-            <div class="widget-table">
-                <table width="100%" class="display nowrap" id='waiting'>
-                    <thead>
-                        <tr>
-                            <th>Quote ID</th>
-                            <th>Project Name</th>
-                            <th>Sales Rep.</th>
-                            <th>Contractor</th>
-                            <th>Arch. Sales Rep.</th>
-                            <th>Segment</th>
-                            <th>Date</td>
-                            <th>Ship Required Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-
-            <h2>Approved Quotes: <?= count($this->approved) ?></h2>
-            <div class="widget-table">
-                <table width="100%" class="display nowrap" id='approved'>
-                    <thead>
-                        <tr>
-                            <th>Quote ID</th>
-                            <th>Project Name</th>
-                            <th>Sales Rep.</th>
-                            <th>Contractor/Company</th>
-                            <th>Arch. Sale Rep.</th>
-                            <th>Segment</th>
-                            <th>Quote Date</th>
-                            <th>Expire Date</th>
-                            <th>Ship Required Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-
-        <h2>Disapproved Quotes: <?= count($this->disapproved) ?></h2>
         <div class="widget-table">
-            <table width="100%" class="display nowrap" id='disapproved'>
+            <table width="100%" class="display nowrap" id='waiting'>
                 <thead>
                     <tr>
-                        <th>Action</th>
+                        <th>Quote ID</th>
+                        <th>Project Name</th>
+                        <th>Sales Rep.</th>
+                        <th>Contractor</th>
+                        <th>Arch. Sales Rep.</th>
+                        <th>Segment</th>
+                        <th>Date</td>
+                        <th>Ship Required Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+        <div class="widget-table">
+            <table width="100%" class="display nowrap" id='approved'>
+                <thead>
+                    <tr>
                         <th>Quote ID</th>
                         <th>Project Name</th>
                         <th>Sales Rep.</th>
@@ -105,23 +64,47 @@
                 </thead>
             </table>
         </div>
+
+        <div class="widget-table">
+            <table width="100%" class="display nowrap" id='disapproved'>
+                <thead>
+                    <tr>
+                        <th>Quote ID</th>
+                        <th>Project Name</th>
+                        <th>Sales Rep.</th>
+                        <th>Contractor/Company</th>
+                        <th>Arch. Sale Rep.</th>
+                        <th>Segment</th>
+                        <th>Quote Date</th>
+                        <th>Expire Date</th>
+                        <th>Ship Required Date</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
     </div>
 </main>
 
-<!-- Right panel -->
-<div class="statsRow">
-    <div class="wrapper">
-        <div class="controlB">
-            <ul>
-                <!--<li><a href="/quote" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Quote</span></a></li>-->
-                <!-- <li><a href="#" title=""><img src="images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>
-                    <li><a href="#" title=""><img src="images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>
-                    <li><a href="#" title=""><img src="images/icons/control/32/save.png" alt="" /><span>Save Project</span></a></li>
-                    <li><a href="#" title=""><img src="images/icons/control/32/delete.png" alt="" /><span>Delete Project</span></a></li>-->
-            </ul>
-            <div class="clear"></div>
-        </div>
-    </div>
+<div class="sidebar-container">
+    <aside id="sidebar-quicklinks" class="sidebar">
+        <nav aria-label="Actions" class="sidebar-inner">
+            <div class="sidebar-inner-nav">
+                <div class="quick-links">
+                    <ol>
+                        <li><a href="/project/" target="_blank" class='quick-link add-project' title="Add new project">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12.75 11.25V5C12.75 4.80109 12.671 4.61032 12.5303 4.46967C12.3897 4.32902 12.1989 4.25 12 4.25C11.8011 4.25 11.6103 4.32902 11.4697 4.46967C11.329 4.61032 11.25 4.80109 11.25 5V11.25H5C4.80109 11.25 4.61032 11.329 4.46967 11.4697C4.32902 11.6103 4.25 11.8011 4.25 12C4.25 12.1989 4.32902 12.3897 4.46967 12.5303C4.61032 12.671 4.80109 12.75 5 12.75H11.25V19C11.2526 19.1981 11.3324 19.3874 11.4725 19.5275C11.6126 19.6676 11.8019 19.7474 12 19.75C12.1989 19.75 12.3897 19.671 12.5303 19.5303C12.671 19.3897 12.75 19.1989 12.75 19V12.75H19C19.1989 12.75 19.3897 12.671 19.5303 12.5303C19.671 12.3897 19.75 12.1989 19.75 12C19.7474 11.8019 19.6676 11.6126 19.5275 11.4725C19.3874 11.3324 19.1981 11.2526 19 11.25H12.75Z" />
+                                </svg>
+                                Add Project
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </nav>
+    </aside>
 </div>
 
 <script>
@@ -130,32 +113,60 @@
             url: "/index/approvalwaiting",
             dataSrc: ''
         },
-        columns: [
-            { data: "quote_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                $(cell).html("<a target='_blank' href='/approve/index/id/"+rowData.quote_id+"'>"+rowData.quote_id+"</a>");
-            }},
-            { data: "project_name"},
-            { data: "sale_name"},
-            { data: "customer"},
-            { data: "arch_name"},
-            { data: "quote_segment"},
-            { data: "quote_date.date"},
-            { data: "ship_required_date.date"},
-            { data: "status_name"}
+        columns: [{
+                data: "quote_id",
+                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    $(cell).html("<a target='_blank' href='/approve/index/id/" + rowData.quote_id + "'>" + rowData.quote_id + "</a>");
+                }
+            },
+            {
+                data: "project_name"
+            },
+            {
+                data: "sale_name"
+            },
+            {
+                data: "customer"
+            },
+            {
+                data: "arch_name"
+            },
+            {
+                data: "quote_segment"
+            },
+            {
+                data: "quote_date.date"
+            },
+            {
+                data: "ship_required_date.date"
+            },
+            {
+                data: "status_name"
+            }
         ],
         columnDefs: [{
             targets: [6, 7],
-            render: function (data) {
+            render: function(data) {
                 let DateTime = luxon.DateTime;
                 let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
                 return d;
-            }}
-        ],
+            }
+        }],
         processing: true,
         //serverSide: true,
-        order: [[0, "desc"]],
-        fixedColumns: { start: 1, end: 1},
-        scrollX: true
+        order: [
+            [0, "desc"]
+        ],
+        fixedColumns: {
+            start: 1,
+            end: 1
+        },
+        scrollX: true,
+        layout: { topStart: function() {
+            let info= document.createElement('div');
+            info.innerHTML = '<h2>Waiting for Approval</h2><p><?= count($this->waiting) ?> quotes waiting for approval</p>';
+            return info;
+        } }
     });
 
     $('#approved').DataTable({
@@ -163,36 +174,69 @@
             url: "/index/approvalapproved",
             dataSrc: ''
         },
-        columns: [
-            { data: "quote_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                $(cell).html("<a target='_blank' href='/approve/index/id/"+rowData.quote_id+"'>"+rowData.quote_id+"</a>");
-            }},
-            { data: "project_name"},
-            { data: "sale_name"},
-            { data: "customer"},
-            { data: "arch_name"},
-            { data: "quote_segment"},
-            { data: "quote_date.date"},
-            { data: "expire_date.date", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
-                let d = new Date(cellData);
-                let today = new Date(); 
-                if (d <= today) {$(cell).addClass("red");}
-            }},
-            { data: "ship_required_date.date"},
-            { data: "status_name"}
+        columns: [{
+                data: "quote_id",
+                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    $(cell).html("<a target='_blank' href='/approve/index/id/" + rowData.quote_id + "'>" + rowData.quote_id + "</a>");
+                }
+            },
+            {
+                data: "project_name"
+            },
+            {
+                data: "sale_name"
+            },
+            {
+                data: "customer"
+            },
+            {
+                data: "arch_name"
+            },
+            {
+                data: "quote_segment"
+            },
+            {
+                data: "quote_date.date"
+            },
+            {
+                data: "expire_date.date",
+                "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
+                    let d = new Date(cellData);
+                    let today = new Date();
+                    if (d <= today) {
+                        $(cell).addClass("red");
+                    }
+                }
+            },
+            {
+                data: "ship_required_date.date"
+            },
+            {
+                data: "status_name"
+            }
         ],
         columnDefs: [{
             targets: [6, 7, 8],
-            render: function (data) {
+            render: function(data) {
                 let DateTime = luxon.DateTime;
                 let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
                 return d;
-            }}
-        ],
+            }
+        }],
         processing: true,
-        order: [[0, "desc"]],
-        fixedColumns: { start: 1, end: 1},
-        scrollX: true
+        order: [
+            [0, "desc"]
+        ],
+        fixedColumns: {
+            start: 1,
+            end: 1
+        },
+        scrollX: true,
+        layout: { topStart: function() {
+            let info= document.createElement('div');
+            info.innerHTML = '<h2>Approved</h2><p><?= count($this->approved) ?> approved quotes';
+            return info;
+        } }
     });
 
     $('#disapproved').DataTable({
@@ -200,39 +244,74 @@
             url: "/index/approvaldisapproved",
             dataSrc: ''
         },
-        columns: [
-            { data: "quote_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                $(cell).html("<a target='_blank' href='/approve/index/id/"+rowData.quote_id+"'>"+rowData.quote_id+"</a>");
-            }},
-            { data: "quote_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                $(cell).html("<a target='_blank' href='/quote/edit/id/"+rowData.quote_id+"'>"+rowData.quote_id+"</a>");
-            }},
-            { data: "project_name"},
-            { data: "sale_name"},
-            { data: "customer"},
-            { data: "arch_name"},
-            { data: "quote_segment"},
-            { data: "quote_date.date"},
-            { data: "expire_date.date", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
-                let d = new Date(cellData);
-                let today = new Date(); 
-                if (d <= today) {$(cell).addClass("red");}
-            }},
-            { data: "ship_required_date.date"},
-            { data: "status_name"}
+        columns: [{
+                data: "quote_id",
+                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    $(cell).html("<a target='_blank' href='/approve/index/id/" + rowData.quote_id + "'>" + rowData.quote_id + "</a>");
+                }
+            },
+            {
+                data: "project_name"
+            },
+            {
+                data: "sale_name"
+            },
+            {
+                data: "customer"
+            },
+            {
+                data: "arch_name"
+            },
+            {
+                data: "quote_segment"
+            },
+            {
+                data: "quote_date.date"
+            },
+            {
+                data: "expire_date.date",
+                "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
+                    let d = new Date(cellData);
+                    let today = new Date();
+                    if (d <= today) {
+                        $(cell).addClass("red");
+                    }
+                }
+            },
+            {
+                data: "ship_required_date.date"
+            },
+            {
+                data: "status_name"
+            },
+            {
+                data: "quote_id",
+                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    $(cell).html("<a target='_blank' href='/quote/edit/id/" + rowData.quote_id + "'><span class='button-wrap'><span class='icon icon-edit'></span></span></a>");
+                }
+            }
         ],
         columnDefs: [{
-            targets: [7, 8, 9],
-            render: function (data) {
+            targets: [6, 7, 8],
+            render: function(data) {
                 let DateTime = luxon.DateTime;
                 let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
                 return d;
-            }}
-        ],
+            }
+        }],
         processing: true,
-        order: [[0, "desc"]],
-        fixedColumns: { start: 1, end: 1},
-        scrollX: true
+        order: [
+            [0, "desc"]
+        ],
+        fixedColumns: {
+            start: 1,
+            end: 2
+        },
+        scrollX: true,
+        layout: { topStart: function() {
+            let info= document.createElement('div');
+            info.innerHTML = '<h2>Disapproved</h2><p><?= count($this->disapproved) ?> disapproved quotes';
+            return info;
+        } }
     });
-
 </script>

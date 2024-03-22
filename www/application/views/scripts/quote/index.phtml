@@ -3,25 +3,6 @@ $session =  Zend_Registry::get('session');
 $project = $this->project;
 ?>
 
-<!-- Left panel -->
-<div class="sidebar-container">
-	<div class="toc-container">
-		<aside class="toc">
-			<nav>
-				<div class="document-toc-container">
-					<section class="document-toc">
-						<header>
-							<h2 class="document-toc-heading">On this page</h2>
-						</header>
-						<ul id="document-toc-list" class="document-toc-list"></ul>
-					</section>
-				</div>
-			</nav>
-		</aside>
-		<section class="place side"></section>
-	</div>
-</div>
-
 <!-- Title area -->
 <main id="content" class="main-content">
 	<div class="middleNav">
@@ -293,8 +274,6 @@ $project = $this->project;
 </div>
 
 <script type="text/javascript">
-	const items = ["Project information", "Customer information", "Quote information", "Items", "Comment"];
-	createTocList(items);
 
 	function resetForm($form) {
 		$form.find('input:text, input:password, input:file, select, textarea').val('');

@@ -51,6 +51,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     	protected function _initSession()
     	{
     		//$this->bootstrap('session');
+			//Zend_Session::start();
     		$session = new Zend_Session_Namespace('centura');
     		Zend_Registry::set('session', $session);
     	}

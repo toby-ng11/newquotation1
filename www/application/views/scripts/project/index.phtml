@@ -1,31 +1,5 @@
 <?php $session =  Zend_Registry::get('session'); ?>
 
-<!-- Left panel -->
-<div class="sidebar-container">
-  <div class="toc-container">
-    <aside class="toc">
-      <nav>
-        <div class="document-toc-container">
-          <section class="document-toc">
-            <header>
-              <h2 class="document-toc-heading">On this page</h2>
-            </header>
-            <ul id="document-toc-list" class="document-toc-list">
-              <!--<li class="document-toc-item">
-                            <a class="document-toc-link" href="#all_quotes">All quotes</a>
-                        </li>
-                        <li class="document-toc-item">
-                            <a class="document-toc-link" href="#all_projects">All projects</a>
-                        </li>-->
-            </ul>
-          </section>
-        </div>
-      </nav>
-    </aside>
-    <section class="place side"></section>
-  </div>
-</div>
-
 <!-- Title area -->
 <main id="content" class="main-content">
 
@@ -224,8 +198,6 @@
 
 
 <script>
-  const items = ["Project Information"];
-  createTocList(items);
 
   function getcustomerbyid(id, obj) {
     $('.loading').show();

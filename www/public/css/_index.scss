@@ -197,7 +197,11 @@ body {
 	//background-color: var(--background-primary);
     //background: rgb(34,195,194);
     background: var(--background-primary);
+	//background-image: var(--background-img);
 	scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
+}
+
+body:not(textarea) {
 	transition: all 0.3s ease-in-out;
 }
 
@@ -2267,66 +2271,6 @@ html ul.tabs li.activeTab a {
 
 
 
-/* ===== Notification messages ===== */
-
-.nNote {
-	cursor: pointer;
-	margin: 32px 0px 0px 0px;
-	box-shadow: inset 0 0 1px #fff;
-}
-
-	.nNote strong {
-		margin-right: 5px;
-	}
-
-	.nNote p {
-		font-size: 11px;
-		padding: 10px 25px 10px 54px;
-		margin: 0px;
-		color: #565656;
-	}
-
-.nMessage p {
-	font-size: 11px;
-}
-
-.nWarning {
-	background: #ffe9ad url(../images/icons/notifications/error.png) no-repeat 15px center;
-	border: 1px solid #eac572;
-	color: #826200;
-}
-
-.nSuccess {
-	background: #effeb9 url(../images/icons/notifications/accept.png) no-repeat 15px center;
-	border: 1px solid #c1d779;
-	color: #3C5A01;
-}
-
-.nFailure {
-	background: #fccac1 url(../images/icons/notifications/exclamation.png) no-repeat 15px center;
-	border: 1px solid #e18b7c;
-	color: #AC260F;
-}
-
-.nInformation {
-	background: #deeefa url(../images/icons/notifications/information.png) no-repeat 15px center;
-	border: 1px solid #afd3f2;
-	color: #235685;
-}
-
-.nLightbulb {
-	background: #FEF0CB url(../images/icons/notifications/lightbulb.html) no-repeat 15px center;
-	border: 1px solid #D3A350;
-	color: #835F21;
-}
-
-.nMessages {
-	background: #9DDFFF url(../images/icons/notifications/email.html) no-repeat 15px center;
-	border: 1px solid #42B4FF;
-	color: #835F21;
-}
-
-
 
 /* Progress bars
 ================================================== */
@@ -2410,115 +2354,6 @@ html ul.tabs li.activeTab a {
 	background: url(../images/ui/blueMediumBar.png) repeat-x;
 	border: 1px solid #70a9d4;
 }
-
-
-
-
-
-/* Tables
-================================================== */
-
-/* ===== Static table ===== */
-
-.sTable thead td {
-	text-align: center;
-}
-
-.sTable thead td {
-	border-bottom: 1px solid #cbcbcb;
-	border-left: 1px solid #cbcbcb;
-	background: #efefef url(../images/backgrounds/titleBg.png) repeat-x;
-	color: #878787;
-	font-size: 11px;
-	color: #878787;
-	font-weight: normal;
-	padding: 3px 8px 2px 8px;
-}
-
-
-.sTable thead td a {
-	color: #878787;
-}
-
-.sTable thead td:first-child {
-	border-left: none;
-}
-
-.mTable tfoot tr {
-	height: 50px;
-	background: #efefef url(../images/backgrounds/titleBg.png) repeat-x;
-	border-top: 1px solid #ddd;
-}
-
-.fileInfo {
-	font-size: 11px;
-	text-align: center;
-}
-
-	.fileInfo span {
-		display: block;
-	}
-
-.itemActions {
-	float: left;
-	margin: 12px;
-}
-
-	.itemActions label {
-		float: left;
-		margin: 4px 12px 0 4px;
-		font-size: 11px;
-	}
-
-	.itemActions .selector, .itemActions .selector span {
-		width: 120px;
-	}
-
-		.itemActions .selector select {
-			width: 130px;
-		}
-
-
-.sTable .checker {
-	margin: 0 auto;
-	float: none;
-}
-
-.sTable tbody tr {
-	border-top: 1px solid #e4e4e4;
-}
-
-	.sTable tbody tr:nth-child(even) {
-		background-color: #f6f6f6;
-	}
-
-.sTable tbody td {
-	border-left: 1px solid #e4e4e4;
-	padding: 8px 12px;
-	vertical-align: middle;
-}
-
-	.sTable tbody td:first-child {
-		border-left: none;
-	}
-
-.sTable tbody tr:first-child {
-	border-top: none;
-}
-
-.withCheck tbody tr td:first-child, .withCheck tbody tr th:first-child {
-	padding: 11px;
-}
-
-.withCheck thead tr td:first-child {
-	vertical-align: middle;
-	width: 37px !important;
-	padding: 0;
-}
-
-
-
-
 
 /* Pagination
 ================================================== */
@@ -4496,57 +4331,6 @@ td.action span {
 	color: #C75510
 }
 
-
-h1, h2, h3 {
-	letter-spacing: var(--heading-letter-spacing);
-}
-
-h1 {
-	font: var(--type-heading-h1);
-	margin-bottom: 2rem;
-	word-break: break-word;
-}
-
-h2 {
-	font: var(--type-heading-h2);
-	margin: 4rem 0 0.5rem;
-}
-
-h3 {
-	font: var(--type-heading-h3);
-    margin: 2rem 0 0.5rem;
-}
-
-/* When an h3 immediately follows an h2 we want to use
- * a smaller top margin. We also make accommodation
-  for situations where there is an empty div
-  between the two elements */
-h2 ~ div ~ h3,
-h2 ~ h3 {
-    margin-top: 1rem;
-}
-
-h4 {
-	font: var(--type-heading-h4);
-    letter-spacing: 0.5px;
-    margin: 2rem 0 1rem;
-}
-
-h5 {
-	font: var(--type-heading-h5);
-    letter-spacing: 1.5px;
-    margin: 2rem 0 1rem;
-    text-transform: uppercase;
-
-}
-
-h6 {
-	font: var(--type-heading-h6);
-    letter-spacing: 1.5px;
-    margin: 2rem 0 1rem;
-    text-transform: uppercase;
-
-}
 
 /* Media queries */
 @media screen and (min-width: 769px) {

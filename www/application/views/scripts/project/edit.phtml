@@ -2,25 +2,6 @@
 $session =  Zend_Registry::get('session');
 $project = $this->project; ?>
 
-<!-- Left panel -->
-<div class="sidebar-container">
-	<div class="toc-container">
-		<aside class="toc">
-			<nav>
-				<div class="document-toc-container">
-					<section class="document-toc">
-						<header>
-							<h2 class="document-toc-heading">On this page</h2>
-						</header>
-						<ul id="document-toc-list" class="document-toc-list"></ul>
-					</section>
-				</div>
-			</nav>
-		</aside>
-		<section class="place side"></section>
-	</div>
-</div>
-
 <!-- Main content wrapper -->
 <main id="content" class="main-content">
 	<div class="middleNav">
@@ -45,18 +26,14 @@ $project = $this->project; ?>
 
 	<div class="main-page-content">
 		<header class="main-page-content-header">
-			<h1>Project To Quote WorkSheet</h1>
+			<h1>Edit Project</h1>
 		</header>
-
-		<div class="section-content">
-			<p>Track project data and events critical to close of sale.</p>
-		</div>
 
 		<!-- Form -->
 		<section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
-			<h2>Project Information</h2>
 			<form method="post" class="form" id='project_content'>
 				<div class="widget-table">
+					<h2>Project Information</h2>
 					<input type="hidden" id='project_id' value='<?= $project['project_id'] ?>'>
 					<div class="formRow">
 						<div class="oneTwo required-field">
@@ -193,19 +170,19 @@ $project = $this->project; ?>
 		</section>
 
 		<section aria-labelledby="quoted-items" id="section2" data-nav="Quoted Items">
-			<h2>Quoted Items</h2>
 			<form method="post" class="form" id='project_log'>
 				<div class="widget-table">
-					<div class="title">
+				<div class="widget-button">
 						<?php if ($this->owner == 1) { ?>
-							<a href="#" title="" class="button greenB" style="margin: 5px;" id="add_item">
-								<span>Add New</span>
+							<a href="#" title="" class="button quick-link" style="margin: 5px;" id="add_item">
+								Add Item
 							</a>
 							<a href="#" title="" class="button redB" style="margin: 5px;display:none" id="save_item">
 								<span>Save</span>
 							</a>
 						<?php } ?>
 					</div>
+					<h2>Quoted Items</h2>
 					<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
 						<thead>
 							<tr>
@@ -215,15 +192,17 @@ $project = $this->project; ?>
 								<th>Unit Price</th>
 								<th>Unit Of Measure</th>
 								<th>Price Quoted</th>
-								<th>Action</th>
+								<th>Options</th>
 							</tr>
 						</thead>
 						<tbody id="item_body">
 							<?php foreach ($this->items as $i) { ?>
 								<tr name="item[<?= $i['product_id'] ?>]">
 									<td><input type="checkbox" name="item[<?= $i['product_id'] ?>]"></td>
-									<td><?= $i['product_id'] ?> - <?= $i['item_desc'] ?>
-										<textarea readonly name="item[<?= $i['product_id'] ?>][note]"><?= $i['note'] ?></textarea>
+									<td><b><?= $i['product_id'] ?> - <?= $i['item_desc'] ?></b>
+										<?php if ($i['note'] != null) { ?>
+											<textarea rows="1" name="item[<?= $i['product_id'] ?>][note]"><?= $i['note'] ?></textarea>
+										<?php } ?>
 									</td>
 									<td><?= $i['qty'] ?></td>
 									<td><?= $i['unit_price'] ?></td>
@@ -233,16 +212,16 @@ $project = $this->project; ?>
 									<input type="hidden" name="item[<?= $i['product_id'] ?>][uom]" value="<?= $i['uom'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][total_price]" value="<?= $i['subtotal'] ?>">
 									<td>
 										<div class="row-button">
-										<a class="edit" href="#">
-											<span class='button-wrap'>
-												<span class='icon icon-edit'></span>
-											</span>
-										</a>
-										<a class="item_delete" href="#" index='<?= $i['product_id'] ?>'>
-											<span class='button-wrap'>
-												<span class='icon icon-delete'></span>
-											</span>
-										</a>
+											<a class="edit" href="#">
+												<span class='button-wrap'>
+													<span class='icon icon-edit'></span>
+												</span>
+											</a>
+											<a class="item_delete" href="#" index='<?= $i['product_id'] ?>'>
+												<span class='button-wrap'>
+													<span class='icon icon-delete'></span>
+												</span>
+											</a>
 										</div>
 									</td>
 
@@ -255,8 +234,8 @@ $project = $this->project; ?>
 		</section>
 
 		<section aria-labelledby="project-log" id="section3" data-nav="Project Log">
-			<h2>Project Log</h2>
 			<div class="widget-table">
+				<h2>Project Log</h2>
 				<div class="title">
 					<?php if ($this->owner == 1) { ?>
 						<a href="#" title="" class="button greenB" style="margin: 5px;" id="opener">
@@ -380,9 +359,6 @@ $project = $this->project; ?>
 
 
 <script type="text/javascript">
-	const items = ["Project Information", "Quoted Items", "Project Log"];
-	createTocList(items);
-
 	$("textarea").each(function() {
 		this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
 	}).on("input", function() {
@@ -457,7 +433,7 @@ $project = $this->project; ?>
 				url: '/customer/fetchbyid/id/' + id,
 				type: "get",
 				success: function(data) {
-					var result = jQuery.parseJSON(data);
+					var result = JSON.parse(data);
 					if (result != null) {
 						$(obj).val(result.name);
 						$('input[name=' + $(obj).attr('id') + ']').val(result.customer_id);
@@ -526,7 +502,7 @@ $project = $this->project; ?>
 				url: '/sales/fetchbylocation/loc/' + $(this).val(),
 				type: "get",
 				success: function(data) {
-					var result = jQuery.parseJSON(data);
+					var result = JSON.parse(data);
 					var list = '<option >Select Architect / Owner</option>';
 					$.each(result, function(i, item) {
 						list = list + '<option value="' + item.id + '">' + item.name + ' - ' + item.default_company + '</option>';
@@ -543,7 +519,7 @@ $project = $this->project; ?>
 				url: '/sales/fetchspecbylocation/loc/' + $(this).val(),
 				type: "get",
 				success: function(data) {
-					var result = jQuery.parseJSON(data);
+					var result = JSON.parse(data);
 					var list = '<option >Choose Specifiler</option>';
 					if (result.length == 0) {
 						$('#specifiler').html(list);
@@ -726,7 +702,7 @@ $project = $this->project; ?>
 			$("#dialog-item").dialog("option", "title", "Edit Item");
 			$('#is_edit').val(1);
 			var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
-			var item_name = jQuery.trim($(row).find('td').eq(1).clone().children().remove().end().text()).replace(item_id + ' - ', '');
+			var item_name = ($(row).find('td').eq(1).clone().children().remove().end().text()).trim().replace(item_id + ' - ', '');
 			var note = $(row).find('textarea').eq(0).val();
 			var qty = $(row).find(':input:hidden').eq(0).val();
 			var unit_price = $(row).find(':input:hidden').eq(1).val();
@@ -750,7 +726,7 @@ $project = $this->project; ?>
 				url: '/item/uom/id/' + $("#item_id ").val(),
 				type: "get",
 				success: function(data) {
-					var uom = jQuery.parseJSON(data);
+					var uom = JSON.parse(data);
 					var list = '';
 					$.each(uom, function(i, item) {
 						list = list + '<option value="' + item.uom + '">' + item.uom + '</option>';
@@ -854,7 +830,7 @@ $project = $this->project; ?>
 				url: '/item/uom/id/' + $("#item_id ").val(),
 				type: "get",
 				success: function(data) {
-					var uom = jQuery.parseJSON(data);
+					var uom = JSON.parse(data);
 					var list = '';
 					$.each(uom, function(i, item) {
 						list = list + '<option value="' + item.uom + '">' + item.uom + '</option>';
@@ -875,7 +851,7 @@ $project = $this->project; ?>
 				url: '/item/price/id/' + $("#item_id ").val() + '/uom/' + $("#uom ").val(),
 				type: "get",
 				success: function(data) {
-					var price = jQuery.parseJSON(data);
+					var price = JSON.parse(data);
 					$('#price').val(price.price);
 					$('.loading').hide();
 				}
@@ -885,12 +861,27 @@ $project = $this->project; ?>
 
 		function additem(item_id, item_desc, uom, price, qty, note) {
 			var total_price = (price * qty).toFixed(2);
-			var str = '<tr name="item[' + item_id + ']">' + '<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' + '<td>' + item_id + '<br/>' + item_desc + '<br/><textarea rows="1" cols="" name="item[' + item_id + '][note]" readonly>' + note + '</textarea></td>' + '<td>' + qty + '</td>' + '<td>' + price + '</td>' + '<td>' + uom + '</td>' + '<td>' + total_price + '</td>' +
+			var str = '<tr name="item[' + item_id + ']">' + 
+				'<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' + 
+				'<td><b>' + item_id + '-' + item_desc + '</b><textarea rows="1" cols="" name="item[' + item_id + '][note]" readonly>' + note + '</textarea></td>' + 
+				'<td>' + qty + '</td>' + 
+				'<td>' + price + '</td>' + 
+				'<td>' + uom + '</td>' + 
+				'<td>' + total_price + '</td>' +
 				'<input type="hidden" name="item[' + item_id + '][qty]" value="' + qty + '"/>' +
 				'<input type="hidden" name="item[' + item_id + '][unit_price]" value="' + price + '"/>' +
 				'<input type="hidden" name="item[' + item_id + '][uom]" value="' + uom + '"/>' +
 				'<input type="hidden" name="item[' + item_id + '][total_price]" value="' + total_price + '"/>' +
-				'<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="item_delete" href="#" index="' + item_id + '"><img src="/images/icons/dark/close.png" alt="delete"></a>';
+				'<td><div class="row-button">' + 
+					'<a class="edit" href="#">' +
+					'<span class="button-wrap">' +
+					'<span class="icon icon-edit"></span>' +
+					'</span>' +
+					'</a>' +
+					'<a class="item_delete" href="#" index="' + item_id + '">' +
+					'<span class="button-wrap">' +
+					'<span class="icon icon-delete"></span>' +
+					'</span></a></div>';
 			saveitem();
 			$('#item_body').append(str);
 		}

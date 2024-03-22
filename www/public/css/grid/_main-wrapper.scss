@@ -42,8 +42,8 @@
         padding-right: 2rem;
     }
     .main-wrapper .main-content, .main-wrapper .sidebar, .main-wrapper .toc {
-		padding-top: 2rem;
-		padding-bottom: 2rem;
+		padding-top: 4rem;
+		padding-bottom: 4rem;
 	}
 
     .main-wrapper .sidebar {
@@ -60,8 +60,8 @@
         display: grid;
         gap: 2rem;
         grid-template-areas:
-            "toc main sidebar";
-        grid-template-columns: minmax(0,0.4fr) minmax(0,2.5fr) minmax(0,9rem);
+            "main sidebar";
+        grid-template-columns: minmax(0,2.5fr) minmax(0,9rem);
         padding-left: 1rem;
         padding-right: 1rem;
     }

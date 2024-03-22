@@ -1,31 +1,7 @@
 <?php $session = Zend_Registry::get('session');
 //$b = $this->ownproject;
 ?>
-<!-- Left panel -->
-<div class="sidebar-container">
-    <div class="toc-container">
-        <aside class="toc">
-            <nav>
-                <div class="document-toc-container">
-                    <section class="document-toc">
-                        <header>
-                            <h2 class="document-toc-heading">On this page</h2>
-                        </header>
-                        <ul id="document-toc-list" class="document-toc-list">
-                            <!--<li class="document-toc-item">
-                            <a class="document-toc-link" href="#all_quotes">All quotes</a>
-                        </li>
-                        <li class="document-toc-item">
-                            <a class="document-toc-link" href="#all_projects">All projects</a>
-                        </li>-->
-                        </ul>
-                    </section>
-                </div>
-            </nav>
-        </aside>
-        <section class="place side"></section>
-    </div>
-</div>
+
 <!-- Title area -->
 <main id="content" class="main-content">
 
@@ -51,35 +27,13 @@
 
     <div class="main-page-content">
         <header class="main-page-content-header">
-            <h1>All Quotes and Projects</h1>
+        <h1>Welcome Back, <span style="font-weight: 300;"><?php echo $session->user['name'] ?></span></h1>
+            <p>Here's all projects and quotes</p>
         </header>
-        <div class="section-content">
-            <p>IT Administrator landing page.</p>
-        </div>
 
         <!-- Form -->
-        <section aria-labelledby="all_quotes" id="section1" data-nav="All Quotes" class="active">
+        <section aria-labelledby="all_projects" id="section1" data-nav="All Projects">
             <div class="widget-table">
-            <h1>All quotes</h1>
-                <table width="100%" class="display nowrap" id='quote_table'>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Project Name</th>
-                            <th>Segment</th>
-                            <th>Quote Date</th>
-                            <th>Expire Date</th>
-                            <th>Ship Required Date</th>
-                            <th>Project Status</th>
-                            <th>Approval Status</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </section>
-        <section aria-labelledby="all_projects" id="section2" data-nav="All Projects">
-            <div class="widget-table">
-            <h1>All projects</h1>
                 <table width="100%" class="display nowrap" id="project_table">
                     <thead>
                         <tr>
@@ -99,29 +53,24 @@
             </div>
         </section>
 
-
-
-        <!--<div class="line"></div>-->
-
-
-
-        <!--
-      <div class="statsRow">
-        <div class="wrapper">
-        	<div class="controlB">
-            	<ul>
-                	<!--<li><a href="/quote" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Quote</span></a></li>-->
-        <!-- <li><a href="#" title=""><img src="images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>
-                    <li><a href="#" title=""><img src="images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>
-                    <li><a href="#" title=""><img src="images/icons/control/32/save.png" alt="" /><span>Save Project</span></a></li>
-                    <li><a href="#" title=""><img src="images/icons/control/32/delete.png" alt="" /><span>Delete Project</span></a></li>
-                </ul>
-                <div class="clear"></div>
+        <section aria-labelledby="all_quotes" id="section2" data-nav="All Quotes" class="active">
+            <div class="widget-table">
+                <table width="100%" class="display nowrap" id='quote_table'>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Project Name</th>
+                            <th>Segment</th>
+                            <th>Quote Date</th>
+                            <th>Expire Date</th>
+                            <th>Ship Required Date</th>
+                            <th>Project Status</th>
+                            <th>Approval Status</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
-        </div>
-
-    </div>
-    -->
+        </section>
     </div>
 </main>
 
@@ -189,12 +138,10 @@
 </div>
 
 <script type="text/javascript">
-    const items = ["All Quotes", "All Projects"];
-    createTocList(items);
 
     let sessionUser = "<?php echo $session->user['id']?>";
 
-    oTable = $('#project_table,#asso_table').DataTable({
+    $('#project_table').DataTable({
         ajax: {
             url: "/index/project",
             dataSrc: ''
@@ -233,7 +180,12 @@
         //"responsive": true,
         order: [[0, "desc"]],
         fixedColumns: { start: 1, end: 2},
-        scrollX: true
+        scrollX: true,
+        layout: { topStart: function() {
+            let info= document.createElement('div');
+            info.innerHTML = '<h2>All projects</h2><p><?= count($this->projects) ?> projects';
+            return info;
+        } }
     });
 
     $('#quote_table').dataTable({
@@ -279,6 +231,11 @@
             "start": 1,
             "end": 1
         },
-        "scrollX": true
+        "scrollX": true,
+        layout: { topStart: function() {
+            let info= document.createElement('div');
+            info.innerHTML = '<h2>All quotes</h2><p><?= count($this->ownproject) ?> quotes';
+            return info;
+        } }
     });
 </script>
