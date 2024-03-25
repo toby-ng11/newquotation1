@@ -205,7 +205,7 @@
       url: '/customer/fetchbyid/id/' + id,
       type: "get",
       success: function(data) {
-        var result = jQuery.parseJSON(data);
+        var result = JSON.parse(data);
         if (result != null) {
           $(obj).val(result.name);
           $('input[name=' + $(obj).attr('id') + ']').val(result.customer_id);

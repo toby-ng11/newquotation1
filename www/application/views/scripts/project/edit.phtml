@@ -57,7 +57,7 @@ $project = $this->project; ?>
 						</div>
 
 						<div class="oneTwo">
-							<label for="quote_no">Project#</label>
+							<label for="quote_no">Project ID</label>
 							<input id="quote_no" type="text" placeholder="123456" name='quote_no' value="<?= $project['quote_no'] ?>" readonly />
 							<input name='create_date' type="hidden" value='<?= $project['create_date']->format('Y-m-d') ?>' />
 						</div>
@@ -93,7 +93,7 @@ $project = $this->project; ?>
 						</div>
 
 						<div class="oneTwo required-field">
-							<label for='architect_name'>Project Architect/Owner</label>
+							<label for='architect_name'>Project Architect / Owner</label>
 							<input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" value='<?= $this->arch_name ?>' />
 							<input type="hidden" name='architect' id='architect' value="<?= $project['architect'] ?>">
 						</div>
@@ -124,12 +124,12 @@ $project = $this->project; ?>
 
 						<div class="oneTwo">
 							<label for="due_date">Tender Due Date</label>
-							<input id="due_date" type="text" name='due_date' class="datepicker" value='<?= $project['due_date']->format('Y-m-d') ?>' />
+							<input id="due_date" type="text" name='due_date' class="datepicker" value='<?= $project['due_date']->format('m/d/Y') ?>' />
 						</div>
 
 						<div class="oneTwo">
 							<label for='required_date'>Material Required Date</label>
-							<input id='required_date' type="text" name='required_date' class="datepicker" value='<?= $project['required_date']->format('Y-m-d') ?>' />
+							<input id='required_date' type="text" name='required_date' class="datepicker" value='<?= $project['required_date']->format('m/d/Y') ?>' />
 						</div>
 
 						<div class="oneTwo">
@@ -172,14 +172,26 @@ $project = $this->project; ?>
 		<section aria-labelledby="quoted-items" id="section2" data-nav="Quoted Items">
 			<form method="post" class="form" id='project_log'>
 				<div class="widget-table">
-				<div class="widget-button">
+					<div class="widget-button">
 						<?php if ($this->owner == 1) { ?>
-							<a href="#" title="" class="button quick-link" style="margin: 5px;" id="add_item">
-								Add Item
-							</a>
-							<a href="#" title="" class="button redB" style="margin: 5px;display:none" id="save_item">
-								<span>Save</span>
-							</a>
+							<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="add_item">
+								<span class="button-wrap">
+									<span class="icon icon-add"></span>
+									Add Item
+								</span>
+							</button>
+							<!--<button type="submit" title="Save new items" class="button action has-icon small" id="save_item" disabled>
+								<span class="button-wrap">
+									<span class="icon icon-save"></span>
+									Save
+								</span>
+							</button>
+							<button type="submit" title="Delete items" class="button action has-icon small" id="delete-multiple-item" disabled>
+								<span class="button-wrap">
+									<span class="icon icon-trash"></span>
+									Delete item
+								</span>
+							</button>-->
 						<?php } ?>
 					</div>
 					<h2>Quoted Items</h2>
@@ -212,19 +224,18 @@ $project = $this->project; ?>
 									<input type="hidden" name="item[<?= $i['product_id'] ?>][uom]" value="<?= $i['uom'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][total_price]" value="<?= $i['subtotal'] ?>">
 									<td>
 										<div class="row-button">
-											<a class="edit" href="#">
+											<a class="button action edit" href="#">
 												<span class='button-wrap'>
 													<span class='icon icon-edit'></span>
 												</span>
 											</a>
-											<a class="item_delete" href="#" index='<?= $i['product_id'] ?>'>
+											<a class="button action item_delete" href="#" index='<?= $i['product_id'] ?>'>
 												<span class='button-wrap'>
 													<span class='icon icon-delete'></span>
 												</span>
 											</a>
 										</div>
 									</td>
-
 								</tr>
 							<?php } ?>
 						</tbody>
@@ -235,14 +246,17 @@ $project = $this->project; ?>
 
 		<section aria-labelledby="project-log" id="section3" data-nav="Project Log">
 			<div class="widget-table">
-				<h2>Project Log</h2>
-				<div class="title">
+				<div class="widget-button">
 					<?php if ($this->owner == 1) { ?>
-						<a href="#" title="" class="button greenB" style="margin: 5px;" id="opener">
-							<span>Add Action</span>
-						</a>
+						<button type="button" title="Add new log" class="button action has-icon add-log-button small" id="opener">
+							<span class="button-wrap">
+								<span class="icon icon-add"></span>
+								Add log
+							</span>
+						</button>
 					<?php } ?>
 				</div>
+				<h2>Project Log</h2>
 				<table cellpadding="0" cellspacing="0" width="100%" class="display no-wrap" id='project_memo'>
 					<thead>
 						<tr>
@@ -260,17 +274,17 @@ $project = $this->project; ?>
 		<div id="dialog-message" title="Add Log">
 			<form action="" class="dialog" id='memo'>
 				<div class="dialog-form">
-					<div class="oneTwo required-field">
+					<div class="oneTwo required-field dialog-note">
 						<label for="title">Enter Action Items Completed</label>
-						<input type="text" name='title' id='title' class="validate[required]">
+						<textarea rows="1" name='title' id='title' class="validate[required]" placeholder="Project log"></textarea>
 					</div>
 
-					<div class="oneTwo required-field">
+					<div class="oneTwo required-field dialog-note">
 						<label for="type">Enter Next Action Required</label>
-						<input type="text" name="type" id='type' class="validate[required]" value='' placeholder="Critical Updates Note">
+						<textarea rows="1" name="type" id='type' class="validate[required]" placeholder="Critical updates note"></textarea>
 					</div>
 
-					<div class="oneTwo">
+					<div class="oneTwo dialog-note">
 						<label for='follow_up_date'>Follow Up Date</label>
 						<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker" value='<?= $project['due_date']->format('Y-m-d') ?>' />
 					</div>
@@ -282,9 +296,9 @@ $project = $this->project; ?>
 			<form action="" class="dialog" id='item'>
 				<div class="dialog-form">
 					<div class="oneTwo required-field">
-						<label for="item_input">Item ID </label>
-						<input type="text" name="item" id='item_input' class="validate[required]" />
-						<input type="hidden" id="item_id" name='item_id' />
+						<label for="item_id">Item ID</label>
+						<input type="hidden" name="item" id='item_input' />
+						<input type="text" id="item_id" name='item_id' class="validate[required]" />
 					</div>
 
 					<div class="oneTwo required-field">
@@ -366,7 +380,7 @@ $project = $this->project; ?>
 		this.style.height = (this.scrollHeight) + "px";
 	});
 
-	$('#project_memo').DataTable({
+	let memoTable = $('#project_memo').DataTable({
 		ajax: {
 			url: "/project/memo/id/" + $('#project_id').val(),
 			dataSrc: ''
@@ -388,7 +402,7 @@ $project = $this->project; ?>
 				data: "memo_id",
 				createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
 					<?php if ($this->owner == 1) { ?>
-						$(cell).html("<a target='_blank' href='/memo/delete/id/" + rowData.memo_id + "'><span class='button-wrap'><span class='icon icon-delete'></span></span></a>");
+						$(cell).html("<a class='memo_delete' target='_blank' href='/memo/delete/id/" + rowData.memo_id + "'><span class='button-wrap'><span class='icon icon-delete'></span></span></a>");
 					<?php } else { ?>
 						$(cell).html("null");
 					<?php } ?>
@@ -426,6 +440,7 @@ $project = $this->project; ?>
 	}
 	var item_dirty = 0;
 	var current_edit_row = '';
+
 	$(function() {
 		function getcustomerbyid(id, obj) {
 			$('.loading').show();
@@ -471,6 +486,7 @@ $project = $this->project; ?>
 				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
 				.appendTo(ul);
 		};
+
 		$("#gerneral_contractor").autocomplete({
 			source: function(request, response) {
 				$.ajax({
@@ -496,6 +512,7 @@ $project = $this->project; ?>
 				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
 				.appendTo(ul);
 		};
+
 		$('#architect_loc').on("change", function() {
 			$('.loading').show();
 			$.ajax({
@@ -513,6 +530,7 @@ $project = $this->project; ?>
 			});
 			$('.loading').show();
 		});
+
 		$('#specifiler_loc').on("change", function() {
 			$('.loading').show();
 			$.ajax({
@@ -533,6 +551,7 @@ $project = $this->project; ?>
 				}
 			});
 		});
+
 		$("#architect_name").autocomplete({
 			source: function(request, response) {
 				$('#architect').val('');
@@ -595,15 +614,14 @@ $project = $this->project; ?>
 			if ($("#project_content").validationEngine('validate') == true) {
 				if ($('#status').val() != 13) {
 					$('.loading').show();
-					$('#project_content').submit();
+					$('#project_content').trigger("submit");
 				} else {
 					if (confirm("You are trying to close a project. Please add the reason to the log.") == true) {
 						$('.loading').show();
-						$('#project_content').submit();
+						$('#project_content').trigger("submit");
 					}
 				}
 			}
-
 		});
 
 		$('.delete_pro').on("click", function() {
@@ -621,11 +639,25 @@ $project = $this->project; ?>
 			}
 		});
 
-
 		$("#dialog-message").dialog({
 			autoOpen: false,
 			modal: true,
-			minWidth: 600,
+			minWidth: 800,
+			width: 800,
+			//minHeight: 600,
+			open: function() { // fade in background
+				$('.ui-widget-overlay').hide().fadeIn();
+			},
+			beforeClose: function() { //fade out background
+				$('.ui-widget-overlay:first')
+					.clone()
+					.appendTo('body')
+					.show()
+					.fadeOut(400, function() {
+						$(this).remove();
+					});
+			},
+			dialogClass: 'add-item-dialog',
 			buttons: [{
 					id: "btn-add",
 					text: "Add Log",
@@ -647,16 +679,30 @@ $project = $this->project; ?>
 
 
 		});
+
 		$("#add_item").on("click", function() {
 			$("#dialog-item").dialog("open");
 			return false;
 		});
+
 		$("#dialog-item").dialog({
 			autoOpen: false,
 			modal: true,
 			minWidth: 800,
 			width: 800,
 			//minHeight: 600,
+			open: function() { // fade in background
+				$('.ui-widget-overlay').hide().fadeIn();
+			},
+			beforeClose: function() { //fade out background
+				$('.ui-widget-overlay:first')
+					.clone()
+					.appendTo('body')
+					.show()
+					.fadeOut(400, function() {
+						$(this).remove();
+					});
+			},
 			dialogClass: 'add-item-dialog',
 			buttons: [{
 					id: "btn-add",
@@ -741,19 +787,6 @@ $project = $this->project; ?>
 
 		}
 
-		function edititem(item_id, item_desc, uom, price, qty, note) {
-			var total_price = (price * qty).toFixed(2);
-			var str = '<tr name="item[' + item_id + ']">' + '<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' + '<td>' + item_id + '<br/>' + item_desc + '<br/><textarea readonly rows="1" cols="" name="item[' + item_id + '][note][]">' + note + '</textarea></td>' + '<td>' + qty + '</td>' + '<td>' + price + '</td>' + '<td>' + uom + '</td>' + '<td>' + total_price + '</td>' +
-				'<input type="hidden" name="item[' + item_id + '][qty][]" value="' + qty + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][unit_price][]" value="' + price + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][uom][]" value="' + uom + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][total_price][]" value="' + total_price + '"/>' +
-				'<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="item_delete" href="#" index="' + item_id + '"><img src="/images/icons/dark/close.png" alt="delete"></a></td>';
-			ajaxedititem(item_id, uom, price, qty, note);
-			current_edit_row.replaceWith(str);
-
-		}
-
 		function getolddata(row) {
 			var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
 			//var item_name = jQuery.trim($(row).find('td').eq(1).clone().children().remove().end().text()).replace(item_id+' - ','');
@@ -770,6 +803,126 @@ $project = $this->project; ?>
 				'old_note': note
 			};
 			return data;
+		}
+
+		$(".dialog #item_id").autocomplete({
+			source: '/item/index/',
+			minLength: 2,
+			focus: function(event, ui) {
+				//$("#item_input").val(ui.item.item_desc);
+				return false;
+			},
+			select: function(event, ui) {
+				$("#item_input").val(ui.item.item_desc);
+				$("#item_id").val(ui.item.item_id);
+				getoum(ui.item.item_id);
+				$('#uom').removeAttr('disabled');
+				$('#uniform-uom').removeClass('disabled');
+				return false;
+			}
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
+			return $("<li></li>")
+				.data("item.autocomplete", item)
+				.append("<a><b>" + item.item_id + " - " + item.item_desc + "</b></a>")
+				.appendTo(ul);
+		};
+
+		$(".dialog #item_id").on('paste', function(e) {
+			alert('paste');
+			$(".dialog #item_id").select();
+		});
+
+		function getoum(item_id) {
+			$('.loading').show();
+			$.ajax({
+				url: '/item/uom/id/' + $("#item_id ").val(),
+				type: "get",
+				success: function(data) {
+					var uom = JSON.parse(data);
+					var list = '';
+					$.each(uom, function(i, item) {
+						list = list + '<option value="' + item.uom + '">' + item.uom + '</option>';
+					});
+					$('#uom').html(list);
+					$('#uom option').eq(0).attr("selected", "selected");
+					$('#uniform-uom span').html(uom[0].uom);
+					getprice();
+					$('.loading').hide();
+				}
+			});
+
+		};
+
+		function getprice() {
+			$('.loading').show();
+			$.ajax({
+				url: '/item/price/id/' + $("#item_id ").val() + '/uom/' + $("#uom ").val(),
+				type: "get",
+				success: function(data) {
+					var price = JSON.parse(data);
+					$('#price').val(price.price);
+					$('.loading').hide();
+				}
+			});
+
+		};
+
+		function additem(item_id, item_desc, uom, price, qty, note) {
+			var total_price = (price * qty).toFixed(2);
+			var str = '<tr name="item[' + item_id + ']">' +
+				'<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' +
+				'<td><b>' + item_id + ' - ' + item_desc + '</b><textarea rows="2" cols="" name="item[' + item_id + '][note]" readonly>' + note + '</textarea></td>' +
+				'<td>' + qty + '</td>' +
+				'<td>' + price + '</td>' +
+				'<td>' + uom + '</td>' +
+				'<td>' + total_price + '</td>' +
+				'<input type="hidden" name="item[' + item_id + '][qty]" value="' + qty + '"/>' +
+				'<input type="hidden" name="item[' + item_id + '][unit_price]" value="' + price + '"/>' +
+				'<input type="hidden" name="item[' + item_id + '][uom]" value="' + uom + '"/>' +
+				'<input type="hidden" name="item[' + item_id + '][total_price]" value="' + total_price + '"/>' +
+				'<td><div class="row-button">' +
+				'<a class="edit" href="#">' +
+				'<span class="button-wrap">' +
+				'<span class="icon icon-edit"></span>' +
+				'</span>' +
+				'</a>' +
+				'<a class="item_delete" href="#" index="' + item_id + '">' +
+				'<span class="button-wrap">' +
+				'<span class="icon icon-delete"></span>' +
+				'</span></a></div>';
+			saveitem();
+			$('#item_body').append(str);
+		};
+
+		function saveitem() {
+			$('.loading').show();
+			$.ajax({
+				url: '/project/additem/pro/' + $('#project_id').val(),
+				type: "post",
+				data: $("#item").serialize(),
+				success: function(data) {
+					$('.loading').hide();
+					resetForm($('#item'));
+				}
+			});
+		};
+
+		function edititem(item_id, item_desc, uom, price, qty, note) {
+			var total_price = (price * qty).toFixed(2);
+			var str = '<tr name="item[' + item_id + ']">' +
+				'<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' +
+				'<td><b>' + item_id + ' - ' + item_desc + '</b><textarea readonly rows="2" cols="" name="item[' + item_id + '][note][]">' + note + '</textarea></td>' +
+				'<td>' + qty + '</td>' +
+				'<td>' + price + '</td>' +
+				'<td>' + uom + '</td>' +
+				'<td>' + total_price + '</td>' +
+				'<input type="hidden" name="item[' + item_id + '][qty][]" value="' + qty + '"/>' +
+				'<input type="hidden" name="item[' + item_id + '][unit_price][]" value="' + price + '"/>' +
+				'<input type="hidden" name="item[' + item_id + '][uom][]" value="' + uom + '"/>' +
+				'<input type="hidden" name="item[' + item_id + '][total_price][]" value="' + total_price + '"/>' +
+				'<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="item_delete" href="#" index="' + item_id + '"><img src="/images/icons/dark/close.png" alt="delete"></a></td>';
+			ajaxedititem(item_id, uom, price, qty, note);
+			current_edit_row.replaceWith(str);
 		}
 
 		function ajaxedititem(item_id, uom, price, qty, note) {
@@ -797,107 +950,7 @@ $project = $this->project; ?>
 					resetForm($('#item'));
 				}
 			});
-		}
-		$(".dialog #item_input").autocomplete({
-			source: '/item/index/',
-			minLength: 2,
-			focus: function(event, ui) {
-				$("#item_input").val(ui.item.item_desc);
-				return false;
-			},
-			select: function(event, ui) {
-				$("#item_input").val(ui.item.item_desc);
-				$("#item_id ").val(ui.item.item_id);
-				getoum(ui.item.item_id);
-				$('#uom').removeAttr('disabled');
-				$('#uniform-uom').removeClass('disabled');
-				return false;
-			}
-		}).data("ui-autocomplete")._renderItem = function(ul, item) {
-			return $("<li></li>")
-				.data("item.autocomplete", item)
-				.append("<a>" + item.item_id + "<br>" + item.item_desc + "</a>")
-				.appendTo(ul);
 		};
-		$(".dialog #item_input").on('paste', function(e) {
-			alert('paste');
-			$(".dialog #item_input").select();
-		});
-
-		function getoum(item_id) {
-			$('.loading').show();
-			$.ajax({
-				url: '/item/uom/id/' + $("#item_id ").val(),
-				type: "get",
-				success: function(data) {
-					var uom = JSON.parse(data);
-					var list = '';
-					$.each(uom, function(i, item) {
-						list = list + '<option value="' + item.uom + '">' + item.uom + '</option>';
-					});
-					$('#uom').html(list);
-					$('#uom option').eq(0).attr("selected", "selected");
-					$('#uniform-uom span').html(uom[0].uom);
-					getprice();
-					$('.loading').hide();
-				}
-			});
-
-		}
-
-		function getprice() {
-			$('.loading').show();
-			$.ajax({
-				url: '/item/price/id/' + $("#item_id ").val() + '/uom/' + $("#uom ").val(),
-				type: "get",
-				success: function(data) {
-					var price = JSON.parse(data);
-					$('#price').val(price.price);
-					$('.loading').hide();
-				}
-			});
-
-		}
-
-		function additem(item_id, item_desc, uom, price, qty, note) {
-			var total_price = (price * qty).toFixed(2);
-			var str = '<tr name="item[' + item_id + ']">' + 
-				'<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' + 
-				'<td><b>' + item_id + '-' + item_desc + '</b><textarea rows="1" cols="" name="item[' + item_id + '][note]" readonly>' + note + '</textarea></td>' + 
-				'<td>' + qty + '</td>' + 
-				'<td>' + price + '</td>' + 
-				'<td>' + uom + '</td>' + 
-				'<td>' + total_price + '</td>' +
-				'<input type="hidden" name="item[' + item_id + '][qty]" value="' + qty + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][unit_price]" value="' + price + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][uom]" value="' + uom + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][total_price]" value="' + total_price + '"/>' +
-				'<td><div class="row-button">' + 
-					'<a class="edit" href="#">' +
-					'<span class="button-wrap">' +
-					'<span class="icon icon-edit"></span>' +
-					'</span>' +
-					'</a>' +
-					'<a class="item_delete" href="#" index="' + item_id + '">' +
-					'<span class="button-wrap">' +
-					'<span class="icon icon-delete"></span>' +
-					'</span></a></div>';
-			saveitem();
-			$('#item_body').append(str);
-		}
-
-		function saveitem() {
-			$('.loading').show();
-			$.ajax({
-				url: '/project/additem/pro/' + $('#project_id').val(),
-				type: "post",
-				data: $("#item").serialize(),
-				success: function(data) {
-					$('.loading').hide();
-					resetForm($('#item'));
-				}
-			});
-		}
 
 		$("#uom,#uniform-uom").on("change", function() {
 			getprice();
@@ -927,23 +980,17 @@ $project = $this->project; ?>
 				success: function(data) {
 					$('.loading').hide();
 					if (data > 0) {
-						$('#project_memo').dataTable().fnAddData([
-							'<?= date('Y-m-d') ?>',
-							$("#memo #title").val(),
-							$("#memo #follow_up_date").val(),
-							'<span class="memo_type mono_type' + '">' + $("#memo #type").val() + '</span>',
-							'<a href="/memo/delete/id/' + data + '" class="memo_delete"><img src="/images/icons/dark/close.png" alt="delete"></a>'
-						]);
+						memoTable.ajax.reload();
 					}
 					resetForm($('#memo'));
 				}
 			});
-		}
+		};
 
 		$(document).on('click', '.memo_delete', function(e) {
 			e.preventDefault();
 			var obj = $(this);
-			if (confirm("Confirm delete This Log?") == true) {
+			if (confirm("Confirm delete this log?") == true) {
 				$('.loading').show();
 				$.ajax({
 					url: $(this).attr('href'),
@@ -951,7 +998,7 @@ $project = $this->project; ?>
 					success: function(data) {
 						var index = $('#project_memo tbody tr').index(obj.parent().parent());
 						if (index != -1) {
-							$('#project_memo').dataTable().fnDeleteRow(index);
+							memoTable.ajax.reload();
 						}
 						$('.loading').hide();
 					}

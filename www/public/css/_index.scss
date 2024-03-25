@@ -2,6 +2,7 @@
 @use "./mixin";
 
 @use "./jquery-ui.css";
+//@use "./ui_custom.css";
 
 @use "./base/themes";
 @use "./icon/icon";
@@ -4294,10 +4295,6 @@ span.mono_type_2 {
 span.mono_type_1 {
 	background: url(../images/icons/updateNotice.png) no-repeat center left;
 	padding-left: 11px;
-}
-
-#btn-add {
-	margin-right: 20px;
 }
 
 .stauts_13 {
