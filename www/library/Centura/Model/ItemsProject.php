@@ -5,6 +5,7 @@ namespace Centura\Model;
 use Zend_Registry;
 use Zend_Date;
 use Exception;
+use Zend_Json;
 
 class ItemsProject extends DbTable\Products
 {
@@ -129,6 +130,20 @@ class ItemsProject extends DbTable\Products
 			->join('P21_Inv_Mast', 'projects_products.product_id = P21_Inv_Mast.item_id','item_desc');
 		
 		return $db->fetchAll($select);
+	}
+
+	public function fetchallitemsJson($project_id)
+	{
+		if($project_id == null)
+		{
+			return  false;
+		}
+		$db = $this->getAdapter();
+		
+		$select = $db->select()->from('projects_products')->where('project_id =?',$project_id)->order('sort_id asc')->where('status = 1')
+			->join('P21_Inv_Mast', 'projects_products.product_id = P21_Inv_Mast.item_id','item_desc');
+		
+		return Zend_Json::encode($db->fetchAll($select));
 	}
 	
 	public function fetchallitemsbyprojectid($project_id)

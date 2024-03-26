@@ -195,50 +195,18 @@ $project = $this->project; ?>
 						<?php } ?>
 					</div>
 					<h2>Quoted Items</h2>
-					<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
+					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display no-wrap" id="items">
 						<thead>
 							<tr>
-								<th></th>
-								<th width="50%">Item ID - Description</td>
+								<th>Item</th>
 								<th>Quality Quoted</th>
 								<th>Unit Price</th>
 								<th>Unit Of Measure</th>
 								<th>Price Quoted</th>
+								<th>Note</th>
 								<th>Options</th>
 							</tr>
 						</thead>
-						<tbody id="item_body">
-							<?php foreach ($this->items as $i) { ?>
-								<tr name="item[<?= $i['product_id'] ?>]">
-									<td><input type="checkbox" name="item[<?= $i['product_id'] ?>]"></td>
-									<td><b><?= $i['product_id'] ?> - <?= $i['item_desc'] ?></b>
-										<?php if ($i['note'] != null) { ?>
-											<textarea rows="1" name="item[<?= $i['product_id'] ?>][note]"><?= $i['note'] ?></textarea>
-										<?php } ?>
-									</td>
-									<td><?= $i['qty'] ?></td>
-									<td><?= $i['unit_price'] ?></td>
-									<td><?= $i['uom'] ?></td>
-									<td><?= $i['subtotal'] ?></td>
-									<input type="hidden" name="item[<?= $i['product_id'] ?>][qty]" value="<?= $i['qty'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][unit_price]" value="<?= $i['unit_price'] ?>">
-									<input type="hidden" name="item[<?= $i['product_id'] ?>][uom]" value="<?= $i['uom'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][total_price]" value="<?= $i['subtotal'] ?>">
-									<td>
-										<div class="row-button">
-											<a class="button action edit" href="#">
-												<span class='button-wrap'>
-													<span class='icon icon-edit'></span>
-												</span>
-											</a>
-											<a class="button action item_delete" href="#" index='<?= $i['product_id'] ?>'>
-												<span class='button-wrap'>
-													<span class='icon icon-delete'></span>
-												</span>
-											</a>
-										</div>
-									</td>
-								</tr>
-							<?php } ?>
-						</tbody>
 					</table>
 				</div>
 			</form>
@@ -386,52 +354,72 @@ $project = $this->project; ?>
 			dataSrc: ''
 		},
 		processing: true,
-		columns: [{
-				data: "added.date"
-			},
-			{
-				data: "title"
-			},
-			{
-				data: "follow_up_date.date"
-			},
-			{
-				data: "type"
-			},
-			{
-				data: "memo_id",
-				createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+		columns: [
+			{ data: "added.date", render: function(data) {
+				let DateTime = luxon.DateTime;
+				let d = DateTime.fromSQL(data).setLocale('en').toFormat('f');
+				return d;
+			}},
+			{ data: "title" },
+			{ data: "follow_up_date.date", render: function(data) {
+				let DateTime = luxon.DateTime;
+				let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
+				return d;
+			}},
+			{ data: "type" },
+			{ data: "memo_id", render: function(data) {
 					<?php if ($this->owner == 1) { ?>
-						$(cell).html("<a class='memo_delete' target='_blank' href='/memo/delete/id/" + rowData.memo_id + "'><span class='button-wrap'><span class='icon icon-delete'></span></span></a>");
+						return "<a class='memo_delete' target='_blank' href='/memo/delete/id/" + data + "'><span class='button-wrap'><span class='icon icon-delete'></span></span></a>";
 					<?php } else { ?>
-						$(cell).html("null");
+						return null;
 					<?php } ?>
 				}
 			},
 		],
-		columnDefs: [{
-			targets: [0],
-			render: function(data) {
-				let DateTime = luxon.DateTime;
-				let d = DateTime.fromSQL(data).setLocale('en').toFormat('f');
-				return d;
-			}
-		}, {
-			targets: [2],
-			render: function(data) {
-				let DateTime = luxon.DateTime;
-				let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
-				return d;
-			}
-		}],
-		fixedColumns: {
-			start: 1,
-			end: 1
-		},
-		order: [
-			[0, "desc"]
-		]
+		fixedColumns: { start: 1, end: 1},
+		scrollX: true,
+		order: [[0, "desc"]],
 	});
+
+	let itemTable = $("#items").DataTable({
+		ajax: {
+			url: "/project/item/id/" + $('#project_id').val(),
+			dataSrc: ''
+		},
+		processing: true,
+		columns: [
+			{ data: "product_id", render: function(data, type, row, meta) {
+				return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
+			} },
+			{ data: "qty" },
+			{ data: "unit_price" },
+			{ data: "uom" },
+			{ data: "subtotal" },
+			{ data: "note" },
+			{ data: "product_id", render: function(data, type, row, meta) {
+				//var oldData = getolddata($(this).closest('tr'));
+				return '<div class="row-button">' +
+					'<a title="Edit this item" class="edit" href="#">' +
+						'<span class="button-wrap">' +
+							'<span class="icon icon-edit"></span>' +
+						'</span></a>' +
+					'<a title="Delete this item" class="item_delete" href="/project/deleteitem/pro/' + row.project_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty +'"'+
+							'index="' + data +'">' +
+						'<span class="button-wrap">' +
+							'<span class="icon icon-delete"></span>' +
+								'</span></a></div>';
+			} }
+		],
+		columnDefs: [
+			{ targets: [0, 1, 2, 3, 4], className: 'dt-body-center' },
+			{ targets: [0, 1, 2, 3, 4, 5, 6], className: 'dt-head-center' },
+		],
+		layout: { topStart: null, topEnd: null },
+		order: { data: "added.date" },
+		scrollX: true,
+		//fixedColumns: { start: 1, end: 1}
+    });
+
 
 	function resetForm($form) {
 		$form.find('input:text, input:password, input:file, select, textarea').val('');
@@ -442,6 +430,38 @@ $project = $this->project; ?>
 	var current_edit_row = '';
 
 	$(function() {
+
+		let currentRow = '';
+
+		$('#items tbody').on('click', 'tr', function () {
+			currentRow = itemTable.row(this).data();
+    		//console.log(currentRow['product_id'], currentRow['note'], currentRow['qty']);
+		});
+
+		function getolddata(row) {
+		
+			//var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
+			let item_id = currentRow['product_id'];
+			//var item_name = jQuery.trim($(row).find('td').eq(1).clone().children().remove().end().text()).replace(item_id+' - ','');
+			//var note = $(row).find('textarea').eq(0).val();
+			let note = currentRow['note'];
+			//var qty = $(row).find(':input:hidden').eq(0).val();
+			let qty = currentRow['qty'];
+			//var unit_price = $(row).find(':input:hidden').eq(1).val();
+			let unit_price = currentRow['unit_price'];
+			//var uom = $(row).find(':input:hidden').eq(2).val();
+			let uom = currentRow['uom'];
+			//	var total_price = $(row).find(':input:hidden').eq(3).val();
+			var data = {
+			'old_item_id': item_id,
+			'old_uom': uom,
+			'old_price': unit_price,
+			'old_qty': qty,
+			'old_note': note
+		};
+		return data;
+	}
+
 		function getcustomerbyid(id, obj) {
 			$('.loading').show();
 			$.ajax({
@@ -676,13 +696,6 @@ $project = $this->project; ?>
 					}
 				}
 			]
-
-
-		});
-
-		$("#add_item").on("click", function() {
-			$("#dialog-item").dialog("open");
-			return false;
 		});
 
 		$("#dialog-item").dialog({
@@ -727,8 +740,11 @@ $project = $this->project; ?>
 					}
 				}
 			]
+		});
 
-
+		$("#add_item").on("click", function() {
+			$("#dialog-item").dialog("open");
+			return false;
 		});
 
 		$('#add_item').on("click", function() {
@@ -741,19 +757,27 @@ $project = $this->project; ?>
 			$("#dialog-item").dialog("open");
 			current_edit_row = $(this).closest('tr');
 			set_edit(current_edit_row);
+			//console.log(current_edit_row);
 			return false;
 		});
 
 		function set_edit(row) {
 			$("#dialog-item").dialog("option", "title", "Edit Item");
 			$('#is_edit').val(1);
-			var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
-			var item_name = ($(row).find('td').eq(1).clone().children().remove().end().text()).trim().replace(item_id + ' - ', '');
-			var note = $(row).find('textarea').eq(0).val();
-			var qty = $(row).find(':input:hidden').eq(0).val();
-			var unit_price = $(row).find(':input:hidden').eq(1).val();
-			var uom = $(row).find(':input:hidden').eq(2).val();
-			var total_price = $(row).find(':input:hidden').eq(3).val();
+			//var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
+			let item_id = currentRow['product_id'];
+			//var item_name = ($(row).find('td').eq(1).clone().children().remove().end().text()).trim().replace(item_id + ' - ', '');
+			let item_name = currentRow['item_desc'];
+			//var note = $(row).find('textarea').eq(0).val();
+			let note = currentRow['note'];
+			//var qty = $(row).find(':input:hidden').eq(0).val();
+			let qty = currentRow['qty'];
+			//var unit_price = $(row).find(':input:hidden').eq(1).val();
+			let unit_price = currentRow['unit_price'];
+			//var uom = $(row).find(':input:hidden').eq(2).val();
+			let uom = currentRow['uom'];
+			//var total_price = $(row).find(':input:hidden').eq(3).val();
+			//let item_id = currentRow['product_id'];
 
 			$('#item #item_input').val(item_name);
 			$('#item #item_id').val(item_id);
@@ -785,24 +809,6 @@ $project = $this->project; ?>
 				}
 			});
 
-		}
-
-		function getolddata(row) {
-			var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
-			//var item_name = jQuery.trim($(row).find('td').eq(1).clone().children().remove().end().text()).replace(item_id+' - ','');
-			var note = $(row).find('textarea').eq(0).val();
-			var qty = $(row).find(':input:hidden').eq(0).val();
-			var unit_price = $(row).find(':input:hidden').eq(1).val();
-			var uom = $(row).find(':input:hidden').eq(2).val();
-			//	var total_price = $(row).find(':input:hidden').eq(3).val();
-			var data = {
-				'old_item_id': item_id,
-				'old_uom': uom,
-				'old_price': unit_price,
-				'old_qty': qty,
-				'old_note': note
-			};
-			return data;
 		}
 
 		$(".dialog #item_id").autocomplete({
@@ -889,9 +895,9 @@ $project = $this->project; ?>
 				'<a class="item_delete" href="#" index="' + item_id + '">' +
 				'<span class="button-wrap">' +
 				'<span class="icon icon-delete"></span>' +
-				'</span></a></div>';
+				'</span></a></div></td>';
 			saveitem();
-			$('#item_body').append(str);
+			//$('#item_body').append(str);
 		};
 
 		function saveitem() {
@@ -902,7 +908,7 @@ $project = $this->project; ?>
 				data: $("#item").serialize(),
 				success: function(data) {
 					$('.loading').hide();
-					resetForm($('#item'));
+					itemTable.ajax.reload();
 				}
 			});
 		};
@@ -920,9 +926,18 @@ $project = $this->project; ?>
 				'<input type="hidden" name="item[' + item_id + '][unit_price][]" value="' + price + '"/>' +
 				'<input type="hidden" name="item[' + item_id + '][uom][]" value="' + uom + '"/>' +
 				'<input type="hidden" name="item[' + item_id + '][total_price][]" value="' + total_price + '"/>' +
-				'<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="item_delete" href="#" index="' + item_id + '"><img src="/images/icons/dark/close.png" alt="delete"></a></td>';
+				'<td><div class="row-button">' +
+				'<a class="edit" href="#">' +
+				'<span class="button-wrap">' +
+				'<span class="icon icon-edit"></span>' +
+				'</span>' +
+				'</a>' +
+				'<a class="item_delete" href="#" index="' + item_id + '">' +
+				'<span class="button-wrap">' +
+				'<span class="icon icon-delete"></span>' +
+				'</span></a></div></td>';
 			ajaxedititem(item_id, uom, price, qty, note);
-			current_edit_row.replaceWith(str);
+			//current_edit_row.replaceWith(str);
 		}
 
 		function ajaxedititem(item_id, uom, price, qty, note) {
@@ -946,8 +961,8 @@ $project = $this->project; ?>
 				type: "post",
 				data: data,
 				success: function(data) {
+					itemTable.ajax.reload();
 					$('.loading').hide();
-					resetForm($('#item'));
 				}
 			});
 		};
@@ -957,18 +972,22 @@ $project = $this->project; ?>
 			return false;
 		});
 
-		$(document).on('click', "#item_body .item_delete", function(e) {
+		$(document).on('click', ".item_delete", function(e) {
 			e.preventDefault();
-			var data = getolddata($(this).closest('tr'));
-			$(this).parent().parent().remove();
-			$('.loading').show();
-			$.ajax({
-				url: '/project/deleteitem/pro/' + $('#project_id').val() + '/item/' + $(this).attr('index') + '/uom/' + data['old_uom'] + '/price/' + data['old_price'] + '/qty/' + data['old_qty'],
-				type: "get",
-				success: function(data) {
-					$('.loading').hide();
-				}
-			});
+			//var data = getolddata($(this).closest('tr'));
+			if (confirm("Are you sure you want to delete this item?") == true) {
+				//$(this).parent().parent().remove();
+				$('.loading').show();
+				$.ajax({
+					url: $(this).attr('href'),
+					//url: '/project/deleteitem/pro/' + $('#project_id').val() + '/item/' + $(this).attr('index') + '/uom/' + data['old_uom'] + '/price/' + data['old_price'] + '/qty/' + data['old_qty'],
+					type: "get",
+					success: function(data) {
+						itemTable.ajax.reload();
+						$('.loading').hide();
+					}
+				});
+			}
 		});
 
 		function addmemo() {

@@ -2,6 +2,8 @@
 
 namespace Centura\Model;
 
+use Zend_Json;
+
 class ProductProject extends DbTable\Products
 {
     
@@ -166,6 +168,20 @@ class ProductProject extends DbTable\Products
 		->join('P21_Inv_Mast', 'quotes_products.product_id = P21_Inv_Mast.item_id','item_desc');
 		
 		return $db->fetchAll($select);
+	}
+
+	public function fetchallitemsbyprojectidJson($project_id)
+	{
+		if($project_id == null)
+		{
+			return  false;
+		}
+		$db = $this->getAdapter();
+		
+		$select = $db->select()->from('quotes_products')->join('quote','quote.quote_id = quotes_products.quote_id',null)->where('project_id =?',$project_id)->order('sort_id asc')->where('quotes_products.status = 1')
+		->join('P21_Inv_Mast', 'quotes_products.product_id = P21_Inv_Mast.item_id','item_desc');
+		
+		return Zend_Json::encode($db->fetchAll($select));
 	}
 	
 }

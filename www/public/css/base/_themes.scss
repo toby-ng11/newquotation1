@@ -5,13 +5,13 @@
 @use "./typography";
 @use "./reset";
 
-$centura-theme-light-widget-background: rgba(255, 255, 255, 0.8);
-$centura-theme-light-widget-hover: $mdn-color-white;
+$centura-theme-light-widget-background: rgba(255, 255, 255, 0.5);
+$centura-theme-light-widget-hover: rgba(255, 255, 255, 0.6);
 $centura-theme-light-widget-box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 $centura-theme-light-widget-icon-box-shadow: 0 5px 8px rgba(0,0,0,0.3);
 
-$centura-theme-dark-widget-background: rgba(255, 255, 255, 0.15);
-$centura-theme-dark-widget-hover: rgba(255, 255, 255, 0.2);
+$centura-theme-dark-widget-background: rgba(255, 255, 255, 0.1);
+$centura-theme-dark-widget-hover: rgba(255, 255, 255, 0.15);
 $centura-theme-dark-widget-box-shadow: 0 5px 15px rgba(0, 0, 0, 1);
 $centura-theme-dark-widget-icon-box-shadow: 0 5px 10x rgba(0,0,0,0.1);
 $centura-theme-dark-widget-green-shadow: 0 5px 15x rgba(55, 255, 0, 0.451);
