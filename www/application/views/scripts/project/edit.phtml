@@ -369,15 +369,13 @@ $project = $this->project; ?>
 			{ data: "type" },
 			{ data: "memo_id", render: function(data) {
 					<?php if ($this->owner == 1) { ?>
-						return "<a class='memo_delete' target='_blank' href='/memo/delete/id/" + data + "'><span class='button-wrap'><span class='icon icon-delete'></span></span></a>";
+						return '<div class="row-button">' + "<a class='memo_delete' target='_blank' href='/memo/delete/id/" + data + "'><span class='button-wrap'><span class='icon icon-delete'></span></span></a></div>";
 					<?php } else { ?>
 						return null;
 					<?php } ?>
 				}
 			},
 		],
-		fixedColumns: { start: 1, end: 1},
-		scrollX: true,
 		order: [[0, "desc"]],
 	});
 
@@ -424,9 +422,10 @@ $project = $this->project; ?>
 	function resetForm($form) {
 		$form.find('input:text, input:password, input:file, select, textarea').val('');
 		$form.find('input:radio, input:checkbox')
-			.removeAttr('checked').removeAttr('selected');
+			.prop('checked', false)
+			.prop('selected', false);
 	}
-	var item_dirty = 0;
+
 	var current_edit_row = '';
 
 	$(function() {
@@ -732,10 +731,7 @@ $project = $this->project; ?>
 						}
 					}
 				},
-				{
-					id: "btn-cancel",
-					text: "Cancel",
-					click: function() {
+				{ id: "btn-cancel", text: "Cancel", click: function() {
 						$(this).dialog("close");
 					}
 				}
@@ -822,7 +818,7 @@ $project = $this->project; ?>
 				$("#item_input").val(ui.item.item_desc);
 				$("#item_id").val(ui.item.item_id);
 				getoum(ui.item.item_id);
-				$('#uom').removeAttr('disabled');
+				$('#uom').prop('disabled', false);
 				$('#uniform-uom').removeClass('disabled');
 				return false;
 			}
@@ -967,7 +963,7 @@ $project = $this->project; ?>
 			});
 		};
 
-		$("#uom,#uniform-uom").on("change", function() {
+		$("#uom, #uniform-uom").on("change", function() {
 			getprice();
 			return false;
 		});

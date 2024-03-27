@@ -55,6 +55,13 @@ class QuoteController extends Zend_Controller_Action
         $this->view->type = $quote->fetchquotetype();
         $this->view->seg = $quote->fetchseg();
     }
+
+	public function itemAction() {
+		$project_id = $this->getRequest()->getParam('project');
+		$item = new ItemsProject();
+    	echo $item->fetchallitemsJson($project_id);
+		exit;
+	}
     
 	public function getdataAction() {
 		$dbDetails = array(
@@ -88,7 +95,6 @@ class QuoteController extends Zend_Controller_Action
 			SSP::simple($_GET, $dbDetails, $table, $primaryKey, $columns)
 		);
 	}
-
 
     public function saveAction()
     {

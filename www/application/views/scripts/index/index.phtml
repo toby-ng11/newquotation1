@@ -186,6 +186,7 @@
             } }
         });
 
+        <?php if ($session->user['approve_id'] != null) { ?>
         $('#other_project_table').DataTable({
             ajax: {
                 url: "/index/otherprojects",
@@ -260,6 +261,7 @@
                 return info;
             } }
         });
+        <?php } ?>
 
         $('#quote_table').DataTable({
             ajax: {

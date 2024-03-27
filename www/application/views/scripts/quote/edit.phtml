@@ -138,7 +138,7 @@ $project = $this->project; ?>
 						</button>
 					</div>
 					<h2>Customer infomation</h2>
-					<input type="hidden" name='project_id' value="<?= $project['project_id'] ?>" />
+					<input type="hidden" id='project_id' value="<?= $project['project_id'] ?>" />
 					<div class="formRow">
 						<div class="oneTwo required-field">
 							<label for="quote">Quote To</label>
@@ -251,53 +251,27 @@ $project = $this->project; ?>
 
 			<section aria-labelledby="items" id="section4" data-nav="Items">
 				<div class="widget-table">
-					<h2>Items</h2>
-					<a href="#" title="" class="button greenB" style="margin: 5px;" id="opener"><span>Add new Item</span></a>
-					<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
+					<div class="widget-button">
+						<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="opener">
+							<span class="button-wrap">
+								<span class="icon icon-add"></span>
+								Add Item
+							</span>
+						</button>
+					</div>
+						<h2>Items</h2>
+					<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items">
 						<thead>
 							<tr>
-								<th></th>
-								<th width="50%">Item ID - Description</th>
+								<th>Item</th>
 								<th>Quality Quoted</th>
 								<th>Unit Price</th>
 								<th>Unit Of Measure</th>
 								<th>Price Quoted</th>
+								<th>Note</th>
 								<th>Options</th>
 							</tr>
 						</thead>
-						<tbody id="item_body">
-							<?PHP foreach ($this->items as $i) { ?>
-								<tr name="item[<?= $i['product_id'] ?>]">
-									<td><input type="checkbox" name="item[<?= $i['product_id'] ?>]"></td>
-									<td><b><?= $i['product_id'] ?> - <?= $i['item_desc'] ?></b>
-										<?php if ($i['note'] != null) { ?>
-										<textarea rows="1" name="item[<?= $i['product_id'] ?>][note][]"><?= $i['note'] ?></textarea>
-										<?php } ?>
-									</td>
-									<td><?= $i['qty'] ?></td>
-									<td><?= $i['unit_price'] ?></td>
-									<td><?= $i['uom'] ?></td>
-									<td><?= $i['subtotal'] ?></td>
-									<input type="hidden" name="item[<?= $i['product_id'] ?>][qty][]" value="<?= $i['qty'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][unit_price][]" value="<?= $i['unit_price'] ?>">
-									<input type="hidden" name="item[<?= $i['product_id'] ?>][uom][]" value="<?= $i['uom'] ?>"><input type="hidden" name="item[<?= $i['product_id'] ?>][total_price][]" value="<?= $i['subtotal'] ?>">
-									<input type="hidden" class='sorts' name="item[<?= $i['product_id'] ?>][sort][]" value="<?= $i['sort_id'] ?>">
-									<td>
-										<div class="row-button">
-											<a class="edit" href="#">
-												<span class='button-wrap'>
-													<span class='icon icon-edit'></span>
-												</span>
-											</a>
-											<a class="delete" href="#">
-												<span class='button-wrap'>
-													<span class='icon icon-delete'></span>
-												</span>
-											</a>
-										</div>
-									</td>
-								</tr>
-							<?PHP } ?>
-						</tbody>
 					</table>
 				</div>
 			</section>
@@ -308,7 +282,7 @@ $project = $this->project; ?>
 					<div class="formRow">
 						<div class="oneTwo">
 							<label for="quote-note">Quote Note:</label>
-							<textarea id="quote-note" rows="8" cols="" name="note" placeholder="Add quote note here..."><?= $this->quote['note'] ?></textarea>
+							<textarea id="quote-note" rows="5" cols="" name="note" placeholder="Add quote note here..."><?= $this->quote['note'] ?></textarea>
 						</div>
 					</div>
 				</div>
@@ -320,8 +294,8 @@ $project = $this->project; ?>
 				<div class="dialog-form">
 					<div class="oneTwo required-field">
 						<label for="item_input">Enter Item ID</label>
-						<input type="text" name="item" id='item_input' class="validate[required]" />
-						<input type="hidden" id="item_id" />
+						<input type="hidden" name="item" id='item_input' />
+						<input type="text" id="item_id" name='item_id' class="validate[required]" />
 					</div>
 
 					<div class="oneTwo required-field">
@@ -429,10 +403,50 @@ $project = $this->project; ?>
 		this.style.height = (this.scrollHeight) + "px";
 	});
 
+	let itemTable = $("#items").DataTable({
+		ajax: {
+			url: "/project/item/id/" + $('#project_id').val(),
+			dataSrc: ''
+		},
+		processing: true,
+		columns: [
+			{ data: "product_id", render: function(data, type, row, meta) {
+				return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
+			} },
+			{ data: "qty" },
+			{ data: "unit_price" },
+			{ data: "uom" },
+			{ data: "subtotal" },
+			{ data: "note" },
+			{ data: "product_id", render: function(data, type, row, meta) {
+				//var oldData = getolddata($(this).closest('tr'));
+				return '<div class="row-button">' +
+					'<a title="Edit this item" class="edit" href="#">' +
+						'<span class="button-wrap">' +
+							'<span class="icon icon-edit"></span>' +
+						'</span></a>' +
+					'<a title="Delete this item" class="item_delete" href="/project/deleteitem/pro/' + row.project_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty +'"'+
+							'index="' + data +'">' +
+						'<span class="button-wrap">' +
+							'<span class="icon icon-delete"></span>' +
+								'</span></a></div>';
+			} }
+		],
+		columnDefs: [
+			{ targets: [0, 1, 2, 3, 4], className: 'dt-body-center' },
+			{ targets: [0, 1, 2, 3, 4, 5, 6], className: 'dt-head-center' },
+		],
+		layout: { topStart: null, topEnd: null },
+		order: { data: "added.date" },
+		paging: false
+		//fixedColumns: { start: 1, end: 1}
+    });
+
 	function resetForm($form) {
 		$form.find('input:text, input:password, input:file, select, textarea').val('');
 		$form.find('input:radio, input:checkbox')
-			.prop('checked', false).prop('selected', false);
+			.prop('checked', false)
+			.prop('selected', false);
 		$form.find('#sort').val(getmaxsort());
 	}
 
@@ -455,12 +469,49 @@ $project = $this->project; ?>
 
 	$(function() {
 
+		let currentRow = '';
+
+		$('#items tbody').on('click', 'tr', function () {
+			currentRow = itemTable.row(this).data();
+		});
+
+		function getolddata(row) {
+			let item_id = currentRow['product_id'];
+			let note = currentRow['note'];
+			let qty = currentRow['qty'];
+			let unit_price = currentRow['unit_price'];
+			let uom = currentRow['uom'];
+			let data = {
+				'old_item_id': item_id,
+				'old_uom': uom,
+				'old_price': unit_price,
+				'old_qty': qty,
+				'old_note': note
+			};
+		return data;
+		}
+
 		$("#dialog-message").dialog({
 			autoOpen: false,
 			modal: true,
 			width: 800,
-			buttons: {
-				OK: function() {
+			minWidth: 800,
+			open: function() { // fade in background
+				$('.ui-widget-overlay').hide().fadeIn();
+			},
+			beforeClose: function() { //fade out background
+				$('.ui-widget-overlay:first')
+					.clone()
+					.appendTo('body')
+					.show()
+					.fadeOut(400, function() {
+						$(this).remove();
+					});
+			},
+			buttons: [{
+				id: "add-item-confirm-button",
+				text: "Add",
+				click: function() {
 					if ($("#item").validationEngine('validate') == true) {
 						if ($('#is_edit').val() == 1) {
 							edititem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val(), $('#sort').val());
@@ -469,10 +520,14 @@ $project = $this->project; ?>
 						}
 						$(this).dialog("close");
 						resetForm($('#item'));
-
 					}
 				}
+			},
+			{ id: "add-item-cancel-button", text: "Cancel", click: function() {
+					$(this).dialog("close");
+				}
 			}
+		]
 		});
 
 		$('#opener').on("click", function() {
@@ -491,14 +546,13 @@ $project = $this->project; ?>
 		function set_edit(row) {
 			$("#dialog-message").dialog("option", "title", "Edit Item");
 			$('#is_edit').val(1);
-			var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
-			var item_name = ($(row).find('td').eq(1).clone().children().remove().end().text()).trim().replace(item_id + ' - ', '');
-			var note = $(row).find('textarea').eq(0).val();
-			var qty = $(row).find(':input:hidden').eq(0).val();
-			var unit_price = $(row).find(':input:hidden').eq(1).val();
-			var uom = $(row).find(':input:hidden').eq(2).val();
-			var total_price = $(row).find(':input:hidden').eq(3).val();
-			var sort = $(row).find(':input:hidden').eq(4).val();
+
+			let item_id = currentRow['product_id'];
+			let item_name = currentRow['item_desc']
+			let note = currentRow['note'];
+			let qty = currentRow['qty'];
+			let unit_price = currentRow['unit_price'];
+			let uom = currentRow['uom'];
 
 			$('#item #item_input').val(item_name);
 			$('#item #item_id').val(item_id);
@@ -509,7 +563,6 @@ $project = $this->project; ?>
 			$('#item #sort').val(sort);
 
 			getoumedit(item_id, uom, unit_price);
-
 		}
 
 		function getoumedit(item_id, unit_number, price) {
@@ -534,16 +587,8 @@ $project = $this->project; ?>
 		}
 
 		function edititem(item_id, item_desc, uom, price, qty, note, sort) {
-			var total_price = (price * qty).toFixed(2);
-			var str = '<tr name="item[' + item_id + ']">' + '<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' + '<td>' + item_id + '<br/>' + item_desc + '<br/><textarea rows="1" cols="" name="item[' + item_id + '][note][]">' + note + '</textarea></td>' + '<td>' + qty + '</td>' + '<td>' + price + '</td>' + '<td>' + uom + '</td>' + '<td>' + total_price + '</td>' +
-				'<input type="hidden" name="item[' + item_id + '][qty][]" value="' + qty + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][unit_price][]" value="' + price + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][uom][]" value="' + uom + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][total_price][]" value="' + total_price + '"/>' +
-				'<input type="hidden" class="sorts" name="item[' + item_id + '][sort][]" value="' + sort + '"/>' +
-				'<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="delete" href="#"><img src="/images/icons/dark/close.png" alt="delete"></a></td>';
-				ajaxedititem(item_id, uom, price, qty, note);
-			current_edit_row.replaceWith(str);
+			//var total_price = (price * qty).toFixed(2);
+			ajaxedititem(item_id, uom, price, qty, note);
 		}
 
 		function ajaxedititem(item_id, uom, price, qty, note) {
@@ -568,36 +613,46 @@ $project = $this->project; ?>
 				data: data,
 				success: function(data) {
 					$('.loading').hide();
-					resetForm($('#item'));
+					itemTable.ajax.reload();
 				}
 			});
 		};
 
-		function getolddata(row) {
-			var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
-			//var item_name = jQuery.trim($(row).find('td').eq(1).clone().children().remove().end().text()).replace(item_id+' - ','');
-			var note = $(row).find('textarea').eq(0).val();
-			var qty = $(row).find(':input:hidden').eq(0).val();
-			var unit_price = $(row).find(':input:hidden').eq(1).val();
-			var uom = $(row).find(':input:hidden').eq(2).val();
-			//	var total_price = $(row).find(':input:hidden').eq(3).val();
-			var data = {
-				'old_item_id': item_id,
-				'old_uom': uom,
-				'old_price': unit_price,
-				'old_qty': qty,
-				'old_note': note
-			};
-			return data;
+		function additem(item_id, item_desc, uom, price, qty, sort) {
+			saveitem();
 		}
 
-		$(".dialog #item_input").autocomplete({
+		function saveitem() {
+			$('.loading').show();
+			$.ajax({
+				url: '/project/additem/pro/' + $('#project_id').val(),
+				type: "post",
+				data: $("#item").serialize(),
+				success: function(data) {
+					$('.loading').hide();
+					itemTable.ajax.reload();
+				}
+			});
+		};
+
+		$(document).on("click", ".item_delete", function(e) {
+			e.preventDefault();
+			if (confirm("Are you sure you want to delete this item?") == true) {
+				$('.loading').show();
+				$.ajax({
+					url: $(this).attr('href'),
+					type: "get",
+					success: function(data) {
+						itemTable.ajax.reload();
+						$('.loading').hide();
+					}
+				});
+			}
+		});
+
+		$(".dialog #item_id").autocomplete({
 			source: '/item/index/',
 			minLength: 2,
-			focus: function(event, ui) {
-				$("#item_input").val(ui.item.item_desc);
-				return false;
-			},
 			select: function(event, ui) {
 				$("#item_input").val(ui.item.item_desc);
 				$("#item_id ").val(ui.item.item_id);
@@ -609,7 +664,7 @@ $project = $this->project; ?>
 		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
-				.append("<a>" + item.item_id + "<br>" + item.item_desc + "</a>")
+				.append("<a><b>" + item.item_id + " - " + item.item_desc + "</b></a>")
 				.appendTo(ul);
 		};
 
@@ -648,20 +703,6 @@ $project = $this->project; ?>
 
 		}
 
-		function additem(item_id, item_desc, uom, price, qty, sort) {
-			var total_price = (price * qty).toFixed(2);
-			var str = '<tr name="item[' + item_id + ']">' + '<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' + '<td>' + item_id + '<br/>' + item_desc + '<br/><textarea rows="1" cols="" name="item[' + item_id + '][note][]"></textarea></td>' + '<td>' + qty + '</td>' + '<td>' + price + '</td>' + '<td>' + uom + '</td>' + '<td>' + total_price + '</td>' +
-				'<input type="hidden" name="item[' + item_id + '][qty][]" value="' + qty + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][unit_price][]" value="' + price + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][uom][]" value="' + uom + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][total_price][]" value="' + total_price + '"/>' +
-				'<input type="hidden" class="sorts" name="item[' + item_id + '][sort][]" value="' + sort + '"/>' +
-				'<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="delete" href="#"><img src="/images/icons/dark/close.png" alt="delete"></a></td>';
-
-			$('#item_body').append(str);
-
-		}
-
 		function getcustomerbyid(id) {
 			$('.loading').show();
 			$.ajax({
@@ -685,7 +726,8 @@ $project = $this->project; ?>
 					$('.loading').hide();
 				}
 			});
-		}
+		};
+
 		$('#add_new_mode').on("click", function() {
 			$('#quote,#address, #tel').prop('readonly', false).val('');
 			$('#customer_id').attr('readonly', 'readonly').val('');
@@ -694,6 +736,7 @@ $project = $this->project; ?>
 			$('#add_new_mode').hide();
 			$('#discard_new_mode').show();
 		});
+
 		$('#discard_new_mode').on("click", function() {
 			$('#address, #tel').attr('readonly', 'readonly').val('');
 			$('#quote').val('');
@@ -709,11 +752,6 @@ $project = $this->project; ?>
 			return false;
 		});
 
-		$(document).on("click", "#item_body .delete", function(e) {
-			$(this).parent().parent().remove();
-			e.preventDefault();
-		});
-
 		$("#customer_email").autocomplete({
 			source: "/customer/email/",
 			minLength: 2,
@@ -726,6 +764,7 @@ $project = $this->project; ?>
 				.append("<a>" + item.email + "<br>" + item.first_name + ' ' + item.last_name + "</a>")
 				.appendTo(ul);
 		};
+
 		$("#quote").autocomplete({
 			source: "/customer/quote/",
 			minLength: 2,
@@ -738,13 +777,13 @@ $project = $this->project; ?>
 				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
 				.appendTo(ul);
 		};
+
 		$("#contact").autocomplete({
 			source: "/customer/name/",
 			minLength: 2,
 			select: function(event, ul) {
 				getcustomerbyid(ul.item.customer_id);
-			},
-
+			}
 		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
@@ -759,6 +798,7 @@ $project = $this->project; ?>
 				$('#quote_content').submit();
 			}
 		});
+
 		$('a.delete_quote').on("click", function(e) {
 			if (confirm("Confirm delete This Quote?") == true) {
 
@@ -802,8 +842,6 @@ $project = $this->project; ?>
 				e.preventDefault();
 			}
 		});
-
-
 
 	});
 </script>
