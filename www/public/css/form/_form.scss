@@ -62,10 +62,13 @@ form {
 		color: var(--text-primary-red);
 		display: inline;
 	}
-}
 
-.ui-formwizard .formRow:last-child {
-	border-bottom: 1px solid #E2E2E2;
+	.oneTwo {
+		&.email-preview {
+			grid-column: 1 / 4;
+			height: 30rem;
+		}
+	}
 }
 
 .wizButtons {

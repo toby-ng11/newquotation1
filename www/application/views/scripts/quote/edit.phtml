@@ -179,12 +179,12 @@ $project = $this->project; ?>
 						</div>
 						<div class="oneTwo">
 							<label for="quote-date">Quote date</label>
-							<input id="quote-date" type="text" class="datepicker" value="<?= $this->quote['quote_date']->format('Y-m-d') ?>" />
+							<input id="quote-date" type="text" class="datepicker" value="<?= $this->quote['quote_date']->format('m/d/Y') ?>" />
 						</div>
 						<div class="oneTwo">
 							<label for='ship_required_date'>Ship required date</label>
-							<input id='ship_required_date' type="text" class="datepicker" name='ship_required_date' value="<?php if ($this->quote['ship_required_date'] != null && $this->quote['ship_required_date']->format('Y-m-d') > '2000-01-01') {
-																																echo $this->quote['ship_required_date']->format('Y-m-d');
+							<input id='ship_required_date' type="text" class="datepicker" name='ship_required_date' value="<?php if ($this->quote['ship_required_date'] != null && $this->quote['ship_required_date']->format('Y-d-m') > '2000-01-01') {
+																																echo $this->quote['ship_required_date']->format('m/d/Y');
 																															} ?>" />
 						</div>
 						<div class="oneTwo">
@@ -293,13 +293,13 @@ $project = $this->project; ?>
 			<form action="" class="dialog" id='item'>
 				<div class="dialog-form">
 					<div class="oneTwo required-field">
-						<label for="item_input">Enter Item ID</label>
+						<label for="item_input">Item ID</label>
 						<input type="hidden" name="item" id='item_input' />
 						<input type="text" id="item_id" name='item_id' class="validate[required]" />
 					</div>
 
 					<div class="oneTwo required-field">
-						<label for="uom">Unit of measure</label>
+						<label for="uom">Unit of Measure</label>
 						<select name="uom" id='uom' class="validate[required]">
 							<option value=''>Select UOM</option>
 						</select>

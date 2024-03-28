@@ -1,91 +1,106 @@
-  <?php $session =  Zend_Registry::get('session'); ?>
-  <!-- Title area -->
-    <div class="titleArea">
-        <div class="wrapper">
-            <div class="pageTitle">
-                <h5>Mail Quote</h5>
-                <span>Will send pdf file as attachment to customer.</span>
-            </div>
-            <div class="middleNav">
-                <ul>
-                    <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
-                        <ul class="mSub1">
-                            <li><a href="#" title="">Share user</a></li>
-                            <li><a href="#" title="">Show Teamworks</a></li>
-                        </ul>
-                    </li>
-                   
-                    <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
-                        <ul class="mSub4">
-                        	<li><a href="#" title="">Add</a></li>
-                            <li><a href="#" title="">Save</a></li>
-                            <li><a href="#" title="">Edit</a></li>
-                            <li><a href="#" title="">Delete</a></li>
-                        </ul>
-                    </li>
+<?php $session =  Zend_Registry::get('session'); ?>
+
+<!-- Title area -->
+<main id="content" class="main-content">
+    <div class="middleNav">
+        <ul>
+            <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
+                <ul class="mSub1">
+                    <li><a href="#" title="">Share user</a></li>
+                    <li><a href="#" title="">Show Teamworks</a></li>
                 </ul>
-                <div class="clear"></div>
-            </div>
-            <div class="clear"></div>
+            </li>
+
+            <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
+                <ul class="mSub4">
+                    <li><a href="#" title="">Add</a></li>
+                    <li><a href="#" title="">Save</a></li>
+                    <li><a href="#" title="">Edit</a></li>
+                    <li><a href="#" title="">Delete</a></li>
+                </ul>
+            </li>
+        </ul>
+        <div class="clear"></div>
+    </div>
+
+    <div class="main-page-content">
+        <header class="main-page-content-header">
+            <h1>Mail Quote</h1>
+            <p>Will send pdf file as attachment to customer.</p>
+        </header>
+
+        <div class="wrapper">
+            <form action="/mail/quote/id/<?= $this->quote["quote_id"] ?>" method="post" class="form" id='mail_content'>
+                <div class="widget-table">
+                    <h2>Mail Quote to <span class="redBack"><?= $this->customer['name'] ?></span></h2>
+                    <div class="formRow">
+                        <div class="oneTwo required-field">
+                            <label for="to">To</label>
+                            <input type="text" name='to' id='to' class='validate[custom[email]]' value='<?= $this->customer['email'] ?>'>
+                        </div>
+                        <div class="oneTwo required-field">
+                            <label for="subject">Subject</label>
+                            <input type="text" name='subject' id='subject' class='validate[required]' value='<?= $this->quote['quote_id'] . ' - ' . $this->subject ?>'>
+                        </div>
+                        <div class="oneTwo">
+                            <label>Attchment</label>
+                            <a href='<?= $this->preview ?>'>
+                                <!--<img src="/images/icons/control/32/pdf.png" alt="">-->
+                                <span>Quote Pdf Preview</span>
+                            </a>
+                        </div>
+
+                        <div class="oneTwo email-preview">
+                            <textarea id="editor" name="body" rows="" cols="" class='validate[required]'><?= $this->body ?></textarea>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name='to_name' value="<?= $this->customer['name'] ?>">
+                <input type="hidden" name='from' value="<?= $session->user['email'] ?>">
+                <input type="hidden" name='from_name' value="<?= $session->user['name'] ?>">
+            </form>
         </div>
     </div>
-    
-    <div class="line"></div>
-    
-    <div class="wrapper">
-    
-        <form action="/mail/quote/id/<?=$this->quote["quote_id"] ?>" method="post" class="form" id='mail_content'> 
-                <div class="widget">
-                    <div class="title"><img src="/images/icons/dark/pencil.png" alt="" class="titleIcon" />
-                      <h6>Mail Quote to <span class="redBack"><?=$this->customer['name'] ?></span></h6></div>
-                    <div class="formRow">
-                        <label>To:</label>
-                        <div class="formRight"><input type="text" name='to' id='to' class='validate[custom[email]]' value='<?=$this->customer['email']?>'></div>
-                        <div class="clear"></div>
-                    </div>
-                     <div class="formRow">
-                        <label>Subject:</label>
-                        <div class="formRight"><input type="text" name='subject' id='subject' class='validate[required]' value='<?=$this->quote['quote_id'].' - '.$this->subject ?>'></div>
-                        <div class="clear"></div>
-                    </div>
-                    <div class="formRow">
-                        <label>Attchment:</label>
-                        <div class="formRight"><a href='<?=$this->preview ?>'><img src="/images/icons/control/32/pdf.png" alt=""><span>Quote Pdf Preview</span></a></div>
-                        <div class="clear"></div>
-                    </div>
-                    
-                     <div class="formRow" style='height:400px;'>
-                        <textarea id="editor" name="body" rows="" cols=""  class='validate[required]' style='min-height:200px;'><?=$this->body ?></textarea>
-                        <div class="clear"></div>
-                    </div>
-                    
-              </div>
-              <input type="hidden" name='to_name' value="<?=$this->customer['name'] ?>">
-							<input type="hidden" name='from' value="<?=$session->user['email'] ?>">
-							<input type="hidden" name='from_name' value="<?=$session->user['name'] ?>">
-        </form>
-        <div class="statsRow">
-        <div class="wrapper">
-        	<div class="controlB">
-            	<ul>
-            			  <li><a class="back" title="Back" href='/quote/edit/id/<?=$this->quote["quote_id"] ?>'><img src="/images/icons/control/32/back.png" alt=""></a></li>
-                    <li><a href="#" class="mail" title="Send" id='mail'><img src="/images/icons/control/32/mail.png" alt=""></a></li>
-                </ul>
-                <div class="clear"></div>
+</main>
+
+<div class="sidebar-container">
+    <aside id="sidebar-quicklinks" class="sidebar">
+        <nav aria-label="Actions" class="sidebar-inner">
+            <div class="sidebar-inner-nav">
+                <div class="quick-links">
+                    <ol>
+                        <li>
+                            <a class="back quick-link" title="Back" href='/quote/edit/id/<?= $this->quote["quote_id"] ?>'>
+                                <img src="/images/icons/control/32/back.png" alt="">
+                                Back
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="mail quick-link" title="Send" id='mail'>
+                                <img src="/images/icons/control/32/mail.png" alt="">
+                                Mail Quote
+                            </a>
+                        </li>
+                    </ol>
+                </div>
             </div>
-        </div>
-    </div>
-       
-    </div>
-    
- </div>
- <script type="text/javascript" >
- 	$('a#mail').click(function(e){
-				e.preventDefault();
-				if($("#mail_content").validationEngine('validate') ==true)
-				{
-					$('.loading').show();
-	  			$('#mail_content').submit();
-	  		}
-  	});
- </script>
+        </nav>
+    </aside>
+</div>
+
+<script type="text/javascript">
+    $('a#mail').on("click", function(e) {
+        e.preventDefault();
+        if ($("#mail_content").validationEngine('validate') == true) {
+            $('.loading').show();
+            $('#mail_content').submit();
+        }
+    });
+
+    $.cleditor.defaultOptions.width = "auto";
+    $.cleditor.defaultOptions.height = "100%";
+    $.cleditor.defaultOptions.useCSS = true;
+    $.cleditor.defaultOptions.docCSSFile = "/css/cleditor-body.css";
+    //$.cleditor.defaultOptions.bodyStyle = "font: 1rem Arial, Verdana";
+    $("#editor").cleditor();
+</script>

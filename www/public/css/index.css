@@ -3852,6 +3852,105 @@ button.signout-button:hover, button.signout-button:focus {
   }
 }
 
+.cleditorMain, .totalAmount {
+  border-radius: 0 0 3px 3px;
+}
+
+.cleditorMain {
+  background-color: white;
+}
+.cleditorMain iframe {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+.cleditorMain iframe body {
+  width: 100%;
+  height: 100%;
+}
+.cleditorMain textarea {
+  border: none !important;
+  margin: 0;
+  padding: 0 !important;
+  resize: none;
+  outline: none;
+  height: 127px;
+  box-shadow: none !important; /* webkit grip focus */
+}
+
+.cleditorToolbar {
+  background: url("../images/wysiwyg/toolbar.gif") repeat;
+}
+
+.cleditorGroup {
+  float: left;
+  height: 26px;
+}
+
+.cleditorButton {
+  float: left;
+  width: 24px;
+  height: 24px;
+  margin: 1px 0 1px 0;
+  background: url("../images/wysiwyg/buttons.gif");
+}
+
+.cleditorDisabled {
+  opacity: 0.3;
+}
+
+.cleditorDivider {
+  float: left;
+  width: 1px;
+  height: 23px;
+  margin: 1px 0 1px 0;
+  background: #CCC;
+}
+
+.cleditorPopup {
+  border: solid 1px #999;
+  background-color: white;
+  position: absolute;
+  cursor: default;
+  z-index: 10000;
+}
+
+.cleditorList div {
+  padding: 2px 4px 2px 4px;
+}
+
+.cleditorColor {
+  width: 150px;
+  padding: 1px 0 0 1px;
+}
+
+.cleditorColor div {
+  float: left;
+  width: 14px;
+  height: 14px;
+  margin: 0 1px 1px 0;
+}
+
+.cleditorPrompt {
+  background-color: #F6F7F9;
+  padding: 10px;
+  font-size: 8.5pt;
+}
+
+.cleditorPrompt input[type=text],
+.cleditorPrompt textarea {
+  font: 8.5pt Arial, Verdana;
+  width: auto;
+  margin: 5px 0;
+}
+
+.cleditorMsg {
+  background-color: #FDFCEE;
+  width: 150px;
+  padding: 4px;
+  font-size: 8.5pt;
+}
+
 .ui-widget-overlay {
   background: rgba(0, 0, 0, 0.7);
   opacity: 1;
@@ -5508,7 +5607,6 @@ kbd {
   list-style: none;
   padding-left: 0;
 }
-
 .document-toc-list.document-toc-list li {
   margin: 0;
 }
@@ -5520,11 +5618,9 @@ kbd {
   padding: 0.5rem 1rem;
   text-decoration: none;
 }
-
 .document-toc-link.document-toc-link:not(.button):hover {
   color: var(--text-link);
 }
-
 .document-toc-link.document-toc-link:not(.button)[aria-current]:not([aria-current=""]):not([aria-current=false]) {
   background-color: var(--background-toc-active);
   border-left: 2px solid var(--category-color);
@@ -5664,9 +5760,9 @@ form .ui-datepicker-append {
   color: var(--text-primary-red);
   display: inline;
 }
-
-.ui-formwizard .formRow:last-child {
-  border-bottom: 1px solid #E2E2E2;
+.formRow .oneTwo.email-preview {
+  grid-column: 1/4;
+  height: 30rem;
 }
 
 .wizButtons {
@@ -10006,10 +10102,6 @@ ul.sub li ul li {
   border-radius: 0 3px 3px 0;
 }
 
-.cleditorMain, .totalAmount {
-  border-radius: 0 0 3px 3px;
-}
-
 .partners li:hover, .newUpdate:hover, .wUserInfo:hover {
   background: #fdfdfd;
 }
@@ -11397,100 +11489,6 @@ label.error {
 .countLabel {
   margin-top: 10px;
   display: block;
-}
-
-/* ===== WYSUWYG editor ===== */
-.cleditorMain {
-  background-color: white;
-}
-
-.cleditorMain iframe {
-  border: none;
-  margin: 0;
-  padding: 0;
-}
-
-.cleditorMain textarea {
-  border: none !important;
-  margin: 0;
-  padding: 0 !important;
-  resize: none;
-  outline: none;
-  height: 127px;
-  box-shadow: none !important; /* webkit grip focus */
-}
-
-.cleditorToolbar {
-  background: url("../images/wysiwyg/toolbar.gif") repeat;
-}
-
-.cleditorGroup {
-  float: left;
-  height: 26px;
-}
-
-.cleditorButton {
-  float: left;
-  width: 24px;
-  height: 24px;
-  margin: 1px 0 1px 0;
-  background: url("../images/wysiwyg/buttons.gif");
-}
-
-.cleditorDisabled {
-  opacity: 0.3;
-}
-
-.cleditorDivider {
-  float: left;
-  width: 1px;
-  height: 23px;
-  margin: 1px 0 1px 0;
-  background: #CCC;
-}
-
-.cleditorPopup {
-  border: solid 1px #999;
-  background-color: white;
-  position: absolute;
-  cursor: default;
-  z-index: 10000;
-}
-
-.cleditorList div {
-  padding: 2px 4px 2px 4px;
-}
-
-.cleditorColor {
-  width: 150px;
-  padding: 1px 0 0 1px;
-}
-
-.cleditorColor div {
-  float: left;
-  width: 14px;
-  height: 14px;
-  margin: 0 1px 1px 0;
-}
-
-.cleditorPrompt {
-  background-color: #F6F7F9;
-  padding: 10px;
-  font-size: 8.5pt;
-}
-
-.cleditorPrompt input[type=text],
-.cleditorPrompt textarea {
-  font: 8.5pt Arial, Verdana;
-  width: auto;
-  margin: 5px 0;
-}
-
-.cleditorMsg {
-  background-color: #FDFCEE;
-  width: 150px;
-  padding: 4px;
-  font-size: 8.5pt;
 }
 
 /* ===== Multiple file uploader  ===== */

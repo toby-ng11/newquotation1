@@ -328,9 +328,9 @@ $(function () {
 	//===== WYSIWYG editor =====//
 
 	$("#editor").cleditor({
-		width: "100%",
-		height: "100%",
-		bodyStyle: "margin: 10px; font: 12px Arial,Verdana; cursor:text",
+		//width: "100%",
+		//height: "100%",
+		//bodyStyle: "margin: 1rem; font: inherit; cursor:text",
 	});
 
 	//===== File uploader =====//
