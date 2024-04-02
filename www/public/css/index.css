@@ -3308,6 +3308,12 @@ body,
 .icon.icon-save {
   mask-image: url("../../images/icons/assets/save.svg");
 }
+.icon.icon-dollar {
+  mask-image: url("../../images/icons/assets/dollar.svg");
+}
+.icon.icon-pdf {
+  mask-image: url("../../images/icons/assets/pdf.svg");
+}
 
 svg.icon {
   background: transparent;
@@ -5160,26 +5166,16 @@ kbd {
     opacity: 0.4;
   }
 }
-/* Statistic row
-================================================== */
-/* ===== Statistics ===== */
 .quick-links {
-  /* background: url(../images/backgrounds/titleRowBg.png); */
-  /* display: flex; */
-  /* position: sticky; */
   top: 7rem;
-  /* bottom: 12rem; */
   align-items: center;
   gap: 1rem;
-  /* width: 100%; */
-  /* margin-top: 7rem; */
 }
 
 .quick-link {
   position: relative;
-  /*border: 1px solid var(--border-primary);*/
   border-radius: 10px;
-  padding: 0.25rem;
+  padding: 0.8rem 0.5rem 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -5190,12 +5186,6 @@ kbd {
   box-shadow: var(--widget-box-shadow);
   transition: all 0.3s ease-in-out;
 }
-
-.quick-link:hover {
-  background: var(--widget-background-hover);
-  color: var(--category-color);
-}
-
 .quick-link::after {
   content: "";
   position: absolute;
@@ -5209,7 +5199,10 @@ kbd {
   box-shadow: var(--widget-box-shadow);
   transition: opacity 0.3s ease-in-out;
 }
-
+.quick-link:hover {
+  background: var(--widget-background-hover);
+  color: var(--category-color);
+}
 .quick-link:hover::after {
   opacity: 1;
 }
@@ -5475,12 +5468,8 @@ kbd {
   padding-left: 0.75rem;
 }
 .sidebar .icon {
-  align-self: center;
-  background-size: 14px;
-  height: 14px;
-  margin-right: -0.25rem;
-  mask-size: 14px;
-  width: 14px;
+  height: 2.5rem;
+  width: 2.5rem;
 }
 .sidebar .icon-experimental,
 .sidebar .icon-nonstandard {

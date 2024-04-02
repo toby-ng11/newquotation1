@@ -94,7 +94,7 @@ class Quote extends DbTable\Quote
 		$info['quote_date']                 = date('Y-m-d h:i:s');
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < 1000) //fix 1969-12-31
 		{
-			$data['expire_date'] = date('Y-m-d h:i:s', "+90 days");
+			$data['expire_date'] = mktime(0, 0, 0, date("m"), date("d") + 90, date("Y"));
 		}
 		$info['expire_date']                = date('Y-m-d h:i:s', strtotime($data['expire_date']));
 		$info['quote_type_id']              = $data['quote_type_id'];
@@ -309,7 +309,21 @@ class Quote extends DbTable\Quote
 			return  false;
 		}
 		$db = $this->getAdapter();
-		$select = $db->select()->from('quotes_manager_view')->order('quote_id desc');
+		$select = $db->select()->from('quotes_manager_view', array(
+			'quote_id',
+			'MAX("quote_no") AS quote_no',
+			'MAX("project_id") AS project_id',
+			'MAX("project_name") AS project_name',
+			//'MAX("sale_name") AS sale_name',
+			'MAX("customer") AS customer',
+			//'MAX("arch_name") AS arch_name',
+			//'MAX("quote_segment") AS quote_segment',
+			'MAX("quote_date") AS quote_date',
+			'MAX("expire_date") AS expire_date',
+			'MAX("ship_required_date") AS ship_required_date',
+			'MAX("status_name") AS status_name',
+			'MAX("approve_status") AS approve_status'
+		));
 		//$select->where('sales_id = ?',$owner)->where('quote.status = ?',$status);
 		$conditions = $db->select()
 			->orWhere('sales_id = ?', $owner)
@@ -318,17 +332,12 @@ class Quote extends DbTable\Quote
 			->getPart(Zend_Db_Select::WHERE);
 		//$select->reset(Zend_Db_Select::WHERE
 		$select->where($conditions[0] . $conditions[1] . $conditions[2])
-			->where('status = ?', $status);
+			->where('status = ?', $status)
+			->group("quote_id")
+			->order('quote_id desc');
 
 		$result = $db->fetchAll($select);
-
-		$merged_result = array();
-
-		foreach ($result as $r) {
-			$merged_result[$r['quote_id']] = $r;
-		}
-
-		return Zend_Json::encode($merged_result);
+		return Zend_Json::encode($result);
 	}
 
 	public function fetchtotal()
@@ -403,7 +412,8 @@ class Quote extends DbTable\Quote
 		$db = $this->getAdapter();
 
 		$select = $db->select()
-		->from('quotes_approval_view', array('quote_id', 
+			->from('quotes_approval_view', array(
+				'quote_id',
 				'MAX("quote_no") AS quote_no',
 				'MAX("project_name") AS project_name',
 				'MAX("sale_name") AS sale_name',
@@ -413,9 +423,10 @@ class Quote extends DbTable\Quote
 				'MAX("quote_date") AS quote_date',
 				'MAX("expire_date") AS expire_date',
 				'MAX("ship_required_date") AS ship_required_date',
-				'MAX("status_name") AS status_name'))
-		->group('quote_id')
-		->order('quote_id desc');
+				'MAX("status_name") AS status_name'
+			))
+			->group('quote_id')
+			->order('quote_id desc');
 
 		$select->where('approve_status = ?', $status); // not delete and waiting approve
 

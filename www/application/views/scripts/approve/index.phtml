@@ -167,8 +167,8 @@ $project = $this->project;
 							<input id="quote-date" type="text" class="datepicker" value="<?= $this->quote['quote_date']->format('m/d/Y') ?>" />
 						</div>
 						<div class="oneTwo required-field">
-							<label for="expire-date">Quote Expire</label>
-							<input id="expire-date" type="text" class="datepicker validate[required]" name='expire_date' value="<?php
+							<label for="expire_date">Quote Expire</label>
+							<input id="expire_date" type="text" class="datepicker validate[required]" name='expire_date' value="<?php
 																																if ($this->quote['expire_date'] == null || $this->quote['expire_date']->format('m/d/Y') < $this->quote['quote_date']->format('m/d/Y')) {
 																																	echo date('m/d/Y', strtotime($this->quote['quote_date']->modify('+60 days')->format('m/d/Y')));
 																																} else {
@@ -206,7 +206,7 @@ $project = $this->project;
 						</div>
 						<div class="oneTwo required-field">
 							<label for='arch'>Arch Rep.</label>
-							<select id='arch' class="validate[required]">
+							<select id='arch' name="arch" class="validate[required]">
 								<?php foreach ($this->arch as $a) { ?>
 									<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $this->quote['arch']) echo 'selected'; ?>><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
 								<?php } ?>
@@ -309,7 +309,7 @@ $project = $this->project;
 					<div class="oneTwo required-field">
 						<label for='item_input'>Item ID </label>
 						<input type="hidden" name="item" id='item_input' />
-						<input type="text" name='item_id' id="item_id" class="validate[required]"/>
+						<input type="text" name='item_id' id="item_id" class="validate[required]" />
 					</div>
 
 					<div class="oneTwo required-field">
@@ -327,8 +327,6 @@ $project = $this->project;
 					<div class="oneTwo required-field">
 						<label for='qty'>Qty</label>
 						<input type="text" name="qty" id='qty' class="validate[required]" />
-						<input type="hidden" id="is_edit" value='0' />
-						<input type="hidden" id="note" value='' />
 					</div>
 
 					<div class="oneTwo dialog-note">
@@ -399,7 +397,7 @@ $project = $this->project;
 						<?php } ?>
 						<?php if ($this->quote['approve_status'] != 10) { ?>
 							<li>
-								<a href="/quote/delete/id/<?= $this->quote['quote_id'] ?>" title="" class='quick-link delete'>
+								<a href="/quote/delete/id/<?= $this->quote['quote_id'] ?>" title="" class='quick-link delete_quote'>
 									<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 										<path d="M20 8.70007H4C3.90151 8.70007 3.80398 8.68067 3.71299 8.64298C3.62199 8.60529 3.53931 8.55005 3.46967 8.4804C3.40003 8.41076 3.34478 8.32808 3.30709 8.23709C3.2694 8.14609 3.25 8.04856 3.25 7.95007C3.25 7.85158 3.2694 7.75405 3.30709 7.66306C3.34478 7.57207 3.40003 7.48939 3.46967 7.41974C3.53931 7.3501 3.62199 7.29486 3.71299 7.25716C3.80398 7.21947 3.90151 7.20007 4 7.20007H20C20.1989 7.20007 20.3897 7.27909 20.5303 7.41974C20.671 7.5604 20.75 7.75116 20.75 7.95007C20.75 8.14899 20.671 8.33975 20.5303 8.4804C20.3897 8.62106 20.1989 8.70007 20 8.70007Z" />
 										<path d="M16.44 20.75H7.56C7.24309 20.7717 6.92503 20.7303 6.62427 20.6281C6.3235 20.5259 6.04601 20.3651 5.80788 20.1548C5.56975 19.9446 5.37572 19.6892 5.23704 19.4034C5.09836 19.1177 5.01779 18.8072 5 18.49V8.00005C5 7.80113 5.07902 7.61037 5.21967 7.46972C5.36032 7.32906 5.55109 7.25005 5.75 7.25005C5.94891 7.25005 6.13968 7.32906 6.28033 7.46972C6.42098 7.61037 6.5 7.80113 6.5 8.00005V18.49C6.5 18.9 6.97 19.25 7.5 19.25H16.38C16.94 19.25 17.38 18.9 17.38 18.49V8.00005C17.38 7.78522 17.4653 7.57919 17.6172 7.42729C17.7691 7.27538 17.9752 7.19005 18.19 7.19005C18.4048 7.19005 18.6109 7.27538 18.7628 7.42729C18.9147 7.57919 19 7.78522 19 8.00005V18.49C18.9822 18.8072 18.9016 19.1177 18.763 19.4034C18.6243 19.6892 18.4303 19.9446 18.1921 20.1548C17.954 20.3651 17.6765 20.5259 17.3757 20.6281C17.075 20.7303 16.7569 20.7717 16.44 20.75ZM16.56 7.75005C16.4611 7.75139 16.363 7.73291 16.2714 7.6957C16.1798 7.65848 16.0966 7.60329 16.0267 7.53337C15.9568 7.46346 15.9016 7.38024 15.8644 7.28864C15.8271 7.19704 15.8087 7.09891 15.81 7.00005V5.51005C15.81 5.10005 15.33 4.75005 14.81 4.75005H9.22C8.67 4.75005 8.22 5.10005 8.22 5.51005V7.00005C8.22 7.19896 8.14098 7.38972 8.00033 7.53038C7.85968 7.67103 7.66891 7.75005 7.47 7.75005C7.27109 7.75005 7.08032 7.67103 6.93967 7.53038C6.79902 7.38972 6.72 7.19896 6.72 7.00005V5.51005C6.75872 4.88136 7.04203 4.29281 7.50929 3.87041C7.97655 3.44801 8.5906 3.22533 9.22 3.25005H14.78C15.4145 3.21723 16.0362 3.43627 16.51 3.8595C16.9838 4.28273 17.2713 4.87592 17.31 5.51005V7.00005C17.3113 7.09938 17.2929 7.19798 17.2558 7.29013C17.2187 7.38228 17.1637 7.46615 17.0939 7.53685C17.0241 7.60756 16.941 7.6637 16.8493 7.70201C16.7577 7.74033 16.6593 7.76006 16.56 7.76005V7.75005Z" />
@@ -487,7 +485,10 @@ $project = $this->project;
 		},
 		paging: false,
 		scrollX: true,
-		fixedColumns: { start: 1, end: 1}
+		fixedColumns: {
+			start: 1,
+			end: 1
+		}
 	});
 
 
@@ -496,27 +497,35 @@ $project = $this->project;
 		$form.find('input:radio, input:checkbox')
 			.prop('checked', false)
 			.prop('selected', false);
-		$form.find('#sort').val(getmaxsort());
-	}
-
-	function getmaxsort() {
-		var sorts = [];
-		$("#item_body .sorts").each(function(index) {
-			sorts.push($(this).val());
-		});
-
-		console.log(sorts);
-		if (sorts == null) {
-			return 0;
-		} else {
-			return Math.max.apply(Math, sorts) + 1;
-		}
-
 	}
 
 	var current_edit_row = '';
 
 	$(function() {
+
+		let currentRow = '';
+
+		$('#items tbody').on('click', 'tr', function() {
+			currentRow = itemTable.row(this).data();
+			//console.log(currentRow['product_id'], currentRow['note'], currentRow['qty']);
+		});
+
+		function getolddata(row) {
+			let item_id = currentRow['product_id'];
+			let note = currentRow['note'];
+			let qty = currentRow['qty'];
+			let unit_price = currentRow['unit_price'];
+			let uom = currentRow['uom'];
+			let data = {
+				'old_item_id': item_id,
+				'old_uom': uom,
+				'old_price': unit_price,
+				'old_qty': qty,
+				'old_note': note
+			};
+			return data;
+		}
+
 		$("#dialog-message").dialog({
 			autoOpen: false,
 			modal: true,
@@ -577,13 +586,12 @@ $project = $this->project;
 			$('#is_edit').val(1);
 
 			let item_id = currentRow['product_id'];
-			let item_name = currentRow['item_desc']
 			let note = currentRow['note'];
 			let qty = currentRow['qty'];
 			let unit_price = currentRow['unit_price'];
 			let uom = currentRow['uom'];
 
-			$('#item #item_input').val(item_name);
+			//$('#item #item_input').val(item_name);
 			$('#item #item_id').val(item_id);
 			$('#item #price').val(unit_price);
 			$('#item #qty').val(qty);
@@ -592,7 +600,7 @@ $project = $this->project;
 			getoumedit(item_id, uom, unit_price);
 		}
 
-		function edititem(item_id, uom, price, qty, note) {
+		function edititem(item_id, item_desc, uom, price, qty, note) {
 			var olddata = getolddata(current_edit_row);
 			var data = {
 				'item_id': item_id,
@@ -606,7 +614,6 @@ $project = $this->project;
 				'old_qty': olddata['old_qty'],
 				'old_note': olddata['old_note']
 			};
-
 			$('.loading').show();
 			$.ajax({
 				url: '/project/edititem/pro/' + $('#project_id').val(),
@@ -638,7 +645,7 @@ $project = $this->project;
 				url: '/item/uom/id/' + $("#item_id ").val(),
 				type: "get",
 				success: function(data) {
-					var uom = jQuery.parseJSON(data);
+					var uom = JSON.parse(data);
 					var list = '';
 					$.each(uom, function(i, item) {
 						list = list + '<option value="' + item.uom + '">' + item.uom + '</option>';
@@ -681,7 +688,7 @@ $project = $this->project;
 				url: '/item/uom/id/' + $("#item_id ").val(),
 				type: "get",
 				success: function(data) {
-					var uom = jQuery.parseJSON(data);
+					var uom = JSON.parse(data);
 					var list = '';
 					$.each(uom, function(i, item) {
 						list = list + '<option value="' + item.uom + '">' + item.uom + '</option>';
@@ -702,7 +709,7 @@ $project = $this->project;
 				url: '/item/price/id/' + $("#item_id ").val() + '/uom/' + $("#uom ").val(),
 				type: "get",
 				success: function(data) {
-					var price = jQuery.parseJSON(data);
+					var price = JSON.parse(data);
 					$('#price').val(price.price);
 					$('.loading').hide();
 				}
@@ -716,7 +723,7 @@ $project = $this->project;
 				url: '/customer/fetchbyid/id/' + id,
 				type: "get",
 				success: function(data) {
-					var result = jQuery.parseJSON(data);
+					var result = JSON.parse(data);
 					if (result != null) {
 						$('#quote').val(result.name);
 						$('#customer_id').val(id);
@@ -808,7 +815,13 @@ $project = $this->project;
 
 		$('a.delete_quote').on("click", function(e) {
 			if (confirm("Confirm delete This Quote?") == true) {
-
+				$.ajax({
+						url: $(this).attr('href'),
+						type: "post",
+						success: function(data) {
+							window.location= "/index/approval";
+						}
+					});
 			} else {
 				e.preventDefault();
 			}
@@ -817,18 +830,18 @@ $project = $this->project;
 		$('a.approve').on("click", function(e) {
 			e.preventDefault();
 			if ($("#quote_content").validationEngine('validate') == true) {
-				$('.loading').show();
-				$.ajax({
-					url: "/quote/approve/id/<?= $this->quote['quote_id'] ?>",
-					type: "post",
-					data: $('#quote_content').serialize(),
-					success: function(data) {
-
-						window.location = '/index/approval';
-					}
-				});
-				$('.loading').hide();
-
+				if (confirm("Are you sure you want to disapprove this quote?") == true) {
+					$('.loading').show();
+					$.ajax({
+						url: $(this).attr('href'),
+						type: "post",
+						data: $('#quote_content').serialize(),
+						success: function(data) {
+							window.location.reload();
+						}
+					});
+					$('.loading').hide();
+				}
 			} else {
 				return false;
 			}
@@ -837,15 +850,17 @@ $project = $this->project;
 
 		$('a.disapprove').on("click", function(e) {
 			e.preventDefault();
-			$('.loading').show();
-			$.ajax({
-				url: "/quote/disapprove/id/<?= $this->quote['quote_id'] ?>",
-				type: "get",
-				success: function(data) {
-					window.location = '/index/approval';
-				}
-			});
-			$('.loading').hide();
+			if (confirm("Are you sure you want to disapprove this quote?") == true) {
+				$('.loading').show();
+				$.ajax({
+					url: $(this).attr('href'),
+					type: "get",
+					success: function(data) {
+						window.location.reload();
+					}
+				});
+				$('.loading').hide();
+			}
 		});
 	});
 </script>

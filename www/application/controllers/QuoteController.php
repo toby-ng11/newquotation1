@@ -116,7 +116,7 @@ class QuoteController extends Zend_Controller_Action
     	$quote = new Quote();
     	 
     	$quote->remove($quote_id);
-    	$this->redirect('/index/approval');
+    	//$this->redirect('/index/approval');
     }
     
     public function readyAction()

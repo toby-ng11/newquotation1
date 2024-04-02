@@ -65,7 +65,7 @@ class User extends DbTable\User
 	    }
 	    else
 	    {	
-			if ($user['id'] == 'TNGUYEN') { $user['approve_id'] = 1 ;}
+			if ($user['id'] == 'TNGUYEN' or $user['id'] == 'QTEST') { $user['approve_id'] = 1 ;}
 			else { $user['approve_id'] = null;}
 	    }
 	    

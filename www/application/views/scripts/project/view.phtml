@@ -203,15 +203,15 @@ $project = $this->project;
                     <div class="title">
                         <?php if ($this->owner == 1) { ?><a href="#" title="" class="button greenB" style="margin: 5px;" id="add_item"><span>Add New</span></a><a href="#" title="" class="button redB" style="margin: 5px;display:none" id="save_item"><span>Save</span></a><?php } ?>
                     </div>
-                    <table width="100%" class="sTable" id="items" style="text-align:center;">
+                    <table width="100%" class="sTable display nowrap" id="items">
                         <thead>
                             <tr>
-                                <th></th>
-                                <th width="50%">Item ID - Description</th>
+                                <th>Item</th>
                                 <th>Quality Quoted</th>
                                 <th>Unit Price</th>
                                 <th>Unit Of Measure</th>
                                 <th>Price Quoted</th>
+                                <th>Note</th>
                             </tr>
                         </thead>
                         <tbody id="item_body">
@@ -293,6 +293,33 @@ $project = $this->project;
 
     $('input').attr('readonly', 'readonly');
     $('.selector').attr('diabled', 'diabled');
+
+    let itemTable = $("#items").DataTable({
+		ajax: {
+			url: "/project/item/id/" + $('#project_id').val(),
+			dataSrc: ''
+		},
+		processing: true,
+		columns: [
+			{ data: "product_id", render: function(data, type, row, meta) {
+				return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
+			} },
+			{ data: "qty" },
+			{ data: "unit_price" },
+			{ data: "uom" },
+			{ data: "subtotal" },
+			{ data: "note" }
+		],
+		columnDefs: [
+			{ targets: [0, 1, 2, 3, 4], className: 'dt-body-center' },
+			{ targets: [0, 1, 2, 3, 4, 5], className: 'dt-head-center' },
+		],
+		layout: { topStart: null, topEnd: null },
+		order: { data: "added.date" },
+		paging: false,
+		scrollX: true,
+		fixedColumns: { start: 1}
+    });
 
     $('#project_memo').DataTable({
         ajax: {

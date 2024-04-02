@@ -11,7 +11,7 @@ include 'C:/inetpub/wwwroot/newquotation/vendor/autoload.php';
 //define('ZF2_PATH', __DIR__.'/../vendor/zendframework');
 
 error_reporting(E_ALL);
-ini_set('display_errors', '1');
+//ini_set('display_errors', '1');
 
 if (! class_exists(Application::class)) {
     throw new RuntimeException(

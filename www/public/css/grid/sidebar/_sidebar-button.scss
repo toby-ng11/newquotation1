@@ -1,27 +1,15 @@
 @use "../../vars" as *;
 
-/* Statistic row
-================================================== */
-
-/* ===== Statistics ===== */
-
 .quick-links {
-	/* background: url(../images/backgrounds/titleRowBg.png); */
-	/* display: flex; */
-	/* position: sticky; */
 	top: 7rem;
-	/* bottom: 12rem; */
 	align-items: center;
 	gap: 1rem;
-	/* width: 100%; */
-	/* margin-top: 7rem; */
 }
 
 .quick-link {
 	position: relative;
-	/*border: 1px solid var(--border-primary);*/
 	border-radius: 10px;
-	padding: 0.25rem;
+	padding: 0.8rem 0.5rem 0.5rem;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -31,31 +19,30 @@
 	color: var(--text-secondary);
 	box-shadow: var(--widget-box-shadow);
 	transition: all 0.3s ease-in-out;
-}
 
-.quick-link:hover {
-	background: var(--widget-background-hover);
-	color: var(--category-color);
-}
+	&::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		border-radius: 10px;
+		z-index: -1;
+		box-shadow: var(--widget-box-shadow);
+		transition: opacity 0.3s ease-in-out;
+	}
 
-.quick-link::after {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	opacity: 0;
-	border-radius: 10px;
-	z-index: -1;
-	box-shadow: var(--widget-box-shadow);
-	transition: opacity 0.3s ease-in-out;
-}
+	&:hover {
+		background: var(--widget-background-hover);
+		color: var(--category-color);
 
-.quick-link:hover::after {
-	opacity: 1;
+		&::after {
+			opacity: 1;
+		}
+	}
 }
-
 
 .statsItems {
 	padding: 20px 0 14px 0;

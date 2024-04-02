@@ -270,58 +270,39 @@
             },
             processing: true,
             //"serverSide": true,
-            columns: [{
-                    data: "quote_id",
-                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                        $(cell).html("<a target='_blank' href='/quote/edit/id/" + rowData.quote_id + "'>" + rowData.quote_id + "</a>");
+            columns: [
+                { data: "quote_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    $(cell).html("<a target='_blank' href='/quote/edit/id/" + rowData.quote_id + "'>" + rowData.quote_id + "</a>");
+                }},
+                { data: "project_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.quote_id + "'>" + rowData.project_name + "</a>");
+                }},
+                { data: "quote_date.date" },
+                { data: "expire_date.date", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    let d = new Date(cellData);
+                    let today = new Date();
+                    if (d <= today) {
+                        $(cell).addClass("red");
                     }
-                },
-                {
-                    data: "project_id",
-                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                        $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.quote_id + "'>" + rowData.project_name + "</a>");
+                }},
+                { data: "ship_required_date.date" },
+                { data: "customer" },
+                { data: "status_name" },
+                { data: "approve_status", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    if (cellData == -1) {
+                        $(cell).addClass("disapproved orange");
+                        $(cell).html("Disapproved");
+                    } else if (cellData == 10) {
+                        $(cell).addClass("approved green");
+                        $(cell).html("Approved");
+                    } else if (cellData == 1) {
+                        $(cell).addClass("waiting red");
+                        $(cell).html("Waiting Approval");
+                    } else {
+                        $(cell).addClass("init");
+                        $(cell).html("Not Submitted");
                     }
-                },
-                {
-                    data: "quote_date.date"
-                },
-                {
-                    data: "expire_date.date",
-                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                        let d = new Date(cellData);
-                        let today = new Date();
-                        if (d <= today) {
-                            $(cell).addClass("red");
-                        }
-                    }
-                },
-                {
-                    data: "ship_required_date.date"
-                },
-                {
-                    data: "customer"
-                },
-                {
-                    data: "status_name"
-                },
-                {
-                    data: "approve_status",
-                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                        if (cellData == -1) {
-                            $(cell).addClass("disapproved orange");
-                            $(cell).html("Disapproved");
-                        } else if (cellData == 10) {
-                            $(cell).addClass("approved green");
-                            $(cell).html("Approved");
-                        } else if (cellData == 1) {
-                            $(cell).addClass("waiting red");
-                            $(cell).html("Waiting Approval");
-                        } else {
-                            $(cell).addClass("init");
-                            $(cell).html("Not Submitted");
-                        }
-                    }
-                }
+                }}
             ],
             columnDefs: [{
                 targets: [2, 3, 4],

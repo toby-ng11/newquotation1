@@ -70,7 +70,8 @@ class ItemsProject extends DbTable\Products
 			$db->update('projects_products', $i,implode(' ', $sql->getPart('where')).' and id = '.$id);
 
 		} catch (Exception $e) {
-			var_dump($e);exit;
+			var_dump($e);
+			exit;
 			return false;
 		}
 	

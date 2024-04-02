@@ -151,4 +151,5 @@ class IndexController extends Zend_Controller_Action
 		echo $quote->fetchwaitingJson(-1, $is_admin);
 		exit;
 	}
+
 }

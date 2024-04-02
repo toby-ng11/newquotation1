@@ -27,46 +27,73 @@ $project = $this->project;
 
 	<div class="main-page-content">
 		<header class="main-page-content-header">
-			<h1>Project to quote</h1>
+			<h1>Making quote</h1>
 		</header>
 
-		<section aria-labelledby="project-information" id="section1" data-nav="Project information" class="active">
-			<h2>Project information</h2>
-			<div class="widget-information">
-				<div class="widget-table">
-					<div class="project-information">
-						<p>Project Name: <b><?= $project['project_name'] ?></b><br>
-							Project Quote No: <b><?= $project['quote_no'] ?></b><br>
-							Worksheet Owner: <b><?= $project['owner'] ?></b><br>
-							Status: <b><?= $project['status_name'] ?></b><br>
-							Due Date: <b><?= $project['due_date']->format('Y-m-d') ?></b>
-						</p>
-					</div>
+		<div class="widget-information">
+			<div style="grid-row: 1/1" class="widget-table">
+				<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+					<path d="M19 12.75H8C7.80109 12.75 7.61032 12.671 7.46967 12.5303C7.32902 12.3897 7.25 12.1989 7.25 12C7.25 11.8011 7.32902 11.6103 7.46967 11.4697C7.61032 11.329 7.80109 11.25 8 11.25H19C19.1989 11.25 19.3897 11.329 19.5303 11.4697C19.671 11.6103 19.75 11.8011 19.75 12C19.75 12.1989 19.671 12.3897 19.5303 12.5303C19.3897 12.671 19.1989 12.75 19 12.75Z" />
+					<path d="M19 8.25H8C7.80109 8.25 7.61032 8.17098 7.46967 8.03033C7.32902 7.88968 7.25 7.69891 7.25 7.5C7.25 7.30109 7.32902 7.11032 7.46967 6.96967C7.61032 6.82902 7.80109 6.75 8 6.75H19C19.1989 6.75 19.3897 6.82902 19.5303 6.96967C19.671 7.11032 19.75 7.30109 19.75 7.5C19.75 7.69891 19.671 7.88968 19.5303 8.03033C19.3897 8.17098 19.1989 8.25 19 8.25Z" />
+					<path d="M19 17.25H8C7.80109 17.25 7.61032 17.171 7.46967 17.0303C7.32902 16.8897 7.25 16.6989 7.25 16.5C7.25 16.3011 7.32902 16.1103 7.46967 15.9697C7.61032 15.829 7.80109 15.75 8 15.75H19C19.1989 15.75 19.3897 15.829 19.5303 15.9697C19.671 16.1103 19.75 16.3011 19.75 16.5C19.75 16.6989 19.671 16.8897 19.5303 17.0303C19.3897 17.171 19.1989 17.25 19 17.25Z" />
+					<path d="M5.00002 8.50002C4.87 8.50161 4.74093 8.47783 4.62002 8.43002C4.50052 8.37204 4.3895 8.29802 4.29002 8.21002C4.19734 8.11658 4.12401 8.00576 4.07425 7.88392C4.02448 7.76209 3.99926 7.63163 4.00002 7.50002C4.0037 7.23525 4.10728 6.98165 4.29002 6.79002C4.38389 6.69742 4.49637 6.62583 4.62002 6.58002C4.86348 6.48 5.13656 6.48 5.38002 6.58002C5.50277 6.62761 5.61491 6.69898 5.71002 6.79002C5.89275 6.98165 5.99633 7.23525 6.00002 7.50002C6.00078 7.63163 5.97555 7.76209 5.92579 7.88392C5.87602 8.00576 5.8027 8.11658 5.71002 8.21002C5.61054 8.29802 5.49951 8.37204 5.38002 8.43002C5.25911 8.47783 5.13003 8.50161 5.00002 8.50002Z" />
+					<path d="M5.00002 13C4.86934 12.9984 4.74024 12.9712 4.62002 12.92C4.49883 12.8693 4.38722 12.7983 4.29002 12.71C4.19734 12.6165 4.12401 12.5057 4.07425 12.3839C4.02448 12.262 3.99926 12.1316 4.00002 12C4.0037 11.7352 4.10728 11.4816 4.29002 11.29C4.38722 11.2016 4.49883 11.1306 4.62002 11.08C4.80104 10.996 5.00303 10.9682 5.20002 11L5.38002 11.06L5.56002 11.15C5.6124 11.1869 5.6625 11.227 5.71002 11.27C5.89749 11.4666 6.00144 11.7283 6.00002 12C6.00002 12.2652 5.89466 12.5195 5.70712 12.7071C5.51959 12.8946 5.26523 13 5.00002 13Z" />
+					<path d="M4.99999 17.5C4.86998 17.5016 4.7409 17.4778 4.61999 17.43C4.50049 17.372 4.38947 17.298 4.28999 17.21C4.20166 17.1128 4.13063 17.0012 4.07999 16.88C4.02708 16.7603 3.99976 16.6309 3.99976 16.5C3.99976 16.3691 4.02708 16.2397 4.07999 16.12C4.13063 15.9988 4.20166 15.8872 4.28999 15.79C4.43061 15.6513 4.60919 15.5573 4.80317 15.5199C4.99716 15.4825 5.19788 15.5034 5.37999 15.58C5.50274 15.6276 5.61488 15.699 5.70999 15.79C5.79832 15.8872 5.86935 15.9988 5.91999 16.12C5.97289 16.2397 6.00022 16.3691 6.00022 16.5C6.00022 16.6309 5.97289 16.7603 5.91999 16.88C5.86935 17.0012 5.79832 17.1128 5.70999 17.21C5.61655 17.3027 5.50573 17.376 5.38389 17.4258C5.26206 17.4756 5.1316 17.5008 4.99999 17.5Z" />
+				</svg>
+				<div class="project-information project-name">
+					<h2><?= $project['project_name'] ?></h2>
+					<p>by <b><?= $project['owner'] ?></b></p>
 				</div>
 			</div>
-		</section>
 
-		<!-- Page statistics area -->
-		<!-- Main content wrapper --
-    
-        <!-- Note -->
-		<!-- <div class="nNote nInformation hideit">
-            <p><strong>INFORMATION: </strong>Quote Has been saved.</p>
-        </div>-->
+			<div class="widget-table">
+				<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+					<path d="M17 4.25H15.75V3C15.75 2.80109 15.671 2.61032 15.5303 2.46967C15.3897 2.32902 15.1989 2.25 15 2.25C14.8011 2.25 14.6103 2.32902 14.4697 2.46967C14.329 2.61032 14.25 2.80109 14.25 3V4.25H9.75V3C9.75 2.80109 9.67098 2.61032 9.53033 2.46967C9.38968 2.32902 9.19891 2.25 9 2.25C8.80109 2.25 8.61032 2.32902 8.46967 2.46967C8.32902 2.61032 8.25 2.80109 8.25 3V4.25H7C6.27065 4.25 5.57118 4.53973 5.05546 5.05546C4.53973 5.57118 4.25 6.27065 4.25 7V18C4.25 18.7293 4.53973 19.4288 5.05546 19.9445C5.57118 20.4603 6.27065 20.75 7 20.75H17C17.7293 20.75 18.4288 20.4603 18.9445 19.9445C19.4603 19.4288 19.75 18.7293 19.75 18V7C19.75 6.27065 19.4603 5.57118 18.9445 5.05546C18.4288 4.53973 17.7293 4.25 17 4.25ZM7 5.75H8.25V7C8.25 7.19891 8.32902 7.38968 8.46967 7.53033C8.61032 7.67098 8.80109 7.75 9 7.75C9.19891 7.75 9.38968 7.67098 9.53033 7.53033C9.67098 7.38968 9.75 7.19891 9.75 7V5.75H14.25V7C14.25 7.19891 14.329 7.38968 14.4697 7.53033C14.6103 7.67098 14.8011 7.75 15 7.75C15.1989 7.75 15.3897 7.67098 15.5303 7.53033C15.671 7.38968 15.75 7.19891 15.75 7V5.75H17C17.3315 5.75 17.6495 5.8817 17.8839 6.11612C18.1183 6.35054 18.25 6.66848 18.25 7V9.75H5.75V7C5.75 6.66848 5.8817 6.35054 6.11612 6.11612C6.35054 5.8817 6.66848 5.75 7 5.75ZM17 19.25H7C6.66848 19.25 6.35054 19.1183 6.11612 18.8839C5.8817 18.6495 5.75 18.3315 5.75 18V11.25H18.25V18C18.25 18.3315 18.1183 18.6495 17.8839 18.8839C17.6495 19.1183 17.3315 19.25 17 19.25Z" />
+				</svg>
+				<div class="project-information">
+					<p>Due date</p>
+					<h2><?= $project['due_date']->format('m/d/Y') ?></h2>
+				</div>
+			</div>
+
+			<div class="widget-table">
+				<div class="project-information">
+					<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+						<path d="M12 20.75C11.8019 20.7474 11.6126 20.6676 11.4725 20.5275C11.3324 20.3874 11.2526 20.1981 11.25 20V4C11.25 3.80109 11.329 3.61032 11.4697 3.46967C11.6103 3.32902 11.8011 3.25 12 3.25C12.1989 3.25 12.3897 3.32902 12.5303 3.46967C12.671 3.61032 12.75 3.80109 12.75 4V20C12.7474 20.1981 12.6676 20.3874 12.5275 20.5275C12.3874 20.6676 12.1981 20.7474 12 20.75Z" />
+						<path d="M13.5 18.75H7C6.80109 18.75 6.61032 18.671 6.46967 18.5303C6.32902 18.3897 6.25 18.1989 6.25 18C6.25 17.8011 6.32902 17.6103 6.46967 17.4697C6.61032 17.329 6.80109 17.25 7 17.25H13.5C14.1615 17.3089 14.8199 17.1064 15.3339 16.6859C15.8479 16.2653 16.1768 15.6601 16.25 15C16.1768 14.3399 15.8479 13.7347 15.3339 13.3141C14.8199 12.8935 14.1615 12.691 13.5 12.75H10.5C9.97449 12.7839 9.44746 12.7136 8.94915 12.5433C8.45085 12.373 7.99107 12.106 7.5962 11.7576C7.20134 11.4092 6.87915 10.9863 6.64814 10.513C6.41712 10.0398 6.28182 9.52562 6.25 8.99998C6.28182 8.47434 6.41712 7.96016 6.64814 7.48694C6.87915 7.01371 7.20134 6.59076 7.5962 6.24235C7.99107 5.89394 8.45085 5.62692 8.94915 5.45663C9.44746 5.28633 9.97449 5.21611 10.5 5.24998H16C16.1989 5.24998 16.3897 5.329 16.5303 5.46965C16.671 5.61031 16.75 5.80107 16.75 5.99998C16.75 6.1989 16.671 6.38966 16.5303 6.53031C16.3897 6.67097 16.1989 6.74998 16 6.74998H10.5C9.83846 6.69103 9.18013 6.89353 8.6661 7.3141C8.15206 7.73468 7.82321 8.33987 7.75 8.99998C7.82321 9.6601 8.15206 10.2653 8.6661 10.6859C9.18013 11.1064 9.83846 11.3089 10.5 11.25H13.5C14.0255 11.2161 14.5525 11.2863 15.0508 11.4566C15.5492 11.6269 16.0089 11.8939 16.4038 12.2423C16.7987 12.5908 17.1208 13.0137 17.3519 13.4869C17.5829 13.9602 17.7182 14.4743 17.75 15C17.7182 15.5256 17.5829 16.0398 17.3519 16.513C17.1208 16.9863 16.7987 17.4092 16.4038 17.7576C16.0089 18.106 15.5492 18.373 15.0508 18.5433C14.5525 18.7136 14.0255 18.7839 13.5 18.75Z" />
+					</svg>
+					<p>Project status</p>
+					<h2>
+						<?php if ($project['status'] != 13) {
+							echo $project['status_name'];
+						} else {
+							echo 'Closed';
+						} ?>
+					</h2>
+				</div>
+			</div>
+		</div>
 
 		<!-- Form -->
 		<form action="/quote/save" method='post' class="form" id="quote_content">
 			<section aria-labelledby="customer-information" id="section2" data-nav="Customer information">
-				<h2>Customer Infomation</h2>
-				<input type="hidden" name='project_id' value="<?= $project['project_id'] ?>" />
+				<input type="hidden" id="project_id" name='project_id' value="<?= $project['project_id'] ?>" />
 				<div class="widget-table" id="customer_info">
-					<div class="title">
-						<a href="javascript:void(0)" title="" class="button greenB" style="margin: 2px;" id="add_new_mode">
-							<span>New Customer</span></a>
-						<a href="javascript:void(0)" title="" class="button basic" style='display:none;' style="margin: 2px;" id="discard_new_mode">
-							<span>Discard Adding</span>
-						</a>
+					<div class="widget-button">
+						<button type="button" class="button action has-icon new-customer small" id="add_new_mode">
+							<span class="button-wrap">
+								<span class="icon icon-add"></span>
+								New Customer
+							</span>
+						</button>
+						<button type="button" class="button action has-icon discard-customer small basic" style='display:none;' id="discard_new_mode">
+							<span class="button-wrap">
+								<span class="icon icon-undo"></span>
+								Discard Adding
+							</span>
+						</button>
 					</div>
+					<h2>Customer Infomation</h2>
 					<div class="formRow">
 						<div class="oneTwo required-field">
 							<label for="quote">Quote To</label>
@@ -98,8 +125,8 @@ $project = $this->project;
 			</section>
 
 			<section aria-labelledby="quote-information" id="section3" data-nav="Quote information">
-				<h2>Quote Infomation</h2>
 				<div class="widget-table">
+					<h2>Quote Infomation</h2>
 					<div class="formRow">
 
 						<div class="oneTwo">
@@ -172,19 +199,26 @@ $project = $this->project;
 			</section>
 
 			<section aria-labelledby="items" id="section4" data-nav="Items">
-				<h2>Items</h2>
 				<div class="widget-table">
-					<a href="#" title="" class="button greenB" style="margin: 5px;" id="opener"><span>Add new Item</span></a>
-					<table cellpadding="0" cellspacing="0" width="100%" class="sTable" id="items" style="text-align:center;">
+					<div class="widget-button">
+						<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="opener">
+							<span class="button-wrap">
+								<span class="icon icon-add"></span>
+								Add Item
+							</span>
+						</button>
+					</div>
+					<h2>Items</h2>
+					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="items">
 						<thead>
 							<tr>
-								<td></td>
-								<td width="50%">Item ID - Description</td>
+								<td>Item</td>
 								<td>Quality Quoted</td>
 								<td>Unit Price</td>
 								<td>Unit Of Measure</td>
 								<td>Price Quoted</td>
-								<td>Action</td>
+								<td>Note</td>
+								<td>Options</td>
 							</tr>
 						</thead>
 						<tbody id="item_body">
@@ -211,8 +245,8 @@ $project = $this->project;
 			</section>
 
 			<section aria-labelledby="comment" id="section5" data-nav="Comment">
-				<h2>Comment</h2>
 				<div class="widget-table">
+					<h2>Comment</h2>
 					<div class="formRow">
 						<div class="oneTwo">
 							<label for="quote-note">Quote Note</label>
@@ -224,25 +258,38 @@ $project = $this->project;
 		</form>
 
 		<div id="dialog-message" title="Add Item">
-			<div class="uiForm">
-				<form action="" class="dialog" id='item'>
-					<span class="formNote">Enter Item ID </span>
-					<input type="text" name="item" id='item_input' class="validate[required]" />
-					<input type="hidden" id="item_id" />
-					<span class="formNote">UOM</span>
-					<select name="uom" id='uom' class="validate[required]">
-						<option value=''>Select UOM</option>
-					</select>
-					<div class="clear"></div>
-					<span class="formNote">Price ($)</span>
-					<input type="text" class="validate[required,custom[number]]" name="price" id='price' placeholder="You can override the price" />
-					<span class="formNote">Qty</span>
-					<input type="text" name="qty" id='qty' class="validate[required]" />
-					<input type="hidden" id="is_edit" value='0' />
-					<input type="hidden" id="note" value='' />
-					<input type="hidden" id="sort" value='' />
-				</form>
-			</div>
+			<form action="" class="dialog" id='item'>
+				<div class="dialog-form">
+					<div class="oneTwo required-field">
+						<label for="item_id">Item ID</label>
+						<input type="hidden" name="item" id='item_input' />
+						<input type="text" id="item_id" name='item_id' class="validate[required]" />
+					</div>
+
+					<div class="oneTwo required-field">
+						<label for='uom'>Unit Of Measure</label>
+						<select name="uom" id='uom' class="validate[required]">
+							<option value=''>-- Select UOM --</option>
+						</select>
+					</div>
+
+					<div class="oneTwo required-field">
+						<label class="formNote">Price ($)</label>
+						<input type="text" class="validate[required,custom[number]]" name="price" id='price' placeholder="You can override the price" />
+					</div>
+
+					<div class="oneTwo required-field">
+						<label for='qty'>Quantity</label>
+						<input type="text" name="qty" id='qty' class="validate[required]" />
+					</div>
+
+					<div class="oneTwo dialog-note">
+						<label for='note'>Note</label>
+						<textarea rows="5" name='note' id="note" maxlength="255" class="validate[maxSize[255]]"></textarea>
+						<input type="hidden" id="is_edit" value='0' />
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
 </main>
@@ -263,7 +310,7 @@ $project = $this->project;
 									<path d="M16.75 20H15.25V13.75H8.75V20H7.25V13.5C7.25 13.1685 7.3817 12.8505 7.61612 12.6161C7.85054 12.3817 8.16848 12.25 8.5 12.25H15.5C15.8315 12.25 16.1495 12.3817 16.3839 12.6161C16.6183 12.8505 16.75 13.1685 16.75 13.5V20Z" />
 									<path d="M12.47 8.75H8.53001C8.3606 8.74869 8.19311 8.71403 8.0371 8.64799C7.88109 8.58195 7.73962 8.48582 7.62076 8.36511C7.5019 8.24439 7.40798 8.10144 7.34437 7.94443C7.28075 7.78741 7.24869 7.61941 7.25001 7.45V4H8.75001V7.25H12.25V4H13.75V7.45C13.7513 7.61941 13.7193 7.78741 13.6557 7.94443C13.592 8.10144 13.4981 8.24439 13.3793 8.36511C13.2604 8.48582 13.1189 8.58195 12.9629 8.64799C12.8069 8.71403 12.6394 8.74869 12.47 8.75Z" />
 								</svg>
-							Save Quote</a></li>
+								Save & make quote</a></li>
 						<!--<li><a href="#" title=""><img src="/images/icons/control/32/mail.png" alt="" /><span>Email Quote</span></a></li>
                     <li><a href="#" title=""><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>-->
 					</ol>
@@ -274,48 +321,147 @@ $project = $this->project;
 </div>
 
 <script type="text/javascript">
+	let itemTable = $("#items").DataTable({
+		ajax: {
+			url: "/project/item/id/" + $('#project_id').val(),
+			dataSrc: ''
+		},
+		processing: true,
+		columns: [{
+				data: "product_id",
+				render: function(data, type, row, meta) {
+					return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
+				}
+			},
+			{
+				data: "qty"
+			},
+			{
+				data: "unit_price"
+			},
+			{
+				data: "uom"
+			},
+			{
+				data: "subtotal"
+			},
+			{
+				data: "note"
+			},
+			{
+				data: "product_id",
+				render: function(data, type, row, meta) {
+					//var oldData = getolddata($(this).closest('tr'));
+					return '<div class="row-button">' +
+						'<a title="Edit this item" class="edit" href="#">' +
+						'<span class="button-wrap">' +
+						'<span class="icon icon-edit"></span>' +
+						'</span></a>' +
+						'<a title="Delete this item" class="item_delete" href="/project/deleteitem/pro/' + row.project_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty + '"' +
+						'index="' + data + '">' +
+						'<span class="button-wrap">' +
+						'<span class="icon icon-delete"></span>' +
+						'</span></a></div>';
+				}
+			}
+		],
+		columnDefs: [{
+				targets: [0, 1, 2, 3, 4],
+				className: 'dt-body-center'
+			},
+			{
+				targets: [0, 1, 2, 3, 4, 5, 6],
+				className: 'dt-head-center'
+			},
+		],
+		layout: {
+			topStart: null,
+			topEnd: null
+		},
+		order: {
+			data: "added.date"
+		},
+		paging: false,
+		scrollX: true,
+		fixedColumns: {
+			start: 1,
+			end: 1
+		}
+	});
 
 	function resetForm($form) {
 		$form.find('input:text, input:password, input:file, select, textarea').val('');
 		$form.find('input:radio, input:checkbox')
 			.prop('checked', false).prop('selected', false);
-		$form.find('#sort').val(getmaxsort());
-	}
-
-	function getmaxsort() {
-		var sorts = [];
-		$("#item_body .sorts").each(function(index) {
-			sorts.push($(this).val());
-		});
-
-		console.log(sorts);
-		if (sorts == null) {
-			return 0;
-		} else {
-			return Math.max.apply(Math, sorts) + 1;
-		}
-
 	}
 
 	var current_edit_row = '';
+
 	$(function() {
+
+		let currentRow = '';
+
+		$('#items tbody').on('click', 'tr', function() {
+			currentRow = itemTable.row(this).data();
+		});
+
+		function getolddata(row) {
+			let item_id = currentRow['product_id'];
+			let note = currentRow['note'];
+			let qty = currentRow['qty'];
+			let unit_price = currentRow['unit_price'];
+			let uom = currentRow['uom'];
+			var data = {
+				'old_item_id': item_id,
+				'old_uom': uom,
+				'old_price': unit_price,
+				'old_qty': qty,
+				'old_note': note
+			};
+			return data;
+		}
+
 		$("#dialog-message").dialog({
 			autoOpen: false,
 			modal: true,
-			buttons: {
-				Ok: function() {
-					if ($("#item").validationEngine('validate') == true) {
-						if ($('#is_edit').val() == 1) {
-							edititem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val(), $('#sort').val());
-						} else {
-							additem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#sort').val());
+			minWidth: 800,
+			width: 800,
+			open: function() { // fade in background
+				$('.ui-widget-overlay').hide().fadeIn();
+			},
+			beforeClose: function() { //fade out background
+				$('.ui-widget-overlay:first')
+					.clone()
+					.appendTo('body')
+					.show()
+					.fadeOut(400, function() {
+						$(this).remove();
+					});
+			},
+			dialogClass: 'add-item-dialog',
+			buttons: [{
+					id: "btn-add",
+					text: "Add",
+					click: function() {
+						if ($("#item").validationEngine('validate') == true) {
+							if ($('#is_edit').val() == 1) {
+								edititem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val());
+							} else {
+								additem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val());
+							}
+							$(this).dialog("close");
+							resetForm($('#item'));
 						}
+					}
+				},
+				{
+					id: "btn-cancel",
+					text: "Cancel",
+					click: function() {
 						$(this).dialog("close");
-						resetForm($('#item'));
-
 					}
 				}
-			}
+			]
 		});
 
 		$('#opener').on("click", function() {
@@ -331,17 +477,31 @@ $project = $this->project;
 			return false;
 		});
 
+		$(document).on('click', ".item_delete", function(e) {
+			e.preventDefault();
+			if (confirm("Are you sure you want to delete this item?") == true) {
+				$('.loading').show();
+				$.ajax({
+					url: $(this).attr('href'),
+					type: "get",
+					success: function(data) {
+						itemTable.ajax.reload();
+						$('.loading').hide();
+					}
+				});
+			}
+		});
+
 		function set_edit(row) {
 			$("#dialog-message").dialog("option", "title", "Edit Item");
 			$('#is_edit').val(1);
-			var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
-			var item_name = jQuery.trim($(row).find('td').eq(1).clone().children().remove().end().text()).replace(item_id + ' - ', '');
-			var note = $(row).find('textarea').eq(0).val();
-			var qty = $(row).find(':input:hidden').eq(0).val();
-			var unit_price = $(row).find(':input:hidden').eq(1).val();
-			var uom = $(row).find(':input:hidden').eq(2).val();
-			var total_price = $(row).find(':input:hidden').eq(3).val();
-			var sort = $(row).find(':input:hidden').eq(4).val();
+			
+			let item_id = currentRow['product_id'];
+			let item_name = currentRow['item_desc'];
+			let note = currentRow['note'];
+			let qty = currentRow['qty'];
+			let unit_price = currentRow['unit_price'];
+			let uom = currentRow['uom'];
 
 			$('#item #item_input').val(item_name);
 			$('#item #item_id').val(item_id);
@@ -349,10 +509,8 @@ $project = $this->project;
 			$('#item #price').val(unit_price);
 			$('#item #qty').val(qty);
 			$('#item #note').val(note);
-			$('#item #sort').val(sort);
 
 			getoumedit(item_id, uom, unit_price);
-
 		}
 
 		function getoumedit(item_id, unit_number, price) {
@@ -361,7 +519,7 @@ $project = $this->project;
 				url: '/item/uom/id/' + $("#item_id ").val(),
 				type: "get",
 				success: function(data) {
-					var uom = jQuery.parseJSON(data);
+					var uom = JSON.parse(data);
 					var list = '';
 					$.each(uom, function(i, item) {
 						list = list + '<option value="' + item.uom + '">' + item.uom + '</option>';
@@ -376,30 +534,40 @@ $project = $this->project;
 
 		}
 
-		function edititem(item_id, item_desc, uom, price, qty, note, sort) {
-			var total_price = (price * qty).toFixed(2);
-			var str = '<tr name="item[' + item_id + ']">' + '<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' + '<td>' + item_id + '<br/>' + item_desc + '<br/><textarea rows="1" cols="" name="item[' + item_id + '][note][]">' + note + '</textarea></td>' + '<td>' + qty + '</td>' + '<td>' + price + '</td>' + '<td>' + uom + '</td>' + '<td>' + total_price + '</td>' +
-				'<input type="hidden" name="item[' + item_id + '][qty][]" value="' + qty + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][unit_price][]" value="' + price + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][uom][]" value="' + uom + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][total_price][]" value="' + total_price + '"/>' +
-				'<input type="hidden" class="sorts" name="item[' + item_id + '][sort][]" value="' + sort + '"/>' +
-				'<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="delete" href="#"><img src="/images/icons/dark/close.png" alt="delete"></a>';
-
-			current_edit_row.replaceWith(str);
-
+		function edititem(item_id, item_desc, uom, price, qty, note) {
+			ajaxedititem(item_id, uom, price, qty, note);
 		}
 
-		$(".dialog #item_input").autocomplete({
+		function ajaxedititem(item_id, uom, price, qty, note) {
+			var olddata = getolddata(current_edit_row);
+			var data = {
+				'item_id': item_id,
+				'uom': uom,
+				'price': price,
+				'qty': qty,
+				'note': note,
+				'old_item_id': olddata['old_item_id'],
+				'old_uom': olddata['old_uom'],
+				'old_price': olddata['old_price'],
+				'old_qty': olddata['old_qty'],
+				'old_note': olddata['old_note']
+			};
+			$.ajax({
+				url: '/project/edititem/pro/' + $('#project_id').val(),
+				type: "post",
+				data: data,
+				success: function(data) {
+					itemTable.ajax.reload();
+				}
+			});
+		};
+
+		$(".dialog #item_id").autocomplete({
 			source: '/item/index/',
 			minLength: 2,
-			focus: function(event, ui) {
-				$("#item_input").val(ui.item.item_desc);
-				return false;
-			},
 			select: function(event, ui) {
 				$("#item_input").val(ui.item.item_desc);
-				$("#item_id ").val(ui.item.item_id);
+				$("#item_id").val(ui.item.item_id);
 				getoum(ui.item.item_id);
 				$('#uom').prop('disabled', false);
 				$('#uniform-uom').removeClass('disabled');
@@ -408,7 +576,7 @@ $project = $this->project;
 		}).data("ui-autocomplete")._renderItem = function(ul, item) {
 			return $("<li></li>")
 				.data("item.autocomplete", item)
-				.append("<a>" + item.item_id + "<br>" + item.item_desc + "</a>")
+				.append("<a><b>" + item.item_id + " - " + item.item_desc + "</b></a>")
 				.appendTo(ul);
 		};
 
@@ -447,18 +615,17 @@ $project = $this->project;
 
 		}
 
-		function additem(item_id, item_desc, uom, price, qty, sort) {
-			var total_price = (price * qty).toFixed(2);
-			var str = '<tr name="item[' + item_id + ']">' + '<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' + '<td>' + item_id + '<br/>' + item_desc + '<br/><textarea rows="1" cols="" name="item[' + item_id + '][note][]"></textarea></td>' + '<td>' + qty + '</td>' + '<td>' + price + '</td>' + '<td>' + uom + '</td>' + '<td>' + total_price + '</td>' +
-				'<input type="hidden" name="item[' + item_id + '][qty][]" value="' + qty + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][unit_price][]" value="' + price + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][uom][]" value="' + uom + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][total_price][]" value="' + total_price + '"/>' +
-				'<input type="hidden" class="sorts" name="item[' + item_id + '][sort][]" value="' + sort + '"/>' +
-				'<td><a class="edit" href="#"><img src="/images/icons/dark/pencil.png" alt="edit"></a><a class="delete" href="#"><img src="/images/icons/dark/close.png" alt="delete"></a></td>';
-
-			$('#item_body').append(str);
-
+		function additem(item_id, item_desc, uom, price, qty) {
+			$('.loading').show();
+			$.ajax({
+				url: '/project/additem/pro/' + $('#project_id').val(),
+				type: "post",
+				data: $("#item").serialize(),
+				success: function(data) {
+					$('.loading').hide();
+					itemTable.ajax.reload();
+				}
+			});
 		}
 
 		function getcustomerbyid(id) {
@@ -485,6 +652,7 @@ $project = $this->project;
 				}
 			});
 		}
+
 		$('#add_new_mode').on("click", function() {
 			$('#quote,#address, #tel').prop('readonly', false).val('');
 			$('#customer_id').attr('readonly', 'readonly').val('');
@@ -493,6 +661,7 @@ $project = $this->project;
 			$('#add_new_mode').hide();
 			$('#discard_new_mode').show();
 		});
+
 		$('#discard_new_mode').on("click", function() {
 			$('#address, #tel').attr('readonly', 'readonly').val('');
 			$('#quote').val('');
@@ -506,11 +675,6 @@ $project = $this->project;
 		$("#uom,#uniform-uom").on("change", function() {
 			getprice();
 			return false;
-		});
-
-		$(document).on("click", "#item_body .delete", function(e) {
-			$(this).parent().parent().remove();
-			e.preventDefault();
 		});
 
 		$("#customer_email").autocomplete({
@@ -554,7 +718,6 @@ $project = $this->project;
 		};
 
 		$('a.save_quote').on("click", function(e) {
-
 			e.preventDefault();
 			if ($("#quote_content").validationEngine('validate') == true) {
 				$('.loading').show();

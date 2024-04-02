@@ -1,5 +1,5 @@
-<?php $session =  Zend_Registry::get('session'); ?>
-
+<?php $session =  Zend_Registry::get('session');
+//$project = $this->project; ?>
 <!-- Title area -->
 <main id="content" class="main-content">
 
@@ -92,7 +92,7 @@
             <div class="oneTwo required-field">
               <label for="architect_name">Project Architect/Owner</label>
               <input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" />
-              <input type="hidden" name='architect' id='architect' value="<?= $project['architect'] ?>">
+              <input type="hidden" name='architect' id='architect' value="<?php // echo $project['architect'] ?>">
             </div>
 
             <div class="oneTwo">
@@ -107,7 +107,7 @@
             <div class="oneTwo required-field">
               <label for="specifiler_name">Specifier</label>
               <input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN">
-              <input type="hidden" id='specifiler' name="specifiler" value="<?= $project['specifiler'] ?>">
+              <input type="hidden" id='specifiler' name="specifiler" value="<?php //echo $project['specifiler'] ?>">
             </div>
 
             <div class="oneTwo">

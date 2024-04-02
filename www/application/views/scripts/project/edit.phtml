@@ -305,32 +305,22 @@ $project = $this->project; ?>
 				<div class="quick-links">
 					<ol>
 						<li><a href="/project/" target="_blank" class='quick-link add_pro' title="Add new project">
-								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-									<path d="M12.75 11.25V5C12.75 4.80109 12.671 4.61032 12.5303 4.46967C12.3897 4.32902 12.1989 4.25 12 4.25C11.8011 4.25 11.6103 4.32902 11.4697 4.46967C11.329 4.61032 11.25 4.80109 11.25 5V11.25H5C4.80109 11.25 4.61032 11.329 4.46967 11.4697C4.32902 11.6103 4.25 11.8011 4.25 12C4.25 12.1989 4.32902 12.3897 4.46967 12.5303C4.61032 12.671 4.80109 12.75 5 12.75H11.25V19C11.2526 19.1981 11.3324 19.3874 11.4725 19.5275C11.6126 19.6676 11.8019 19.7474 12 19.75C12.1989 19.75 12.3897 19.671 12.5303 19.5303C12.671 19.3897 12.75 19.1989 12.75 19V12.75H19C19.1989 12.75 19.3897 12.671 19.5303 12.5303C19.671 12.3897 19.75 12.1989 19.75 12C19.7474 11.8019 19.6676 11.6126 19.5275 11.4725C19.3874 11.3324 19.1981 11.2526 19 11.25H12.75Z" />
-								</svg>
+							<span class='icon icon-add'></span>
 								Add Project</a></li>
 						<!--<li><a href="#" class='edit_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
 						<!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
 						<li><a href="#" class='quick-link save_pro' title="Save project">
-								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-									<path d="M17 20.75H7C6.27065 20.75 5.57118 20.4603 5.05546 19.9445C4.53973 19.4288 4.25 18.7293 4.25 18V6C4.25 5.27065 4.53973 4.57118 5.05546 4.05546C5.57118 3.53973 6.27065 3.25 7 3.25H14.5C14.6988 3.25018 14.8895 3.32931 15.03 3.47L19.53 8C19.6707 8.14052 19.7498 8.33115 19.75 8.53V18C19.75 18.7293 19.4603 19.4288 18.9445 19.9445C18.4288 20.4603 17.7293 20.75 17 20.75ZM7 4.75C6.66848 4.75 6.35054 4.8817 6.11612 5.11612C5.8817 5.35054 5.75 5.66848 5.75 6V18C5.75 18.3315 5.8817 18.6495 6.11612 18.8839C6.35054 19.1183 6.66848 19.25 7 19.25H17C17.3315 19.25 17.6495 19.1183 17.8839 18.8839C18.1183 18.6495 18.25 18.3315 18.25 18V8.81L14.19 4.75H7Z" />
-									<path d="M16.75 20H15.25V13.75H8.75V20H7.25V13.5C7.25 13.1685 7.3817 12.8505 7.61612 12.6161C7.85054 12.3817 8.16848 12.25 8.5 12.25H15.5C15.8315 12.25 16.1495 12.3817 16.3839 12.6161C16.6183 12.8505 16.75 13.1685 16.75 13.5V20Z" />
-									<path d="M12.47 8.75H8.53001C8.3606 8.74869 8.19311 8.71403 8.0371 8.64799C7.88109 8.58195 7.73962 8.48582 7.62076 8.36511C7.5019 8.24439 7.40798 8.10144 7.34437 7.94443C7.28075 7.78741 7.24869 7.61941 7.25001 7.45V4H8.75001V7.25H12.25V4H13.75V7.45C13.7513 7.61941 13.7193 7.78741 13.6557 7.94443C13.592 8.10144 13.4981 8.24439 13.3793 8.36511C13.2604 8.48582 13.1189 8.58195 12.9629 8.64799C12.8069 8.71403 12.6394 8.74869 12.47 8.75Z" />
-								</svg>
+						<span class='icon icon-save'></span>
 								Save Project</span></a></li>
 						<li><a class='quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/project/print/id/" . $project['project_id'] . "?company=" . substr($project['quote_no'], 0, 3) . "&name=Centura_Project_" . preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print">
-								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-									<path d="M18.53 9L13 3.47C12.8595 3.32931 12.6688 3.25018 12.47 3.25H8C7.27065 3.25 6.57118 3.53973 6.05546 4.05546C5.53973 4.57118 5.25 5.27065 5.25 6V18C5.25 18.7293 5.53973 19.4288 6.05546 19.9445C6.57118 20.4603 7.27065 20.75 8 20.75H16C16.7293 20.75 17.4288 20.4603 17.9445 19.9445C18.4603 19.4288 18.75 18.7293 18.75 18V9.5C18.7421 9.3116 18.6636 9.13309 18.53 9ZM13.25 5.81L16.19 8.75H13.25V5.81ZM16 19.25H8C7.66848 19.25 7.35054 19.1183 7.11612 18.8839C6.8817 18.6495 6.75 18.3315 6.75 18V6C6.75 5.66848 6.8817 5.35054 7.11612 5.11612C7.35054 4.8817 7.66848 4.75 8 4.75H11.75V9.5C11.7526 9.69811 11.8324 9.88737 11.9725 10.0275C12.1126 10.1676 12.3019 10.2474 12.5 10.25H17.25V18C17.25 18.3315 17.1183 18.6495 16.8839 18.8839C16.6495 19.1183 16.3315 19.25 16 19.25Z" />
-									<path d="M13.49 14.85C12.8751 14.4642 12.4124 13.8778 12.18 13.19C12.3953 12.5467 12.4603 11.8625 12.37 11.19C12.3412 11.0206 12.2586 10.865 12.1344 10.7462C12.0102 10.6274 11.8511 10.5518 11.6806 10.5305C11.5101 10.5092 11.3372 10.5433 11.1876 10.6279C11.038 10.7125 10.9197 10.843 10.85 11C10.7362 11.8085 10.822 12.6325 11.1 13.4C10.7202 14.2873 10.2963 15.1551 9.83001 16C9.12001 16.4 8.15001 17 8.00001 17.69C7.88001 18.25 8.93001 19.69 10.72 16.57C11.5159 16.2746 12.3312 16.034 13.16 15.85C13.7727 16.2003 14.4561 16.4088 15.16 16.46C15.3216 16.4642 15.4809 16.4206 15.6178 16.3345C15.7546 16.2484 15.863 16.1238 15.9292 15.9764C15.9955 15.8289 16.0167 15.6651 15.9901 15.5056C15.9636 15.3462 15.8905 15.1981 15.78 15.08C15.36 14.65 14.11 14.77 13.49 14.85ZM8.71001 17.85C8.99025 17.3705 9.36034 16.9495 9.80001 16.61C9.12001 17.69 8.71001 17.88 8.71001 17.86V17.85ZM11.63 11.04C11.89 11.04 11.87 12.19 11.69 12.5C11.5544 12.0285 11.5338 11.5312 11.63 11.05V11.04ZM10.76 15.92C11.0988 15.3019 11.3929 14.6602 11.64 14C11.9049 14.493 12.2734 14.9229 12.72 15.26C12.0491 15.4281 11.3934 15.6522 10.76 15.93V15.92ZM15.46 15.74C15.46 15.74 15.28 15.96 14.13 15.46C15.38 15.38 15.59 15.67 15.46 15.75V15.74Z" />
-								</svg>
+							<span class='icon icon-pdf'></span>
 								Print Project</a></li>
+						<li><a class='quick-link make-quote' href="/quote/index/project/<?= $project['project_id'] ?>" title="Make quote">
+								<span class='icon icon-dollar'></span>
+								Make Quote
+							</a></li>
 						<li><a href="#" class='quick-link delete_pro' title="delete">
-								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-									<path d="M20 8.70007H4C3.90151 8.70007 3.80398 8.68067 3.71299 8.64298C3.62199 8.60529 3.53931 8.55005 3.46967 8.4804C3.40003 8.41076 3.34478 8.32808 3.30709 8.23709C3.2694 8.14609 3.25 8.04856 3.25 7.95007C3.25 7.85158 3.2694 7.75405 3.30709 7.66306C3.34478 7.57207 3.40003 7.48939 3.46967 7.41974C3.53931 7.3501 3.62199 7.29486 3.71299 7.25716C3.80398 7.21947 3.90151 7.20007 4 7.20007H20C20.1989 7.20007 20.3897 7.27909 20.5303 7.41974C20.671 7.5604 20.75 7.75116 20.75 7.95007C20.75 8.14899 20.671 8.33975 20.5303 8.4804C20.3897 8.62106 20.1989 8.70007 20 8.70007Z" />
-									<path d="M16.44 20.75H7.56C7.24309 20.7717 6.92503 20.7303 6.62427 20.6281C6.3235 20.5259 6.04601 20.3651 5.80788 20.1548C5.56975 19.9446 5.37572 19.6892 5.23704 19.4034C5.09836 19.1177 5.01779 18.8072 5 18.49V8.00005C5 7.80113 5.07902 7.61037 5.21967 7.46972C5.36032 7.32906 5.55109 7.25005 5.75 7.25005C5.94891 7.25005 6.13968 7.32906 6.28033 7.46972C6.42098 7.61037 6.5 7.80113 6.5 8.00005V18.49C6.5 18.9 6.97 19.25 7.5 19.25H16.38C16.94 19.25 17.38 18.9 17.38 18.49V8.00005C17.38 7.78522 17.4653 7.57919 17.6172 7.42729C17.7691 7.27538 17.9752 7.19005 18.19 7.19005C18.4048 7.19005 18.6109 7.27538 18.7628 7.42729C18.9147 7.57919 19 7.78522 19 8.00005V18.49C18.9822 18.8072 18.9016 19.1177 18.763 19.4034C18.6243 19.6892 18.4303 19.9446 18.1921 20.1548C17.954 20.3651 17.6765 20.5259 17.3757 20.6281C17.075 20.7303 16.7569 20.7717 16.44 20.75ZM16.56 7.75005C16.4611 7.75139 16.363 7.73291 16.2714 7.6957C16.1798 7.65848 16.0966 7.60329 16.0267 7.53337C15.9568 7.46346 15.9016 7.38024 15.8644 7.28864C15.8271 7.19704 15.8087 7.09891 15.81 7.00005V5.51005C15.81 5.10005 15.33 4.75005 14.81 4.75005H9.22C8.67 4.75005 8.22 5.10005 8.22 5.51005V7.00005C8.22 7.19896 8.14098 7.38972 8.00033 7.53038C7.85968 7.67103 7.66891 7.75005 7.47 7.75005C7.27109 7.75005 7.08032 7.67103 6.93967 7.53038C6.79902 7.38972 6.72 7.19896 6.72 7.00005V5.51005C6.75872 4.88136 7.04203 4.29281 7.50929 3.87041C7.97655 3.44801 8.5906 3.22533 9.22 3.25005H14.78C15.4145 3.21723 16.0362 3.43627 16.51 3.8595C16.9838 4.28273 17.2713 4.87592 17.31 5.51005V7.00005C17.3113 7.09938 17.2929 7.19798 17.2558 7.29013C17.2187 7.38228 17.1637 7.46615 17.0939 7.53685C17.0241 7.60756 16.941 7.6637 16.8493 7.70201C16.7577 7.74033 16.6593 7.76006 16.56 7.76005V7.75005Z" />
-									<path d="M10.22 17.0001C10.0219 16.9975 9.83263 16.9177 9.69253 16.7776C9.55244 16.6375 9.47259 16.4482 9.47 16.2501V11.7201C9.47 11.5212 9.54902 11.3304 9.68967 11.1898C9.83032 11.0491 10.0211 10.9701 10.22 10.9701C10.4189 10.9701 10.6097 11.0491 10.7503 11.1898C10.891 11.3304 10.97 11.5212 10.97 11.7201V16.2401C10.9713 16.3394 10.9529 16.438 10.9158 16.5302C10.8787 16.6223 10.8237 16.7062 10.7539 16.7769C10.6841 16.8476 10.601 16.9037 10.5093 16.9421C10.4177 16.9804 10.3193 17.0001 10.22 17.0001Z" />
-									<path d="M13.78 17.0001C13.5811 17.0001 13.3903 16.9211 13.2497 16.7804C13.109 16.6398 13.03 16.449 13.03 16.2501V11.7201C13.03 11.5212 13.109 11.3304 13.2497 11.1898C13.3903 11.0491 13.5811 10.9701 13.78 10.9701C13.9789 10.9701 14.1697 11.0491 14.3103 11.1898C14.451 11.3304 14.53 11.5212 14.53 11.7201V16.2401C14.53 16.4399 14.4513 16.6317 14.3109 16.774C14.1706 16.9162 13.9798 16.9975 13.78 17.0001Z" />
-								</svg>
+							<span class='icon icon-trash'></span>
 								Close Project</a></li>
 					</ol>
 				</div>
@@ -354,20 +344,31 @@ $project = $this->project; ?>
 			dataSrc: ''
 		},
 		processing: true,
-		columns: [
-			{ data: "added.date", render: function(data) {
-				let DateTime = luxon.DateTime;
-				let d = DateTime.fromSQL(data).setLocale('en').toFormat('f');
-				return d;
-			}},
-			{ data: "title" },
-			{ data: "follow_up_date.date", render: function(data) {
-				let DateTime = luxon.DateTime;
-				let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
-				return d;
-			}},
-			{ data: "type" },
-			{ data: "memo_id", render: function(data) {
+		columns: [{
+				data: "added.date",
+				render: function(data) {
+					let DateTime = luxon.DateTime;
+					let d = DateTime.fromSQL(data).setLocale('en').toFormat('f');
+					return d;
+				}
+			},
+			{
+				data: "title"
+			},
+			{
+				data: "follow_up_date.date",
+				render: function(data) {
+					let DateTime = luxon.DateTime;
+					let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
+					return d;
+				}
+			},
+			{
+				data: "type"
+			},
+			{
+				data: "memo_id",
+				render: function(data) {
 					<?php if ($this->owner == 1) { ?>
 						return '<div class="row-button">' + "<a class='memo_delete' target='_blank' href='/memo/delete/id/" + data + "'><span class='button-wrap'><span class='icon icon-delete'></span></span></a></div>";
 					<?php } else { ?>
@@ -376,7 +377,9 @@ $project = $this->project; ?>
 				}
 			},
 		],
-		order: [[0, "desc"]],
+		order: [
+			[0, "desc"]
+		],
 	});
 
 	let itemTable = $("#items").DataTable({
@@ -385,39 +388,66 @@ $project = $this->project; ?>
 			dataSrc: ''
 		},
 		processing: true,
-		columns: [
-			{ data: "product_id", render: function(data, type, row, meta) {
-				return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
-			} },
-			{ data: "qty" },
-			{ data: "unit_price" },
-			{ data: "uom" },
-			{ data: "subtotal" },
-			{ data: "note" },
-			{ data: "product_id", render: function(data, type, row, meta) {
-				//var oldData = getolddata($(this).closest('tr'));
-				return '<div class="row-button">' +
-					'<a title="Edit this item" class="edit" href="#">' +
+		columns: [{
+				data: "product_id",
+				render: function(data, type, row, meta) {
+					return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
+				}
+			},
+			{
+				data: "qty"
+			},
+			{
+				data: "unit_price"
+			},
+			{
+				data: "uom"
+			},
+			{
+				data: "subtotal"
+			},
+			{
+				data: "note"
+			},
+			{
+				data: "product_id",
+				render: function(data, type, row, meta) {
+					//var oldData = getolddata($(this).closest('tr'));
+					return '<div class="row-button">' +
+						'<a title="Edit this item" class="edit" href="#">' +
 						'<span class="button-wrap">' +
-							'<span class="icon icon-edit"></span>' +
+						'<span class="icon icon-edit"></span>' +
 						'</span></a>' +
-					'<a title="Delete this item" class="item_delete" href="/project/deleteitem/pro/' + row.project_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty +'"'+
-							'index="' + data +'">' +
+						'<a title="Delete this item" class="item_delete" href="/project/deleteitem/pro/' + row.project_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty + '"' +
+						'index="' + data + '">' +
 						'<span class="button-wrap">' +
-							'<span class="icon icon-delete"></span>' +
-								'</span></a></div>';
-			} }
+						'<span class="icon icon-delete"></span>' +
+						'</span></a></div>';
+				}
+			}
 		],
-		columnDefs: [
-			{ targets: [0, 1, 2, 3, 4], className: 'dt-body-center' },
-			{ targets: [0, 1, 2, 3, 4, 5, 6], className: 'dt-head-center' },
+		columnDefs: [{
+				targets: [0, 1, 2, 3, 4],
+				className: 'dt-body-center'
+			},
+			{
+				targets: [0, 1, 2, 3, 4, 5, 6],
+				className: 'dt-head-center'
+			},
 		],
-		layout: { topStart: null, topEnd: null },
-		order: { data: "added.date" },
+		layout: {
+			topStart: null,
+			topEnd: null
+		},
+		//order: { data: "added.date" },
 		paging: false,
 		scrollX: true,
-		fixedColumns: { start: 1, end: 1}
-    });
+		fixedColumns: {
+			start: 1,
+			end: 1
+		},
+		rowReorder: true
+	});
 
 
 	function resetForm($form) {
@@ -430,56 +460,6 @@ $project = $this->project; ?>
 	var current_edit_row = '';
 
 	$(function() {
-
-		let currentRow = '';
-
-		$('#items tbody').on('click', 'tr', function () {
-			currentRow = itemTable.row(this).data();
-    		//console.log(currentRow['product_id'], currentRow['note'], currentRow['qty']);
-		});
-
-		function getolddata(row) {
-		
-			//var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
-			let item_id = currentRow['product_id'];
-			//var item_name = jQuery.trim($(row).find('td').eq(1).clone().children().remove().end().text()).replace(item_id+' - ','');
-			//var note = $(row).find('textarea').eq(0).val();
-			let note = currentRow['note'];
-			//var qty = $(row).find(':input:hidden').eq(0).val();
-			let qty = currentRow['qty'];
-			//var unit_price = $(row).find(':input:hidden').eq(1).val();
-			let unit_price = currentRow['unit_price'];
-			//var uom = $(row).find(':input:hidden').eq(2).val();
-			let uom = currentRow['uom'];
-			//	var total_price = $(row).find(':input:hidden').eq(3).val();
-			var data = {
-			'old_item_id': item_id,
-			'old_uom': uom,
-			'old_price': unit_price,
-			'old_qty': qty,
-			'old_note': note
-		};
-		return data;
-	}
-
-		function getcustomerbyid(id, obj) {
-			$('.loading').show();
-			$.ajax({
-				url: '/customer/fetchbyid/id/' + id,
-				type: "get",
-				success: function(data) {
-					var result = JSON.parse(data);
-					if (result != null) {
-						$(obj).val(result.name);
-						$('input[name=' + $(obj).attr('id') + ']').val(result.customer_id);
-					} else {
-						alert('Can\'t find customer');
-						$('#customer_info input').val('');
-					}
-					$('.loading').hide();
-				}
-			});
-		}
 
 		$("#awarded_contractor").autocomplete({
 			source: function(request, response) {
@@ -629,35 +609,35 @@ $project = $this->project; ?>
 				.appendTo(ul);
 		};
 
-		$('.save_pro').on("click", function(e) {
-			e.preventDefault();
-			if ($("#project_content").validationEngine('validate') == true) {
-				if ($('#status').val() != 13) {
-					$('.loading').show();
-					$('#project_content').trigger("submit");
-				} else {
-					if (confirm("You are trying to close a project. Please add the reason to the log.") == true) {
-						$('.loading').show();
-						$('#project_content').trigger("submit");
-					}
-				}
-			}
+		let currentRow = '';
+
+		$('#items tbody').on('click', 'tr', function() {
+			currentRow = itemTable.row(this).data();
+			//console.log(currentRow['product_id'], currentRow['note'], currentRow['qty']);
 		});
 
-		$('.delete_pro').on("click", function() {
-			if (confirm("You are trying to close a project. Please add the reason to the log.") == true) {
-				$('.loading').show();
-				$.ajax({
-					url: '/project/delete/id/' + $('#project_id').val(),
-					type: "get",
-					success: function(data) {
-						$('.loading').hide();
-
-						window.location = '/';
-					}
-				});
-			}
-		});
+		function getolddata(row) {
+			//var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
+			let item_id = currentRow['product_id'];
+			//var item_name = jQuery.trim($(row).find('td').eq(1).clone().children().remove().end().text()).replace(item_id+' - ','');
+			//var note = $(row).find('textarea').eq(0).val();
+			let note = currentRow['note'];
+			//var qty = $(row).find(':input:hidden').eq(0).val();
+			let qty = currentRow['qty'];
+			//var unit_price = $(row).find(':input:hidden').eq(1).val();
+			let unit_price = currentRow['unit_price'];
+			//var uom = $(row).find(':input:hidden').eq(2).val();
+			let uom = currentRow['uom'];
+			//	var total_price = $(row).find(':input:hidden').eq(3).val();
+			var data = {
+				'old_item_id': item_id,
+				'old_uom': uom,
+				'old_price': unit_price,
+				'old_qty': qty,
+				'old_note': note
+			};
+			return data;
+		}
 
 		$("#dialog-message").dialog({
 			autoOpen: false,
@@ -732,21 +712,20 @@ $project = $this->project; ?>
 						}
 					}
 				},
-				{ id: "btn-cancel", text: "Cancel", click: function() {
+				{
+					id: "btn-cancel",
+					text: "Cancel",
+					click: function() {
 						$(this).dialog("close");
 					}
 				}
 			]
 		});
 
-		$("#add_item").on("click", function() {
-			$("#dialog-item").dialog("open");
-			return false;
-		});
-
 		$('#add_item').on("click", function() {
 			resetForm($('#item'));
 			$('#is_edit').val(0);
+			$("#dialog-item").dialog("open");
 			return false;
 		});
 
@@ -756,6 +735,24 @@ $project = $this->project; ?>
 			set_edit(current_edit_row);
 			//console.log(current_edit_row);
 			return false;
+		});
+
+		$(document).on('click', ".item_delete", function(e) {
+			e.preventDefault();
+			//var data = getolddata($(this).closest('tr'));
+			if (confirm("Are you sure you want to delete this item?") == true) {
+				//$(this).parent().parent().remove();
+				$('.loading').show();
+				$.ajax({
+					url: $(this).attr('href'),
+					//url: '/project/deleteitem/pro/' + $('#project_id').val() + '/item/' + $(this).attr('index') + '/uom/' + data['old_uom'] + '/price/' + data['old_price'] + '/qty/' + data['old_qty'],
+					type: "get",
+					success: function(data) {
+						itemTable.ajax.reload();
+						$('.loading').hide();
+					}
+				});
+			}
 		});
 
 		function set_edit(row) {
@@ -806,6 +803,25 @@ $project = $this->project; ?>
 				}
 			});
 
+		}
+
+		function getcustomerbyid(id, obj) {
+			$('.loading').show();
+			$.ajax({
+				url: '/customer/fetchbyid/id/' + id,
+				type: "get",
+				success: function(data) {
+					var result = JSON.parse(data);
+					if (result != null) {
+						$(obj).val(result.name);
+						$('input[name=' + $(obj).attr('id') + ']').val(result.customer_id);
+					} else {
+						alert('Can\'t find customer');
+						$('#customer_info input').val('');
+					}
+					$('.loading').hide();
+				}
+			});
 		}
 
 		$(".dialog #item_id").autocomplete({
@@ -911,28 +927,6 @@ $project = $this->project; ?>
 		};
 
 		function edititem(item_id, item_desc, uom, price, qty, note) {
-			var total_price = (price * qty).toFixed(2);
-			var str = '<tr name="item[' + item_id + ']">' +
-				'<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' +
-				'<td><b>' + item_id + ' - ' + item_desc + '</b><textarea readonly rows="2" cols="" name="item[' + item_id + '][note][]">' + note + '</textarea></td>' +
-				'<td>' + qty + '</td>' +
-				'<td>' + price + '</td>' +
-				'<td>' + uom + '</td>' +
-				'<td>' + total_price + '</td>' +
-				'<input type="hidden" name="item[' + item_id + '][qty][]" value="' + qty + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][unit_price][]" value="' + price + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][uom][]" value="' + uom + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][total_price][]" value="' + total_price + '"/>' +
-				'<td><div class="row-button">' +
-				'<a class="edit" href="#">' +
-				'<span class="button-wrap">' +
-				'<span class="icon icon-edit"></span>' +
-				'</span>' +
-				'</a>' +
-				'<a class="item_delete" href="#" index="' + item_id + '">' +
-				'<span class="button-wrap">' +
-				'<span class="icon icon-delete"></span>' +
-				'</span></a></div></td>';
 			ajaxedititem(item_id, uom, price, qty, note);
 			//current_edit_row.replaceWith(str);
 		}
@@ -951,15 +945,12 @@ $project = $this->project; ?>
 				'old_qty': olddata['old_qty'],
 				'old_note': olddata['old_note']
 			};
-
-			$('.loading').show();
 			$.ajax({
 				url: '/project/edititem/pro/' + $('#project_id').val(),
 				type: "post",
 				data: data,
 				success: function(data) {
 					itemTable.ajax.reload();
-					$('.loading').hide();
 				}
 			});
 		};
@@ -967,24 +958,6 @@ $project = $this->project; ?>
 		$("#uom, #uniform-uom").on("change", function() {
 			getprice();
 			return false;
-		});
-
-		$(document).on('click', ".item_delete", function(e) {
-			e.preventDefault();
-			//var data = getolddata($(this).closest('tr'));
-			if (confirm("Are you sure you want to delete this item?") == true) {
-				//$(this).parent().parent().remove();
-				$('.loading').show();
-				$.ajax({
-					url: $(this).attr('href'),
-					//url: '/project/deleteitem/pro/' + $('#project_id').val() + '/item/' + $(this).attr('index') + '/uom/' + data['old_uom'] + '/price/' + data['old_price'] + '/qty/' + data['old_qty'],
-					type: "get",
-					success: function(data) {
-						itemTable.ajax.reload();
-						$('.loading').hide();
-					}
-				});
-			}
 		});
 
 		function addmemo() {
@@ -1017,6 +990,36 @@ $project = $this->project; ?>
 							memoTable.ajax.reload();
 						}
 						$('.loading').hide();
+					}
+				});
+			}
+		});
+
+		$('.save_pro').on("click", function(e) {
+			e.preventDefault();
+			if ($("#project_content").validationEngine('validate') == true) {
+				if ($('#status').val() != 13) {
+					$('.loading').show();
+					$('#project_content').trigger("submit");
+				} else {
+					if (confirm("You are trying to close a project. Please add the reason to the log.") == true) {
+						$('.loading').show();
+						$('#project_content').trigger("submit");
+					}
+				}
+			}
+		});
+
+		$('.delete_pro').on("click", function() {
+			if (confirm("You are trying to close a project. Please add the reason to the log.") == true) {
+				$('.loading').show();
+				$.ajax({
+					url: '/project/delete/id/' + $('#project_id').val(),
+					type: "get",
+					success: function(data) {
+						$('.loading').hide();
+
+						window.location = '/';
 					}
 				});
 			}
