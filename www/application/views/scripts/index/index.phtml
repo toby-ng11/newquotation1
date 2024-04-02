@@ -275,7 +275,7 @@
                     $(cell).html("<a target='_blank' href='/quote/edit/id/" + rowData.quote_id + "'>" + rowData.quote_id + "</a>");
                 }},
                 { data: "project_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                    $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.quote_id + "'>" + rowData.project_name + "</a>");
+                    $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.project_id + "'>" + rowData.project_name + "</a>");
                 }},
                 { data: "quote_date.date" },
                 { data: "expire_date.date", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {

@@ -210,9 +210,9 @@
             {"data": "ship_required_date.date"},
             {"data": "status_name"},
             {"data": "approve_status", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData == -1) {$(cell).addClass("disapproved orange"); $(cell).html("Disapproved");}
+                if (cellData == -1) {$(cell).addClass("disapproved red"); $(cell).html("Disapproved");}
                 else if (cellData == 10) {$(cell).addClass("approved green"); $(cell).html("Approved");}
-                else if (cellData == 1) {$(cell).addClass("waiting red"); $(cell).html("Waiting Approval");}
+                else if (cellData == 1) {$(cell).addClass("waiting orange"); $(cell).html("Waiting Approval");}
                 else {$(cell).addClass("init"); $(cell).html("Not Submitted");}
             }}
         ],

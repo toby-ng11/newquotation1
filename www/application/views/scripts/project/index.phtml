@@ -61,7 +61,7 @@
 
             <div class="oneTwo required-field">
               <label for='project_location_address'>Project Location</label>
-              <input type="text" class="validate[required] tipN" id='project_location_address' original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" />
+              <input id='project_location_address' name='project_location_address' type="text" class="validate[required] tipN" original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" />
             </div>
 
             <div class="oneTwo required-field">
@@ -97,7 +97,7 @@
 
             <div class="oneTwo">
               <label for="architect_loc">Architect Location</label>
-              <select id="architect_loc">
+              <select id="architect_loc" name="architect_loc">
                 <?php foreach ($this->locations as $l) { ?>
                   <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
                 <?php } ?>
@@ -112,7 +112,7 @@
 
             <div class="oneTwo">
               <label for="specifiler_loc">Specifier Location</label>
-              <select id="specifiler_loc">
+              <select id="specifiler_loc" name="specifiler_loc">
                 <?php foreach ($this->locations as $l) { ?>
                   <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
                 <?php } ?>
@@ -130,35 +130,32 @@
             </div>
 
             <div class="oneTwo">
-              <label for="general_contractor">General Contractor</label>
-              <input type="text" class='tipN' original-title="Type Company Name" id="gerneral_contractor" />
+              <label for="gerneral_contractor">General Contractor</label>
+              <input id="gerneral_contractor" name="gerneral_contractor"type="text" class='tipN' original-title="Type Company Name" />
             </div>
 
             <div class="oneTwo">
               <label for="gerneral_contractor_loc">General Contractor Location</label>
-              <select id="gerneral_contractor_loc">
+              <select id="gerneral_contractor_loc" name="gerneral_contractor_loc">
                 <?php foreach ($this->locations as $l) { ?>
                   <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
                 <?php } ?>
               </select>
             </div>
-            <input type="hidden" name='gerneral_contractor'>
 
             <div class="oneTwo">
               <label for="awarded_contractor">Awarded Contractor</label>
-              <input type="text" class='tipN' original-title="Type Company Name" id="awarded_contractor" />
+              <input id="awarded_contractor" name="awarded_contractor" type="text" class='tipN' original-title="Type Company Name" id="awarded_contractor" />
             </div>
 
             <div class="oneTwo">
               <label for="awarded_contractor_loc">Awarded Contractor Location</label>
-              <select id="awarded_contractor_loc">
+              <select id="awarded_contractor_loc" name='awarded_contractor_loc'>
                 <?php foreach ($this->locations as $l) { ?>
                   <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
                 <?php } ?>
               </select>
-            </div>
-            <input type="hidden" name='awarded_contractor'>
-
+                </div>
           </div>
         </div>
       </form>
@@ -174,16 +171,10 @@
         <div class="quick-links">
           <ol>
             <li><a href="/project/" target="_blank" class='quick-link add_pro' title="Add new project">
-								<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-									<path d="M12.75 11.25V5C12.75 4.80109 12.671 4.61032 12.5303 4.46967C12.3897 4.32902 12.1989 4.25 12 4.25C11.8011 4.25 11.6103 4.32902 11.4697 4.46967C11.329 4.61032 11.25 4.80109 11.25 5V11.25H5C4.80109 11.25 4.61032 11.329 4.46967 11.4697C4.32902 11.6103 4.25 11.8011 4.25 12C4.25 12.1989 4.32902 12.3897 4.46967 12.5303C4.61032 12.671 4.80109 12.75 5 12.75H11.25V19C11.2526 19.1981 11.3324 19.3874 11.4725 19.5275C11.6126 19.6676 11.8019 19.7474 12 19.75C12.1989 19.75 12.3897 19.671 12.5303 19.5303C12.671 19.3897 12.75 19.1989 12.75 19V12.75H19C19.1989 12.75 19.3897 12.671 19.5303 12.5303C19.671 12.3897 19.75 12.1989 19.75 12C19.7474 11.8019 19.6676 11.6126 19.5275 11.4725C19.3874 11.3324 19.1981 11.2526 19 11.25H12.75Z" />
-								</svg>
+                <span class='icon icon-add'></span>
 								Add Project</a></li>
             <li><a href="#" class='quick-link save_pro' title="Save project">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M17 20.75H7C6.27065 20.75 5.57118 20.4603 5.05546 19.9445C4.53973 19.4288 4.25 18.7293 4.25 18V6C4.25 5.27065 4.53973 4.57118 5.05546 4.05546C5.57118 3.53973 6.27065 3.25 7 3.25H14.5C14.6988 3.25018 14.8895 3.32931 15.03 3.47L19.53 8C19.6707 8.14052 19.7498 8.33115 19.75 8.53V18C19.75 18.7293 19.4603 19.4288 18.9445 19.9445C18.4288 20.4603 17.7293 20.75 17 20.75ZM7 4.75C6.66848 4.75 6.35054 4.8817 6.11612 5.11612C5.8817 5.35054 5.75 5.66848 5.75 6V18C5.75 18.3315 5.8817 18.6495 6.11612 18.8839C6.35054 19.1183 6.66848 19.25 7 19.25H17C17.3315 19.25 17.6495 19.1183 17.8839 18.8839C18.1183 18.6495 18.25 18.3315 18.25 18V8.81L14.19 4.75H7Z" />
-                  <path d="M16.75 20H15.25V13.75H8.75V20H7.25V13.5C7.25 13.1685 7.3817 12.8505 7.61612 12.6161C7.85054 12.3817 8.16848 12.25 8.5 12.25H15.5C15.8315 12.25 16.1495 12.3817 16.3839 12.6161C16.6183 12.8505 16.75 13.1685 16.75 13.5V20Z" />
-                  <path d="M12.47 8.75H8.53001C8.3606 8.74869 8.19311 8.71403 8.0371 8.64799C7.88109 8.58195 7.73962 8.48582 7.62076 8.36511C7.5019 8.24439 7.40798 8.10144 7.34437 7.94443C7.28075 7.78741 7.24869 7.61941 7.25001 7.45V4H8.75001V7.25H12.25V4H13.75V7.45C13.7513 7.61941 13.7193 7.78741 13.6557 7.94443C13.592 8.10144 13.4981 8.24439 13.3793 8.36511C13.2604 8.48582 13.1189 8.58195 12.9629 8.64799C12.8069 8.71403 12.6394 8.74869 12.47 8.75Z" />
-                </svg>
+                <span class='icon icon-save'></span>
                 Save Project</span></a></li>
           </ol>
         </div>

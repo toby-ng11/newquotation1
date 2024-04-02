@@ -1,6 +1,7 @@
 <?php
-$session =  Zend_Registry::get('session');
-$project = $this->project; ?>
+	$session =  Zend_Registry::get('session');
+	$project = $this->project;
+?>
 
 <!-- Main content wrapper -->
 <main id="content" class="main-content">
@@ -134,13 +135,13 @@ $project = $this->project; ?>
 
 						<div class="oneTwo">
 							<label for="gerneral_contractor">General Contractor</label>
-							<input type="text" placeholder="Type Name" id="gerneral_contractor" value='<?= $this->gerneral_contractor['name'] . ' - ' . $this->gerneral_contractor['company_id'] ?>' />
+							<input type="text" placeholder="Type Name" id="gerneral_contractor" value='<?= $this->gerneral_contractor['name'] ?? ''. ' - ' . ($this->gerneral_contractor['company_id'] ?? '') ?>' />
 						</div>
 
 						<div class="oneTwo">
 							<label for="gerneral_contractor_loc">General Contractor Location</label>
 							<select id="gerneral_contractor_loc">
-								<?php if ($this->gerneral_contractor['company_id'] == null) $this->gerneral_contractor['company_id'] = DEFAULT_COMPNAY; ?>
+								<?php if ($this->gerneral_contractor['company_id'] ?? '' == null) $this->gerneral_contractor['company_id'] = DEFAULT_COMPNAY; ?>
 								<?php foreach ($this->locations as $l) { ?>
 									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->gerneral_contractor['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
 								<?php } ?>
@@ -150,13 +151,13 @@ $project = $this->project; ?>
 
 						<div class="oneTwo">
 							<label id="awarded_contractor">Awarded Sub Contractor</label>
-							<input type="text" placeholder="Type Name" id="awarded_contractor" value='<?= $this->awarded_sub_contracotr['name'] . ' - ' . $this->awarded_sub_contracotr['company_id'] ?>' />
+							<input type="text" placeholder="Type Name" id="awarded_contractor" value='<?= $this->awarded_sub_contracotr['name'] ?? '' . ' - ' . ($this->awarded_sub_contracotr['company_id'] ?? '') ?>' />
 						</div>
 
 						<div class="oneTwo">
 							<label for="awarded_contractor_loc">Awarded Contractor Location</label>
 							<select id="awarded_contractor_loc">
-								<?php if ($this->awarded_sub_contracotr['company_id'] == null) $this->awarded_sub_contracotr['company_id'] = DEFAULT_COMPNAY; ?>
+								<?php $this->awarded_sub_contracotr['company_id'] = $this->awarded_sub_contracotr['company_id'] ?? DEFAULT_COMPNAY; ?>
 								<?php foreach ($this->locations as $l) { ?>
 									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->awarded_sub_contracotr['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
 								<?php } ?>

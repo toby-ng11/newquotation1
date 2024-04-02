@@ -167,11 +167,11 @@ $project = $this->project;
 							<select id="arch" name='arch' class="validate[required]">
 								<?php if ($session->user['approve_id'] != null) { ?>
 									<?php foreach ($this->arch as $a) { ?>
-										<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $this->quote['arch']) echo 'selected'; ?>><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
+										<option value="<?= $a['id'] ?? '' ?>" <?php if (($a['id'] ?? '') == ($this->quote['arch'] ?? '')) echo 'selected'; ?>><?= $a['name'] ?? '' . ' - ' . ($a['default_company'] ?? '') ?></option>
 									<?php } ?>
 								<?php } else { ?>
 									<?php foreach ($this->arch as $a) { ?>
-										<?php if ($a['id'] == $project['owner']) { ?><option value="<?= $a['id'] ?>" selected><?= $a['name'] . ' - ' . $a['default_company'] ?></option> <?php } ?>
+										<?php if (($a['id'] ?? '') == ($project['owner'] ?? '')) { ?><option value="<?= $a['id'] ?? '' ?>" selected><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option> <?php } ?>
 									<?php } ?>
 								<?php } ?>
 							</select>
