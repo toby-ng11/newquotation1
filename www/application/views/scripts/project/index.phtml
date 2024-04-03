@@ -199,7 +199,7 @@
         var result = JSON.parse(data);
         if (result != null) {
           $(obj).val(result.name);
-          $('input[name=' + $(obj).attr('id') + ']').val(result.fullname);
+          $('input[name=' + $(obj).attr('id') + ']').val(result.name);
         } else {
           alert('Can\'t find customer');
           $('#customer_info input').val('');
@@ -225,17 +225,17 @@
     },
     minLength: 2,
     select: function(event, ul) {
-      $('#awarded_contractor').val(ul.item.fullname);
+      $('#awarded_contractor').val(ul.item.name);
       $('#awarded_contractor_id').val(ul.item.customer_id);
       getcustomerbyid(ul.item.customer_id, $('#awarded_contractor'));
-    },
-
+    }
   }).data("ui-autocomplete")._renderItem = function(ul, item) {
     return $("<li></li>")
       .data("item.autocomplete", item)
       .append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
       .appendTo(ul);
   };
+
   $("#gerneral_contractor").autocomplete({
     source: function(request, response) {
       $.ajax({
@@ -252,7 +252,7 @@
     },
     minLength: 2,
     select: function(event, ul) {
-      $('#gerneral_contractor').val(ul.item.fullname);
+      $('#gerneral_contractor').val(ul.item.name);
       $('#gerneral_contractor_id').val(ul.item.customer_id);
       getcustomerbyid(ul.item.customer_id, $('#gerneral_contractor'));
     },
@@ -263,6 +263,7 @@
       .append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
       .appendTo(ul);
   };
+
   $("#architect_name").autocomplete({
     source: function(request, response) {
       $('#architect').val('');

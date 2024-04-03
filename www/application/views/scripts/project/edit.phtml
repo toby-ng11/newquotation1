@@ -135,34 +135,34 @@
 
 						<div class="oneTwo">
 							<label for="gerneral_contractor">General Contractor</label>
-							<input type="text" placeholder="Type Name" id="gerneral_contractor" value='<?= $this->gerneral_contractor['name'] ?? ''. ' - ' . ($this->gerneral_contractor['company_id'] ?? '') ?>' />
+							<input type="text" id="gerneral_contractor" name="gerneral_contractor" placeholder="Type Name" value='<?= $this->gerneral_contractor['name'] ?? ''. ' - ' . ($this->gerneral_contractor['company_id'] ?? '') ?>' />
+							<input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" value="<?= $project['gerneral_contractor_id'] ?? '' ?>" />
 						</div>
 
 						<div class="oneTwo">
 							<label for="gerneral_contractor_loc">General Contractor Location</label>
-							<select id="gerneral_contractor_loc">
+							<select id="gerneral_contractor_loc" name="gerneral_contractor_loc">
 								<?php if ($this->gerneral_contractor['company_id'] ?? '' == null) $this->gerneral_contractor['company_id'] = DEFAULT_COMPNAY; ?>
 								<?php foreach ($this->locations as $l) { ?>
 									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->gerneral_contractor['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
 								<?php } ?>
 							</select>
-							<input type="hidden" name='gerneral_contractor' value="<?= $project['general_contractor_id'] ?>">
 						</div>
 
 						<div class="oneTwo">
-							<label id="awarded_contractor">Awarded Sub Contractor</label>
-							<input type="text" placeholder="Type Name" id="awarded_contractor" value='<?= $this->awarded_sub_contracotr['name'] ?? '' . ' - ' . ($this->awarded_sub_contracotr['company_id'] ?? '') ?>' />
+							<label for="awarded_contractor">Awarded Sub Contractor</label>
+							<input type="text" id="awarded_contractor" name="awarded_contractor" placeholder="Type Name" value='<?= $this->awarded_sub_contracotr['name'] ?? '' . ' - ' . ($this->awarded_sub_contracotr['company_id'] ?? '') ?>' />
+							<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id' value="<?= $project['awarded_sub_contracotr_id'] ?>">
 						</div>
 
 						<div class="oneTwo">
 							<label for="awarded_contractor_loc">Awarded Contractor Location</label>
-							<select id="awarded_contractor_loc">
+							<select id="awarded_contractor_loc" name="awarded_contractor_loc">
 								<?php $this->awarded_sub_contracotr['company_id'] = $this->awarded_sub_contracotr['company_id'] ?? DEFAULT_COMPNAY; ?>
 								<?php foreach ($this->locations as $l) { ?>
 									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->awarded_sub_contracotr['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
 								<?php } ?>
 							</select>
-							<input type="hidden" name='awarded_contractor' value="<?= $project['awarded_sub_contracotr_id'] ?>">
 						</div>
 
 					</div>
@@ -478,6 +478,8 @@
 			},
 			minLength: 2,
 			select: function(event, ul) {
+				$('#awarded_contractor').val(ul.item.name);
+      			$('#awarded_contractor_id').val(ul.item.customer_id);
 				getcustomerbyid(ul.item.customer_id, $('#awarded_contractor'));
 			},
 
@@ -504,6 +506,8 @@
 			},
 			minLength: 2,
 			select: function(event, ul) {
+				$('#gerneral_contractor').val(ul.item.name);
+      			$('#gerneral_contractor_id').val(ul.item.customer_id);
 				getcustomerbyid(ul.item.customer_id, $('#gerneral_contractor'));
 			},
 
@@ -815,7 +819,7 @@
 					var result = JSON.parse(data);
 					if (result != null) {
 						$(obj).val(result.name);
-						$('input[name=' + $(obj).attr('id') + ']').val(result.customer_id);
+						$('input[name=' + $(obj).attr('id') + ']').val(result.name);
 					} else {
 						alert('Can\'t find customer');
 						$('#customer_info input').val('');
@@ -888,33 +892,6 @@
 		};
 
 		function additem(item_id, item_desc, uom, price, qty, note) {
-			var total_price = (price * qty).toFixed(2);
-			var str = '<tr name="item[' + item_id + ']">' +
-				'<td><input type="checkbox"' + 'name="item[' + item_id + ']"/></td>' +
-				'<td><b>' + item_id + ' - ' + item_desc + '</b><textarea rows="2" cols="" name="item[' + item_id + '][note]" readonly>' + note + '</textarea></td>' +
-				'<td>' + qty + '</td>' +
-				'<td>' + price + '</td>' +
-				'<td>' + uom + '</td>' +
-				'<td>' + total_price + '</td>' +
-				'<input type="hidden" name="item[' + item_id + '][qty]" value="' + qty + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][unit_price]" value="' + price + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][uom]" value="' + uom + '"/>' +
-				'<input type="hidden" name="item[' + item_id + '][total_price]" value="' + total_price + '"/>' +
-				'<td><div class="row-button">' +
-				'<a class="edit" href="#">' +
-				'<span class="button-wrap">' +
-				'<span class="icon icon-edit"></span>' +
-				'</span>' +
-				'</a>' +
-				'<a class="item_delete" href="#" index="' + item_id + '">' +
-				'<span class="button-wrap">' +
-				'<span class="icon icon-delete"></span>' +
-				'</span></a></div></td>';
-			saveitem();
-			//$('#item_body').append(str);
-		};
-
-		function saveitem() {
 			$('.loading').show();
 			$.ajax({
 				url: '/project/additem/pro/' + $('#project_id').val(),

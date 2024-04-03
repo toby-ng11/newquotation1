@@ -178,7 +178,7 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->arch_name = $project->fetchspecbyid($project_detail['architect']);
     	
     	$this->view->architect = $project->fetchspec($project_detail['architect']);
-    	$this->view->arch = $sales->fetchallsales($this->view->architect['default_company']);
+    	//$this->view->arch = $sales->fetchallsales($this->view->architect['default_company']);
     	$this->view->sepcloc = $quote->fetchsepcloc($project_detail['specifiler']);
     	 
     	$this->view->gerneral_contractor = $customer->fetchCustomerById($project_detail['general_contractor_id']);
