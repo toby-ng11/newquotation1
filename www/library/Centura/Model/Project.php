@@ -23,8 +23,8 @@ class Project extends DbTable\Project
 	    $info['owner']               = $data['owner'];
 	    $info['project_location_address'] = $data['project_location_address'];
 	    $info['reed']                     = $data['reed'];
-	    $info['general_contractor_id']    = $data['gerneral_contractor'];
-	    $info['awarded_sub_contracotr_id']  = $data['awarded_contractor'];
+	    $info['general_contractor_id']    = $data['gerneral_contractor_id'];
+	    $info['awarded_sub_contracotr_id']  = $data['awarded_contractor_id'];
 	    $info['create_date']                = date('Y-m-d h:i:s');
 	    if(!empty($data['required_date']))
 	    {
@@ -265,8 +265,8 @@ class Project extends DbTable\Project
 	    $info['owner']               = $data['owner'];
 	    $info['project_location_address'] = $data['project_location_address'];
 	    $info['reed']                     = $data['reed'];
-	    $info['general_contractor_id']    = $data['gerneral_contractor'];
-	    $info['awarded_sub_contracotr_id']  = $data['awarded_contractor'];
+	    $info['general_contractor_id']    = $data['gerneral_contractor_id'];
+	    $info['awarded_sub_contracotr_id']  = $data['awarded_contractor_id'];
 	    //$info['create_date']                = date('Y-m-d h:i:s');
 	    $info['required_date']              = date('Y-m-d h:i:s',strtotime($data['required_date']));
 	    $info['due_date']                   = date('Y-m-d h:i:s',strtotime($data['due_date']));

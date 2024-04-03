@@ -1,5 +1,6 @@
 <?php $session =  Zend_Registry::get('session');
-//$project = $this->project; ?>
+//$project = $this->project; 
+?>
 <!-- Title area -->
 <main id="content" class="main-content">
 
@@ -31,7 +32,7 @@
     <section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
       <form action="/project/save" method="post" class="form" id='project_content'>
         <div class="widget-table">
-        <h2>Project Information</h2>
+          <h2>Project Information</h2>
           <div class="formRow">
             <div class="oneTwo required-field">
               <label for="project_name">Project Name</label>
@@ -92,7 +93,8 @@
             <div class="oneTwo required-field">
               <label for="architect_name">Project Architect/Owner</label>
               <input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" />
-              <input type="hidden" name='architect' id='architect' value="<?php // echo $project['architect'] ?>">
+              <input type="hidden" name='architect' id='architect' value="<?php // echo $project['architect'] 
+                                                                          ?>">
             </div>
 
             <div class="oneTwo">
@@ -107,7 +109,8 @@
             <div class="oneTwo required-field">
               <label for="specifiler_name">Specifier</label>
               <input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN">
-              <input type="hidden" id='specifiler' name="specifiler" value="<?php //echo $project['specifiler'] ?>">
+              <input type="hidden" id='specifiler' name="specifiler" value="<?php //echo $project['specifiler'] 
+                                                                            ?>">
             </div>
 
             <div class="oneTwo">
@@ -131,7 +134,8 @@
 
             <div class="oneTwo">
               <label for="gerneral_contractor">General Contractor</label>
-              <input id="gerneral_contractor" name="gerneral_contractor"type="text" class='tipN' original-title="Type Company Name" />
+              <input type="text" id="gerneral_contractor" name="gerneral_contractor"class='tipN' original-title="Type Company Name" />
+              <input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" />
             </div>
 
             <div class="oneTwo">
@@ -145,7 +149,8 @@
 
             <div class="oneTwo">
               <label for="awarded_contractor">Awarded Contractor</label>
-              <input id="awarded_contractor" name="awarded_contractor" type="text" class='tipN' original-title="Type Company Name" id="awarded_contractor" />
+              <input id="awarded_contractor" name="awarded_contractor" type="text" class='tipN' original-title="Type Company Name" />
+              <input id="awarded_contractor_id" name="awarded_contractor_id" type="hidden" />
             </div>
 
             <div class="oneTwo">
@@ -172,7 +177,7 @@
           <ol>
             <li><a href="/project/" target="_blank" class='quick-link add_pro' title="Add new project">
                 <span class='icon icon-add'></span>
-								Add Project</a></li>
+                Add Project</a></li>
             <li><a href="#" class='quick-link save_pro' title="Save project">
                 <span class='icon icon-save'></span>
                 Save Project</span></a></li>
@@ -185,7 +190,6 @@
 
 
 <script>
-
   function getcustomerbyid(id, obj) {
     $('.loading').show();
     $.ajax({
@@ -195,7 +199,7 @@
         var result = JSON.parse(data);
         if (result != null) {
           $(obj).val(result.name);
-          $('input[name=' + $(obj).attr('id') + ']').val(result.customer_id);
+          $('input[name=' + $(obj).attr('id') + ']').val(result.fullname);
         } else {
           alert('Can\'t find customer');
           $('#customer_info input').val('');
@@ -221,6 +225,8 @@
     },
     minLength: 2,
     select: function(event, ul) {
+      $('#awarded_contractor').val(ul.item.fullname);
+      $('#awarded_contractor_id').val(ul.item.customer_id);
       getcustomerbyid(ul.item.customer_id, $('#awarded_contractor'));
     },
 
@@ -246,6 +252,8 @@
     },
     minLength: 2,
     select: function(event, ul) {
+      $('#gerneral_contractor').val(ul.item.fullname);
+      $('#gerneral_contractor_id').val(ul.item.customer_id);
       getcustomerbyid(ul.item.customer_id, $('#gerneral_contractor'));
     },
 
@@ -316,7 +324,7 @@
     e.preventDefault();
     if ($("#project_content").validationEngine('validate') == true) {
       $('.loading').show();
-      $('#project_content').submit();
+      $('#project_content').trigger("submit");
     }
 
   });

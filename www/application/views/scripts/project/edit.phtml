@@ -101,7 +101,7 @@
 
 						<div class="oneTwo">
 							<label for="architect_loc">Architect Location</label>
-							<select id="architect_loc">
+							<select id="architect_loc" name="architect_loc">
 								<?php foreach ($this->locations as $l) { ?>
 									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->architect['Company_ID']) echo 'selected' ?>><?= $l['name'] ?></option>
 								<?php } ?>
@@ -116,7 +116,7 @@
 
 						<div class="oneTwo">
 							<label for="specifiler_loc">Specifier Location</label>
-							<select id="specifiler_loc">
+							<select id="specifiler_loc" name="specifiler_loc">
 								<?php foreach ($this->locations as $l) { ?>
 									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->sepcloc['Company_ID']) echo 'selected' ?>><?= $l['name'] ?></option>
 								<?php } ?>
