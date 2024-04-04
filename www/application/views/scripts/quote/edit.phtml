@@ -173,9 +173,10 @@ $project = $this->project; ?>
 				<div class="widget-table">
 					<h2>Quote infomation</h2>
 					<div class="formRow">
+						<input id="expire_date" name="expire_date" type="hidden" value='<?= $this->quote['expire_date']->format('m/d/Y') ?>' />
 						<div class="oneTwo">
-							<label for="quote-number">Quote number</label>
-							<input id="quote-number" type="text" value='<?= $this->quote['quote_id'] ?>' readonly />
+							<label for='quote_id'>Quote number</label>
+							<input id='quote_id' type="text" value='<?= $this->quote['quote_id'] ?>' readonly />
 						</div>
 						<div class="oneTwo">
 							<label for="quote-date">Quote date</label>
@@ -293,7 +294,7 @@ $project = $this->project; ?>
 			<form action="" class="dialog" id='item'>
 				<div class="dialog-form">
 					<div class="oneTwo required-field">
-						<label for="item_input">Item ID</label>
+						<label for="item_id">Item ID</label>
 						<input type="hidden" name="item" id='item_input' />
 						<input type="text" id="item_id" name='item_id' class="validate[required]" />
 					</div>
@@ -402,7 +403,7 @@ $project = $this->project; ?>
 
 	let itemTable = $("#items").DataTable({
 		ajax: {
-			url: "/project/item/id/" + $('#project_id').val(),
+			url: "/quote/item/id/" + $('#quote_id').val(),
 			dataSrc: ''
 		},
 		processing: true,
@@ -436,7 +437,7 @@ $project = $this->project; ?>
 						'<span class="button-wrap">' +
 						'<span class="icon icon-edit"></span>' +
 						'</span></a>' +
-						'<a title="Delete this item" class="item_delete" href="/project/deleteitem/pro/' + row.project_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty + '"' +
+						'<a title="Delete this item" class="item_delete" href="/quote/deleteitem/id/' + row.quote_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty + '/sort/' + row.sort_id + '"' +
 						'index="' + data + '">' +
 						'<span class="button-wrap">' +
 						'<span class="icon icon-delete"></span>' +
@@ -491,12 +492,14 @@ $project = $this->project; ?>
 			let qty = currentRow['qty'];
 			let unit_price = currentRow['unit_price'];
 			let uom = currentRow['uom'];
+			let sort_id = currentRow['sort_id'];
 			let data = {
 				'old_item_id': item_id,
 				'old_uom': uom,
 				'old_price': unit_price,
 				'old_qty': qty,
-				'old_note': note
+				'old_note': note,
+				'sort_id': sort_id,
 			};
 			return data;
 		}
@@ -525,9 +528,9 @@ $project = $this->project; ?>
 					click: function() {
 						if ($("#item").validationEngine('validate') == true) {
 							if ($('#is_edit').val() == 1) {
-								edititem($('#item_id').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val());
+								edititem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val());
 							} else {
-								additem();
+								additem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val());
 							}
 							$(this).dialog("close");
 							resetForm($('#item'));
@@ -614,7 +617,7 @@ $project = $this->project; ?>
 
 		}
 
-		function edititem(item_id, uom, price, qty, note) {
+		function edititem(item_id, item_desc, uom, price, qty, note) {
 			var olddata = getolddata(current_edit_row);
 			var data = {
 				'item_id': item_id,
@@ -622,14 +625,16 @@ $project = $this->project; ?>
 				'price': price,
 				'qty': qty,
 				'note': note,
+				'sort_id': olddata['sort_id'],
 				'old_item_id': olddata['old_item_id'],
 				'old_uom': olddata['old_uom'],
 				'old_price': olddata['old_price'],
 				'old_qty': olddata['old_qty'],
 				'old_note': olddata['old_note']
 			};
+			console.log(data);
 			$.ajax({
-				url: '/project/edititem/pro/' + $('#project_id').val(),
+				url: '/quote/edititem/id/' + $('#quote_id').val(),
 				type: "post",
 				data: data,
 				success: function(data) {
@@ -638,10 +643,10 @@ $project = $this->project; ?>
 			});
 		}
 
-		function additem() {
+		function additem(item_id, item_desc, uom, price, qty, note) {
 			$('.loading').show();
 			$.ajax({
-				url: '/project/additem/pro/' + $('#project_id').val(),
+				url: '/quote/additem/id/' + $('#quote_id').val(),
 				type: "post",
 				data: $("#item").serialize(),
 				success: function(data) {

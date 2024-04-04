@@ -34,7 +34,7 @@ class ItemsProject extends DbTable\Products
 	    try {
 	    	$db->insert('projects_products', $i);
 	    } catch (Exception $e) {
-	    	
+	    	echo $e->getMessage(); 	
 	    	return false;
 	    }
 	   
@@ -63,15 +63,21 @@ class ItemsProject extends DbTable\Products
 
 
 		try {
-			$sql = $db->select()->from('projects_products')->where('product_id = ?',$data['old_item_id'])->where('qty = ?',$data['old_qty'])->where('uom = ?',$data['old_uom'])
-			->where('unit_price=?',$data['old_price'])->where('note=?',$data['old_note'])->where('status = 1')->limit(1);
+			$sql = $db->select()->from('projects_products')
+				->where('product_id = ?',$data['old_item_id'])
+				->where('qty = ?',$data['old_qty'])
+				->where('uom = ?',$data['old_uom'])
+				->where('unit_price=?',$data['old_price'])
+				->where('note=?',$data['old_note'])
+				->where('status = 1')
+				->limit(1);
 			$product = $db->fetchRow($sql);
+			echo Zend_Json::encode($product);
 			$id = $product['id'];
 			$db->update('projects_products', $i,implode(' ', $sql->getPart('where')).' and id = '.$id);
 
 		} catch (Exception $e) {
-			var_dump($e);
-			exit;
+			echo $e->getMessage();
 			return false;
 		}
 	
@@ -96,8 +102,12 @@ class ItemsProject extends DbTable\Products
 		}
 		$db = $this->getAdapter();
 		$data['status'] = 0;
-		$sql = $db->select()->from('projects_products',null)->where('project_id = ?',$project_id)->where('product_id = ?',$item_id)->where('qty = ?',$qty)->where('uom = ?',$uom)
-			->where('unit_price=?',$price);;
+		$sql = $db->select()->from('projects_products',null)
+			->where('project_id = ?',$project_id)
+			->where('product_id = ?',$item_id)
+			->where('qty = ?',$qty)
+			->where('uom = ?',$uom)
+			->where('unit_price=?',$price);
 		
 		$db->update('projects_products',$data,implode(' ', $sql->getPart('where')));
 		

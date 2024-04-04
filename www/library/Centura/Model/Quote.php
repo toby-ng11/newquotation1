@@ -70,7 +70,7 @@ class Quote extends DbTable\Quote
 		$products->add($data['item'], $quote['quote_id']);
 
 		$project = new Project();
-		$project->log($data['project_id'], 'Quote Add', $quote['quote_id'], serialize($data['item']), $data['note']);
+		$project->log($data['project_id'], 'Quote Add', $quote['quote_id'], null, $data['note']);
 
 		return $quote['quote_id'];
 	}
@@ -123,11 +123,11 @@ class Quote extends DbTable\Quote
 		}
 
 		//edit products
-		$products = new ProductProject();
-		$products->edit($data['item'], $quote_id);
+		//$products = new ProductProject();
+		//$products->edit($data['item'], $quote_id);
 
 		$project = new Project();
-		$project->log($data['project_id'], 'Quote Edit', $quote_id, serialize($data['item']), $data['note']);
+		$project->log($data['project_id'], 'Quote Edit', $quote_id, null, $data['note']);
 
 		return $quote_id;
 	}

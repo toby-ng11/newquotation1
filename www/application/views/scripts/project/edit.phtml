@@ -923,6 +923,7 @@
 				'old_qty': olddata['old_qty'],
 				'old_note': olddata['old_note']
 			};
+			console.log(data);
 			$.ajax({
 				url: '/project/edititem/pro/' + $('#project_id').val(),
 				type: "post",
