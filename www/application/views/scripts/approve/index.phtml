@@ -53,7 +53,7 @@ $project = $this->project;
 				</svg>
 				<div class="project-information">
 					<p>Due date</p>
-					<h2><?= $project['due_date']->format('m/d/Y') ?></h2>
+					<h2><?= $project['due_date']->format('Y-m-d') ?></h2>
 				</div>
 			</div>
 
@@ -164,23 +164,23 @@ $project = $this->project;
 						</div>
 						<div class="oneTwo">
 							<label for="quote-date">Quote Date</label>
-							<input id="quote-date" type="text" class="datepicker" value="<?= $this->quote['quote_date']->format('m/d/Y') ?>" />
+							<input id="quote-date" type="text" class="datepicker" value="<?= $this->quote['quote_date']->format('Y-m-d') ?>" />
 						</div>
 						<div class="oneTwo required-field">
 							<label for="expire_date">Quote Expire</label>
 							<input id="expire_date" type="text" class="datepicker validate[required]" name='expire_date' value="<?php
-																																if ($this->quote['expire_date'] == null || $this->quote['expire_date']->format('m/d/Y') < $this->quote['quote_date']->format('m/d/Y')) {
-																																	echo date('m/d/Y', strtotime($this->quote['quote_date']->modify('+60 days')->format('m/d/Y')));
+																																if ($this->quote['expire_date'] == null || $this->quote['expire_date']->format('Y-m-d') < $this->quote['quote_date']->format('Y-m-d')) {
+																																	echo date('Y-m-d', strtotime($this->quote['quote_date']->modify('+60 days')->format('Y-m-d')));
 																																} else {
-																																	echo $this->quote['expire_date']->format('m/d/Y');
+																																	echo $this->quote['expire_date']->format('Y-m-d');
 																																}
 																																?>" />
 						</div>
 						<div class="oneTwo">
 							<label for="ship_required_date">Ship Required Date</label>
 							<input id="ship_required_date" type="text" class="datepicker" name='ship_required_date' value="<?php
-																															if ($this->quote['ship_required_date'] != null && $this->quote['ship_required_date']->format('m/d/Y') > '01/01/2000') {
-																																echo $this->quote['ship_required_date']->format('m/d/Y');
+																															if ($this->quote['ship_required_date'] != null && $this->quote['ship_required_date']->format('Y-m-d') > '01/01/2000') {
+																																echo $this->quote['ship_required_date']->format('Y-m-d');
 																															} ?>" />
 						</div>
 						<div class="oneTwo">
