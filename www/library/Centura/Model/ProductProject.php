@@ -20,28 +20,26 @@ class ProductProject extends DbTable\Products
 	    
 	    $db = $this->getAdapter();
 	    $sort = 0;
-	    
-	    foreach ($data as $item_id=>$item)
-	    {
-	    	foreach($item['uom'] as $k=>$v)
-	    	{
-	    		$i['quote_id'] = $quote_id;
-	    		$i['product_id'] = $item_id;
-	    		$i['qty'] = $item['qty'][$k];
-	    		$i['sort_id'] = $sort;
-	    		$i['note'] = $item['note'][$k];
-	    		$i['unit_price'] = $item['unit_price'][$k];
-	    		$i['note'] = $item['note'][$k];
-	    		$i['uom'] =$item['uom'][$k];
-	    		$i['subtotal'] = $item['total_price'][$k];
-	    		$sort++;
-	    		$db->insert('quotes_products', $i);
-	    		$i = null;
-	    	}	
+
+		$i = array();
+
+	    $i['quote_id'] = $quote_id;
+	    $i['product_id'] = $data['product_id'];
+	    $i['qty'] = $data['qty'];
+	    $i['sort_id'] = $data['sort_id'];
+	    $i['note'] =  $data['note'];
+		$i['uom'] = $data['uom'];
+	    $i['unit_price'] = $data['unit_price'];
+	    $i['subtotal'] = $data['qty'] * $data['unit_price'];
+		//$i['status'] = $data['status'];
+		try {
+	    	$db->insert('quotes_products', $i);
+	    } catch (Exception $e) {
+	    	return $e->getMessage();
 	    }
-	    
+
+	    $i = null;
 	    return true;
-	    
 	}
 
 	public function addsingle($data, $quote_id)

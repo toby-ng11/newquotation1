@@ -3314,6 +3314,12 @@ body,
 .icon.icon-pdf {
   mask-image: url("../../images/icons/assets/pdf.svg");
 }
+.icon.icon-mail {
+  mask-image: url("../../images/icons/assets/mail.svg");
+}
+.icon.icon-approval {
+  mask-image: url("../../images/icons/assets/approval.svg");
+}
 
 svg.icon {
   background: transparent;

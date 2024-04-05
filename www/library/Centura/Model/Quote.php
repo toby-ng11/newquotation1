@@ -30,11 +30,13 @@ class Quote extends DbTable\Quote
 		//add quote
 		$info['customer_id']                = $data['customer_id'];
 		$info['project_id']                 = $data['project_id'];
-		$info['quote_date']                 = date('Y-m-d h:i:s');
+		$info['quote_date']                 = date('Y-m-d h:i:s', strtotime($data['quote_date']));
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < time()) {
 			$data['expire_date'] = date('Y-m-d h:i:s', strtotime("+90 days"));
+		} 
+		else {
+			$info['expire_date'] = date('Y-m-d h:i:s', strtotime($data['expire_date']));
 		}
-		$info['expire_date']                = date('Y-m-d h:i:s', strtotime($data['expire_date']));
 		$info['quote_type_id']              = $data['quote_type_id'];
 		$info['quote_segment']              = $data['quote_segment'];
 		$info['sales_id']                   = $session->user['id'];
@@ -47,11 +49,9 @@ class Quote extends DbTable\Quote
 			$info['ship_required_date'] = NULL;
 		}
 
-
 		if ($data['arch'] != null) {
 			$info['arch']                       = $data['arch'];
 		}
-
 
 		try {
 			$db->insert('quote', $info);
@@ -66,11 +66,18 @@ class Quote extends DbTable\Quote
 		$this->updatequoteno($quote['quote_id']);
 
 		//add products
+
+		$item = new ItemsProject();
+		$result = $item->fetchallitems($data['project_id']);
+
 		$products = new ProductProject();
-		$products->add($data['item'], $quote['quote_id']);
+		foreach ($result as $item) {
+			$products->add($item, $quote['quote_id']);
+			$item_id_list[] = $item["product_id"];
+		}
 
 		$project = new Project();
-		$project->log($data['project_id'], 'Quote Add', $quote['quote_id'], null, $data['note']);
+		$project->log($data['project_id'], 'Quote Add', $quote['quote_id'], implode(", ", $item_id_list), $data['note']);
 
 		return $quote['quote_id'];
 	}

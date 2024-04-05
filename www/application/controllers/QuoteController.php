@@ -82,6 +82,21 @@ class QuoteController extends Zend_Controller_Action
 		exit;
 	}
 
+	public function importitemAction()
+	{
+		$quote_id = $this->getRequest()->getParam('id');
+
+		if ($this->_request->isXmlHttpRequest() && $this->_request->isPost() && $quote_id != null) {
+			$data = $this->_request->getPost();
+
+			$products = new ProductProject();
+			echo $products->addsingle($data, $quote_id);
+		} else {
+			echo '0';
+		}
+		exit;
+	}
+
 	public function edititemAction()
     {
     	$quote_id = $this->getRequest()->getParam('id');
