@@ -147,34 +147,33 @@
             dataSrc: ''
         },
         columns: [
-            { data: "project_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                if(rowData.owner == sessionUser) { $(cell).html("<a target='_blank' href='/project/edit/id/"+rowData.project_id+"'>"+rowData.project_id+"</a>");}
-                else { $(cell).html("<a target='_blank' href='/project/view/id/"+rowData.project_id+"'>"+rowData.project_id+"</a>");}
+            { data: "project_id", render: function(data, type, row, meta) {
+                if(row.owner == sessionUser) { return "<a target='_blank' href='/project/edit/id/"+ row.project_id+"'>"+ row .project_id+"</a>";}
+                else { return "<a target='_blank' href='/project/view/id/"+ row.project_id+"'>"+row.project_id+"</a>";}
             } },
             { data: "quote_no"},
             { data: "project_name"},
             { data: "owner"},
-            { data: "create_date.date"},
-            { data: "due_date.date", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
-                let d = new Date(cellData);
+            { data: "create_date.date", render: function(data) {
+                let date = new Date(data);
+                return date.toLocaleDateString();
+            }},
+            { data: "due_date.date", render: function(data) {
+                let date = new Date(data);
                 let today = new Date(); 
-                if (d <= today) {$(cell).addClass("red");}
+                if (date <= today) {return '<span class="red">' + date.toLocaleDateString() + '</span>';}
+                else { return date.toLocaleDateString();}
             }},
             { data: "Specifier_name"},
             { data: "segment"},
             { data: "status_name"},
-            { data: "project_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                $(cell).html("<a target='_blank' href='/quote/index/project/"+ rowData.project_id + "'><span class='button-wrap'><span class='icon icon-money'></span></span></a>")
+            { data: "project_id", render: function(data, type, row, meta) {
+                return '<a target="_blank" href="/quote/index/project/' + row.project_id + '">' +
+                '<span class="button-wrap"><span class="icon icon-money"></span></span></a>';
             }},
         ],
-        columnDefs: [{
-            targets: [4, 5],
-            render: function (data) {
-                let DateTime = luxon.DateTime;
-                let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
-                return d;
-            }},
-        { targets: [9], "className": 'dt-body-center'}
+        columnDefs: [
+            { targets: [0, 1, 3, 4, 5, 6, 7, 8, 9], className: 'dt-body-center'}
         ],
         processing: true,
         //"responsive": true,
@@ -188,50 +187,47 @@
         } }
     });
 
-    $('#quote_table').dataTable({
-        "ajax": {
-            "url": "/index/quote",
-            "dataSrc": ''
+    $('#quote_table').DataTable({
+        ajax: {
+            url: "/index/quote",
+            dataSrc: ''
         },
-        "processing": true,
+        processing: true,
         //"serverSide": true,
-        "columns": [
-            {"data": "quote_id", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
-                $(cell).html("<a target='_blank' href='/quote/edit/id/"+rowData.quote_id+"'>"+rowData.quote_id+"</a>");
-            } },
-            {"data": "project_name"},
-            {"data": "quote_segment"},
-            {"data": "quote_date.date" },
-            {"data": "expire_date.date", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
-                let d = new Date(cellData);
-                let today = new Date(); 
-                if (d <= today) {$(cell).addClass("red");}
+        columns: [
+            {data: "quote_id", render: function(data, type, row, meta) {
+                return "<a target='_blank' href='/quote/edit/id/"+ data + "'>" + data + "</a>";
             }},
-            {"data": "ship_required_date.date"},
-            {"data": "status_name"},
-            {"data": "approve_status", "createdCell": function(cell, cellData, rowData, rowIndex, colIndex) {
-                if (cellData == -1) {$(cell).addClass("disapproved red"); $(cell).html("Disapproved");}
-                else if (cellData == 10) {$(cell).addClass("approved green"); $(cell).html("Approved");}
-                else if (cellData == 1) {$(cell).addClass("waiting orange"); $(cell).html("Waiting Approval");}
-                else {$(cell).addClass("init"); $(cell).html("Not Submitted");}
+            {data: "project_name"},
+            {data: "quote_segment"},
+            {data: "quote_date.date", render: function (data) {
+                let date = new Date(data);
+                return date.toLocaleDateString();
+            }},
+            {data: "expire_date.date", render: function(data) {
+                let date = new Date(data);
+                let today = new Date(); 
+                if (date <= today) {return '<span class="red">' + date.toLocaleDateString() + '</span>';}
+                else { return date.toLocaleDateString();}
+            }},
+            {data: "ship_required_date.date", render: function (data) {
+                let date = new Date(data);
+                return date.toLocaleDateString();
+            }},
+            {data: "status_name"},
+            {data: "approve_status", render: function(data) {
+                if (data == -1) {return '<span class="disapproved red">Disapproved</span>';}
+                else if (data == 10) {return '<span class="approved green">Approved</span>';}
+                else if (data == 1) {return '<span class="waiting orange">Waiting</span>';}
+                else {return 'Not submitted';}
             }}
         ],
-        "columnDefs": [
-        {
-            "targets": [3, 4, 5],
-            "render": function (data) {
-                let DateTime = luxon.DateTime;
-                let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
-                return d;
-            }
-        }
+        columnDefs: [
+            { targets: [0, 2, 3, 4, 5, 6, 7], className: 'dt-body-center'}
         ],
-        "order": [[0, "desc"]],
-        "fixedColumns": {
-            "start": 1,
-            "end": 1
-        },
-        "scrollX": true,
+        order: [[0, "desc"]],
+        fixedColumns: { start: 1, end: 1 },
+        scrollX: true,
         layout: { topStart: function() {
             let info= document.createElement('div');
             info.innerHTML = '<h2>All quotes</h2><p><?= count($this->ownproject) ?> quotes';

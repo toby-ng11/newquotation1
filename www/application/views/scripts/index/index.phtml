@@ -58,10 +58,10 @@
                                 <th>Project ID</th>
                                 <th>Quote ID</th>
                                 <th>Project Name</th>
+                                <th>Worksheet Owner</th>
                                 <th>Create Date</th>
                                 <th>Due Date</th>
                                 <th>Specifier</th>
-                                <th>Worksheet Owner</th>
                                 <th>Market Segment</th>
                                 <th class="action">Make Quote</th>
                             </tr>
@@ -77,6 +77,7 @@
                     <thead>
                         <tr>
                             <th>Quote #</th>
+                            <th>Project #</th>
                             <th>Project Name</th>
                             <th>Quote Date</th>
                             <th>Expire Date</th>
@@ -106,7 +107,6 @@
         </section>
 </main>
 <script>
-
     $(document).ready(function() {
         $('#project_table').DataTable({
             //select: true,
@@ -116,9 +116,9 @@
             },
             columns: [{
                     data: "project_id",
-                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    render: function(data, type, row, meta) {
                         {
-                            $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.project_id + "'>" + rowData.project_id + "</a>");
+                            return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + row.project_id + "</a>";
                         }
                     }
                 },
@@ -129,15 +129,21 @@
                     data: "project_name"
                 },
                 {
-                    data: "create_date.date"
+                    data: "create_date.date",
+                    render: function(data) {
+                        let date = new Date(data);
+                        return date.toLocaleDateString();
+                    }
                 },
                 {
                     data: "due_date.date",
-                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                        let d = new Date(cellData);
+                    render: function(data) {
+                        let date = new Date(data);
                         let today = new Date();
-                        if (d <= today) {
-                            $(cell).addClass("red");
+                        if (date <= today) {
+                            return '<span class="red">' + date.toLocaleDateString() + '</span>';
+                        } else {
+                            return date.toLocaleDateString();
                         }
                     }
                 },
@@ -152,24 +158,15 @@
                 },
                 {
                     data: "project_id",
-                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                        $(cell).html("<a target='_blank' href='/quote/index/project/" + rowData.project_id + "'><span class='button-wrap'><span class='icon icon-money'></span></span></a>")
+                    render: function(data, type, row, meta) {
+                        return "<a target='_blank' href='/quote/index/project/" + row.project_id + "'><span class='button-wrap'><span class='icon icon-money'></span></span></a>";
                     }
                 },
             ],
             columnDefs: [{
-                    targets: [3, 4],
-                    render: function(data) {
-                        let DateTime = luxon.DateTime;
-                        let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
-                        return d;
-                    }
-                },
-                {
-                    targets: [8],
-                    className: 'dt-body-center'
-                }
-            ],
+                targets: [0, 1, 3, 4, 6, 7, 8],
+                className: 'dt-body-center'
+            }],
             processing: true,
             order: [
                 [0, "desc"]
@@ -179,88 +176,89 @@
                 end: 2
             },
             scrollX: true,
-            layout: { topStart: function() {
-                let info= document.createElement('div');
-                info.innerHTML = '<h2>My Projects</h2><p><?= count($this->ownproject) ?> projects';
-                return info;
-            } }
+            layout: {
+                topStart: function() {
+                    let info = document.createElement('div');
+                    info.innerHTML = '<h2>My Projects</h2><p><?= count($this->ownproject) ?> projects';
+                    return info;
+                }
+            }
         });
 
         <?php if ($session->user['approve_id'] != null) { ?>
-        $('#other_project_table').DataTable({
-            ajax: {
-                url: "/index/otherprojects",
-                dataSrc: ''
-            },
-            columns: [{
-                    data: "project_id",
-                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                        $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.project_id + "'>" + rowData.project_id + "</a>");
-                    }
+            $('#other_project_table').DataTable({
+                ajax: {
+                    url: "/index/otherprojects",
+                    dataSrc: ''
                 },
-                {
-                    data: "quote_no"
-                },
-                {
-                    data: "project_name"
-                },
-                {
-                    data: "create_date.date"
-                },
-                {
-                    data: "due_date.date",
-                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                        let d = new Date(cellData);
-                        let today = new Date();
-                        if (d <= today) {
-                            $(cell).addClass("red");
+                columns: [{
+                        data: "project_id",
+                        render: function(data, type, row, meta) {
+                            return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + row.project_id + "</a>";
                         }
-                    }
-                },
-                {
-                    data: "Specifier_name"
-                },
-                {
-                    data: "owner"
-                },
-                {
-                    data: "segment"
-                },
-                {
-                    data: "project_id",
-                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                        $(cell).html("<a target='_blank' href='/quote/index/project/" + rowData.project_id + "'><span class='button-wrap'><span class='icon icon-money'></span></span></a>")
-                    }
-                },
-            ],
-            columnDefs: [{
-                    targets: [3, 4],
-                    render: function(data) {
-                        let DateTime = luxon.DateTime;
-                        let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
-                        return d;
-                    }
-                },
-                {
-                    targets: [8],
+                    },
+                    {
+                        data: "quote_no"
+                    },
+                    {
+                        data: "project_name"
+                    },
+                    {
+                        data: "owner"
+                    },
+                    {
+                        data: "create_date.date",
+                        render: function(data) {
+                            let date = new Date(data);
+                            return date.toLocaleDateString();
+                        }
+                    },
+                    {
+                        data: "due_date.date",
+                        render: function(data) {
+                            let date = new Date(data);
+                            let today = new Date();
+                            if (date <= today) {
+                                return '<span class="red">' + date.toLocaleDateString() + '</span>';
+                            } else {
+                                return date.toLocaleDateString();
+                            }
+                        }
+                    },
+                    {
+                        data: "Specifier_name"
+                    },
+                    {
+                        data: "segment"
+                    },
+                    {
+                        data: "project_id",
+                        render: function(data, type, row, meta) {
+                            return "<a target='_blank' href='/quote/index/project/" + row.project_id + "'><span class='button-wrap'><span class='icon icon-money'></span></span></a>";
+                        }
+                    },
+                ],
+                columnDefs: [{
+                    targets: [0, 1, 3, 4, 6, 8],
                     className: 'dt-body-center'
+                }],
+                processing: true,
+                order: [
+                    [0, "desc"]
+                ],
+                fixedColumns: {
+                    start: 1,
+                    end: 1
+                },
+                scrollX: true,
+                layout: {
+                    topStart: function() {
+                        let info = document.createElement('div');
+                        info.innerHTML = '<h2>Other Projects At <?= $session->user['company'] ?></h2><p> <?= count($this->otherprojects) ?> projects at <?= $session->user['company'] ?>';
+                        return info;
+                    }
                 }
-            ],
-            processing: true,
-            order: [
-                [0, "desc"]
-            ],
-            fixedColumns: {
-                start: 1,
-                end: 1
-            },
-            scrollX: true,
-            layout: { topStart: function() {
-                let info= document.createElement('div');
-                info.innerHTML = '<h2>Other Projects At <?= $session->user['company'] ?></h2><p> <?= count($this->otherprojects) ?> projects at <?= $session->user['company'] ?>';
-                return info;
-            } }
-        });
+            });
         <?php } ?>
 
         $('#quote_table').DataTable({
@@ -270,47 +268,71 @@
             },
             processing: true,
             //"serverSide": true,
-            columns: [
-                { data: "quote_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                    $(cell).html("<a target='_blank' href='/quote/edit/id/" + rowData.quote_id + "'>" + rowData.quote_id + "</a>");
-                }},
-                { data: "project_id", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                    $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.project_id + "'>" + rowData.project_name + "</a>");
-                }},
-                { data: "quote_date.date" },
-                { data: "expire_date.date", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                    let d = new Date(cellData);
-                    let today = new Date();
-                    if (d <= today) {
-                        $(cell).addClass("red");
+            columns: [{
+                    data: "quote_id",
+                    render: function(data, type, row, meta) {
+                        return "<a target='_blank' href='/quote/edit/id/" + row.quote_id + "'>" + row.quote_id + "</a>";
                     }
-                }},
-                { data: "ship_required_date.date" },
-                { data: "customer" },
-                { data: "status_name" },
-                { data: "approve_status", createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                    if (cellData == -1) {
-                        $(cell).addClass("disapproved orange");
-                        $(cell).html("Disapproved");
-                    } else if (cellData == 10) {
-                        $(cell).addClass("approved green");
-                        $(cell).html("Approved");
-                    } else if (cellData == 1) {
-                        $(cell).addClass("waiting red");
-                        $(cell).html("Waiting Approval");
-                    } else {
-                        $(cell).addClass("init");
-                        $(cell).html("Not Submitted");
+                },
+                {
+                    data: "project_id",
+                    render: function(data, type, row, meta) {
+                        return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + row.project_id + "</a>";
                     }
-                }}
+                },
+                {
+                    data: "project_name"
+                },
+                {
+                    data: "quote_date.date",
+                    render: function(data) {
+                        let date = new Date(data);
+                        return date.toLocaleDateString();
+                    }
+                },
+                {
+                    data: "expire_date.date",
+                    render: function(data) {
+                        let date = new Date(data);
+                        let today = new Date();
+                        if (date <= today) {
+                            return '<span class="red">' + date.toLocaleDateString() + '</span>';
+                        } else {
+                            return date.toLocaleDateString();
+                        }
+                    }
+                },
+                {
+                    data: "ship_required_date.date",
+                    render: function(data) {
+                        let date = new Date(data);
+                        return date.toLocaleDateString();
+                    }
+                },
+                {
+                    data: "customer"
+                },
+                {
+                    data: "status_name"
+                },
+                {
+                    data: "approve_status",
+                    render: function(data) {
+                        if (data == -1) {
+                            return '<span class="disapproved red">Disapproved</span>';
+                        } else if (data == 10) {
+                            return '<span class="approved green">Approved</span>';
+                        } else if (data == 1) {
+                            return '<span class="waiting orange">Waiting</span>';
+                        } else {
+                            return 'Not submitted';
+                        }
+                    }
+                }
             ],
             columnDefs: [{
-                targets: [2, 3, 4],
-                render: function(data) {
-                    let DateTime = luxon.DateTime;
-                    let d = DateTime.fromSQL(data).setLocale('en').toFormat('f');
-                    return d;
-                }
+                targets: [0, 1, 3, 4, 5, 7, 8],
+                className: 'dt-body-center'
             }],
             order: [
                 [0, "desc"]
@@ -320,11 +342,13 @@
                 end: 2
             },
             scrollX: true,
-            layout: { topStart: function() {
-                let info= document.createElement('div');
-                info.innerHTML = '<h2>My Quotes</h2><p> <?= count($this->ownquotes) ?> quotes';
-                return info;
-            } }
+            layout: {
+                topStart: function() {
+                    let info = document.createElement('div');
+                    info.innerHTML = '<h2>My Quotes</h2><p> <?= count($this->ownquotes) ?> quotes';
+                    return info;
+                }
+            }
         });
 
         $('#project_log').DataTable({
@@ -334,13 +358,17 @@
             },
             processing: true,
             columns: [{
-                    data: "added.date"
+                    data: "added.date",
+                    render: function(data) {
+                        let date = new Date(data);
+                        return date.toLocaleString();
+                    }
                 },
                 {
                     data: "project_id",
-                    createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
+                    render: function(data, type, row, meta) {
                         {
-                            $(cell).html("<a target='_blank' href='/project/edit/id/" + rowData.project_id + "'>" + rowData.project_id + "</a>");
+                            return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + row.project_id + "</a>";
                         }
                     }
                 },
@@ -352,26 +380,28 @@
                 },
             ],
             columnDefs: [{
-                targets: [0],
-                render: function(data) {
-                    let DateTime = luxon.DateTime;
-                    let d = DateTime.fromSQL(data).setLocale('en').toFormat('f');
-                    return d;
+                    targets: [0, 1],
+                    className: 'dt-body-center'
+                },
+                {
+                    targets: [0, 1, 2],
+                    className: 'dt-head-center'
                 }
-            }, {
-                targets: [1],
-                className: 'dt-body-center'
-            }],
+            ],
             fixedColumns: {
                 start: 3
             },
-            order: [],
             scrollX: true,
-            layout: { topStart: function() {
-                let info= document.createElement('div');
-                info.innerHTML = '<h2>Follow Up Logs</h2><p> <?= count($this->memo) ?> logs';
-                return info;
-            } }
+            order: [
+                [0, "desc"]
+            ],
+            layout: {
+                topStart: function() {
+                    let info = document.createElement('div');
+                    info.innerHTML = '<h2>Follow Up Logs</h2><p> <?= count($this->memo) ?> logs';
+                    return info;
+                }
+            }
         });
     })
 </script>

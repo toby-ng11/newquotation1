@@ -1,6 +1,6 @@
 <?php
-	$session =  Zend_Registry::get('session');
-	$project = $this->project;
+$session =  Zend_Registry::get('session');
+$project = $this->project;
 ?>
 
 <!-- Main content wrapper -->
@@ -135,7 +135,7 @@
 
 						<div class="oneTwo">
 							<label for="gerneral_contractor">General Contractor</label>
-							<input type="text" id="gerneral_contractor" name="gerneral_contractor" placeholder="Type Name" value='<?= $this->gerneral_contractor['name'] ?? ''. ' - ' . ($this->gerneral_contractor['company_id'] ?? '') ?>' />
+							<input type="text" id="gerneral_contractor" name="gerneral_contractor" placeholder="Type Name" value='<?= $this->gerneral_contractor['name'] ?? '' . ' - ' . ($this->gerneral_contractor['company_id'] ?? '') ?>' />
 							<input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" value="<?= $project['gerneral_contractor_id'] ?? '' ?>" />
 						</div>
 
@@ -306,22 +306,22 @@
 				<div class="quick-links">
 					<ol>
 						<li><a href="/project/" target="_blank" class='quick-link add_pro' title="Add new project">
-							<span class='icon icon-add'></span>
+								<span class='icon icon-add'></span>
 								Add Project</a></li>
 						<!--<li><a href="#" class='edit_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
 						<!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
 						<li><a href="#" class='quick-link save_pro' title="Save project">
-						<span class='icon icon-save'></span>
+								<span class='icon icon-save'></span>
 								Save Project</span></a></li>
 						<li><a class='quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/project/print/id/" . $project['project_id'] . "?company=" . substr($project['quote_no'], 0, 3) . "&name=Centura_Project_" . preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print">
-							<span class='icon icon-pdf'></span>
+								<span class='icon icon-pdf'></span>
 								Print Project</a></li>
 						<li><a class='quick-link make-quote' href="/quote/index/project/<?= $project['project_id'] ?>" title="Make quote">
 								<span class='icon icon-dollar'></span>
 								Make Quote
 							</a></li>
 						<li><a href="#" class='quick-link delete_pro' title="delete">
-							<span class='icon icon-trash'></span>
+								<span class='icon icon-trash'></span>
 								Close Project</a></li>
 					</ol>
 				</div>
@@ -348,9 +348,8 @@
 		columns: [{
 				data: "added.date",
 				render: function(data) {
-					let DateTime = luxon.DateTime;
-					let d = DateTime.fromSQL(data).setLocale('en').toFormat('f');
-					return d;
+					let date = new Date(data);
+					return date.toLocaleString();
 				}
 			},
 			{
@@ -359,9 +358,8 @@
 			{
 				data: "follow_up_date.date",
 				render: function(data) {
-					let DateTime = luxon.DateTime;
-					let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
-					return d;
+					let date = new Date(data);
+					return date.toLocaleDateString();
 				}
 			},
 			{
@@ -377,6 +375,15 @@
 					<?php } ?>
 				}
 			},
+		],
+		columnDefs: [{
+				targets: [0, 2, 4],
+				className: 'dt-body-center'
+			},
+			{
+				targets: [0, 1, 2, 3, 4],
+				className: 'dt-head-center'
+			}
 		],
 		order: [
 			[0, "desc"]
@@ -479,7 +486,7 @@
 			minLength: 2,
 			select: function(event, ul) {
 				$('#awarded_contractor').val(ul.item.name);
-      			$('#awarded_contractor_id').val(ul.item.customer_id);
+				$('#awarded_contractor_id').val(ul.item.customer_id);
 				getcustomerbyid(ul.item.customer_id, $('#awarded_contractor'));
 			},
 
@@ -507,7 +514,7 @@
 			minLength: 2,
 			select: function(event, ul) {
 				$('#gerneral_contractor').val(ul.item.name);
-      			$('#gerneral_contractor_id').val(ul.item.customer_id);
+				$('#gerneral_contractor_id').val(ul.item.customer_id);
 				getcustomerbyid(ul.item.customer_id, $('#gerneral_contractor'));
 			},
 

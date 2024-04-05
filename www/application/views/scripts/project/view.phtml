@@ -81,7 +81,7 @@ $project = $this->project;
             <form method="post" class="form" id='project_content'>
                 <input type="hidden" id='project_id' value='<?= $project['project_id'] ?>'>
                 <div class="widget-table">
-                <h2>Project information</h2>
+                    <h2>Project information</h2>
                     <div class="formRow">
                         <div class="oneTwo">
                             <label for="project_name">Project Name</label>
@@ -176,7 +176,7 @@ $project = $this->project;
                         </div>
                         <div class="oneTwo">
                             <label for="awarded_contractor">Awarded Sub Contractor</label>
-                            <input type="text" id="awarded_contractor" name='awarded_contractor'  placeholder="Type Name" value='<?= ($this->awarded_sub_contracotr['name'] ?? '') . ' - ' . ($this->awarded_sub_contracotr['company_id'] ?? '') ?>' />
+                            <input type="text" id="awarded_contractor" name='awarded_contractor' placeholder="Type Name" value='<?= ($this->awarded_sub_contracotr['name'] ?? '') . ' - ' . ($this->awarded_sub_contracotr['company_id'] ?? '') ?>' />
                             <input type="hidden" id="awarded_contractor_id" name='awarded_contractor_id' value="<?= $project['awarded_sub_contracotr_id'] ?>">
                         </div>
                         <div class="oneTwo">
@@ -231,15 +231,14 @@ $project = $this->project;
 
         <section aria-labelledby="project-log" id="section3" data-nav="Project log">
             <div class="widget-table">
-            <h2>Project log</h2>
-                <table cellpadding="0" cellspacing="0" width="100%" class="display no-wrap" id='project_memo'>
+                <h2>Project log</h2>
+                <table cellpadding="0" cellspacing="0" width="100%" class="display" id='project_memo'>
                     <thead>
                         <tr>
-                            <th>Log Date</th>
+                            <th data-priority="1">Log Date</th>
                             <th>Action Items Completed</th>
-                            <th>Follow Up Date</th>
-                            <th>Next Action Required</th>
-                            <th class="action">Delete</th>
+                            <th data-priority="2">Follow Up Date</th>
+                            <th data-priority="3">Next Action Required</th>
                         </tr>
                     </thead>
                 </table>
@@ -257,11 +256,11 @@ $project = $this->project;
                     <ol>
                         <?php if ($project['status'] != 13) { ?>
                             <li><a class='quick-link add_pro' href="/quote/index/project/<?= $project['project_id'] ?>" title="add">
-                                 <span class='icon icon-dollar'></span>
+                                    <span class='icon icon-dollar'></span>
                                     Make Quote</a></li>
                         <?php } ?>
                         <li><a class='quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/project/print/id/" . $project['project_id'] . "?company=" . substr($project['quote_no'], 0, 3) . "&name=Centura_Project_" . preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print">
-                                 <span class='icon icon-pdf'></span>
+                                <span class='icon icon-pdf'></span>
                                 Print Project</a></li>
                     </ol>
                 </div>
@@ -282,30 +281,54 @@ $project = $this->project;
     $('.selector').attr('diabled', 'diabled');
 
     let itemTable = $("#items").DataTable({
-		ajax: {
-			url: "/project/item/id/" + $('#project_id').val(),
-			dataSrc: ''
-		},
-		processing: true,
-		columns: [
-			{ data: "product_id", render: function(data, type, row, meta) {
-				return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
-			} },
-			{ data: "qty" },
-			{ data: "unit_price" },
-			{ data: "uom" },
-			{ data: "subtotal" },
-			{ data: "note" }
-		],
-		columnDefs: [
-			{ targets: [0, 1, 2, 3, 4], className: 'dt-body-center' },
-			{ targets: [0, 1, 2, 3, 4, 5], className: 'dt-head-center' },
-		],
-		layout: { topStart: null, topEnd: null },
-		order: { data: "added.date" },
-		paging: false,
-		scrollX: true,
-		fixedColumns: { start: 1}
+        ajax: {
+            url: "/project/item/id/" + $('#project_id').val(),
+            dataSrc: ''
+        },
+        processing: true,
+        columns: [{
+                data: "product_id",
+                render: function(data, type, row, meta) {
+                    return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
+                }
+            },
+            {
+                data: "qty"
+            },
+            {
+                data: "unit_price"
+            },
+            {
+                data: "uom"
+            },
+            {
+                data: "subtotal"
+            },
+            {
+                data: "note"
+            }
+        ],
+        columnDefs: [{
+                targets: [0, 1, 2, 3, 4],
+                className: 'dt-body-center'
+            },
+            {
+                targets: [0, 1, 2, 3, 4, 5],
+                className: 'dt-head-center'
+            },
+        ],
+        layout: {
+            topStart: null,
+            topEnd: null
+        },
+        order: {
+            data: "added.date"
+        },
+        paging: false,
+        scrollX: true,
+        fixedColumns: {
+            start: 1
+        }
     });
 
     $('#project_memo').DataTable({
@@ -315,51 +338,32 @@ $project = $this->project;
         },
         processing: true,
         columns: [{
-                data: "added.date"
+                data: "added.date",
+                render: function(data) {
+                    let date = new Date(data);
+                    return date.toLocaleString();
+                }
             },
             {
                 data: "title"
             },
             {
-                data: "follow_up_date.date"
+                data: "follow_up_date.date",
+                render: function(data) {
+                    let date = new Date(data);
+                    return date.toLocaleDateString();
+                }
             },
             {
                 data: "type"
-            },
-            {
-                data: "memo_id",
-                createdCell: function(cell, cellData, rowData, rowIndex, colIndex) {
-                    <?php if ($this->owner == 1) { ?>
-                        $(cell).html("<a target='_blank' href='/memo/delete/id/" + rowData.memo_id + "'><img src='/images/icons/dark/close.png' alt='delete'></a>");
-                    <?php } else { ?>
-                        $(cell).html("");
-                    <?php } ?>
-                }
-            },
+            }
         ],
         columnDefs: [{
-            targets: [0],
-            render: function(data) {
-                let DateTime = luxon.DateTime;
-                let d = DateTime.fromSQL(data).setLocale('en').toFormat('f');
-                return d;
-            }
-        }, {
-            targets: [2],
-            render: function(data) {
-                let DateTime = luxon.DateTime;
-                let d = DateTime.fromSQL(data).setLocale('en').toFormat('D');
-                return d;
-            }
+            targets: [0, 2],
+            className: 'dt-body-center'
         }],
-        fixedColumns: {
-            start: 1,
-            end: 1
-        },
         order: [
             [0, "desc"]
         ]
     });
 </script>
-
-</div>
