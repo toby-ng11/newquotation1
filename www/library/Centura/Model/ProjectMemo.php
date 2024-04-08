@@ -29,6 +29,7 @@ class ProjectMemo extends Zend_Db_Table
 		try {
 			$db->insert('project_memo', $info);
 		} catch (Exception $e) {
+			echo $e->getMessage();
 			return false;
 		}
 		return $this->fetchlatest($project_id);
@@ -92,7 +93,9 @@ class ProjectMemo extends Zend_Db_Table
 		}
 		$db = $this->getAdapter();
 		
-		$select = $db->select()->from('project_memo')->where('project_id =?',$project_id)->where('project_memo.Delete_Flag = ?','N');
+		$select = $db->select()->from('project_memo')
+			->where('project_id =?',$project_id)
+			->where('project_memo.Delete_Flag = ?','N');
 		
 		return Zend_Json::encode($db->fetchAll($select));
 	}
@@ -101,7 +104,8 @@ class ProjectMemo extends Zend_Db_Table
 	{
 		$db = $this->getAdapter();
 		
-		$select = $db->select()->from('project_memo_types')->where('Delete_Flag = ?','N');
+		$select = $db->select()->from('project_memo_types')
+			->where('Delete_Flag = ?','N');
 		return $db->fetchAll($select);
 	}
 	
@@ -115,8 +119,10 @@ class ProjectMemo extends Zend_Db_Table
 		}
 		$db = $this->getAdapter();
 	
-		$select =$db->select()->from('project_memo')->join('project', 'project.project_id = project_memo.project_id',array('address'=>'project_location_address','project_name'))
-		->where('project.owner = ?',$owner)->order('added desc');
+		$select =$db->select()->from('project_memo')
+			->join('project', 'project.project_id = project_memo.project_id',array('address'=>'project_location_address','project_name'))
+			->where('project.owner = ?',$owner)
+			->order('added desc');
 		return $db->fetchAll($select);
 	
 	}
@@ -130,8 +136,10 @@ class ProjectMemo extends Zend_Db_Table
 		}
 		$db = $this->getAdapter();
 	
-		$select =$db->select()->from('project_memo')->join('project', 'project.project_id = project_memo.project_id',array('address'=>'project_location_address','project_name'))
-		->where('project.owner = ?',$owner)->order('added desc');
+		$select =$db->select()->from('project_memo')
+			->join('project', 'project.project_id = project_memo.project_id', array('address'=>'project_location_address','project_name'))
+			->where('project.owner = ?',$owner)
+			->order('added desc');
 		$result = $db->fetchAll($select);
 		return Zend_Json::encode($result);
 	}

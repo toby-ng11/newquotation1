@@ -27,9 +27,9 @@ class MemoController extends Zend_Controller_Action
     	{
     		$data = $this->_request->getPost();
     		
-    		$momo = new ProjectMemo();
+    		$memo = new ProjectMemo();
     		
-    		echo $momo->add($project_id, $data);
+    		echo $memo->add($project_id, $data);
     		
     	}
     	else

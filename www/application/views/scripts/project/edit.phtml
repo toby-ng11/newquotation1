@@ -233,7 +233,7 @@ $project = $this->project;
 							<th>Action Items Completed</th>
 							<th>Follow Up Date</th>
 							<th>Next Action Required</th>
-							<th class="action">Delete</th>
+							<th class="action">Options</th>
 						</tr>
 					</thead>
 				</table>
@@ -244,13 +244,18 @@ $project = $this->project;
 			<form action="" class="dialog" id='memo'>
 				<div class="dialog-form">
 					<div class="oneTwo required-field dialog-note">
-						<label for="title">Enter Action Items Completed</label>
-						<textarea rows="1" name='title' id='title' class="validate[required]" placeholder="Project log"></textarea>
+						<label for="title">Title</label>
+						<textarea rows="2" name='title' id='title' class="validate[required]" placeholder="Title"></textarea>
 					</div>
 
 					<div class="oneTwo required-field dialog-note">
-						<label for="type">Enter Next Action Required</label>
-						<textarea rows="1" name="type" id='type' class="validate[required]" placeholder="Critical updates note"></textarea>
+						<label for="title">Content</label>
+						<textarea rows="3" name='content' id='content' class="validate[required]" placeholder="Log content"></textarea>
+					</div>
+
+					<div class="oneTwo required-field dialog-note">
+						<label for="type">Next Action Required</label>
+						<textarea rows="3" name="type" id='type' class="validate[required]" placeholder="Critical updates note"></textarea>
 					</div>
 
 					<div class="oneTwo dialog-note">
@@ -353,7 +358,11 @@ $project = $this->project;
 				}
 			},
 			{
-				data: "title"
+				data: "title",
+				render: function(data, type, row, meta) {
+					if (row.content == null) { return '<p><b>' + data + '</b></p>'; }
+					else { return '<p><b>' + data + '</b></br>' + row.content + '</p>'; }
+				}
 			},
 			{
 				data: "follow_up_date.date",
@@ -369,7 +378,13 @@ $project = $this->project;
 				data: "memo_id",
 				render: function(data) {
 					<?php if ($this->owner == 1) { ?>
-						return '<div class="row-button">' + "<a class='memo_delete' target='_blank' href='/memo/delete/id/" + data + "'><span class='button-wrap'><span class='icon icon-delete'></span></span></a></div>";
+						return '<div class="row-button">' +
+						'<a title="Edit this item" class="memo-edit" href="#">' +
+						'<span class="button-wrap">' +
+						'<span class="icon icon-edit"></span>' +
+						'</span></a>' +
+						'<a class="memo_delete" target="_blank" href="/memo/delete/id/' + data +
+						'"><span class="button-wrap"><span class="icon icon-delete"></span></span></a></div>';
 					<?php } else { ?>
 						return null;
 					<?php } ?>
