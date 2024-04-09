@@ -34,6 +34,16 @@ $project = $this->project;
 		<section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
 			<form method="post" class="form" id='project_content'>
 				<div class="widget-table">
+					<div class="widget-button">
+						<?php if ($this->owner == 1) { ?>
+							<button disabled id="save-project" type="button" title="Save project information" class="button action has-icon save-project-button small">
+								<span class="button-wrap">
+									<span class="icon icon-save"></span>
+									Save
+								</span>
+							</button>
+						<?php } ?>
+					</div>
 					<h2>Project Information</h2>
 					<input type="hidden" id='project_id' value='<?= $project['project_id'] ?>'>
 					<div class="formRow">
@@ -135,8 +145,8 @@ $project = $this->project;
 
 						<div class="oneTwo">
 							<label for="gerneral_contractor">General Contractor</label>
-							<input type="text" id="gerneral_contractor" name="gerneral_contractor" placeholder="Type Name" value='<?= $this->gerneral_contractor['name'] ?? '' . ' - ' . ($this->gerneral_contractor['company_id'] ?? '') ?>' />
-							<input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" value="<?= $project['gerneral_contractor_id'] ?? '' ?>" />
+							<input type="text" id="gerneral_contractor" name="gerneral_contractor" placeholder="Add general contractor" value='<?php if (!empty($this->gerneral_contractor)) { echo $this->gerneral_contractor['name'] . ' - ' . $this->gerneral_contractor['company_id']; } ?>' />
+							<input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" value="<?= $project['general_contractor_id'] ?? '' ?>" />
 						</div>
 
 						<div class="oneTwo">
@@ -151,7 +161,7 @@ $project = $this->project;
 
 						<div class="oneTwo">
 							<label for="awarded_contractor">Awarded Sub Contractor</label>
-							<input type="text" id="awarded_contractor" name="awarded_contractor" placeholder="Type Name" value='<?= $this->awarded_sub_contracotr['name'] ?? '' . ' - ' . ($this->awarded_sub_contracotr['company_id'] ?? '') ?>' />
+							<input type="text" id="awarded_contractor" name="awarded_contractor" placeholder="Add awarded contractor" value='<?php if(!empty($this->awarded_sub_contracotr)) { echo $this->awarded_sub_contracotr['name'] . ' - ' . $this->awarded_sub_contracotr['company_id']; } ?>' />
 							<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id' value="<?= $project['awarded_sub_contracotr_id'] ?>">
 						</div>
 
@@ -164,7 +174,6 @@ $project = $this->project;
 								<?php } ?>
 							</select>
 						</div>
-
 					</div>
 				</div>
 			</form>
@@ -226,7 +235,7 @@ $project = $this->project;
 					<?php } ?>
 				</div>
 				<h2>Project Log</h2>
-				<table cellpadding="0" cellspacing="0" width="100%" class="display no-wrap" id='project_memo'>
+				<table cellpadding="0" cellspacing="0" width="100%" class="display" id='project_memo'>
 					<thead>
 						<tr>
 							<th>Log Time</th>
@@ -315,9 +324,6 @@ $project = $this->project;
 								Add Project</a></li>
 						<!--<li><a href="#" class='edit_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
 						<!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
-						<li><a href="#" class='quick-link save_pro' title="Save project">
-								<span class='icon icon-save'></span>
-								Save Project</span></a></li>
 						<li><a class='quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/project/print/id/" . $project['project_id'] . "?company=" . substr($project['quote_no'], 0, 3) . "&name=Centura_Project_" . preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print">
 								<span class='icon icon-pdf'></span>
 								Print Project</a></li>
@@ -360,8 +366,11 @@ $project = $this->project;
 			{
 				data: "title",
 				render: function(data, type, row, meta) {
-					if (row.content == null) { return '<p><b>' + data + '</b></p>'; }
-					else { return '<p><b>' + data + '</b></br>' + row.content + '</p>'; }
+					if (row.content == null) {
+						return '<p><b>' + data + '</b></p>';
+					} else {
+						return '<p><b>' + data + '</b></br>' + row.content + '</p>';
+					}
 				}
 			},
 			{
@@ -379,12 +388,12 @@ $project = $this->project;
 				render: function(data) {
 					<?php if ($this->owner == 1) { ?>
 						return '<div class="row-button">' +
-						'<a title="Edit this item" class="memo-edit" href="#">' +
-						'<span class="button-wrap">' +
-						'<span class="icon icon-edit"></span>' +
-						'</span></a>' +
-						'<a class="memo_delete" target="_blank" href="/memo/delete/id/' + data +
-						'"><span class="button-wrap"><span class="icon icon-delete"></span></span></a></div>';
+							'<a title="Edit this item" class="memo-edit" href="#">' +
+							'<span class="button-wrap">' +
+							'<span class="icon icon-edit"></span>' +
+							'</span></a>' +
+							'<a class="memo_delete" target="_blank" href="/memo/delete/id/' + data +
+							'"><span class="button-wrap"><span class="icon icon-delete"></span></span></a></div>';
 					<?php } else { ?>
 						return null;
 					<?php } ?>
@@ -996,20 +1005,34 @@ $project = $this->project;
 			}
 		});
 
-		$('.save_pro').on("click", function(e) {
+		let unsave = false;
+
+		$('#project_content').on("change", function() {
+			$('#save-project').prop("disabled", false);
+			unsave = true;
+		});
+
+		$('#save-project').on("click", function(e) {
 			e.preventDefault();
 			if ($("#project_content").validationEngine('validate') == true) {
 				if ($('#status').val() != 13) {
-					$('.loading').show();
+					if ($('#gerneral_contractor').val() == '') {
+						$('#gerneral_contractor_id').val('')
+					}; // delete contractor
+					if ($('#awarded_contractor').val() == '') {
+						$('#awarded_contractor_id').val('')
+					};
 					$('#project_content').trigger("submit");
-				} else {
-					if (confirm("You are trying to close a project. Please add the reason to the log.") == true) {
-						$('.loading').show();
-						$('#project_content').trigger("submit");
-					}
+					unsave = false;
 				}
 			}
 		});
+
+		window.onbeforeunload = function() {
+			if (unsave) {
+				return "You have unsaved changes project information. Do you want to leave this page and discard your changes or stay on this page?";
+			}
+		}
 
 		$('.delete_pro').on("click", function() {
 			if (confirm("You are trying to close a project. Please add the reason to the log.") == true) {

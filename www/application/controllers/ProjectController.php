@@ -81,27 +81,29 @@ class ProjectController extends Zend_Controller_Action
     	
     	
     	$quote = new Quote();
+
+		$project = new Project();
+		$project_detail = $project->fetchbyid($project_id);
+		echo Zend_Json::encode($project_detail);
+		$this->view->project = $project_detail;
     
     	$this->view->status = $quote->fetchstatus();
     	$this->view->seg = $quote->fetchseg();
     	$this->view->sepc = $quote->fetchsepc();
     	$sales = new User();
-    
-    	$locations = new Location();
-    	$this->view->locations = $locations->fetchAllBranches();
+
     	
-    	$project = new Project();
     	$customer = new Customer();
-    	
-    	$project_detail = $project->fetchbyid($project_id);
     	
     	if($project_detail['status'] == 13)//Project closed
     	{
     		$this->redirect('/project/view/id/'.$project_id);
     	}
     	
-    	
-    	$this->view->project = $project_detail;
+		$locations = new Location();
+    	$this->view->locations = $locations->fetchAllBranches();
+		//$this->view->locations = $locations->fetchBranchesByCompanyId($project_detail['company_id']);
+
     	$this->view->spec_name = $project->fetchspecbyid($project_detail['specifiler']);
     	$this->view->arch_name = $project->fetchspecbyid($project_detail['architect']);
     	

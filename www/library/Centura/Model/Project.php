@@ -311,7 +311,7 @@ class Project extends DbTable\Project
 	    try {
 	    	$db->update('project', $info,'project_id ='.$project_id);
 	    } catch (Exception $e) {
-	    	var_dump($e);
+	    	echo $e->getMessage();
 	    	return  false;
 	    }
 	    
