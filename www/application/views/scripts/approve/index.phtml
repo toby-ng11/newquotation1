@@ -121,7 +121,6 @@ $project = $this->project;
 
 		<!-- Form -->
 		<form method='post' class="form" id="quote_content">
-			<section aria-labelledby="customer-information" id="section2" data-nav="Customer information">
 				<div class="widget-table" id="customer_info">
 					<h2>Customer Infomation</h2>
 					<input type="hidden" id="project_id" name='project_id' value="<?= $project['project_id'] ?>" />
@@ -151,16 +150,15 @@ $project = $this->project;
 							<input type="text" value="<?= $this->customer['email'] ?>" id='customer_email' name='Contacts_email' class="validate[custom[email]]" placeholder="Enter Customer Email to fetch existing customer">
 						</div>
 					</div>
-				</div>
-			</section>
 
-			<section aria-labelledby="quote-information" id="section3" data-nav="Quote information">
-				<div class="widget-table">
+					<div class="line"></div>
+				
+
 					<h2>Quote Infomation</h2>
 					<div class="formRow">
 						<div class="oneTwo">
-							<label for="quote-id">Quote Number</label>
-							<input id="quote-id" type="text" value='<?= $this->quote['quote_id'] ?>' readonly />
+							<label for="quote_id">Quote Number</label>
+							<input id="quote_id" type="text" value='<?= $this->quote['quote_id'] ?>' readonly />
 						</div>
 						<div class="oneTwo">
 							<label for="quote-date">Quote Date</label>
@@ -260,8 +258,18 @@ $project = $this->project;
 							</select>
 						</div>
 					</div>
+
+					<div class="line"></div>
+
+					<h2>Comment</h2>
+					<div class="formRow">
+						<div class="oneTwo">
+							<label for="quote-note">Quote Note</label>
+							<textarea id="quote-note" rows="5" cols="" name="note" placeholder="Add quote note here..."><?= $this->quote['note'] ?></textarea>
+						</div>
+					</div>
 				</div>
-			</section>
+		</form>
 
 			<section aria-labelledby="items" id="section4" data-nav="Items">
 				<div class="widget-table">
@@ -289,19 +297,6 @@ $project = $this->project;
 					</table>
 				</div>
 			</section>
-
-			<section aria-labelledby="comment" id="section5" data-nav="Comment">
-				<div class="widget-table">
-					<h2>Comment</h2>
-					<div class="formRow">
-						<div class="oneTwo">
-							<label for="quote-note">Quote Note</label>
-							<textarea id="quote-note" rows="8" cols="" name="note" placeholder="Add quote note here..."><?= $this->quote['note'] ?></textarea>
-						</div>
-					</div>
-				</div>
-			</section>
-		</form>
 
 		<div id="dialog-message" title="Add Item">
 			<form action="" class="dialog" id='item'>
@@ -425,7 +420,7 @@ $project = $this->project;
 
 	let itemTable = $("#items").DataTable({
 		ajax: {
-			url: "/project/item/id/" + $('#project_id').val(),
+			url: "/quote/item/id/" + $('#quote_id').val(),
 			dataSrc: ''
 		},
 		processing: true,
@@ -830,7 +825,7 @@ $project = $this->project;
 		$('a.approve').on("click", function(e) {
 			e.preventDefault();
 			if ($("#quote_content").validationEngine('validate') == true) {
-				if (confirm("Are you sure you want to disapprove this quote?") == true) {
+				if (confirm("Are you sure you want to approve this quote?") == true) {
 					$('.loading').show();
 					$.ajax({
 						url: $(this).attr('href'),

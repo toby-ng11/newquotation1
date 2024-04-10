@@ -27,7 +27,7 @@ $project = $this->project;
 
 	<div class="main-page-content">
 		<header class="main-page-content-header">
-			<h1>Making quote</h1>
+			<h1>Make quote</h1>
 		</header>
 
 		<div class="widget-information">
@@ -76,7 +76,6 @@ $project = $this->project;
 
 		<!-- Form -->
 		<form action="/quote/save" method='post' class="form" id="quote_content">
-			<section aria-labelledby="customer-information" id="section2" data-nav="Customer information">
 				<input type="hidden" id="project_id" name='project_id' value="<?= $project['project_id'] ?>" />
 				<div class="widget-table" id="customer_info">
 					<div class="widget-button">
@@ -93,6 +92,7 @@ $project = $this->project;
 							</span>
 						</button>
 					</div>
+
 					<h2>Customer Infomation</h2>
 					<div class="formRow">
 						<div class="oneTwo required-field">
@@ -121,11 +121,8 @@ $project = $this->project;
 						</div>
 					</div>
 
-				</div>
-			</section>
+					<div class="line"></div>
 
-			<section aria-labelledby="quote-information" id="section3" data-nav="Quote information">
-				<div class="widget-table">
 					<h2>Quote Infomation</h2>
 					<div class="formRow">
 						<div class="oneTwo">
@@ -198,8 +195,19 @@ $project = $this->project;
 							</select>
 						</div>
 					</div>
+
+					<div class="line"></div>
+
+					<h2>Comment</h2>
+					<div class="formRow">
+						<div class="oneTwo">
+							<label for="quote-note">Quote Note</label>
+							<textarea id="quote-note" rows="5" name="note" placeholder="Note area"></textarea>
+						</div>
+					</div>
+
 				</div>
-			</section>
+		</form>
 
 			<section aria-labelledby="items" id="section4" data-nav="Items">
 				<div class="widget-table">
@@ -227,19 +235,6 @@ $project = $this->project;
 					</table>
 				</div>
 			</section>
-
-			<section aria-labelledby="comment" id="section5" data-nav="Comment">
-				<div class="widget-table">
-					<h2>Comment</h2>
-					<div class="formRow">
-						<div class="oneTwo">
-							<label for="quote-note">Quote Note</label>
-							<textarea id="quote-note" name="note" placeholder="Note area"></textarea>
-						</div>
-					</div>
-				</div>
-			</section>
-		</form>
 
 		<div id="dialog-message" title="Add Item">
 			<form action="" class="dialog" id='item'>

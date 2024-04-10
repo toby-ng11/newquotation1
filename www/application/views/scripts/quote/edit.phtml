@@ -77,7 +77,9 @@ $project = $this->project; ?>
 				</div>
 			</div>
 
-			<?php if ($this->quote['approve_status'] == 10) { ?>
+			<?php 
+			switch ($this->quote['approve_status']) {
+				case 10: ?>
 				<div class="widget-table quote-status status-approved">
 					<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 						<path d="M10.5 15.25C10.307 15.2353 10.1276 15.1455 9.99998 15L6.99998 12C6.93314 11.8601 6.91133 11.7029 6.93756 11.55C6.96379 11.3971 7.03676 11.2562 7.14643 11.1465C7.2561 11.0368 7.39707 10.9638 7.54993 10.9376C7.70279 10.9114 7.86003 10.9332 7.99998 11L10.47 13.47L19 5.00004C19.1399 4.9332 19.2972 4.91139 19.45 4.93762C19.6029 4.96385 19.7439 5.03682 19.8535 5.14649C19.9632 5.25616 20.0362 5.39713 20.0624 5.54999C20.0886 5.70286 20.0668 5.86009 20 6.00004L11 15C10.8724 15.1455 10.6929 15.2353 10.5 15.25Z" />
@@ -88,9 +90,9 @@ $project = $this->project; ?>
 						<h2>Approved</h2>
 					</div>
 				</div>
-			<?php } ?>
+			<?php break;
 
-			<?php if ($this->quote['approve_status'] == 1) { ?>
+				case 1: ?>
 				<div class="widget-table quote-status status-waiting">
 					<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 						<path d="M12 21C10.22 21 8.47991 20.4722 6.99987 19.4832C5.51983 18.4943 4.36628 17.0887 3.68509 15.4442C3.0039 13.7996 2.82567 11.99 3.17294 10.2442C3.5202 8.49836 4.37737 6.89472 5.63604 5.63604C6.89472 4.37737 8.49836 3.5202 10.2442 3.17294C11.99 2.82567 13.7996 3.0039 15.4442 3.68509C17.0887 4.36628 18.4943 5.51983 19.4832 6.99987C20.4722 8.47991 21 10.22 21 12C21 14.387 20.0518 16.6761 18.364 18.364C16.6761 20.0518 14.387 21 12 21ZM12 4.5C10.5166 4.5 9.0666 4.93987 7.83323 5.76398C6.59986 6.58809 5.63856 7.75943 5.07091 9.12988C4.50325 10.5003 4.35473 12.0083 4.64411 13.4632C4.9335 14.918 5.64781 16.2544 6.6967 17.3033C7.7456 18.3522 9.08197 19.0665 10.5368 19.3559C11.9917 19.6453 13.4997 19.4968 14.8701 18.9291C16.2406 18.3614 17.4119 17.4001 18.236 16.1668C19.0601 14.9334 19.5 13.4834 19.5 12C19.5 10.0109 18.7098 8.10323 17.3033 6.6967C15.8968 5.29018 13.9891 4.5 12 4.5Z" />
@@ -102,9 +104,9 @@ $project = $this->project; ?>
 						<h2>Waiting for approval</h2>
 					</div>
 				</div>
-			<?php } ?>
+				<?php break;
 
-			<?php if ($this->quote['approve_status'] == -1) { ?>
+				case -1: ?>
 				<div class="widget-table quote-status status-disapproved">
 					<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 						<path d="M12 21C10.22 21 8.47991 20.4722 6.99987 19.4832C5.51983 18.4943 4.36628 17.0887 3.68509 15.4442C3.0039 13.7996 2.82567 11.99 3.17294 10.2442C3.5202 8.49836 4.37737 6.89472 5.63604 5.63604C6.89472 4.37737 8.49836 3.5202 10.2442 3.17294C11.99 2.82567 13.7996 3.0039 15.4442 3.68509C17.0887 4.36628 18.4943 5.51983 19.4832 6.99987C20.4722 8.47991 21 10.22 21 12C21 14.387 20.0518 16.6761 18.364 18.364C16.6761 20.0518 14.387 21 12 21ZM12 4.5C10.5166 4.5 9.0666 4.93987 7.83323 5.76398C6.59986 6.58809 5.63856 7.75943 5.07091 9.12988C4.50325 10.5003 4.35473 12.0083 4.64411 13.4632C4.9335 14.918 5.64781 16.2544 6.6967 17.3033C7.7456 18.3522 9.08197 19.0665 10.5368 19.3559C11.9917 19.6453 13.4997 19.4968 14.8701 18.9291C16.2406 18.3614 17.4119 17.4001 18.236 16.1668C19.0601 14.9334 19.5 13.4834 19.5 12C19.5 10.0109 18.7098 8.10323 17.3033 6.6967C15.8968 5.29018 13.9891 4.5 12 4.5Z" />
@@ -116,185 +118,197 @@ $project = $this->project; ?>
 						<h2>Disapproved</h2>
 					</div>
 				</div>
-			<?php } ?>
+				<?php break; 
+
+				default: ?>
+				<div class="widget-table quote-status status-notsubmitted">
+					<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+						<path d="M12 21C10.22 21 8.47991 20.4722 6.99987 19.4832C5.51983 18.4943 4.36628 17.0887 3.68509 15.4442C3.0039 13.7996 2.82567 11.99 3.17294 10.2442C3.5202 8.49836 4.37737 6.89472 5.63604 5.63604C6.89472 4.37737 8.49836 3.5202 10.2442 3.17294C11.99 2.82567 13.7996 3.0039 15.4442 3.68509C17.0887 4.36628 18.4943 5.51983 19.4832 6.99987C20.4722 8.47991 21 10.22 21 12C21 14.387 20.0518 16.6761 18.364 18.364C16.6761 20.0518 14.387 21 12 21ZM12 4.5C10.5166 4.5 9.0666 4.93987 7.83323 5.76398C6.59986 6.58809 5.63856 7.75943 5.07091 9.12988C4.50325 10.5003 4.35473 12.0083 4.64411 13.4632C4.9335 14.918 5.64781 16.2544 6.6967 17.3033C7.7456 18.3522 9.08197 19.0665 10.5368 19.3559C11.9917 19.6453 13.4997 19.4968 14.8701 18.9291C16.2406 18.3614 17.4119 17.4001 18.236 16.1668C19.0601 14.9334 19.5 13.4834 19.5 12C19.5 10.0109 18.7098 8.10323 17.3033 6.6967C15.8968 5.29018 13.9891 4.5 12 4.5Z" />
+						<path d="M9.00001 15.75C8.90147 15.7504 8.80383 15.7312 8.71282 15.6934C8.62181 15.6557 8.53926 15.6001 8.47001 15.53C8.32956 15.3893 8.25067 15.1987 8.25067 15C8.25067 14.8012 8.32956 14.6106 8.47001 14.47L14.47 8.46997C14.6122 8.33749 14.8002 8.26537 14.9945 8.26879C15.1888 8.27222 15.3742 8.35093 15.5116 8.48835C15.649 8.62576 15.7278 8.81115 15.7312 9.00545C15.7346 9.19975 15.6625 9.38779 15.53 9.52997L9.53001 15.53C9.46077 15.6001 9.37822 15.6557 9.2872 15.6934C9.19619 15.7312 9.09855 15.7504 9.00001 15.75Z" />
+						<path d="M15 15.75C14.9015 15.7504 14.8038 15.7312 14.7128 15.6934C14.6218 15.6557 14.5392 15.6001 14.47 15.53L8.47 9.52997C8.33752 9.38779 8.2654 9.19975 8.26882 9.00545C8.27225 8.81115 8.35097 8.62576 8.48838 8.48835C8.62579 8.35093 8.81118 8.27222 9.00548 8.26879C9.19978 8.26537 9.38782 8.33749 9.53 8.46997L15.53 14.47C15.6704 14.6106 15.7493 14.8012 15.7493 15C15.7493 15.1987 15.6704 15.3893 15.53 15.53C15.4608 15.6001 15.3782 15.6557 15.2872 15.6934C15.1962 15.7312 15.0985 15.7504 15 15.75Z" />
+					</svg>
+					<div class="project-information">
+						<p>Quote status</p>
+						<h2>Not submitted</h2>
+					</div>
+				</div>
+			<?php break; } ?>
 		</div>
 
 		<!-- Form -->
 		<form method='post' class="form" id="quote_content">
-			<section aria-labelledby="customer-information" id="section2" data-nav="Customer information">
-				<div class="widget-table" id="customer_info">
-					<div class="widget-button">
-						<button type="button" class="button action has-icon new-customer small" id="add_new_mode">
-							<span class="button-wrap">
-								<span class="icon icon-add"></span>
-								New Customer
-							</span>
-						</button>
-						<button type="button" class="button action has-icon discard-customer small basic" style='display:none;' id="discard_new_mode">
-							<span class="button-wrap">
-								<span class="icon icon-undo"></span>
-								Discard Adding
-							</span>
-						</button>
+			<div class="widget-table" id="customer_info">
+				<div class="widget-button">
+					<?php if ($this->quote['approve_status'] != 10) { ?>
+					<button disabled id="save_quote" type="button" title="Save quote information" class="button action has-icon save-quote-button small">
+						<span class="button-wrap">
+							<span class="icon icon-save"></span>
+							Save
+						</span>
+					</button>
+					<button type="button" class="button action has-icon new-customer small" id="add_new_mode">
+						<span class="button-wrap">
+							<span class="icon icon-add"></span>
+							New Customer
+						</span>
+					</button>
+					<button type="button" class="button action has-icon discard-customer small basic" style='display:none;' id="discard_new_mode">
+						<span class="button-wrap">
+							<span class="icon icon-undo"></span>
+							Discard Adding
+						</span>
+					</button>
+					<?php } ?>
+				</div>
+				<h2>Customer infomation</h2>
+				<input type="hidden" id='project_id' value="<?= $project['project_id'] ?>" />
+				<div class="formRow">
+					<div class="oneTwo required-field">
+						<label for="quote">Quote To</label>
+						<input id='quote' name='name' type="text" value="<?= $this->customer['name'] ?>" />
 					</div>
-					<h2>Customer infomation</h2>
-					<input type="hidden" id='project_id' value="<?= $project['project_id'] ?>" />
-					<div class="formRow">
-						<div class="oneTwo required-field">
-							<label for="quote">Quote To</label>
-							<input type="text" value="<?= $this->customer['name'] ?>" id='quote' name='name' />
-						</div>
 
-						<div class="oneTwo required-field">
-							<label for="address">Address</label>
-							<input type="text" value="<?= $this->customer['phys_address1'] ?>" id='address' name='phys_address1' readonly />
-						</div>
-						<div class="oneTwo required-field">
-							<label for="tel">Phone Number</label>
-							<input type="text" id='tel' name='phone' class="maskPhoneExt" value="<?= $this->customer['tel'] ?>" id='tel' name='tel' readonly />
-						</div>
-						<div class="oneTwo required-field">
-							<label for="customer_id">Customer ID</label>
-							<input name='customer_id' type="text" id='customer_id' class="validate[custom[integer]]" value="<?= $this->customer['customer_id'] ?>" placeholder="Leave blank for add new customer" readonly />
-						</div>
-						<div class="oneTwo required-field">
-							<label for="contact">Contact</label>
-							<input type="text" id='contact' name='fullname' value="<?= $this->customer['fullname'] ?>" class="validate[required]" placeholder="Enter Customer Name to fetch existing customer" />
-						</div>
-						<div class="oneTwo required-field">
-							<label for="customer_email">Email</label>
-							<input type="text" value="<?= $this->customer['email'] ?>" id='customer_email' name='Contacts_email' class="validate[custom[email]]" placeholder="Enter Customer Email to fetch existing customer">
-						</div>
+					<div class="oneTwo required-field">
+						<label for="address">Address</label>
+						<input id='address' name='phys_address1' type="text" value="<?= $this->customer['phys_address1'] ?>" readonly />
+					</div>
+					<div class="oneTwo required-field">
+						<label for="tel">Phone Number</label>
+						<input id='tel' name='phone' type="text" class="maskPhoneExt" value="<?= $this->customer['tel'] ?>" readonly />
+					</div>
+					<div class="oneTwo required-field">
+						<label for="customer_id">Customer ID</label>
+						<input name='customer_id' type="text" id='customer_id' class="validate[custom[integer]]" value="<?= $this->customer['customer_id'] ?>" placeholder="Leave blank for add new customer" readonly />
+					</div>
+					<div class="oneTwo required-field">
+						<label for="contact">Contact</label>
+						<input type="text" id='contact' name='fullname' value="<?= $this->customer['fullname'] ?>" class="validate[required]" placeholder="Enter Customer Name to fetch existing customer" />
+					</div>
+					<div class="oneTwo required-field">
+						<label for="customer_email">Email</label>
+						<input type="text" value="<?= $this->customer['email'] ?>" id='customer_email' name='Contacts_email' class="validate[custom[email]]" placeholder="Enter Customer Email to fetch existing customer">
 					</div>
 				</div>
-			</section>
 
-			<section aria-labelledby="quote-information" id="section3" data-nav="Quote information">
-				<div class="widget-table">
-					<h2>Quote infomation</h2>
-					<div class="formRow">
-						<input id="expire_date" name="expire_date" type="hidden" value='<?= $this->quote['expire_date']->format('Y-m-d') ?>' />
-						<div class="oneTwo">
-							<label for='quote_id'>Quote number</label>
-							<input id='quote_id' type="text" value='<?= $this->quote['quote_id'] ?>' readonly />
-						</div>
-						<div class="oneTwo">
-							<label for="quote-date">Quote date</label>
-							<input id="quote-date" type="text" class="datepicker" value="<?= $this->quote['quote_date']->format('Y-m-d') ?>" />
-						</div>
-						<div class="oneTwo">
-							<label for='ship_required_date'>Ship required date</label>
-							<input id='ship_required_date' type="text" class="datepicker" name='ship_required_date' value="<?php if ($this->quote['ship_required_date'] != null && $this->quote['ship_required_date']->format('Y-d-m') > '2000-01-01') {
-																																echo $this->quote['ship_required_date']->format('Y-m-d');
-																															} ?>" />
-						</div>
-						<div class="oneTwo">
-							<label for='quote_type'>Quote type</label>
-							<select name="quote_type_id" id='quote_type' class="validate[required]">
-								<option value="">Select Quote type</option>
-								<?php foreach ($this->type as $t) { ?>
-									<option value="<?= $t['uid'] ?>" <?php if ($t['uid'] == $this->quote['quote_type_id']) echo 'selected'; ?>><?= $t['type'] ?></option>
+				<div class="line"></div>
+
+				<h2>Quote infomation</h2>
+				<div class="formRow">
+					<input id="expire_date" name="expire_date" type="hidden" value='<?= $this->quote['expire_date']->format('Y-m-d') ?>' />
+					<div class="oneTwo">
+						<label for='quote_id'>Quote number</label>
+						<input id='quote_id' type="text" value='<?= $this->quote['quote_id'] ?>' readonly />
+					</div>
+					<div class="oneTwo">
+						<label for="quote-date">Quote date</label>
+						<input id="quote-date" type="text" class="datepicker" value="<?= $this->quote['quote_date']->format('Y-m-d') ?>" />
+					</div>
+					<div class="oneTwo">
+						<label for='ship_required_date'>Ship required date</label>
+						<input id='ship_required_date' type="text" class="datepicker" name='ship_required_date' value="<?php if ($this->quote['ship_required_date'] != null && $this->quote['ship_required_date']->format('Y-d-m') > '2000-01-01') {
+																															echo $this->quote['ship_required_date']->format('Y-m-d');
+																														} ?>" />
+					</div>
+					<div class="oneTwo">
+						<label for='quote_type'>Quote type</label>
+						<select name="quote_type_id" id='quote_type' class="validate[required]">
+							<option value="">Select Quote type</option>
+							<?php foreach ($this->type as $t) { ?>
+								<option value="<?= $t['uid'] ?>" <?php if ($t['uid'] == $this->quote['quote_type_id']) echo 'selected'; ?>><?= $t['type'] ?></option>
+							<?php } ?>
+						</select>
+					</div>
+
+					<div class="oneTwo">
+						<label for="project-name">Project name</label>
+						<input id="project-name" type="text" value="<?= $project['project_name'] ?>" readonly />
+					</div>
+
+					<div class="oneTwo">
+						<label for="project-location">Project location</label>
+						<input id="project-location" type="text" value="<?= $project['project_location_address'] ?>" readonly />
+					</div>
+
+					<div class="oneTwo">
+						<label for='sale_rep'>Sales Representative</label>
+						<input id='sale_rep' name='sale_rep' type="text" value="<?= $this->quote['sales_id'] ?>" readonly />
+					</div>
+
+					<div class="oneTwo required-field">
+						<label for='arch'>Architect's Representative</label>
+						<select id='arch' name='arch' class="validate[required]">
+							<?php if ($session->user['approve_id'] != null) { ?>
+								<?php foreach ($this->arch as $a) { ?>
+									<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $this->quote['arch']) echo 'selected'; ?>><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
 								<?php } ?>
-							</select>
-						</div>
-
-						<div class="oneTwo">
-							<label for="project-name">Project name</label>
-							<input id="project-name" type="text" value="<?= $project['project_name'] ?>" readonly />
-						</div>
-
-						<div class="oneTwo">
-							<label for="project-location">Project location</label>
-							<input id="project-location" type="text" value="<?= $project['project_location_address'] ?>" readonly />
-						</div>
-
-						<div class="oneTwo">
-							<label for='sale_rep'>Sales Representative</label>
-							<input id='sale_rep' name='sale_rep' type="text" value="<?= $this->quote['sales_id'] ?>" readonly />
-						</div>
-
-						<div class="oneTwo required-field">
-							<label for='arch'>Architect's Representative</label>
-							<select id='arch' name='arch' class="validate[required]">
-								<?php if ($session->user['approve_id'] != null) { ?>
-									<?php foreach ($this->arch as $a) { ?>
-										<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $this->quote['arch']) echo 'selected'; ?>><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
-									<?php } ?>
-								<?php } else { ?>
-									<?php foreach ($this->arch as $a) { ?>
-										<?php if ($a['id'] == $this->quote['arch']) { ?><option value="<?= $a['id'] ?>" selected><?= $a['name'] . ' - ' . $a['default_company'] ?></option> <?php } ?>
-									<?php } ?>
+							<?php } else { ?>
+								<?php foreach ($this->arch as $a) { ?>
+									<?php if ($a['id'] == $this->quote['arch']) { ?><option value="<?= $a['id'] ?>" selected><?= $a['name'] . ' - ' . $a['default_company'] ?></option> <?php } ?>
 								<?php } ?>
-							</select>
-						</div>
-						<input type="hidden" name="sales_id" value="<?= $session->user['id'] ?>" />
+							<?php } ?>
+						</select>
+					</div>
+					<input type="hidden" name="sales_id" value="<?= $session->user['id'] ?>" />
 
-						<div class=" oneTwo required-field">
-							<label for='Segment'>Segment</label>
-							<input type="text" class="validate[required]" id='Segment' placeholder="123456-" name='quote_segment' value='<?= $this->quote['quote_segment'] ?>' />
-						</div>
+					<div class=" oneTwo required-field">
+						<label for='Segment'>Segment</label>
+						<input type="text" class="validate[required]" id='Segment' placeholder="123456-" name='quote_segment' value='<?= $this->quote['quote_segment'] ?>' />
+					</div>
 
-						<div class="oneTwo required-field">
-							<label for="quote_approval">Quote approval</label>
-							<select id="quote_approval">
-								<?php foreach ($this->approval as $a) {
-									if ($a['uid'] == $this->quote['quote_approval']) { ?>
-										<option value="
+					<div class="oneTwo required-field">
+						<label for="quote_approval">Quote approval</label>
+						<select id="quote_approval">
+							<?php foreach ($this->approval as $a) {
+								if ($a['uid'] == $this->quote['quote_approval']) { ?>
+									<option value="
 												<?= $a['uid'] ?>" selected><?= $a['Name'] . ' - ' . $a['Company_ID'] ?>
-										</option>
-								<?php }
-								} ?>
-							</select>
-						</div>
+									</option>
+							<?php }
+							} ?>
+						</select>
 					</div>
 				</div>
-			</section>
 
-			<section aria-labelledby="items" id="section4" data-nav="Items">
-				<div class="widget-table">
-					<div class="widget-button">
-						<button type="button" title="Import item from project" class="button action has-icon import-item-button small" id="import-item-button">
-							<span class="button-wrap">
-								<span class="icon icon-add"></span>
-								Import Item
-							</span>
-						</button>
-						<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="opener">
-							<span class="button-wrap">
-								<span class="icon icon-add"></span>
-								Add Item
-							</span>
-						</button>
-					</div>
-					<h2>Items</h2>
-					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="items">
-						<thead>
-							<tr>
-								<th>Item</th>
-								<th>Quality Quoted</th>
-								<th>Unit Price</th>
-								<th>Unit Of Measure</th>
-								<th>Price Quoted</th>
-								<th>Note</th>
-								<th>Options</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			</section>
+				<div class="line"></div>
 
-			<section aria-labelledby="comment" id="section5" data-nav="Comment">
-				<div class="widget-table">
-					<h2>Comment</h2>
-					<div class="formRow">
-						<div class="oneTwo">
-							<label for="quote-note">Quote Note:</label>
-							<textarea id="quote-note" rows="5" cols="" name="note" placeholder="Add quote note here..."><?= $this->quote['note'] ?></textarea>
-						</div>
+				<h2>Comment</h2>
+				<div class="formRow">
+					<div class="oneTwo">
+						<label for="quote-note">Quote Note</label>
+						<textarea id="quote-note" rows="5" cols="" name="note" placeholder="Add quote note here..."><?= $this->quote['note'] ?></textarea>
 					</div>
 				</div>
-			</section>
+			</div>
 		</form>
+
+		<section aria-labelledby="items" id="section4" data-nav="Items">
+			<div class="widget-table">
+				<div class="widget-button">
+					<?php if ($this->quote['approve_status'] != 10) { ?>
+					<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="opener">
+						<span class="button-wrap">
+							<span class="icon icon-add"></span>
+							Add Item
+						</span>
+					</button>
+					<?php } ?>
+				</div>
+				<h2>Items</h2>
+				<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="items">
+					<thead>
+						<tr>
+							<th>Item</th>
+							<th>Quality Quoted</th>
+							<th>Unit Price</th>
+							<th>Unit Of Measure</th>
+							<th>Price Quoted</th>
+							<th>Note</th>
+							<th>Options</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</section>
 
 		<div id="dialog-message" title="Add Item">
 			<form action="" class="dialog" id='item'>
@@ -345,11 +359,6 @@ $project = $this->project; ?>
 								Add new quote</a></li>
 						<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
                     <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-						<?php if ($this->quote['approve_status'] != 10) { ?>
-							<li><a href="#" title="save" class="quick-link save_quote">
-									<span class='icon icon-save'></span>
-									Save Quote</a></li>
-						<?php } ?>
 						<li><a class="quick-link" href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $this->quote['quote_id'] . "?company=" . substr($this->quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $this->quote['quote_id'] . '.pdf' ?>" title="print">
 								<span class='icon icon-pdf'></span>
 								Print Quote</a></li>
@@ -417,6 +426,7 @@ $project = $this->project; ?>
 				data: "product_id",
 				render: function(data, type, row, meta) {
 					//var oldData = getolddata($(this).closest('tr'));
+					<?php if ($this->quote['approve_status'] != 10) { ?>
 					return '<div class="row-button">' +
 						'<a title="Edit this item" class="edit" href="#">' +
 						'<span class="button-wrap">' +
@@ -427,6 +437,9 @@ $project = $this->project; ?>
 						'<span class="button-wrap">' +
 						'<span class="icon icon-delete"></span>' +
 						'</span></a></div>';
+					<?php } else { ?>
+						return null;
+					<?php } ?>
 				}
 			}
 		],
@@ -782,7 +795,7 @@ $project = $this->project; ?>
 				.appendTo(ul);
 		};
 
-		$('a.save_quote').on("click", function(e) {
+		$('#save_quote').on("click", function(e) {
 			e.preventDefault();
 			if ($("#quote_content").validationEngine('validate') == true) {
 				$('.loading').show();
@@ -840,30 +853,7 @@ $project = $this->project; ?>
 			}
 		});
 
-		$('#import-item-button').on("click", function(event) {
-			if (confirm("Do you want to import items from the project? This may result in duplicates.") == true) { 
-				$.ajax({
-					url: "/project/item/id/" + $('#project_id').val(),
-					type: "get",
-					success: function(data) {
-						var result = JSON.parse(data);
-						console.log(result);
 
-						$.ajax({
-							url: '/quote/importitem/id/' + $('#quote_id').val(),
-							type: "post",
-							data: result,
-							success: function(data) {
-								itemTable.ajax.reload();
-							}
-						})
-					}
-				})
-			} 
-			else {
-				event.preventDefault();
-			}
-		})
 
 	});
 </script>

@@ -61,10 +61,10 @@ $project = $this->project;
 							</select>
 						</div>
 
-						<div class="oneTwo">
-							<label for="owner">Worksheet Owner</label>
-							<input id="owner" type="text" value='<?= $project['owner_name'] ?>' readonly />
-							<input type="hidden" name='owner' value='<?= $project['owner'] ?>'>
+						<div class="oneTwo form-worksheet-owner">
+							<label for="owner_name">Worksheet Owner</label>
+							<input id="owner_name" name="owner_name" type="text" value='<?= $project['owner_name'] ?>' />
+							<input type="hidden" id="owner" name='owner' value='<?= $project['owner'] ?>'>
 						</div>
 
 						<div class="oneTwo">
@@ -548,6 +548,9 @@ $project = $this->project;
 				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
 				.appendTo(ul);
 		};
+
+		$('#owner_name').autocomplete({
+		})
 
 		$('#architect_loc').on("change", function() {
 			$('.loading').show();

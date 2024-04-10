@@ -266,6 +266,7 @@ class QuoteController extends Zend_Controller_Action
 		$products = new ProductProject();
 
 		$quote_detail = $quote->fetchquotebyid($quote_id);
+		echo Zend_Json::encode($quote_detail);
 		$project_detail = $project->fetchbyid($quote_detail['project_id']);
 
 
