@@ -266,7 +266,7 @@ class QuoteController extends Zend_Controller_Action
 		$products = new ProductProject();
 
 		$quote_detail = $quote->fetchquotebyid($quote_id);
-		echo Zend_Json::encode($quote_detail);
+		//echo Zend_Json::encode($quote_detail);
 		$project_detail = $project->fetchbyid($quote_detail['project_id']);
 
 
@@ -284,7 +284,12 @@ class QuoteController extends Zend_Controller_Action
 			$model = new Quote();
 
 			$result = $model->edit($data, $quote_id);
-			$this->redirect('/quote/edit/id/' . $result);
+			if($result == true) {
+				$this->redirect('/quote/edit/id/' . $result);
+			}
+			else {
+				echo 'false';
+			}
 		}
 	}
 

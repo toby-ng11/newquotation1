@@ -32,7 +32,7 @@ class Quote extends DbTable\Quote
 		$info['project_id']                 = $data['project_id'];
 		$info['quote_date']                 = date('Y-m-d h:i:s', strtotime($data['quote_date']));
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < time()) {
-			$data['expire_date'] = date('Y-m-d h:i:s', strtotime("+90 days"));
+			$data['expire_date'] = date('Y-m-d h:i:s', mktime(0, 0, 0, date("m"), date("d") + 90, date("Y")));
 		} 
 		else {
 			$info['expire_date'] = date('Y-m-d h:i:s', strtotime($data['expire_date']));
@@ -98,20 +98,20 @@ class Quote extends DbTable\Quote
 		//add quote
 		$info['customer_id']                = $data['customer_id'];
 		$info['project_id']                 = $data['project_id'];
-		$info['quote_date']                 = date('Y-m-d h:i:s');
+		$info['quote_date']                 = date('Y-m-d h:i:s', strtotime($data['quote_date']));
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < 1000) //fix 1969-12-31
 		{
-			$data['expire_date'] = mktime(0, 0, 0, date("m"), date("d") + 90, date("Y"));
+			$data['expire_date'] = date('Y-m-d h:i:s', mktime(0, 0, 0, date("m"), date("d") + 90, date("Y")));
 		}
-		$info['expire_date']                = date('Y-m-d h:i:s', strtotime($data['expire_date']));
+		else { $info['expire_date']                = date('Y-m-d h:i:s', strtotime($data['expire_date'])); }
 		$info['quote_type_id']              = $data['quote_type_id'];
 		$info['quote_segment']              = $data['quote_segment'];
-		$info['sales_id']                   = $data['sale_rep'];
+		//$info['sales_id']                   = $session->user['id'];
 		//		$info['quote_approval']             = $data['quote_approval'];
 		$info['note']                       = $data['note'];
-		$info['status']                     = 1;
-		$info['term']                       = $data['credit_term'];
-		$info['lead_time']                  = $data['lead_time'];
+		//$info['status']                     = 1;
+		//$info['term']                       = $data['credit_term'];
+		//$info['lead_time']                  = $data['lead_time'];
 		if ($data['ship_required_date'] != null) {
 			$info['ship_required_date']         = date('Y-m-d h:i:s', strtotime($data['ship_required_date']));
 		} else {
@@ -125,7 +125,7 @@ class Quote extends DbTable\Quote
 		try {
 			$db->update('quote', $info, 'quote_id =' . $quote_id);
 		} catch (Exception $e) {
-			var_dump($e);
+			echo $e->getMessage();
 			return false;
 		}
 

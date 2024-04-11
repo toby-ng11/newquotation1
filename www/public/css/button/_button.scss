@@ -103,8 +103,14 @@ button,
 
 .button.small,
 .button.small .button-wrap {
-  --button-height: 1.75rem;
+  //--button-height: 1.75rem;
   --button-padding: 0.25rem;
+}
+
+.widget-footer-button {
+  .button.small {
+    --button-height: 3rem;
+  }
 }
 
 /* Secondary Version */
