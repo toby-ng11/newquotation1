@@ -5,9 +5,9 @@
 @use "./typography";
 @use "./reset";
 
-$centura-theme-light-widget-background: rgba(255, 255, 255, 0.5);
-$centura-theme-light-widget-hover: rgba(255, 255, 255, 0.6);
-$centura-theme-light-widget-box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+$centura-theme-light-widget-background: rgba(255, 255, 255, 0.6);
+$centura-theme-light-widget-hover: rgba(255, 255, 255, 0.8);
+$centura-theme-light-widget-box-shadow: 0 2px 15px rgba(0,0,0,0.3);
 $centura-theme-light-widget-icon-box-shadow: 0 5px 8px rgba(0,0,0,0.3);
 
 $centura-theme-dark-widget-background: rgba(255, 255, 255, 0.1);
@@ -47,7 +47,7 @@ $centura-theme-dark-widget-green-shadow: 0 5px 15x rgba(55, 255, 0, 0.451);
 
   --header-background-primary: rgba(241, 241, 241, 0);
 
-  --background-primary: rgb(241, 241, 241);
+  --background-primary: rgb(240, 240, 240);
   --background-img: url("./5297078.jpg");
   --background-secondary: #{$mdn-theme-light-background-secondary};
   --background-tertiary: #{$mdn-theme-light-background-tertiary};

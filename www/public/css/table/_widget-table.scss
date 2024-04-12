@@ -1,6 +1,7 @@
 @use "../vars" as *;
 
 .main-content {
+	
 	.widget-table {
 		background-color: var(--widget-background-primary);
 		/*border: 1px solid var(--border-primary);*/
@@ -9,10 +10,14 @@
 		margin-bottom: 2rem;
 		/* clear: both; */
 		padding: 2rem;
-		border-radius: 15px;
 		position: relative;
+		border-radius: 15px;
 		box-shadow: var(--widget-box-shadow);
 		transition: all 0.3s ease-in-out;
+
+		&.dashboard {
+			clip-path: inset(0 round 15px);
+		}
 
 		&:hover {
 			background: var(--widget-background-hover);
@@ -165,10 +170,15 @@
 		letter-spacing: .05rem;
 	}
 
-	svg {
-		float: right;
-		background: transparent;
-		color: rgba(0, 0, 0, 0.2);
+	svg, .svg {
+		position: absolute;
+		left: 17em;
+		top: 30%;
+		height: 10rem;
+		width: 10rem;
+		opacity: 0.3;
+		//background: transparent;
+		//color: rgba(0, 0, 0, 0.2);
 	}
 
 	.line {

@@ -11,7 +11,9 @@ $icons: "add-filled", "add", "altname", "bell", "bell-filled", "bell-ring",
   "server", "sidebar", "simple-firefox", "small-arrow", "theme-light",
   "star-filled", "star", "theme-os-default", "thumbs-down", "thumbs-up", "trash",
   "trash-filled", "twitter", "unknown", "warning", "webview", "yes",
-  "yes-circle", "money", "delete", "save", "dollar", "pdf", "mail", "approval";
+  "yes-circle", "money", "delete", "save", "dollar", "pdf", "mail", "approval",
+  "calender", "time-circle", "list", "number", "money-1", "checkmark-circle",
+  "information-circle", "cancel-circle";
 
 .icon {
   --size: var(--icon-size, 1rem);
@@ -26,7 +28,7 @@ $icons: "add-filled", "add", "altname", "bell", "bell-filled", "bell-ring",
 
   @each $name in $icons {
     &.icon-#{$name} {
-      mask-image: url("../../images/icons/assets/" + $name + ".svg");
+      mask-image: url("../images/icons/assets/" + $name + ".svg");
     }
   }
 }

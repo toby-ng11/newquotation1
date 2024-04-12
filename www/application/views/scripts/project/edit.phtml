@@ -34,16 +34,6 @@ $project = $this->project;
 		<section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
 			<form method="post" class="form" id='project_content'>
 				<div class="widget-table">
-					<div class="widget-button">
-						<?php if ($this->owner == 1) { ?>
-							<button disabled id="save-project" type="button" title="Save project information" class="button action has-icon save-project-button small">
-								<span class="button-wrap">
-									<span class="icon icon-save"></span>
-									Save
-								</span>
-							</button>
-						<?php } ?>
-					</div>
 					<h2>Project Information</h2>
 					<input type="hidden" id='project_id' value='<?= $project['project_id'] ?>'>
 					<div class="formRow">
@@ -175,6 +165,22 @@ $project = $this->project;
 							</select>
 						</div>
 					</div>
+
+					<?php if ($this->owner == 1) { ?>
+
+					<div class="line"></div>
+
+					<div class="widget-footer">
+						<div class="widget-footer-button">
+						<button disabled id="save-project" type="button" title="Save project information" class="button action save-project-button small">
+								<span class="button-wrap">
+									<span class="icon icon-save"></span>
+									Save
+								</span>
+							</button>
+						</div>
+					</div>
+					<?php } ?>
 				</div>
 			</form>
 		</section>
@@ -1033,6 +1039,7 @@ $project = $this->project;
 
 		window.onbeforeunload = function() {
 			if (unsave) {
+				$('#save-project').trigger("focus");
 				return "You have unsaved changes project information. Do you want to leave this page and discard your changes or stay on this page?";
 			}
 		}

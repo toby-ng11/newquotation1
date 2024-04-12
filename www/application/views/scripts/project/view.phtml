@@ -345,7 +345,14 @@ $project = $this->project;
                 }
             },
             {
-                data: "title"
+                data: "title",
+                render: function(data, type, row, meta) {
+					if (row.content == null) {
+						return '<p><b>' + data + '</b></p>';
+					} else {
+						return '<p><b>' + data + '</b></br>' + row.content + '</p>';
+					}
+				}
             },
             {
                 data: "follow_up_date.date",

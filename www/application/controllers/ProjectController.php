@@ -84,7 +84,7 @@ class ProjectController extends Zend_Controller_Action
 
 		$project = new Project();
 		$project_detail = $project->fetchbyid($project_id);
-		echo Zend_Json::encode($project_detail);
+		//echo Zend_Json::encode($project_detail);
 		$this->view->project = $project_detail;
     
     	$this->view->status = $quote->fetchstatus();
