@@ -94,6 +94,10 @@ class Quote extends DbTable\Quote
 		{
 			$customer = new Customer();
 			$data['customer_id'] = $customer->newcustomer($data);
+		} 
+		else {
+			$customer = new Customer();
+			$data['customer_id'] = $customer->edit($data['customer_id'], $data);
 		}
 		//add quote
 		$info['customer_id']                = $data['customer_id'];

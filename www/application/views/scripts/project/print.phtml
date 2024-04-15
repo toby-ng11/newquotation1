@@ -239,7 +239,7 @@ body{padding-bottom:20px;}
       <?php foreach($this->memo as $l) {?>
           <tr>
                      		 <td><?=$l['added']->format('Y-m-d'); ?></td>
-                         <td><?=$l['title']; ?></td>
+                         <td><?=$l['title']?></br><?= $l['content']; ?></td>
                         <td><?=$l['follow_up_date'] != null ? $l['follow_up_date']->format('Y-m-d') : ''; ?></td>
                         <td><?=$l['type']; ?></td>
            </tr>

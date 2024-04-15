@@ -3,6 +3,7 @@
 namespace Centura\Model;
 
 use Zend_Registry;
+use Zend_Json;
 use Exception;
 
 class Customer extends DbTable\Customer
@@ -24,6 +25,7 @@ class Customer extends DbTable\Customer
 	    			->where('customer_id = ?',$id);
 		$result = $this->merge( $db->fetchRow($select),$db->fetchRow($select2));
 
+		echo Zend_Json::encode($result);
 	    return $result;
 	    
 	}

@@ -133,9 +133,8 @@ $quote = $this->quote;
 					<?php } ?>
 				</div>
 				<h2>Customer infomation</h2>
-				<input type="hidden" id='project_id' name='project_id' value="<?= $project['project_id'] ?>" />
-				<input type="hidden" id="expire_date" name="expire_date" value='<?= $quote['expire_date']->format('Y-m-d') ?>' />
 				<div class="formRow">
+					<input type="hidden" name='customer_id'id='customer_id' class="validate[custom[integer]]" value="<?= $this->customer['customer_id'] ?>" placeholder="Leave blank for add new customer" readonly />
 					<div class="oneTwo required-field">
 						<label for="quote">Quote To</label>
 						<input id='quote' name='name' type="text" value="<?= $this->customer['name'] ?>" />
@@ -149,10 +148,7 @@ $quote = $this->quote;
 						<label for="tel">Phone Number</label>
 						<input id='tel' name='phone' type="text" class="maskPhoneExt" value="<?= $this->customer['tel'] ?>" readonly />
 					</div>
-					<div class="oneTwo required-field">
-						<label for="customer_id">Customer ID</label>
-						<input name='customer_id' type="text" id='customer_id' class="validate[custom[integer]]" value="<?= $this->customer['customer_id'] ?>" placeholder="Leave blank for add new customer" readonly />
-					</div>
+			
 					<div class="oneTwo required-field">
 						<label for="contact">Contact</label>
 						<input type="text" id='contact' name='fullname' value="<?= $this->customer['fullname'] ?>" class="validate[required]" placeholder="Enter Customer Name to fetch existing customer" />
@@ -161,12 +157,19 @@ $quote = $this->quote;
 						<label for="customer_email">Email</label>
 						<input type="text" value="<?= $this->customer['email'] ?>" id='customer_email' name='Contacts_email' class="validate[custom[email]]" placeholder="Enter Customer Email to fetch existing customer">
 					</div>
+
+					<details>
+					<summary>Details test</summary>
+  					Something small enough to escape casual notice. Will put more information here later.
+					</details>
 				</div>
 
 				<div class="line"></div>
 
 				<h2>Quote infomation</h2>
 				<div class="formRow">
+					<input type="hidden" id='project_id' name='project_id' value="<?= $project['project_id'] ?>" />
+					<input type="hidden" id="expire_date" name="expire_date" value='<?= $quote['expire_date']->format('Y-m-d') ?>' />
 					<div class="oneTwo">
 						<label for='quote_id'>Quote number</label>
 						<input id='quote_id' type="text" value='<?= $quote['quote_id'] ?>' readonly />

@@ -1004,10 +1004,10 @@ $project = $this->project;
 					url: $(this).attr('href'),
 					type: "get",
 					success: function(data) {
-						var index = $('#project_memo tbody tr').index(obj.parent().parent());
-						if (index != -1) {
+						//var index = $('#project_memo tbody tr').index(obj.parent().parent());
+						//if (index != -1) {
 							memoTable.ajax.reload();
-						}
+						//}
 						$('.loading').hide();
 					}
 				});
