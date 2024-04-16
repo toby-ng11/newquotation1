@@ -25,7 +25,7 @@ class Customer extends DbTable\Customer
 	    			->where('customer_id = ?',$id);
 		$result = $this->merge( $db->fetchRow($select),$db->fetchRow($select2));
 
-		echo Zend_Json::encode($result);
+		//echo Zend_Json::encode($result);
 	    return $result;
 	    
 	}
@@ -155,7 +155,8 @@ class Customer extends DbTable\Customer
 		$db = $this->getAdapter();
 		$info['name']                = $data['name'];
 		$info['Contacts_email']      = $data['Contacts_email'];
-		$info['company_id']          = DEFAULT_COMPNAY;
+		if ($data['company_id'] == null) { $info['company_id'] = DEFAULT_COMPNAY; }
+		else { $info['company_id']          = $data['company_id']; }
 		$info['central_phone_number']       = $data['phone'];
 		$info['first_name']                 = $data['first_name'];
 		$info['last_name']                  = $data['last_name'];
@@ -166,14 +167,17 @@ class Customer extends DbTable\Customer
 		$info['mail_postal_code']           = $data['mail_postal_code'];
 		$info['phys_country']               = $data['phys_country'];
 		$info['fullname']                   = $data['fullname'];
-		$info['sale_rep']                   = 'Centura Branches';
-		$info['phys_country']               = $data['phys_country'];
+		if ($data['sale_rep'] == null) {
+			$info['sale_rep']                   = 'Centura Branches';
+		}
+		else { $info['sale_rep']                   = $data['sale_rep'];}
+		//$info['phys_country']               = $data['phys_country'];
 		$info['creator']                    = $session->user['id'];
 		
 		try {
 			$db->insert('customer', $info);
 		} catch (Exception $e) {
-			var_dump($e);
+			error_log($e);
 			return false;
 		}
 		
@@ -203,11 +207,12 @@ class Customer extends DbTable\Customer
 		$info['mail_postal_code']           = $data['mail_postal_code'];
 		$info['phys_country']               = $data['phys_country'];
 		$info['sale_rep']                   = $data['sale_rep'];
-		$info['phys_country']               = $data['phys_country'];
+		//$info['phys_country']               = $data['phys_country'];
 		
 		try {
 			$project_id = $db->update('customer', $info,'customer_id ='.$customer_id);
 		} catch (Exception $e) {
+			error_log($e);
 			return false;
 		}
 		

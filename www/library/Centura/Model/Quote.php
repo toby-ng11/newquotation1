@@ -70,6 +70,8 @@ class Quote extends DbTable\Quote
 		$item = new ItemsProject();
 		$result = $item->fetchallitems($data['project_id']);
 
+		$item_id_list = array();
+
 		$products = new ProductProject();
 		foreach ($result as $item) {
 			$products->add($item, $quote['quote_id']);
@@ -95,10 +97,10 @@ class Quote extends DbTable\Quote
 			$customer = new Customer();
 			$data['customer_id'] = $customer->newcustomer($data);
 		} 
-		else {
-			$customer = new Customer();
-			$data['customer_id'] = $customer->edit($data['customer_id'], $data);
-		}
+		//else {
+		//	$customer = new Customer();
+		//	$data['customer_id'] = $customer->edit($data['customer_id'], $data);
+		//}
 		//add quote
 		$info['customer_id']                = $data['customer_id'];
 		$info['project_id']                 = $data['project_id'];
@@ -219,11 +221,12 @@ class Quote extends DbTable\Quote
 		$data['status'] = 0;
 
 		try {
-			$db->update('quote', $data, 'quote_id =' . $quote_id);
+			$db->update('quote', $data, 'quote_id ='.$quote_id);
 		} catch (Exception $e) {
-			var_dump($e);
+			error_log($e);
 			return false;
 		}
+		return true;
 	}
 
 	public function fetchstatus()

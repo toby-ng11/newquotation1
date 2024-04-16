@@ -70,47 +70,57 @@ $quote = $this->quote;
 			</div>
 
 			<?php
-			switch ($quote['approve_status']) {
-				case 10: ?>
-					<div class="widget-table dashboard quote-status status-approved">
-						<div class="project-information">
-							<p>Quote status</p>
-							<h2>Approved</h2>
+			if ($quote['status'] != 0) {
+				switch ($quote['approve_status']) {
+					case 10: ?>
+						<div class="widget-table dashboard quote-status status-approved">
+							<div class="project-information">
+								<p>Quote status</p>
+								<h2>Approved</h2>
+							</div>
+							<span class='svg icon icon-checkmark-circle'></span>
 						</div>
-						<span class='svg icon icon-checkmark-circle'></span>
-					</div>
-				<?php break;
+					<?php break;
 
-				case 1: ?>
-					<div class="widget-table dashboard quote-status status-waiting">
-						<div class="project-information">
-							<p>Quote status</p>
-							<h2>Waiting for approval</h2>
+					case 1: ?>
+						<div class="widget-table dashboard quote-status status-waiting">
+							<div class="project-information">
+								<p>Quote status</p>
+								<h2>Waiting for approval</h2>
+							</div>
+							<span class='svg icon icon-information-circle'></span>
 						</div>
-						<span class='svg icon icon-information-circle'></span>
-					</div>
-				<?php break;
+					<?php break;
 
-				case -1: ?>
-					<div class="widget-table dashboard quote-status status-disapproved">
-						<div class="project-information">
-							<p>Quote status</p>
-							<h2>Disapproved</h2>
+					case -1: ?>
+						<div class="widget-table dashboard quote-status status-disapproved">
+							<div class="project-information">
+								<p>Quote status</p>
+								<h2>Disapproved</h2>
+							</div>
+							<span class='svg icon icon-cancel-circle'></span>
 						</div>
-						<span class='svg icon icon-cancel-circle'></span>
-					</div>
-				<?php break;
+					<?php break;
 
-				default: ?>
-					<div class="widget-table dashboard quote-status status-notsubmitted">
-						<div class="project-information">
-							<p>Quote status</p>
-							<h2>Not submitted</h2>
+					default: ?>
+						<div class="widget-table dashboard quote-status status-notsubmitted">
+							<div class="project-information">
+								<p>Quote status</p>
+								<h2>Not submitted</h2>
+							</div>
+							<span class='svg icon icon-cancel-circle'></span>
 						</div>
-						<span class='svg icon icon-cancel-circle'></span>
+				<?php break;
+				}
+			} else {  ?>
+				<div class="widget-table dashboard quote-status status-deleted">
+					<div class="project-information">
+						<p>Quote status</p>
+						<h2>Deleted</h2>
 					</div>
-			<?php break;
-			} ?>
+					<span class='svg icon icon-cancel-circle'></span>
+				</div>
+			<?php } ?>
 		</div>
 
 		<!-- Form -->
@@ -134,34 +144,74 @@ $quote = $this->quote;
 				</div>
 				<h2>Customer infomation</h2>
 				<div class="formRow">
-					<input type="hidden" name='customer_id'id='customer_id' class="validate[custom[integer]]" value="<?= $this->customer['customer_id'] ?>" placeholder="Leave blank for add new customer" readonly />
 					<div class="oneTwo required-field">
 						<label for="quote">Quote To</label>
-						<input id='quote' name='name' type="text" value="<?= $this->customer['name'] ?>" />
+						<input readonly id='quote' name='name' type="text" value="<?= $this->customer['name'] ?>" />
+					</div>
+
+					<div class="oneTwo">
+						<label for="customer_id">Customer ID</label>
+						<input readonly type="text" name='customer_id' id='customer_id' class="validate[custom[integer]]" value="<?= $this->customer['customer_id'] ?>" placeholder="Leave blank to add new customer or contact" />
+					</div>
+
+					<div class="oneTwo">
+						<label for="company_id">Company ID</label>
+						<input type="text" name='company_id' id='company_id' value="<?= $this->customer['company_id'] ?>" />
+					</div>
+
+					<div class="oneTwo">
+						<label for="first_name">First Name</label>
+						<input readonly id='first_name' name='first_name' type="text" value="<?= $this->customer['first_name'] ?>">
+					</div>
+
+					<div class="oneTwo">
+						<label for="last_name">Last Name</label>
+						<input readonly id='last_name' name='last_name' type="text" value="<?= $this->customer['last_name'] ?>">
 					</div>
 
 					<div class="oneTwo required-field">
-						<label for="address">Address</label>
-						<input id='address' name='phys_address1' type="text" value="<?= $this->customer['phys_address1'] ?>" readonly />
+						<label for="address">Address 1</label>
+						<input readonly id='address' name='phys_address1' type="text" value="<?= $this->customer['phys_address1'] ?>" />
 					</div>
+
+					<div class="oneTwo">
+						<label for="phys_address2">Address 2</label>
+						<input readonly id='phys_address2' name='phys_address2' type="text" value="<?= $this->customer['phys_address2'] ?>">
+					</div>
+
+					<div class="oneTwo">
+						<label for="phys_city">City</label>
+						<input readonly id='phys_city' name='phys_city' type="text" value="<?= $this->customer['phys_city'] ?>">
+					</div>
+
+					<div class="oneTwo">
+						<label for="mail_state">Province</label>
+						<input readonly id='mail_state' name='mail_state' type="text" value="<?= $this->customer['mail_state'] ?>">
+					</div>
+
+					<div class="oneTwo">
+						<label for="mail_postal_code">Postal Code</label>
+						<input readonly id='mail_postal_code' name='mail_postal_code' type="text" value="<?= $this->customer['mail_postal_code'] ?>">
+					</div>
+
+					<div class="oneTwo">
+						<label for="phys_country">Country</label>
+						<input readonly id='phys_country' name='phys_country' type="text" value="<?= $this->customer['phys_country'] ?>">
+					</div>
+
 					<div class="oneTwo required-field">
 						<label for="tel">Phone Number</label>
-						<input id='tel' name='phone' type="text" class="maskPhoneExt" value="<?= $this->customer['tel'] ?>" readonly />
+						<input readonly id='tel' name='phone' type="text" class="maskPhoneExt" value="<?= $this->customer['tel'] ?>" />
 					</div>
-			
+
 					<div class="oneTwo required-field">
 						<label for="contact">Contact</label>
-						<input type="text" id='contact' name='fullname' value="<?= $this->customer['fullname'] ?>" class="validate[required]" placeholder="Enter Customer Name to fetch existing customer" />
+						<input readonly type="text" id='contact' name='fullname' value="<?= $this->customer['fullname'] ?>" class="validate[required]" placeholder="Enter Customer Name to fetch existing customer" />
 					</div>
 					<div class="oneTwo required-field">
 						<label for="customer_email">Email</label>
-						<input type="text" value="<?= $this->customer['email'] ?>" id='customer_email' name='Contacts_email' class="validate[custom[email]]" placeholder="Enter Customer Email to fetch existing customer">
+						<input readonly type="text" value="<?= $this->customer['email'] ?>" id='customer_email' name='Contacts_email' class="validate[custom[email]]" placeholder="Enter Customer Email to fetch existing customer">
 					</div>
-
-					<details>
-					<summary>Details test</summary>
-  					Something small enough to escape casual notice. Will put more information here later.
-					</details>
 				</div>
 
 				<div class="line"></div>
@@ -169,20 +219,9 @@ $quote = $this->quote;
 				<h2>Quote infomation</h2>
 				<div class="formRow">
 					<input type="hidden" id='project_id' name='project_id' value="<?= $project['project_id'] ?>" />
-					<input type="hidden" id="expire_date" name="expire_date" value='<?= $quote['expire_date']->format('Y-m-d') ?>' />
 					<div class="oneTwo">
 						<label for='quote_id'>Quote number</label>
 						<input id='quote_id' type="text" value='<?= $quote['quote_id'] ?>' readonly />
-					</div>
-					<div class="oneTwo">
-						<label for="quote-date">Quote date</label>
-						<input id="quote-date" name='quote_date' type="text" class="datepicker" value="<?= $quote['quote_date']->format('Y-m-d') ?>" />
-					</div>
-					<div class="oneTwo">
-						<label for='ship_required_date'>Ship required date</label>
-						<input id='ship_required_date' type="text" class="datepicker" name='ship_required_date' value="<?php if ($quote['ship_required_date'] != null && $quote['ship_required_date']->format('Y-d-m') > '2000-01-01') {
-																															echo $quote['ship_required_date']->format('Y-m-d');
-																														} ?>" />
 					</div>
 					<div class="oneTwo">
 						<label for='quote_type'>Quote type</label>
@@ -197,6 +236,20 @@ $quote = $this->quote;
 					<div class="oneTwo">
 						<label for='sale_rep'>Sales Representative</label>
 						<input id='sale_rep' name='sale_rep' type="text" value="<?= $quote['sales_id'] ?>" readonly />
+					</div>
+					<div class="oneTwo">
+						<label for="quote-date">Quote date</label>
+						<input id="quote-date" name='quote_date' type="text" class="datepicker" value="<?= $quote['quote_date']->format('Y-m-d') ?>" />
+					</div>
+					<div class="oneTwo">
+						<label for='ship_required_date'>Ship required date</label>
+						<input id='ship_required_date' type="text" class="datepicker" name='ship_required_date' value="<?php if ($quote['ship_required_date'] != null && $quote['ship_required_date']->format('Y-d-m') > '2000-01-01') {
+																															echo $quote['ship_required_date']->format('Y-m-d');
+																														} ?>" />
+					</div>
+					<div class="oneTwo">
+						<label for="quote_date">Expire Date</label>
+						<input id="expire_date" name="expire_date" type="text" class="datepicker" value='<?= $quote['expire_date']->format('Y-m-d') ?>' />
 					</div>
 
 					<div class="oneTwo required-field">
@@ -678,10 +731,18 @@ $quote = $this->quote;
 					if (result != null) {
 						$('#quote').val(result.name);
 						$('#customer_id').val(id);
-						$('#address').val(result.phys_address1 + ' ' + result.phys_address2 + ' ' + result.phys_city + ' ' + result.mail_state + ' ' + result.phys_country + ' ' + result.mail_postal_code);
+						$('#first_name').val(result.first_name);
+						$('#last_name').val(result.last_name);
+						$('#address').val(result.phys_address1);
+						$('#phys_address2').val(result.phys_address2);
+						$('#phys_city').val(result.phys_city);
+						$('#mail_state').val(result.mail_state);
+						$('#mail_postal_code').val(result.mail_postal_code);
+						$('#phys_country').val(result.phys_country);
 						$('#tel').val(result.tel);
-						$('#contact').val(result.first_name + ' ' + result.last_name);
+						$('#contact').val(result.fullname);
 						$('#customer_email').val(result.email);
+						$('#company_id').val(result.company_id);
 						//$('#sale_rep').val(result.sale_rep);
 
 					} else {
@@ -693,23 +754,73 @@ $quote = $this->quote;
 			});
 		};
 
+		function getOldCustomer() {
+			let quoteTo = $('#quote').val();
+			let firstName = $('#first_name').val();
+			let lastName = $('#last_name').val();
+			let address1 = $('#address').val();
+			let address2 = $('#phys_address2').val();
+			let city = $('#phys_city').val();
+			let province = $('#mail_state').val();
+			let postalCode = $('#mail_postal_code').val();
+			let country = $('#phys_country').val();
+			let phoneNumber = $('#tel').val();
+			let contact = $('#contact').val();
+			let email = $('#customer_email').val();
+			let companyId = $('#company_id').val();
+			let customerId = $('#customer_id').val();
+			let oldData = {
+				'oldQuoteTo': quoteTo,
+				'oldFirstName': firstName,
+				'oldLastName': lastName,
+				'oldAddress1': address1,
+				'oldAddress2': address2,
+				'oldCity': city,
+				'oldProvince': province,
+				'oldPostalCode': postalCode,
+				'oldCountry': country,
+				'oldPhoneNumber': phoneNumber,
+				'oldContact': contact,
+				'oldEmail': email,
+				'oldCustomerId': customerId,
+				'oldCompanyId': companyId
+			};
+			return oldData;
+		}
+
+		let oldCustomer = '';
+
 		$('#add_new_mode').on("click", function() {
-			$('#quote,#address, #tel').prop('readonly', false).val('');
-			$('#customer_id').attr('readonly', 'readonly').val('');
-			$('#contact,#customer_email').val('');
-			$('#quote, #address, #tel,#customer_email').addClass('validate[required]');
+			oldCustomer = getOldCustomer();
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id').prop('readonly', false);
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #customer_id').val('');
+			$('#quote, #address, #tel, #customer_email').addClass('validate[required]');
 			$('#add_new_mode').hide();
 			$('#discard_new_mode').show();
+			//console.log(oldCustomer);
 		});
 
 		$('#discard_new_mode').on("click", function() {
-			$('#address, #tel').attr('readonly', 'readonly').val('');
-			$('#quote').val('');
-			$('#customer_id').prop('readonly', false).val('');
-			$('#contact,#customer_email').val('');
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email').prop('readonly', true);
+			$('#quote').val(oldCustomer['oldQuoteTo']);
+			$('#first_name').val(oldCustomer['oldFirstName']);
+			$('#last_name').val(oldCustomer['oldLastName']);
+			$('#address').val(oldCustomer['oldAddress1']);
+			$('#phys_address2').val(oldCustomer['oldAddress2']);
+			$('#phys_city').val(oldCustomer['oldCity']);
+			$('#mail_state').val(oldCustomer['oldProvince']);
+			$('#mail_postal_code').val(oldCustomer['oldPostalCode']);
+			$('#phys_country').val(oldCustomer['oldCountry']);
+			$('#tel').val(oldCustomer['oldPhoneNumber']);
+			$('#contact').val(oldCustomer['oldContact']);
+			$('#customer_email').val(oldCustomer['oldEmail']);
+			$('#customer_id').val(oldCustomer['oldCustomerId']);
+			$('#company_id').val(oldCustomer['oldCompanyId']);
+
 			$('#quote, #address, #tel,#customer_email').removeClass('validate[required]');
 			$('#add_new_mode').show();
 			$('#discard_new_mode').hide();
+			oldCustomer = '';
 		});
 
 		$("#uom,#uniform-uom").on("change", function() {
@@ -800,7 +911,7 @@ $quote = $this->quote;
 		$('.delete_quote').on("click", function(e) {
 			if (confirm("Are you sure you want to delete this quote?") == true) {
 				$.ajax({
-					url: '/quote/delete/id/' + $('#quote-number').val(),
+					url: '/quote/delete/id/' + $('#quote_id').val(),
 					type: "get",
 					success: function(data) {
 						window.location = "/";
@@ -812,15 +923,16 @@ $quote = $this->quote;
 		});
 
 		$('a.ready_quote').on("click", function(e) {
-			if (confirm("Click OK to submit quote without changes.\nClick CANCEL to return to edit.") == true) {
+			if (confirm("Click OK to submit quote.\nClick CANCEL to return to edit.") == true) {
 				e.preventDefault();
 				$('.loading').show();
 				$.ajax({
 					url: "/quote/ready/id/<?= $quote['quote_id'] ?>",
 					type: "get",
 					success: function(data) {
-						$('#status').html('<div class="nNote nInformation hideit"><p><strong>INFORMATION: </strong>Your Quote is Waiting for Approval.</p></div>');
-						$('a.ready_quote').hide();
+						//$('#status').html('<div class="nNote nInformation hideit"><p><strong>INFORMATION: </strong>Your Quote is Waiting for Approval.</p></div>');
+						//$('a.ready_quote').hide();
+						location.reload();
 					}
 				});
 				$('.loading').hide();

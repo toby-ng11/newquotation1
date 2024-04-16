@@ -8,15 +8,15 @@ use Dompdf\Options;
 require_once 'autoload.inc.php';
 $url = str_replace("devquotation.centura.local", "newstatic.centura.local", $_GET["url"]);
 $name = str_replace('.pdf', '', $_GET["name"]);
-$username= 'centura\tnguyen';
-$password = '#9#6Draceus';
+$username= 'centura\join';
+$password = 'C3ntura!';
 if ($name == null) {
   $name = 'centura_' . date('y-m-d') . '.pdf';
 }
 
 $context = stream_context_create(array(
   'http' => array(
-      'header'  => "Authorization: Windows " . base64_encode("$username:$password")
+      'header'  => "Authorization: Basic " . base64_encode("$username:$password")
   )
 ));
 $html = getUrl($url);
@@ -34,6 +34,8 @@ $dompdf->loadHtml($html);
 
 $dompdf->render();
 $dompdf->stream($name);
+
+
 
 function getUrl($url)
 {

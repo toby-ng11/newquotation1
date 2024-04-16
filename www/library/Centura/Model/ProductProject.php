@@ -185,7 +185,7 @@ class ProductProject extends DbTable\Products
 			//$db->update('quotes_products', $data, implode(' ', $sql->getPart('where')));
 			$db->delete('quotes_products', implode(' ', $sql->getPart('where')));
 		} catch (Exception $e) {
-			echo $e->getMessage();
+			error_log($e);
 			return false;
 		}
 		return true;

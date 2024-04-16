@@ -136,7 +136,7 @@ $project = $this->project;
 						<div class="oneTwo">
 							<label for="gerneral_contractor">General Contractor</label>
 							<input type="text" id="gerneral_contractor" name="gerneral_contractor" placeholder="Add general contractor" value='<?php if (!empty($this->gerneral_contractor)) { echo $this->gerneral_contractor['name'] . ' - ' . $this->gerneral_contractor['company_id']; } ?>' />
-							<input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" value="<?= $project['general_contractor_id'] ?? '' ?>" />
+							<input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" value="<?= $project['general_contractor_id'] ?>" />
 						</div>
 
 						<div class="oneTwo">
