@@ -156,7 +156,7 @@ $quote = $this->quote;
 
 					<div class="oneTwo">
 						<label for="company_id">Company ID</label>
-						<input type="text" name='company_id' id='company_id' value="<?= $this->customer['company_id'] ?>" />
+						<input readonly type="text" name='company_id' id='company_id' value="<?= $this->customer['company_id'] ?>" />
 					</div>
 
 					<div class="oneTwo">
@@ -394,23 +394,29 @@ $quote = $this->quote;
 						<li><a class="quick-link" href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $quote['quote_id'] . "?company=" . substr($quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $quote['quote_id'] . '.pdf' ?>" title="print">
 								<span class='icon icon-pdf'></span>
 								Print Quote</a></li>
-						<?php if ($quote['approve_status'] == 10) { ?>
-							<li><a class="quick-link" href="/mail/quote/id/<?= $quote['quote_id'] ?>" title="mail">
-									<span class='icon icon-mail'></span>
-									Mail Quote</a></li>
-						<?php } ?>
-						<li><a href="" title="" class='quick-link delete_quote'>
-								<span class='icon icon-trash'></span>
-								Delete Quote</a></li>
-						<?php if ($quote['approve_status'] <= 0) { ?>
-							<li><a href="/quote/ready/id/<?= $quote['quote_id'] ?>" title="" class='quick-link ready_quote'>
-									<span class='icon icon-approval'></span>
-									Submit Approval</a></li>
-						<?php } ?>
-						<?php if ($quote['approve_status'] == 10) { ?>
-							<li><a href="/quote/disapprove/id/<?= $quote['quote_id'] ?>" title="" class='quick-link disapprove_quote'>
-									<span class='icon icon-edit'></span>
-									Edit Again</a></li>
+						<li><a class="quick-link" target="_blank" href="/project/edit/id/<?= $project['project_id']?>" title="Go to project for this quote">
+								<span class='icon icon-external'></span>
+								Go to Project</a></li>
+						<?php
+						switch ($quote['approve_status']) {
+							case 10: ?>
+								<li><a class="quick-link" href="/mail/quote/id/<?= $quote['quote_id'] ?>" title="mail">
+										<span class='icon icon-mail'></span>
+										Mail Quote</a></li>
+								<li><a href="/quote/disapprove/id/<?= $quote['quote_id'] ?>" title="" class='quick-link disapprove_quote'>
+										<span class='icon icon-edit'></span>
+										Edit Again</a></li>
+							<?php break;
+							case 0:  ?>
+								<li><a href="/quote/ready/id/<?= $quote['quote_id'] ?>" title="" class='quick-link ready_quote'>
+										<span class='icon icon-approval'></span>
+										Submit Approval</a></li>
+							<?php break;
+						}
+						if ($quote['status'] != 0) { ?>
+							<li><a href="" title="" class='quick-link delete_quote'>
+									<span class='icon icon-trash'></span>
+									Delete Quote</a></li>
 						<?php } ?>
 					</ol>
 				</div>
@@ -946,10 +952,10 @@ $quote = $this->quote;
 				e.preventDefault();
 				$('.loading').show();
 				$.ajax({
-					url: "/quote/disapprove/id/<?= $quote['quote_id'] ?>",
+					url: "/quote/ready/id/<?= $quote['quote_id'] ?>",
 					type: "get",
 					success: function(data) {
-						$('#status').html('<div class="nNote nInformation hideit"><p><strong>INFORMATION: </strong>You Need submit again after edit</p></div>');
+						//$('#status').html('<div class="nNote nInformation hideit"><p><strong>INFORMATION: </strong>You Need submit again after edit</p></div>');
 						location.reload();
 					}
 				});
@@ -958,8 +964,5 @@ $quote = $this->quote;
 				e.preventDefault();
 			}
 		});
-
-
-
 	});
 </script>
