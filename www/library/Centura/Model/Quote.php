@@ -113,11 +113,11 @@ class Quote extends DbTable\Quote
 		$info['quote_type_id']              = $data['quote_type_id'];
 		$info['quote_segment']              = $data['quote_segment'];
 		//$info['sales_id']                   = $session->user['id'];
-		//		$info['quote_approval']             = $data['quote_approval'];
+		$info['quote_approval']             = $data['quote_approval'];
 		$info['note']                       = $data['note'];
 		//$info['status']                     = 1;
-		//$info['term']                       = $data['credit_term'];
-		//$info['lead_time']                  = $data['lead_time'];
+		$info['term']                       = $data['credit_term'];
+		$info['lead_time']                  = $data['lead_time'];
 		if ($data['ship_required_date'] != null) {
 			$info['ship_required_date']         = date('Y-m-d h:i:s', strtotime($data['ship_required_date']));
 		} else {
@@ -367,8 +367,12 @@ class Quote extends DbTable\Quote
 	{
 		$db = $this->getAdapter();
 
-		$select = $db->select()->from('quote')->order('quote_id desc')->join('project', 'project.project_id = quote.project_id', 'project_name')
-			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))->where('project.deleted =?', 'N');
+		$select = $db->select()->from('quote')
+			->order('quote_id desc')
+			->join('project', 'project.project_id = quote.project_id', 'project_name')
+			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))
+			->join('quote_market_segment', 'quote_market_segment.uid = quote.quote_segment', array('segment'=>'Market_Segment'))
+			->where('project.deleted =?', 'N');
 
 		//$select->limit($limit);
 

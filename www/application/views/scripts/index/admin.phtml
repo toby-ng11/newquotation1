@@ -199,7 +199,7 @@
                 return "<a target='_blank' href='/quote/edit/id/"+ data + "'>" + data + "</a>";
             }},
             {data: "project_name"},
-            {data: "quote_segment"},
+            {data: "segment"},
             {data: "quote_date.date", render: function (data) {
                 let date = new Date(data);
                 return date.toLocaleDateString();

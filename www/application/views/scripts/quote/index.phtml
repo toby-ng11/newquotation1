@@ -117,7 +117,7 @@ $project = $this->project;
 
 					<div class="oneTwo">
 						<label for="phys_address2">Address 2</label>
-						<input id='phys_address2' name='phys_address2' type="text" placeholder="Optional" >
+						<input id='phys_address2' name='phys_address2' type="text" placeholder="Optional">
 					</div>
 
 					<div class="oneTwo">
@@ -127,7 +127,7 @@ $project = $this->project;
 
 					<div class="oneTwo">
 						<label for="mail_state">Province</label>
-						<input id='mail_state' name='mail_state' type="text" placeholder="Optional" >
+						<input id='mail_state' name='mail_state' type="text" placeholder="Optional">
 					</div>
 
 					<div class="oneTwo">
@@ -137,7 +137,7 @@ $project = $this->project;
 
 					<div class="oneTwo">
 						<label for="phys_country">Country</label>
-						<input id='phys_country' name='phys_country' type="text" placeholder="Optional" >
+						<input id='phys_country' name='phys_country' type="text" placeholder="Optional">
 					</div>
 
 					<div class="oneTwo required-field">
@@ -172,10 +172,16 @@ $project = $this->project;
 							<?php } ?>
 						</select>
 					</div>
-					<div class="oneTwo">
-						<label for="sale_rep">Sales Representative</label>
-						<input id="sale_rep" type="text" value="<?= $session->user['id'] ?>" readonly />
+					<div class="oneTwo required-field">
+						<label for="Segment">Quote Segment</label>
+						<select name="quote_segment" id='Segment' class="validate[required]">
+							<option value="">-- Choose Segment --</option>
+							<?php foreach ($this->seg as $s) { ?>
+								<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $project['market_segment']) echo 'selected' ?>><?= $s['Market_Segment'] ?></option>
+							<?php } ?>
+						</select>
 					</div>
+
 					<div class="oneTwo">
 						<label for="quote_date">Quote Date</label>
 						<input type="text" class="datepicker" id='quote_date' name='quote_date' value='<?= date('Y-m-d') ?>' />
@@ -188,18 +194,20 @@ $project = $this->project;
 						<label for="quote_date">Expire Date</label>
 						<input id="expire_date" name="expire_date" type="text" class="datepicker" value='<?= date("Y-m-d", mktime(0, 0, 0, date("m"), date("d") + 90, date("Y"))) ?>' />
 					</div>
-					<div class="oneTwo required-field">
-						<label for="arch">Architect's Representative</label>
+					<div class="oneTwo">
+						<label for="arch">Architectural Representative</label>
 						<select id="arch" name='arch' class="validate[required]">
-							<?php if ($session->user['approve_id'] != null) { ?>
-								<?php foreach ($this->arch as $a) { ?>
-									<option value="<?= $a['id'] ?? '' ?>" <?php if (($a['id'] ?? '') == ($this->quote['arch'] ?? '')) echo 'selected'; ?>><?= $a['name'] ?? '' . ' - ' . ($a['default_company'] ?? '') ?></option>
-								<?php } ?>
-							<?php } else { ?>
-								<?php foreach ($this->arch as $a) { ?>
-									<?php if (($a['id'] ?? '') == ($project['owner'] ?? '')) { ?><option value="<?= $a['id'] ?? '' ?>" selected><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option> <?php } ?>
-								<?php } ?>
-							<?php } ?>
+							<?php if ($session->user['approve_id'] != null) {
+								foreach ($this->arch as $a) { ?>
+									<option value="<?= $a['id']?>" <?php if ($a['id'] == 'TORTESTSALESMAN002') {echo 'selected';} ?>><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option>
+									<?php }
+							} else {
+								foreach ($this->arch as $a) {
+									if (($a['id']) == ($project['owner'])) { ?>
+										<option value="<?= $a['id'] ?>" selected><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option>
+							<?php }
+								}
+							} ?>
 						</select>
 					</div>
 					<input type="hidden" name="sales_id" value="<?= $session->user['id'] ?>" />
@@ -207,19 +215,12 @@ $project = $this->project;
 					<?php foreach ($this->seg as $s) { ?>
 						<?php if ($s['uid'] == $project['market_segment']) $seg = $s['Market_Segment'] ?>
 					<?php } ?>
-					<div class="oneTwo required-field">
-						<label for="Segment">Segment</label>
-						<input type="text" original-title="Segment Format" name='quote_segment' id='Segment' class='validate[required] tipN' value="<?= $seg ?>" />
+
+					<div class="oneTwo">
+						<label for="sale_rep">Sales Representative</label>
+						<input id="sale_rep" type="text" value="<?= $session->user['id'] ?>" readonly />
 					</div>
-					<div class="oneTwo required-field">
-						<label for="quote_approval">Quote Approval</label>
-						<select id="quote_approval">
-							<option value="">Only approver can edit</option>
-							<!--<?php foreach ($this->approval as $a) { ?>
-                                <option value="<?= $a['uid'] ?>"><?= $a['Name'] . ' - ' . $a['Company_ID'] ?></option>
-                             		 <?php } ?>-->
-						</select>
-					</div>
+
 				</div>
 
 				<div class="line"></div>
@@ -643,7 +644,7 @@ $project = $this->project;
 						$('#last_name').val(result.last_name);
 						$('#address').val(result.phys_address1);
 						$('#phys_address2').val(result.phys_address2);
-						$('#phys_city').val(result.phys_city );
+						$('#phys_city').val(result.phys_city);
 						$('#mail_state').val(result.mail_state);
 						$('#mail_postal_code').val(result.mail_postal_code);
 						$('#phys_country').val(result.phys_country);

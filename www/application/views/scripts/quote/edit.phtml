@@ -2,6 +2,10 @@
 $session =  Zend_Registry::get('session');
 $project = $this->project;
 $quote = $this->quote;
+
+$approved = 10;
+$waitingApprove = 1;
+$disapproved = -1;
 ?>
 
 <!-- Title area -->
@@ -72,7 +76,7 @@ $quote = $this->quote;
 			<?php
 			if ($quote['status'] != 0) {
 				switch ($quote['approve_status']) {
-					case 10: ?>
+					case $approved: ?>
 						<div class="widget-table dashboard quote-status status-approved">
 							<div class="project-information">
 								<p>Quote status</p>
@@ -82,7 +86,7 @@ $quote = $this->quote;
 						</div>
 					<?php break;
 
-					case 1: ?>
+					case $waitingApprove: ?>
 						<div class="widget-table dashboard quote-status status-waiting">
 							<div class="project-information">
 								<p>Quote status</p>
@@ -92,7 +96,7 @@ $quote = $this->quote;
 						</div>
 					<?php break;
 
-					case -1: ?>
+					case $disapproved: ?>
 						<div class="widget-table dashboard quote-status status-disapproved">
 							<div class="project-information">
 								<p>Quote status</p>
@@ -127,7 +131,7 @@ $quote = $this->quote;
 		<form method='post' class="form" id="quote_content">
 			<div class="widget-table" id="customer_info">
 				<div class="widget-button">
-					<?php if ($quote['approve_status'] != 10) { ?>
+					<?php if ($quote['approve_status'] != $approved) { ?>
 						<button type="button" class="button action has-icon new-customer small" id="add_new_mode">
 							<span class="button-wrap">
 								<span class="icon icon-add"></span>
@@ -219,12 +223,14 @@ $quote = $this->quote;
 				<h2>Quote infomation</h2>
 				<div class="formRow">
 					<input type="hidden" id='project_id' name='project_id' value="<?= $project['project_id'] ?>" />
+					<input type="hidden" id='lead_time' name='lead_time' value="<?= $quote['lead_time'] ?>" />
+					<input type="hidden" id='credit_term' name='credit_term' value="<?= $quote['term'] ?>" />
 					<div class="oneTwo">
-						<label for='quote_id'>Quote number</label>
+						<label for='quote_id'>Quote Number</label>
 						<input id='quote_id' type="text" value='<?= $quote['quote_id'] ?>' readonly />
 					</div>
 					<div class="oneTwo">
-						<label for='quote_type'>Quote type</label>
+						<label for='quote_type'>Quote Type</label>
 						<select name="quote_type_id" id='quote_type' class="validate[required]">
 							<option value="">Select Quote type</option>
 							<?php foreach ($this->type as $t) { ?>
@@ -233,27 +239,34 @@ $quote = $this->quote;
 						</select>
 					</div>
 
-					<div class="oneTwo">
-						<label for='sale_rep'>Sales Representative</label>
-						<input id='sale_rep' name='sale_rep' type="text" value="<?= $quote['sales_id'] ?>" readonly />
+					<div class=" oneTwo required-field">
+						<label for='Segment'>Quote Segment</label>
+
+						<select name="quote_segment" id='Segment' class="validate[required]">
+							<option value="">Choose Segment</option>
+							<?php foreach ($this->seg as $s) { ?>
+								<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $quote['quote_segment']) echo 'selected' ?>><?= $s['Market_Segment'] ?></option>
+							<?php } ?>
+						</select>
 					</div>
+
 					<div class="oneTwo">
-						<label for="quote-date">Quote date</label>
+						<label for="quote-date">Quote Date</label>
 						<input id="quote-date" name='quote_date' type="text" class="datepicker" value="<?= $quote['quote_date']->format('Y-m-d') ?>" />
 					</div>
 					<div class="oneTwo">
-						<label for='ship_required_date'>Ship required date</label>
+						<label for='ship_required_date'>Ship Required Date</label>
 						<input id='ship_required_date' type="text" class="datepicker" name='ship_required_date' value="<?php if ($quote['ship_required_date'] != null && $quote['ship_required_date']->format('Y-d-m') > '2000-01-01') {
 																															echo $quote['ship_required_date']->format('Y-m-d');
 																														} ?>" />
 					</div>
 					<div class="oneTwo">
-						<label for="quote_date">Expire Date</label>
+						<label for="quote_date">Quote Expire Date</label>
 						<input id="expire_date" name="expire_date" type="text" class="datepicker" value='<?= $quote['expire_date']->format('Y-m-d') ?>' />
 					</div>
 
 					<div class="oneTwo required-field">
-						<label for='arch'>Architect's Representative</label>
+						<label for='arch'>Architectural Representative</label>
 						<select id='arch' name='arch' class="validate[required]">
 							<?php if ($session->user['approve_id'] != null) { ?>
 								<?php foreach ($this->arch as $a) { ?>
@@ -267,23 +280,27 @@ $quote = $this->quote;
 						</select>
 					</div>
 
-					<div class=" oneTwo required-field">
-						<label for='Segment'>Segment</label>
-						<input type="text" class="validate[required]" id='Segment' placeholder="123456-" name='quote_segment' value='<?= $quote['quote_segment'] ?>' />
+					<div class="oneTwo">
+						<label for='sale_rep'>Sales Representative</label>
+						<input id='sale_rep' name='sale_rep' type="text" value="<?= $quote['sales_id'] ?>" readonly />
 					</div>
 
-					<div class="oneTwo required-field">
-						<label for="quote_approval">Quote approval</label>
-						<select id="quote_approval">
-							<?php foreach ($this->approval as $a) {
-								if ($a['uid'] == $quote['quote_approval']) { ?>
-									<option value="
-												<?= $a['uid'] ?>" selected><?= $a['Name'] . ' - ' . $a['Company_ID'] ?>
-									</option>
-							<?php }
-							} ?>
-						</select>
-					</div>
+					<?php if ($quote['approve_status'] == $approved) { ?>
+						<div class="oneTwo">
+							<label for="quote_approval">Quote Approval</label>
+							<select id="quote_approval" name="quote_approval">
+								<?php foreach ($this->approval as $a) {
+									if ($a['uid'] == $quote['quote_approval']) { ?>
+										<option value="
+											<?= $a['uid'] ?>" selected><?= $a['Name'] . ' - ' . $a['Company_ID'] ?>
+										</option>
+								<?php }
+								} ?>
+							</select>
+						</div>
+					<?php } else { ?>
+						<input type="hidden" id='quote_approval' name='quote_approval' value="<?= $quote['quote_approval'] ?>" />
+					<?php } ?>
 				</div>
 
 				<div class="line"></div>
@@ -296,7 +313,7 @@ $quote = $this->quote;
 					</div>
 				</div>
 
-				<?php if ($quote['approve_status'] != 10) { ?>
+				<?php if ($quote['approve_status'] != $approved) { ?>
 
 					<div class="line"></div>
 
@@ -316,7 +333,7 @@ $quote = $this->quote;
 		<section aria-labelledby="items" id="section4" data-nav="Items">
 			<div class="widget-table">
 				<div class="widget-button">
-					<?php if ($quote['approve_status'] != 10) { ?>
+					<?php if ($quote['approve_status'] != $approved) { ?>
 						<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="opener">
 							<span class="button-wrap">
 								<span class="icon icon-add"></span>
@@ -394,12 +411,12 @@ $quote = $this->quote;
 						<li><a class="quick-link" href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $quote['quote_id'] . "?company=" . substr($quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $quote['quote_id'] . '.pdf' ?>" title="print">
 								<span class='icon icon-pdf'></span>
 								Print Quote</a></li>
-						<li><a class="quick-link" target="_blank" href="/project/edit/id/<?= $project['project_id']?>" title="Go to project for this quote">
+						<li><a class="quick-link" target="_blank" href="/project/edit/id/<?= $project['project_id'] ?>" title="Go to project for this quote">
 								<span class='icon icon-external'></span>
 								Go to Project</a></li>
 						<?php
 						switch ($quote['approve_status']) {
-							case 10: ?>
+							case $approved: ?>
 								<li><a class="quick-link" href="/mail/quote/id/<?= $quote['quote_id'] ?>" title="mail">
 										<span class='icon icon-mail'></span>
 										Mail Quote</a></li>
@@ -407,13 +424,14 @@ $quote = $this->quote;
 										<span class='icon icon-edit'></span>
 										Edit Again</a></li>
 							<?php break;
-							case 0:  ?>
+
+							default:  ?>
 								<li><a href="/quote/ready/id/<?= $quote['quote_id'] ?>" title="" class='quick-link ready_quote'>
 										<span class='icon icon-approval'></span>
 										Submit Approval</a></li>
 							<?php break;
 						}
-						if ($quote['status'] != 0) { ?>
+						if ($quote['status'] != 0 and $quote['approve_status'] != $approved) { ?>
 							<li><a href="" title="" class='quick-link delete_quote'>
 									<span class='icon icon-trash'></span>
 									Delete Quote</a></li>

@@ -158,7 +158,9 @@ class Project extends DbTable\Project
 			return  false;
 		}
 		$db = $this->getAdapter();
-		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location', 'centura_location_id = P21_Location.location_id','company_id')
+		$select = $db->select()->from('project')
+			->order('project_id desc')
+			->join('P21_Location', 'centura_location_id = P21_Location.location_id','company_id')
 			->join('quote_status','quote_status.uid=project.status',array('status_name'=>'Status'))
 			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment',array('segment'=>'Market_Segment'))
 			->join('quote_specifier','quote_specifier.uid = project.specifiler',array('Specifier_name'=>'quote_specifier.Specifier'));

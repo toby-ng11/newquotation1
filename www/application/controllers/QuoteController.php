@@ -277,6 +277,7 @@ class QuoteController extends Zend_Controller_Action
 		$this->view->project = $project_detail;
 		$this->view->type = $quote->fetchquotetype();
 		$this->view->items = $products->fetchallitems($quote_id);
+		$this->view->seg = $quote->fetchseg();
 
 		if ($this->_request->isPost()) {
 			$data = $this->_request->getPost();
