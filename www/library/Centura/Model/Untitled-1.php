@@ -1,3 +1,8 @@
 <?php
 
-echo date('Y-m-d h:i:s', mktime(0, 0, 0, date("m"), date("d") + 90, date("Y")));
+$selectedField = array('quote_id', 'quote_no', 'project_name');
+$joinField = array('abc');
+
+$total = $selectedField + $joinField;
+
+var_dump(array_merge($selectedField, $joinField));

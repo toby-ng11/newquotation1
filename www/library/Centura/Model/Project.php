@@ -313,11 +313,11 @@ class Project extends DbTable\Project
 	    try {
 	    	$db->update('project', $info,'project_id ='.$project_id);
 	    } catch (Exception $e) {
-	    	echo $e->getMessage();
+	    	error_log($e->getMessage());
 	    	return  false;
 	    }
 	    
-	    $this->log($project_id,'Project Update',null,null,serialize($info));
+	    $this->log($project_id,'Project Update',null,null,json_encode($info));
 	    
 	    return true;
 

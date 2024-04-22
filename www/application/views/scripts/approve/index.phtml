@@ -206,7 +206,12 @@ $quote = $this->quote;
 					</div>
 					<div class="oneTwo required-field">
 						<label for='Segment'>Quote Segment</label>
-						<input type="text" class="validate[required]" id='Segment' placeholder="123456-" name='quote_segment' value='<?= $quote['quote_segment'] ?>' />
+						<select name="quote_segment" id='Segment' class="validate[required]">
+							<option value="">Choose Segment</option>
+							<?php foreach ($this->seg as $s) { ?>
+								<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $quote['quote_segment']) echo 'selected' ?>><?= $s['Market_Segment'] ?></option>
+							<?php } ?>
+						</select>
 					</div>
 					
 					<div class="oneTwo">
