@@ -196,7 +196,6 @@ class QuoteController extends Zend_Controller_Action
 		$quote = new Quote();
 		$data['approve_status'] = 1; // waiting approve
 		$quote->update($data, 'quote_id = ' . $quote_id);
-
 		exit;
 	}
 
@@ -250,6 +249,19 @@ class QuoteController extends Zend_Controller_Action
 		exit;
 	}
 
+	public function unsubmitAction()
+	{
+		$quote_id = $this->getRequest()->getParam('id');
+		if ($quote_id == null) {
+			return false;
+		}
+		$quote = new Quote();
+		$data['approve_status'] = 0; // unsubmit
+		$quote->update($data, 'quote_id = ' . $quote_id);
+		$this->redirect('/quote/edit/id/' . $quote_id);
+		exit;
+	}
+
 	public function editAction()
 	{
 		$quote_id = $this->getRequest()->getParam('id');
@@ -266,7 +278,7 @@ class QuoteController extends Zend_Controller_Action
 		$products = new ProductProject();
 
 		$quote_detail = $quote->fetchquotebyid($quote_id);
-		echo Zend_Json::encode($quote_detail);
+		//echo Zend_Json::encode($quote_detail);
 		$project_detail = $project->fetchbyid($quote_detail['project_id']);
 
 

@@ -2,6 +2,7 @@
 $session =  Zend_Registry::get('session');
 $project = $this->project;
 $quote = $this->quote;
+$quoteID = $quote['quote_id'];
 
 $approved = 10;
 $waitingApprove = 1;
@@ -117,7 +118,7 @@ $disapproved = -1;
 				<?php break;
 				}
 			} else {  ?>
-				<div class="widget-table dashboard quote-status status-deleted">
+				<div class="widget-table dashboard quote-status status-disapproved">
 					<div class="project-information">
 						<p>Quote status</p>
 						<h2>Deleted</h2>
@@ -227,7 +228,7 @@ $disapproved = -1;
 					<input type="hidden" id='credit_term' name='credit_term' value="<?= $quote['term'] ?>" />
 					<div class="oneTwo">
 						<label for='quote_id'>Quote Number</label>
-						<input id='quote_id' type="text" value='<?= $quote['quote_id'] ?>' readonly />
+						<input id='quote_id' type="text" value='<?= $quoteID ?>' readonly />
 					</div>
 					<div class="oneTwo">
 						<label for='quote_type'>Quote Type</label>
@@ -408,28 +409,39 @@ $disapproved = -1;
 								Add new quote</a></li>
 						<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
                     <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-						<li><a class="quick-link" href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $quote['quote_id'] . "?company=" . substr($quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $quote['quote_id'] . '.pdf' ?>" title="print">
+						<li><a class="quick-link" href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $quoteID . "?company=" . substr($quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $quoteID . '.pdf' ?>" title="Print this quote">
 								<span class='icon icon-pdf'></span>
 								Print Quote</a></li>
 						<li><a class="quick-link" target="_blank" href="/project/edit/id/<?= $project['project_id'] ?>" title="Go to project for this quote">
 								<span class='icon icon-external'></span>
 								Go to Project</a></li>
-						<?php
+						<?php if ($session->user['approve_id'] != null and $quote['status'] != 0 and $quote['approve_status'] != 0) { ?>
+							<li><a class='quick-link' target="_blank" href="/approve/index/id/<?= $quoteID ?>" title="Go to this quote approval">
+									<span class='icon icon-external'></span>
+									Go to Approval</a></li>
+						<?php }
 						switch ($quote['approve_status']) {
 							case $approved: ?>
-								<li><a class="quick-link" href="/mail/quote/id/<?= $quote['quote_id'] ?>" title="mail">
+								<li><a class="quick-link" href="/mail/quote/id/<?= $quoteID ?>" title="mail">
 										<span class='icon icon-mail'></span>
 										Mail Quote</a></li>
-								<li><a href="/quote/disapprove/id/<?= $quote['quote_id'] ?>" title="" class='quick-link disapprove_quote'>
+								<li><a href="/quote/ready/id/<?= $quoteID ?>" title="" class='quick-link quote-edit-again'>
 										<span class='icon icon-edit'></span>
 										Edit Again</a></li>
 							<?php break;
 
-							default:  ?>
-								<li><a href="/quote/ready/id/<?= $quote['quote_id'] ?>" title="" class='quick-link ready_quote'>
+							case $waitingApprove: ?>
+								<li><a href="/quote/unsubmit/id/<?= $quoteID ?>" title="" class='quick-link undo-submit'>
+										<span class='icon icon-undo'></span>
+										Undo Submit</a></li>
+							<?php break;
+
+							default: 
+								if ($quote['status'] != 0) { ?>
+								<li><a href="/quote/ready/id/<?= $quoteID ?>" title="" class='quick-link ready_quote'>
 										<span class='icon icon-approval'></span>
 										Submit Approval</a></li>
-							<?php break;
+							<?php } break;
 						}
 						if ($quote['status'] != 0 and $quote['approve_status'] != $approved) { ?>
 							<li><a href="" title="" class='quick-link delete_quote'>
@@ -739,11 +751,33 @@ $disapproved = -1;
 				success: function(data) {
 					var price = JSON.parse(data);
 					$('#price').val(price.price);
-					$('.loading').hide();
 				}
 			});
 
 		}
+
+		$("#uom,#uniform-uom").on("change", function() {
+			getprice();
+			return false;
+		});
+
+		$(".dialog #item_id").autocomplete({
+			source: '/item/index/',
+			minLength: 2,
+			select: function(event, ui) {
+				$("#item_input").val(ui.item.item_desc);
+				$("#item_id ").val(ui.item.item_id);
+				getoum(ui.item.item_id);
+				$('#uom').prop('disabled', false);
+				$('#uniform-uom').removeClass('disabled');
+				return false;
+			}
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
+			return $("<li></li>")
+				.data("item.autocomplete", item)
+				.append("<a><b>" + item.item_id + " - " + item.item_desc + "</b></a>")
+				.appendTo(ul);
+		};
 
 		function getcustomerbyid(id) {
 			$('.loading').show();
@@ -847,29 +881,6 @@ $disapproved = -1;
 			oldCustomer = '';
 		});
 
-		$("#uom,#uniform-uom").on("change", function() {
-			getprice();
-			return false;
-		});
-
-		$(".dialog #item_id").autocomplete({
-			source: '/item/index/',
-			minLength: 2,
-			select: function(event, ui) {
-				$("#item_input").val(ui.item.item_desc);
-				$("#item_id ").val(ui.item.item_id);
-				getoum(ui.item.item_id);
-				$('#uom').prop('disabled', false);
-				$('#uniform-uom').removeClass('disabled');
-				return false;
-			}
-		}).data("ui-autocomplete")._renderItem = function(ul, item) {
-			return $("<li></li>")
-				.data("item.autocomplete", item)
-				.append("<a><b>" + item.item_id + " - " + item.item_desc + "</b></a>")
-				.appendTo(ul);
-		};
-
 		$("#customer_email").autocomplete({
 			source: "/customer/email/",
 			minLength: 2,
@@ -919,9 +930,9 @@ $disapproved = -1;
 		$('#save_quote').on("click", function(e) {
 			e.preventDefault();
 			if ($("#quote_content").validationEngine('validate') == true) {
-				$('.loading').show();
 				$('#quote_content').trigger("submit");
 				unsave = false;
+				//location.reload();
 			}
 		});
 
@@ -938,7 +949,7 @@ $disapproved = -1;
 					url: '/quote/delete/id/' + $('#quote_id').val(),
 					type: "get",
 					success: function(data) {
-						window.location = "/";
+						window.location = "/index";
 					}
 				});
 			} else {
@@ -951,26 +962,31 @@ $disapproved = -1;
 				e.preventDefault();
 				$('.loading').show();
 				$.ajax({
-					url: "/quote/ready/id/<?= $quote['quote_id'] ?>",
+					url: "/quote/ready/id/<?= $quoteID ?>",
 					type: "get",
 					success: function(data) {
 						//$('#status').html('<div class="nNote nInformation hideit"><p><strong>INFORMATION: </strong>Your Quote is Waiting for Approval.</p></div>');
 						//$('a.ready_quote').hide();
-						location.reload();
+						<?php if ($session->user['approve_id'] != null) { ?>
+							window.location.replace('<?= 'http://' . SITEURL . '/approve/index/id/' . $quoteID ?>');
+						<?php } else { ?>
+							window.scrollTo(0, 0);
+							location.reload();
+						<?php } ?>
 					}
 				});
-				$('.loading').hide();
 			} else {
 				e.preventDefault();
 			}
 		});
+		
 
-		$('a.disapprove_quote').on("click", function(e) {
+		$('a.quote-edit-again').on("click", function(e) {
 			if (confirm("You need submit again after edit!") == true) {
 				e.preventDefault();
 				$('.loading').show();
 				$.ajax({
-					url: "/quote/ready/id/<?= $quote['quote_id'] ?>",
+					url: "/quote/ready/id/<?= $quoteID ?>",
 					type: "get",
 					success: function(data) {
 						//$('#status').html('<div class="nNote nInformation hideit"><p><strong>INFORMATION: </strong>You Need submit again after edit</p></div>');

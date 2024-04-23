@@ -130,21 +130,20 @@ class Quote extends DbTable\Quote
 
 		try {
 			$db->update('quote', $info, 'quote_id =' . $quote_id);
+			$project = new Project();
+			$project->log($data['project_id'], 'Quote Edit', $quote_id, null, $data['note']);
 		} catch (Exception $e) {
 			echo $e->getMessage();
 			return false;
 		}
 
-		//edit products
+		//edit products //legacy
 		//$products = new ProductProject();
 		//$products->edit($data['item'], $quote_id);
 
-		$project = new Project();
-		$project->log($data['project_id'], 'Quote Edit', $quote_id, null, $data['note']);
-
 		return $quote_id;
 	}
-
+	
 	public function fetchquotebyid($quote_id)
 	{
 		if ($quote_id == null) {

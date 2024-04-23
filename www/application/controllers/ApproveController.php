@@ -40,7 +40,7 @@ class ApproveController extends Zend_Controller_Action
     	$this->view->approval = $sales->getQuoteapproval();
     	$this->view->project = $project_detail;
     	$this->view->type = $quote->fetchquotetype();
-    	$this->view->items = $products->fetchallitemslive($quote_id);
+    	//$this->view->items = $products->fetchallitemslive($quote_id); // legacy
     	
     	$this->view->terms = $quote->fetchallterms();
 
@@ -50,8 +50,19 @@ class ApproveController extends Zend_Controller_Action
     	
 		$this->view->seg = $quote->fetchseg();
 
-    }
- 
+		if ($this->_request->isPost()) {
+			$data = $this->_request->getPost();
 
+			$model = new Quote();
+
+			$result = $model->edit($data, $quote_id);
+			if($result == true) {
+				$this->redirect('/approve/index/id/' . $result);
+			}
+			else {
+				echo 'false';
+			}
+		}
+    }
 }
 

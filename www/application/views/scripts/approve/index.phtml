@@ -2,6 +2,11 @@
 $session =  Zend_Registry::get('session');
 $project = $this->project;
 $quote = $this->quote;
+$quoteID = $quote['quote_id'];
+
+$approved = 10;
+$waitingApprove = 1;
+$disapproved = -1;
 ?>
 
 <!-- Main content-->
@@ -48,7 +53,7 @@ $quote = $this->quote;
 
 			<?php
 			switch ($quote['approve_status']) {
-				case 10: ?>
+				case $approved: ?>
 					<div class="widget-table dashboard quote-status status-approved">
 						<div class="project-information">
 							<p>Quote status</p>
@@ -58,7 +63,7 @@ $quote = $this->quote;
 					</div>
 				<?php break;
 
-				case 1: ?>
+				case $waitingApprove: ?>
 					<div class="widget-table dashboard quote-status status-waiting">
 						<div class="project-information">
 							<p>Quote status</p>
@@ -68,7 +73,7 @@ $quote = $this->quote;
 					</div>
 				<?php break;
 
-				case -1: ?>
+				case $disapproved: ?>
 					<div class="widget-table dashboard quote-status status-disapproved">
 						<div class="project-information">
 							<p>Quote status</p>
@@ -113,6 +118,20 @@ $quote = $this->quote;
 		<!-- Form -->
 		<form method='post' class="form" id="quote_content">
 			<div class="widget-table" id="customer_info">
+				<div class="widget-button">
+					<button type="button" class="button action has-icon new-customer small" id="add_new_mode">
+						<span class="button-wrap">
+							<span class="icon icon-add"></span>
+							New Customer
+						</span>
+					</button>
+					<button type="button" class="button action has-icon discard-customer small basic" style='display:none;' id="discard_new_mode">
+						<span class="button-wrap">
+							<span class="icon icon-undo"></span>
+							Discard Adding
+						</span>
+					</button>
+				</div>
 				<h2>Customer Infomation</h2>
 				<input type="hidden" id="project_id" name='project_id' value="<?= $project['project_id'] ?>" />
 				<div class="formRow">
@@ -178,11 +197,11 @@ $quote = $this->quote;
 
 					<div class="oneTwo required-field">
 						<label for="contact">Contact</label>
-						<input readonly type="text" id='contact' name='fullname' value="<?= $this->customer['fullname'] ?>"/>
+						<input readonly type="text" id='contact' name='fullname' value="<?= $this->customer['fullname'] ?>" />
 					</div>
 					<div class="oneTwo required-field">
 						<label for="customer_email">Email</label>
-						<input readonly type="text" value="<?= $this->customer['email'] ?>" id='customer_email' name='Contacts_email' >
+						<input readonly type="text" value="<?= $this->customer['email'] ?>" id='customer_email' name='Contacts_email'>
 					</div>
 				</div>
 
@@ -193,7 +212,7 @@ $quote = $this->quote;
 				<div class="formRow">
 					<div class="oneTwo">
 						<label for="quote_id">Quote Number</label>
-						<input id="quote_id" type="text" value='<?= $quote['quote_id'] ?>' readonly />
+						<input id="quote_id" type="text" value='<?= $quoteID ?>' readonly />
 					</div>
 					<div class="oneTwo">
 						<label for='quote_type'>Quote Type</label>
@@ -213,7 +232,7 @@ $quote = $this->quote;
 							<?php } ?>
 						</select>
 					</div>
-					
+
 					<div class="oneTwo">
 						<label for="quote-date">Quote Date</label>
 						<input id="quote-date" name="quote_date" type="text" class="datepicker" value="<?= $quote['quote_date']->format('Y-m-d') ?>" />
@@ -228,12 +247,12 @@ $quote = $this->quote;
 					<div class="oneTwo">
 						<label for="expire_date">Quote Expire Date</label>
 						<input id="expire_date" type="text" class="datepicker" name='expire_date' value="<?php
-																															if ($quote['expire_date'] == null || $quote['expire_date']->format('Y-m-d') < $quote['quote_date']->format('Y-m-d')) {
-																																echo date('Y-m-d', strtotime($quote['quote_date']->modify('+60 days')->format('Y-m-d')));
-																															} else {
-																																echo $quote['expire_date']->format('Y-m-d');
-																															}
-																															?>" />
+																											if ($quote['expire_date'] == null || $quote['expire_date']->format('Y-m-d') < $quote['quote_date']->format('Y-m-d')) {
+																												echo date('Y-m-d', strtotime($quote['quote_date']->modify('+60 days')->format('Y-m-d')));
+																											} else {
+																												echo $quote['expire_date']->format('Y-m-d');
+																											}
+																											?>" />
 					</div>
 					<div class="oneTwo required-field">
 						<label for='arch'>Architectural Representative</label>
@@ -244,7 +263,7 @@ $quote = $this->quote;
 						</select>
 						<input type="hidden" name="sales_id" value="<?= $session->user['id'] ?>" />
 					</div>
-					
+
 					<div class="oneTwo required-field">
 						<label for="quote_approval">Quote Approval</label>
 						<?php if ($session->user['approve_id'] != null) { ?>
@@ -300,6 +319,18 @@ $quote = $this->quote;
 					<div class="oneTwo">
 						<label for="quote-note">Quote Note</label>
 						<textarea id="quote-note" rows="5" cols="" name="note" placeholder="Add quote note here..."><?= $quote['note'] ?></textarea>
+					</div>
+				</div>
+
+				<div class="line"></div>
+
+				<div class="widget-footer">
+					<div class="widget-footer-button">
+						<button disabled id="save_quote" type="button" title="Save quote information" class="button action save-quote-button small">
+							<span class="button-wrap">
+								Save
+							</span>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -375,47 +406,45 @@ $quote = $this->quote;
 			<div class="sidebar-inner-nav">
 				<div class="quick-links">
 					<ol>
-						<?php if ($quote['approve_status'] != 10) { ?>
+						<?php if ($quote['approve_status'] != $approved) { ?>
 							<li>
-								<a href="/quote/approve/id/<?= $quote['quote_id'] ?>" title="" class='quick-link approve'>
+								<a href="/quote/approve/id/<?= $quoteID ?>" title="" class='quick-link approve'>
 									<span class='icon icon-approval'></span>
 									Approve
 								</a>
 							</li>
 						<?php } ?>
-						<li>
-							<a class='quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $quote['quote_id'] . "?company=" . substr($quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $quote['quote_id'] . '.pdf' ?>" title="print">
-								<span class='icon icon-pdf'></span>
-								Print Quote
-							</a>
-						</li>
-						<?php if ($quote['approve_status'] == 10) { ?>
+						<?php if ($quote['approve_status'] == $approved) { ?>
 							<li>
-								<a class='quick-link' href="/mail/quote/id/<?= $quote['quote_id'] ?>" title="mail">
+								<a class='quick-link' href="/mail/quote/id/<?= $quoteID ?>" title="mail">
 									<span class='icon icon-mail'></span>
 									Mail Quote
 								</a>
 							</li>
-							<li><a href="/quote/approve/id/<?= $quote['quote_id'] ?>" title="" class='quick-link approve'>
-									<span class='icon icon-approval'></span>
-									Edit And Approve
-								</a>
-							</li>
 						<?php } ?>
-						<?php if ($quote['approve_status'] != -1) { ?>
+						<?php if ($quote['approve_status'] != $disapproved) { ?>
 							<li>
-								<a href="/quote/disapprove/id/<?= $quote['quote_id'] ?>" title="" class='quick-link disapprove'>
-									<svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-										<path d="M18.53 9L13 3.47C12.8595 3.32931 12.6688 3.25018 12.47 3.25H8C7.27065 3.25 6.57118 3.53973 6.05546 4.05546C5.53973 4.57118 5.25 5.27065 5.25 6V18C5.25 18.7293 5.53973 19.4288 6.05546 19.9445C6.57118 20.4603 7.27065 20.75 8 20.75H16C16.7293 20.75 17.4288 20.4603 17.9445 19.9445C18.4603 19.4288 18.75 18.7293 18.75 18V9.5C18.7421 9.3116 18.6636 9.13309 18.53 9ZM13.25 5.81L16.19 8.75H13.25V5.81ZM16 19.25H8C7.66848 19.25 7.35054 19.1183 7.11612 18.8839C6.8817 18.6495 6.75 18.3315 6.75 18V6C6.75 5.66848 6.8817 5.35054 7.11612 5.11612C7.35054 4.8817 7.66848 4.75 8 4.75H11.75V9.5C11.7526 9.69811 11.8324 9.88737 11.9725 10.0275C12.1126 10.1676 12.3019 10.2474 12.5 10.25H17.25V18C17.25 18.3315 17.1183 18.6495 16.8839 18.8839C16.6495 19.1183 16.3315 19.25 16 19.25Z" />
-										<path d="M14.47 11.9101C14.312 11.7893 14.1134 11.7344 13.9158 11.7568C13.7183 11.7791 13.537 11.8771 13.41 12.0301L12 13.8001L10.59 12.0001C10.5243 11.9226 10.4441 11.8588 10.3537 11.8123C10.2634 11.7659 10.1648 11.7377 10.0636 11.7293C9.96242 11.721 9.86055 11.7326 9.76384 11.7636C9.66713 11.7946 9.57747 11.8444 9.49999 11.9101C9.42251 11.9757 9.35872 12.056 9.31227 12.1463C9.26581 12.2366 9.2376 12.3352 9.22925 12.4364C9.22089 12.5376 9.23255 12.6395 9.26356 12.7362C9.29457 12.8329 9.34433 12.9226 9.40999 13.0001L11 15.0001L9.40999 17.0001C9.28534 17.1565 9.22796 17.3561 9.25046 17.5549C9.27296 17.7537 9.37351 17.9354 9.52999 18.0601C9.68647 18.1847 9.88606 18.2421 10.0848 18.2196C10.2836 18.1971 10.4653 18.0965 10.59 17.9401L12 16.2001L13.41 18.0001C13.4818 18.0871 13.5719 18.1573 13.6738 18.2057C13.7758 18.2541 13.8871 18.2795 14 18.2801C14.1534 18.2928 14.3069 18.258 14.4398 18.1804C14.5728 18.1029 14.6786 17.9863 14.743 17.8466C14.8074 17.7068 14.8273 17.5506 14.7999 17.3992C14.7726 17.2478 14.6993 17.1084 14.59 17.0001L13 15.0001L14.63 13.0001C14.6922 12.9184 14.7375 12.8252 14.7632 12.7258C14.7889 12.6264 14.7944 12.5229 14.7795 12.4214C14.7646 12.3198 14.7295 12.2223 14.6764 12.1345C14.6232 12.0466 14.5531 11.9703 14.47 11.9101Z" />
-									</svg>
+								<a href="/quote/disapprove/id/<?= $quoteID ?>" title="" class='quick-link disapprove'>
+									<span class='icon icon-cancel-circle'></span>
 									Disapprove
 								</a>
 							</li>
 						<?php } ?>
-						<?php if ($quote['approve_status'] != 10) { ?>
+						<li><a class="quick-link" target="_blank" href="/quote/edit/id/<?= $quoteID ?>" title="Edit this quote">
+								<span class='icon icon-external'></span>
+								Go to Edit</a></li>
+						<li><a class="quick-link" target="_blank" href="/project/edit/id/<?= $project['project_id'] ?>" title="Go to project for this quote">
+								<span class='icon icon-external'></span>
+								Go to Project</a></li>
+						<li>
+							<a class='quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $quoteID . "?company=" . substr($quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $quoteID . '.pdf' ?>" title="print">
+								<span class='icon icon-pdf'></span>
+								Print Quote
+							</a>
+						</li>
+						<?php if ($quote['approve_status'] != $approved) { ?>
 							<li>
-								<a href="/quote/delete/id/<?= $quote['quote_id'] ?>" title="" class='quick-link delete_quote'>
+								<a href="/quote/delete/id/<?= $quoteID ?>" title="" class='quick-link delete_quote'>
 									<span class='icon icon-trash'></span>
 									Delete
 								</a>
@@ -472,7 +501,7 @@ $quote = $this->quote;
 						'<span class="button-wrap">' +
 						'<span class="icon icon-edit"></span>' +
 						'</span></a>' +
-						'<a title="Delete this item" class="item_delete" href="/project/deleteitem/pro/' + row.project_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty + '"' +
+						'<a title="Delete this item" class="item_delete" href="/quote/deleteitem/id/' + row.quote_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty + '/sort/' + row.sort_id + '"' +
 						'index="' + data + '">' +
 						'<span class="button-wrap">' +
 						'<span class="icon icon-delete"></span>' +
@@ -529,12 +558,14 @@ $quote = $this->quote;
 			let qty = currentRow['qty'];
 			let unit_price = currentRow['unit_price'];
 			let uom = currentRow['uom'];
+			let sort_id = currentRow['sort_id'];
 			let data = {
 				'old_item_id': item_id,
 				'old_uom': uom,
 				'old_price': unit_price,
 				'old_qty': qty,
-				'old_note': note
+				'old_note': note,
+				'sort_id': sort_id,
 			};
 			return data;
 		}
@@ -621,6 +652,7 @@ $quote = $this->quote;
 				'price': price,
 				'qty': qty,
 				'note': note,
+				'sort_id': olddata['sort_id'],
 				'old_item_id': olddata['old_item_id'],
 				'old_uom': olddata['old_uom'],
 				'old_price': olddata['old_price'],
@@ -629,11 +661,10 @@ $quote = $this->quote;
 			};
 			$('.loading').show();
 			$.ajax({
-				url: '/project/edititem/pro/' + $('#project_id').val(),
+				url: '/quote/edititem/id/' + $('#quote_id').val(),
 				type: "post",
 				data: data,
 				success: function(data) {
-					$('.loading').hide();
 					itemTable.ajax.reload();
 				}
 			});
@@ -642,11 +673,10 @@ $quote = $this->quote;
 		function additem() {
 			$('.loading').show();
 			$.ajax({
-				url: '/project/additem/pro/' + $('#project_id').val(),
+				url: '/quote/additem/id/' + $('#quote_id').val(),
 				type: "post",
 				data: $("#item").serialize(),
 				success: function(data) {
-					$('.loading').hide();
 					itemTable.ajax.reload();
 				}
 			});
@@ -730,35 +760,6 @@ $quote = $this->quote;
 
 		}
 
-		function getcustomerbyid(id) {
-			$('.loading').show();
-			$.ajax({
-				url: '/customer/fetchbyid/id/' + id,
-				type: "get",
-				success: function(data) {
-					var result = JSON.parse(data);
-					if (result != null) {
-						$('#quote').val(result.name);
-						$('#customer_id').val(id);
-						$('#address').val(result.phys_address1 + ' ' + result.phys_address2 + ' ' + result.phys_city + ' ' + result.mail_state + ' ' + result.phys_country + ' ' + result.mail_postal_code);
-						$('#tel').val(result.tel);
-						$('#contact').val(result.first_name + ' ' + result.last_name);
-						$('#customer_email').val(result.email);
-						$('#sale_rep').val(result.sale_rep);
-
-					} else {
-						alert('Can\'t find customer');
-						$('#customer_info input').val('');
-					}
-					$('.loading').hide();
-				}
-			});
-		}
-
-		$('#add_new_mode').on("click", function() {
-			$('#quote, #address, #tel, #customer_id').removeAttr('readonly');
-		});
-
 		$("#uom,#uniform-uom").on("change", function() {
 			getprice();
 			return false;
@@ -777,6 +778,106 @@ $quote = $this->quote;
 					}
 				});
 			}
+		});
+
+		function getcustomerbyid(id) {
+			$('.loading').show();
+			$.ajax({
+				url: '/customer/fetchbyid/id/' + id,
+				type: "get",
+				success: function(data) {
+					var result = JSON.parse(data);
+					if (result != null) {
+						$('#quote').val(result.name);
+						$('#customer_id').val(id);
+						$('#first_name').val(result.first_name);
+						$('#last_name').val(result.last_name);
+						$('#address').val(result.phys_address1);
+						$('#phys_address2').val(result.phys_address2);
+						$('#phys_city').val(result.phys_city);
+						$('#mail_state').val(result.mail_state);
+						$('#mail_postal_code').val(result.mail_postal_code);
+						$('#phys_country').val(result.phys_country);
+						$('#tel').val(result.tel);
+						$('#contact').val(result.fullname);
+						$('#customer_email').val(result.email);
+						$('#company_id').val(result.company_id);
+
+					} else {
+						alert('Can\'t find customer');
+						$('#customer_info input').val('');
+					}
+					$('.loading').hide();
+				}
+			});
+		};
+
+		function getOldCustomer() {
+			let quoteTo = $('#quote').val();
+			let firstName = $('#first_name').val();
+			let lastName = $('#last_name').val();
+			let address1 = $('#address').val();
+			let address2 = $('#phys_address2').val();
+			let city = $('#phys_city').val();
+			let province = $('#mail_state').val();
+			let postalCode = $('#mail_postal_code').val();
+			let country = $('#phys_country').val();
+			let phoneNumber = $('#tel').val();
+			let contact = $('#contact').val();
+			let email = $('#customer_email').val();
+			let companyId = $('#company_id').val();
+			let customerId = $('#customer_id').val();
+			let oldData = {
+				'oldQuoteTo': quoteTo,
+				'oldFirstName': firstName,
+				'oldLastName': lastName,
+				'oldAddress1': address1,
+				'oldAddress2': address2,
+				'oldCity': city,
+				'oldProvince': province,
+				'oldPostalCode': postalCode,
+				'oldCountry': country,
+				'oldPhoneNumber': phoneNumber,
+				'oldContact': contact,
+				'oldEmail': email,
+				'oldCustomerId': customerId,
+				'oldCompanyId': companyId
+			};
+			return oldData;
+		};
+
+		let oldCustomer = '';
+
+		$('#add_new_mode').on("click", function() {
+			oldCustomer = getOldCustomer();
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id').prop('readonly', false);
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #customer_id').val('');
+			$('#quote, #address, #tel, #customer_email').addClass('validate[required]');
+			$('#add_new_mode').hide();
+			$('#discard_new_mode').show();
+		});
+
+		$('#discard_new_mode').on("click", function() {
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email').prop('readonly', true);
+			$('#quote').val(oldCustomer['oldQuoteTo']);
+			$('#first_name').val(oldCustomer['oldFirstName']);
+			$('#last_name').val(oldCustomer['oldLastName']);
+			$('#address').val(oldCustomer['oldAddress1']);
+			$('#phys_address2').val(oldCustomer['oldAddress2']);
+			$('#phys_city').val(oldCustomer['oldCity']);
+			$('#mail_state').val(oldCustomer['oldProvince']);
+			$('#mail_postal_code').val(oldCustomer['oldPostalCode']);
+			$('#phys_country').val(oldCustomer['oldCountry']);
+			$('#tel').val(oldCustomer['oldPhoneNumber']);
+			$('#contact').val(oldCustomer['oldContact']);
+			$('#customer_email').val(oldCustomer['oldEmail']);
+			$('#customer_id').val(oldCustomer['oldCustomerId']);
+			$('#company_id').val(oldCustomer['oldCompanyId']);
+
+			$('#quote, #address, #tel,#customer_email').removeClass('validate[required]');
+			$('#add_new_mode').show();
+			$('#discard_new_mode').hide();
+			oldCustomer = '';
 		});
 
 		$("#customer_email").autocomplete({
@@ -804,6 +905,7 @@ $quote = $this->quote;
 				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
 				.appendTo(ul);
 		};
+
 		$("#contact").autocomplete({
 			source: "/customer/name/",
 			minLength: 2,
@@ -818,13 +920,28 @@ $quote = $this->quote;
 				.appendTo(ul);
 		};
 
-		$('a.save_quote').on("click", function(e) {
+		let unsave = false;
+
+		$('#quote_content').on("change", function() {
+			$('#save_quote').prop("disabled", false);
+			unsave = true;
+		});
+
+		$('#save_quote').on("click", function(e) {
 			e.preventDefault();
 			if ($("#quote_content").validationEngine('validate') == true) {
-				$('.loading').show();
-				$('#quote_content').submit();
+				//$('#quote_content').trigger("submit");
+				document.getElementById("quote_content").submit();
+				unsave = false;
 			}
 		});
+
+		window.onbeforeunload = function() {
+			if (unsave) {
+				$('#save_quote').trigger("focus");
+				return "You have unsaved changes project information. Do you want to leave this page and discard your changes or stay on this page?";
+			}
+		}
 
 		$('a.delete_quote').on("click", function(e) {
 			if (confirm("Confirm delete This Quote?") == true) {
@@ -853,7 +970,6 @@ $quote = $this->quote;
 							window.location.reload();
 						}
 					});
-					$('.loading').hide();
 				}
 			} else {
 				return false;
@@ -872,7 +988,6 @@ $quote = $this->quote;
 						window.location.reload();
 					}
 				});
-				$('.loading').hide();
 			}
 		});
 	});
