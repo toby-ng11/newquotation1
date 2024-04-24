@@ -34,9 +34,18 @@
         <div class="widget-table">
           <h2>Project Information</h2>
           <div class="formRow">
+            <input type="hidden" name='owner' value='<?= $session->user['id'] ?>'>
+            <input type="hidden" id='quote_no' name='quote_no' placeholder="Auto Generate" />
+            <input type="hidden" name='create_date' value='<?= date('Y-m-d') ?>' />
+
             <div class="oneTwo required-field">
               <label for="project_name">Project Name</label>
               <input type="text" id='project_name' name='project_name' class="validate[required]" />
+            </div>
+
+            <div class="oneTwo required-field">
+              <label for='project_location_address'>Project Location</label>
+              <input id='project_location_address' name='project_location_address' type="text" class="validate[required] tipN" original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" />
             </div>
 
             <div class="oneTwo">
@@ -52,23 +61,18 @@
               <label for="owner">Worksheet Owner</label>
               <input type="text" id="owner" value='<?= $session->user['name'] ?>' readonly />
             </div>
-            <input type="hidden" name='owner' value='<?= $session->user['id'] ?>'>
 
-            <div class="oneTwo">
-              <label for="quote_no">Project ID</label>
-              <input type="text" placeholder="Auto Generate" id='quote_no' name='quote_no' readonly />
-            </div>
-            <input name='create_date' type="hidden" value='<?= date('Y-m-d') ?>' readonly />
-
-            <div class="oneTwo required-field">
-              <label for='project_location_address'>Project Location</label>
-              <input id='project_location_address' name='project_location_address' type="text" class="validate[required] tipN" original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" />
-            </div>
+            <?php if ($session->user['approve_id'] != null) { ?>
+              <div class="oneTwo">
+                <label for="worksheet_assign">Worksheet Assign</label>
+                <input id="worksheet_assign" name="worksheet_assign" type="text" placeholder="Assign other salesrep to this project" />
+              </div>
+            <?php } ?>
 
             <div class="oneTwo required-field">
               <label for="status">Status</label>
               <select name="status" id='status' class="validate[required]">
-                <option value="">Select Status</option>
+                <option value="">-- Select Status --</option>
                 <?php foreach ($this->status as $s) { ?>
                   <option value="<?= $s['uid'] ?>"><?= $s['Status'] ?></option>
                 <?php } ?>
@@ -80,10 +84,10 @@
               <input type="text" name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" />
             </div>
 
-            <div class="oneTwo">
+            <div class="oneTwo required-field">
               <label for="market_segment">Market Segment</label>
               <select name="market_segment" id='market_segment' class="validate[required]">
-                <option value="">Choose Segment</option>
+                <option value="">-- Choose Segment --</option>
                 <?php foreach ($this->seg as $s) { ?>
                   <option value="<?= $s['uid'] ?>"><?= $s['Market_Segment'] ?></option>
                 <?php } ?>
@@ -129,12 +133,12 @@
 
             <div class="oneTwo">
               <label for="required_date">Material Required Date</label>
-              <input type="text" id="required_date" name='required_date' class="datepicker" />
+              <input type="text" id="required_date" name='required_date' placeholder="Material required date" class="datepicker" />
             </div>
 
             <div class="oneTwo">
               <label for="gerneral_contractor">General Contractor</label>
-              <input type="text" id="gerneral_contractor" name="gerneral_contractor"class='tipN' original-title="Type Company Name" />
+              <input type="text" id="gerneral_contractor" name="gerneral_contractor" class='tipN' placeholder="Add general contractor" original-title="Type Company Name" />
               <input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" />
             </div>
 
@@ -149,7 +153,7 @@
 
             <div class="oneTwo">
               <label for="awarded_contractor">Awarded Contractor</label>
-              <input id="awarded_contractor" name="awarded_contractor" type="text" class='tipN' original-title="Type Company Name" />
+              <input id="awarded_contractor" name="awarded_contractor" type="text" class='tipN' placeholder="Add awarded contractor" original-title="Type Company Name" />
               <input id="awarded_contractor_id" name="awarded_contractor_id" type="hidden" />
             </div>
 
@@ -160,7 +164,20 @@
                   <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
                 <?php } ?>
               </select>
-                </div>
+            </div>
+          </div>
+
+          <div class="line"></div>
+
+          <div class="widget-footer">
+            <div class="widget-footer-button">
+              <button disabled id="save_pro" type="button" title="Create project" class="button action create-project-button small">
+                <span class="button-wrap">
+                  <span class="icon icon-add"></span>
+                  Create Project
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </form>
@@ -178,9 +195,6 @@
             <li><a href="/project/" target="_blank" class='quick-link add_pro' title="Add new project">
                 <span class='icon icon-add'></span>
                 Add Project</a></li>
-            <li><a href="#" class='quick-link save_pro' title="Save project">
-                <span class='icon icon-save'></span>
-                Save Project</span></a></li>
           </ol>
         </div>
       </div>
@@ -190,143 +204,165 @@
 
 
 <script>
-  function getcustomerbyid(id, obj) {
-    $('.loading').show();
-    $.ajax({
-      url: '/customer/fetchbyid/id/' + id,
-      type: "get",
-      success: function(data) {
-        var result = JSON.parse(data);
-        if (result != null) {
-          $(obj).val(result.name);
-          $('input[name=' + $(obj).attr('id') + ']').val(result.name);
-        } else {
-          alert('Can\'t find customer');
-          $('#customer_info input').val('');
-        }
-        $('.loading').hide();
-      }
-    });
-  }
-
-  $("#awarded_contractor").autocomplete({
-    source: function(request, response) {
-      $.ajax({
-        url: '/customer/fetchbynamecompany/',
-        dataType: "json",
-        data: {
-          term: request.term,
-          company: $('#awarded_contractor_loc').val()
-        },
-        success: function(data) {
-          response(data);
-        }
-      });
-    },
-    minLength: 2,
-    select: function(event, ul) {
-      $('#awarded_contractor').val(ul.item.name);
-      $('#awarded_contractor_id').val(ul.item.customer_id);
-      getcustomerbyid(ul.item.customer_id, $('#awarded_contractor'));
-    }
-  }).data("ui-autocomplete")._renderItem = function(ul, item) {
-    return $("<li></li>")
-      .data("item.autocomplete", item)
-      .append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
-      .appendTo(ul);
-  };
-
-  $("#gerneral_contractor").autocomplete({
-    source: function(request, response) {
-      $.ajax({
-        url: '/customer/fetchbynamecompany/',
-        dataType: "json",
-        data: {
-          term: request.term,
-          company: $('#gerneral_contractor_loc').val()
-        },
-        success: function(data) {
-          response(data);
-        }
-      });
-    },
-    minLength: 2,
-    select: function(event, ul) {
-      $('#gerneral_contractor').val(ul.item.name);
-      $('#gerneral_contractor_id').val(ul.item.customer_id);
-      getcustomerbyid(ul.item.customer_id, $('#gerneral_contractor'));
-    },
-
-  }).data("ui-autocomplete")._renderItem = function(ul, item) {
-    return $("<li></li>")
-      .data("item.autocomplete", item)
-      .append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
-      .appendTo(ul);
-  };
-
-  $("#architect_name").autocomplete({
-    source: function(request, response) {
-      $('#architect').val('');
-      $.ajax({
-        url: '/sales/fetchspec/',
-        dataType: "json",
-        data: {
-          term: request.term,
-          loc: $('#architect_loc').val()
-        },
-        success: function(data) {
-          response(data);
-        }
-      });
-    },
-    minLength: 2,
-    select: function(event, ul) {
-      $("#architect_name").val(ul.item.Specifier);
-      $('#architect').val(ul.item.uid);
-      return false;
-    },
-
-  }).data("ui-autocomplete")._renderItem = function(ul, item) {
-    return $("<li></li>")
-      .data("item.autocomplete", item)
-      .append("<a>" + item.Specifier + "</a>")
-      .appendTo(ul);
-  };
-
-  $("#specifiler_name").autocomplete({
-    source: function(request, response) {
-      $.ajax({
-        url: '/sales/fetchspec/',
-        dataType: "json",
-        data: {
-          term: request.term,
-          loc: $('#specifiler_loc').val()
-        },
-        success: function(data) {
-          response(data);
-        }
-      });
-    },
-    minLength: 2,
-    select: function(event, ul) {
-      $("#specifiler_name").val(ul.item.Specifier);
-      $('#specifiler').val(ul.item.uid);
-      return false;
-    },
-
-  }).data("ui-autocomplete")._renderItem = function(ul, item) {
-    return $("<li></li>")
-      .data("item.autocomplete", item)
-      .append("<a>" + item.Specifier + "</a>")
-      .appendTo(ul);
-  };
-
-  $('.save_pro').on("click", function(e) {
-    e.preventDefault();
-    if ($("#project_content").validationEngine('validate') == true) {
+  $(function() {
+    function getcustomerbyid(id, obj) {
       $('.loading').show();
-      $('#project_content').trigger("submit");
+      $.ajax({
+        url: '/customer/fetchbyid/id/' + id,
+        type: "get",
+        success: function(data) {
+          var result = JSON.parse(data);
+          if (result != null) {
+            $(obj).val(result.name);
+            $('input[name=' + $(obj).attr('id') + ']').val(result.name);
+          } else {
+            alert('Can\'t find customer');
+            $('#customer_info input').val('');
+          }
+          $('.loading').hide();
+        }
+      });
     }
 
-  });
+    $('#worksheet_assign').autocomplete({
+      source: '/user/id',
+      minLength: 1,
+      select: function(event, ui) {
+        $('#worksheet_assign').val(ui.item.id);
+        return false;
+      }
+    }).data("ui-autocomplete")._renderItem = function(ul, item) {
+      return $("<li></li>")
+        .data("item.autocomplete", item)
+        .append("<a>" + item.id + "</br>" + item.name + "</a>")
+        .appendTo(ul);
+    }
+
+    $("#awarded_contractor").autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: '/customer/fetchbynamecompany/',
+          dataType: "json",
+          data: {
+            term: request.term,
+            company: $('#awarded_contractor_loc').val()
+          },
+          success: function(data) {
+            response(data);
+          }
+        });
+      },
+      minLength: 2,
+      select: function(event, ul) {
+        $('#awarded_contractor').val(ul.item.name);
+        $('#awarded_contractor_id').val(ul.item.customer_id);
+        getcustomerbyid(ul.item.customer_id, $('#awarded_contractor'));
+      }
+    }).data("ui-autocomplete")._renderItem = function(ul, item) {
+      return $("<li></li>")
+        .data("item.autocomplete", item)
+        .append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
+        .appendTo(ul);
+    };
+
+    $("#gerneral_contractor").autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: '/customer/fetchbynamecompany/',
+          dataType: "json",
+          data: {
+            term: request.term,
+            company: $('#gerneral_contractor_loc').val()
+          },
+          success: function(data) {
+            response(data);
+          }
+        });
+      },
+      minLength: 2,
+      select: function(event, ul) {
+        $('#gerneral_contractor').val(ul.item.name);
+        $('#gerneral_contractor_id').val(ul.item.customer_id);
+        getcustomerbyid(ul.item.customer_id, $('#gerneral_contractor'));
+      },
+
+    }).data("ui-autocomplete")._renderItem = function(ul, item) {
+      return $("<li></li>")
+        .data("item.autocomplete", item)
+        .append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
+        .appendTo(ul);
+    };
+
+    $("#architect_name").autocomplete({
+      source: function(request, response) {
+        $('#architect').val('');
+        $.ajax({
+          url: '/sales/fetchspec/',
+          dataType: "json",
+          data: {
+            term: request.term,
+            loc: $('#architect_loc').val()
+          },
+          success: function(data) {
+            response(data);
+          }
+        });
+      },
+      minLength: 2,
+      select: function(event, ul) {
+        $("#architect_name").val(ul.item.Specifier);
+        $('#architect').val(ul.item.uid);
+        return false;
+      },
+
+    }).data("ui-autocomplete")._renderItem = function(ul, item) {
+      return $("<li></li>")
+        .data("item.autocomplete", item)
+        .append("<a>" + item.Specifier + "</a>")
+        .appendTo(ul);
+    };
+
+    $("#specifiler_name").autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: '/sales/fetchspec/',
+          dataType: "json",
+          data: {
+            term: request.term,
+            loc: $('#specifiler_loc').val()
+          },
+          success: function(data) {
+            response(data);
+          }
+        });
+      },
+      minLength: 2,
+      select: function(event, ul) {
+        $("#specifiler_name").val(ul.item.Specifier);
+        $('#specifiler').val(ul.item.uid);
+        return false;
+      },
+
+    }).data("ui-autocomplete")._renderItem = function(ul, item) {
+      return $("<li></li>")
+        .data("item.autocomplete", item)
+        .append("<a>" + item.Specifier + "</a>")
+        .appendTo(ul);
+    };
+
+    let unsave = false;
+
+    $('#project_content').on("change", function() {
+      $('#save_pro').prop("disabled", false);
+      unsave = true;
+    });
+
+    $('#save_pro').on("click", function(e) {
+      e.preventDefault();
+      if ($("#project_content").validationEngine('validate') == true) {
+        $('#project_content').trigger("submit");
+      }
+
+    });
+  })
 </script>

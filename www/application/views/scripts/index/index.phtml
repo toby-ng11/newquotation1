@@ -49,8 +49,28 @@
             </div>
         </section>
 
+        <section aria-labelledby="assigned_projects" id="section2" data-nav="Assigned Projects">
+            <div class="widget-table">
+                <table width="100%" class="display nowrap" id='assigned_projects_table'>
+                    <thead>
+                        <tr>
+                            <th>Project ID</th>
+                            <th>Quote ID</th>
+                            <th>Project Name</th>
+                            <th>Create Date</th>
+                            <th>Due Date</th>
+                            <th>Specifier</th>
+                            <th>Market Segment</th>
+                            <th>Status</th>
+                            <th>Make Quote</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
+
         <?php if ($session->user['approve_id'] != null) { ?>
-            <section aria-labelledby="other_projects" id="section2" data-nav="Other Projects">
+            <section aria-labelledby="other_projects" id="section3" data-nav="Other Projects">
                 <div class="widget-table">
                     <table width="100%" class="display nowrap" id='other_project_table'>
                         <thead>
@@ -71,7 +91,7 @@
             </section>
         <?php } ?>
 
-        <section aria-labelledby="my_quotes" <?php if ($session->user['approve_id'] != null) { ?> id="section3" <?php } else { ?> id="section2" <?php } ?> data-nav="My Quotes">
+        <section aria-labelledby="my_quotes" <?php if ($session->user['approve_id'] != null) { ?> id="section4" <?php } else { ?> id="section3" <?php } ?> data-nav="My Quotes">
             <div class="widget-table">
                 <table width="100%" class="display nowrap" id='quote_table'>
                     <thead>
@@ -91,7 +111,7 @@
             </div>
         </section>
 
-        <section aria-labelledby="follow_up_logs" <?php if ($session->user['approve_id'] != null) { ?> id="section4" <?php } else { ?> id="section3" <?php } ?> data-nav="Follow Up Logs">
+        <section aria-labelledby="follow_up_logs" <?php if ($session->user['approve_id'] != null) { ?> id="section5" <?php } else { ?> id="section4" <?php } ?> data-nav="Follow Up Logs">
             <div class="widget-table">
                 <table width="100%" class="display nowrap" id='project_log'>
                     <thead>
@@ -180,6 +200,83 @@
                 topStart: function() {
                     let info = document.createElement('div');
                     info.innerHTML = '<h2>My Projects</h2><p><?= count($this->ownproject) ?> projects';
+                    return info;
+                }
+            }
+        });
+
+        $('#assigned_projects_table').DataTable({
+            //select: true,
+            ajax: {
+                url: "/index/assignedprojects",
+                dataSrc: ''
+            },
+            columns: [{
+                    data: "project_id",
+                    render: function(data, type, row, meta) {
+                        {
+                            return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + row.project_id + "</a>";
+                        }
+                    }
+                },
+                {
+                    data: "quote_no"
+                },
+                {
+                    data: "project_name"
+                },
+                {
+                    data: "create_date.date",
+                    render: function(data) {
+                        let date = new Date(data);
+                        return date.toLocaleDateString();
+                    }
+                },
+                {
+                    data: "due_date.date",
+                    render: function(data) {
+                        let date = new Date(data);
+                        let today = new Date();
+                        if (date <= today) {
+                            return '<span class="red">' + date.toLocaleDateString() + '</span>';
+                        } else {
+                            return date.toLocaleDateString();
+                        }
+                    }
+                },
+                {
+                    data: "Specifier_name"
+                },
+                {
+                    data: "segment"
+                },
+                {
+                    data: "status_name"
+                },
+                {
+                    data: "project_id",
+                    render: function(data, type, row, meta) {
+                        return "<a target='_blank' href='/quote/index/project/" + row.project_id + "'><span class='button-wrap'><span class='icon icon-money'></span></span></a>";
+                    }
+                },
+            ],
+            columnDefs: [{
+                targets: [0, 1, 3, 4, 6, 7, 8],
+                className: 'dt-body-center'
+            }],
+            processing: true,
+            order: [
+                [0, "desc"]
+            ],
+            fixedColumns: {
+                start: 1,
+                end: 2
+            },
+            scrollX: true,
+            layout: {
+                topStart: function() {
+                    let info = document.createElement('div');
+                    info.innerHTML = '<h2>Assigned Projects</h2><p><?= count($this->assignedproject) ?> assigned projects';
                     return info;
                 }
             }

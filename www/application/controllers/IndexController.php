@@ -24,15 +24,16 @@ class IndexController extends Zend_Controller_Action
 		if ($this->session->user['sale_role'] == 'admin' && APPLICATION_ENV == 'production' && $this->_getParam('normal') == null) {
 			$this->redirect('/index/admin');
 		}
-		if ($this->session->user['approve_id'] != null && APPLICATION_ENV == 'production' && $this->_getParam('normal') == null) {
-			$this->redirect('/index/approval');
-		}
+		//if ($this->session->user['approve_id'] != null && APPLICATION_ENV == 'production' && $this->_getParam('normal') == null) {
+		//	$this->redirect('/index/approval');
+		//}
 
 		$project = new Project();
 		$quote = new Quote();
 		$memo = new ProjectMemo();
 
 		$this->view->ownproject = $project->fetchbyowner($this->sale_id);
+		$this->view->assignedproject = $project->fetchbyassign($this->sale_id);
 		$this->view->ownquotes = $quote->fetchrelated($this->sale_id);
 
 		$this->view->memo = $memo->fetchmemobyowner($this->sale_id);
@@ -46,6 +47,13 @@ class IndexController extends Zend_Controller_Action
 	{
 		$project = new Project();
 		echo $project->fetchbyownerJson($this->sale_id);
+		exit;
+	}
+
+	public function assignedprojectsAction() // ajax
+	{
+		$project = new Project();
+		echo $project->fetchbyassignJson($this->sale_id);
 		exit;
 	}
 

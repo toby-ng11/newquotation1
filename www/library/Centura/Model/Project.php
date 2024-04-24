@@ -49,6 +49,7 @@ class Project extends DbTable\Project
 	    $info['specifiler']                  = $data['specifiler'];// null need check
 	    $info['deleted']                     = 'N';
 	    $info['project_name']               = $data['project_name'];
+		$info['worksheet_assign'] = $data['worksheet_assign'];
 	    
 	  	if($info['architect'] == null || $info['architect'] == 0   ) // no id or not match
 	    {
@@ -161,11 +162,58 @@ class Project extends DbTable\Project
 		$select = $db->select()->from('project')
 			->order('project_id desc')
 			->join('P21_Location', 'centura_location_id = P21_Location.location_id','company_id')
-			->join('quote_status','quote_status.uid=project.status',array('status_name'=>'Status'))
-			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment',array('segment'=>'Market_Segment'))
-			->join('quote_specifier','quote_specifier.uid = project.specifiler',array('Specifier_name'=>'quote_specifier.Specifier'));
-		
-		$select->where('owner = ?',$owner)->where('project.deleted =?','N');
+			->join('quote_status','quote_status.uid=project.status', array(
+				'status_name'=>'Status'))
+			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment', array(
+				'segment'=>'Market_Segment'))
+			->join('quote_specifier','quote_specifier.uid = project.specifiler', array(
+				'Specifier_name'=>'quote_specifier.Specifier'))
+		    ->where('owner = ?',$owner)
+			->where('project.deleted =?','N');
+
+		return Zend_Json::encode($db->fetchAll($select));	
+	}
+
+	public function fetchbyassign($owner = null,$count = 5,$offset =0)
+	{
+		if($owner ==null)
+		{
+			return  false;
+		}
+		$db = $this->getAdapter();
+		$select = $db->select()->from('project')
+			->order('project_id desc')
+			->join('P21_Location', 'centura_location_id = P21_Location.location_id','company_id')
+			->join('quote_status','quote_status.uid=project.status', array(
+				'status_name'=>'Status'))
+			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment', array(
+				'segment'=>'Market_Segment'))
+			->join('quote_specifier','quote_specifier.uid = project.specifiler', array(
+				'Specifier_name'=>'quote_specifier.Specifier'))
+		    ->where('worksheet_assign = ?',$owner)
+			->where('project.deleted =?','N');
+
+		return $db->fetchAll($select);	
+	}
+
+	public function fetchbyassignJson($owner = null,$count = 5,$offset =0)
+	{
+		if($owner ==null)
+		{
+			return  false;
+		}
+		$db = $this->getAdapter();
+		$select = $db->select()->from('project')
+			->order('project_id desc')
+			->join('P21_Location', 'centura_location_id = P21_Location.location_id','company_id')
+			->join('quote_status','quote_status.uid=project.status', array(
+				'status_name'=>'Status'))
+			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment', array(
+				'segment'=>'Market_Segment'))
+			->join('quote_specifier','quote_specifier.uid = project.specifiler', array(
+				'Specifier_name'=>'quote_specifier.Specifier'))
+		    ->where('worksheet_assign = ?',$owner)
+			->where('project.deleted =?','N');
 
 		return Zend_Json::encode($db->fetchAll($select));	
 	}
@@ -278,6 +326,7 @@ class Project extends DbTable\Project
 	    $info['deleted']                     = 'N';
 	    $info['quote_no']                   = $data['quote_no'];
 	    $info['project_name']                = $data['project_name'];
+		$info['worksheet_assign']           = $data['worksheet_assign'];
 	    
 		if($info['architect'] == null || $info['architect'] == 0 || strtolower($this->fetchspecbyid($info['architect'])) != strtolower($data['architect_name'])) // no id or not match
 	    {

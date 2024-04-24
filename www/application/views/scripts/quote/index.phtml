@@ -203,7 +203,7 @@ $project = $this->project;
 									<?php }
 							} else {
 								foreach ($this->arch as $a) {
-									if (($a['id']) == ($project['owner'])) { ?>
+									if (($a['id']) == ($project['owner']) or $a['id'] == (($project['worksheet_assign']))) { ?>
 										<option value="<?= $a['id'] ?>" selected><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option>
 							<?php }
 								}

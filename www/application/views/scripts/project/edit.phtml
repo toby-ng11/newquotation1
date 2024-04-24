@@ -35,8 +35,13 @@ $project = $this->project;
 			<form method="post" class="form" id='project_content'>
 				<div class="widget-table">
 					<h2>Project Information</h2>
-					<input type="hidden" id='project_id' value='<?= $project['project_id'] ?>'>
 					<div class="formRow">
+						<input type="hidden" id='project_id' value='<?= $project['project_id'] ?>'>
+						<input type="hidden" id="owner" name='owner' value='<?= $project['owner'] ?>'>
+						<input type="hidden" id='create_date' name='create_date' value='<?= $project['create_date']->format('Y-m-d') ?>' />
+						<input type="hidden" id='architect' name='architect' value="<?= $project['architect'] ?>">
+						<input type="hidden" id='specifiler' name="specifiler" value="<?= $project['specifiler'] ?>">
+
 						<div class="oneTwo required-field">
 							<label for="project_name">Project Name</label>
 							<input type="text" id='project_name' class="validate[required]" placeholder="Project Name" name='project_name' value="<?= $project['project_name'] ?>" />
@@ -53,14 +58,19 @@ $project = $this->project;
 
 						<div class="oneTwo form-worksheet-owner">
 							<label for="owner_name">Worksheet Owner</label>
-							<input id="owner_name" name="owner_name" type="text" value='<?= $project['owner_name'] ?>' />
-							<input type="hidden" id="owner" name='owner' value='<?= $project['owner'] ?>'>
+							<input id="owner_name" name="owner_name" type="text" value='<?= $project['owner_name'] ?>' readonly />
 						</div>
+
+						<?php if ($session->user['approve_id'] != null) { ?>
+						<div class="oneTwo form-worksheet-owner">
+							<label for="worksheet_assign">Worksheet Assign</label>
+							<input id="worksheet_assign" name="worksheet_assign" type="text" value='<?= $project['worksheet_assign'] ?>' />
+						</div>
+						<?php } ?>
 
 						<div class="oneTwo">
 							<label for="quote_no">Project ID</label>
 							<input id="quote_no" type="text" placeholder="123456" name='quote_no' value="<?= $project['quote_no'] ?>" readonly />
-							<input name='create_date' type="hidden" value='<?= $project['create_date']->format('Y-m-d') ?>' />
 						</div>
 
 						<div class="oneTwo required-field">
@@ -96,7 +106,6 @@ $project = $this->project;
 						<div class="oneTwo required-field">
 							<label for='architect_name'>Project Architect / Owner</label>
 							<input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" value='<?= $this->arch_name ?>' />
-							<input type="hidden" name='architect' id='architect' value="<?= $project['architect'] ?>">
 						</div>
 
 						<div class="oneTwo">
@@ -111,7 +120,6 @@ $project = $this->project;
 						<div class="oneTwo required-field">
 							<label for='specifiler_name'>Specifier</label>
 							<input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN" original-title="Type 2 letter to start or add your own">
-							<input type="hidden" id='specifiler' name="specifiler" value="<?= $project['specifiler'] ?>">
 						</div>
 
 						<div class="oneTwo">
@@ -135,7 +143,9 @@ $project = $this->project;
 
 						<div class="oneTwo">
 							<label for="gerneral_contractor">General Contractor</label>
-							<input type="text" id="gerneral_contractor" name="gerneral_contractor" placeholder="Add general contractor" value='<?php if (!empty($this->gerneral_contractor)) { echo $this->gerneral_contractor['name'] . ' - ' . $this->gerneral_contractor['company_id']; } ?>' />
+							<input type="text" id="gerneral_contractor" name="gerneral_contractor" placeholder="Add general contractor" value='<?php if (!empty($this->gerneral_contractor)) {
+																																					echo $this->gerneral_contractor['name'] . ' - ' . $this->gerneral_contractor['company_id'];
+																																				} ?>' />
 							<input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" value="<?= $project['general_contractor_id'] ?>" />
 						</div>
 
@@ -151,7 +161,9 @@ $project = $this->project;
 
 						<div class="oneTwo">
 							<label for="awarded_contractor">Awarded Sub Contractor</label>
-							<input type="text" id="awarded_contractor" name="awarded_contractor" placeholder="Add awarded contractor" value='<?php if(!empty($this->awarded_sub_contracotr)) { echo $this->awarded_sub_contracotr['name'] . ' - ' . $this->awarded_sub_contracotr['company_id']; } ?>' />
+							<input type="text" id="awarded_contractor" name="awarded_contractor" placeholder="Add awarded contractor" value='<?php if (!empty($this->awarded_sub_contracotr)) {
+																																					echo $this->awarded_sub_contracotr['name'] . ' - ' . $this->awarded_sub_contracotr['company_id'];
+																																				} ?>' />
 							<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id' value="<?= $project['awarded_sub_contracotr_id'] ?>">
 						</div>
 
@@ -168,18 +180,18 @@ $project = $this->project;
 
 					<?php if ($this->owner == 1) { ?>
 
-					<div class="line"></div>
+						<div class="line"></div>
 
-					<div class="widget-footer">
-						<div class="widget-footer-button">
-						<button disabled id="save-project" type="button" title="Save project information" class="button action save-project-button small">
-								<span class="button-wrap">
-									<span class="icon icon-save"></span>
-									Save
-								</span>
-							</button>
+						<div class="widget-footer">
+							<div class="widget-footer-button">
+								<button disabled id="save-project" type="button" title="Save project information" class="button action save-project-button small">
+									<span class="button-wrap">
+										<span class="icon icon-save"></span>
+										Save
+									</span>
+								</button>
+							</div>
 						</div>
-					</div>
 					<?php } ?>
 				</div>
 			</form>
@@ -555,8 +567,7 @@ $project = $this->project;
 				.appendTo(ul);
 		};
 
-		$('#owner_name').autocomplete({
-		})
+		$('#owner_name').autocomplete({})
 
 		$('#architect_loc').on("change", function() {
 			$('.loading').show();
@@ -1006,7 +1017,7 @@ $project = $this->project;
 					success: function(data) {
 						//var index = $('#project_memo tbody tr').index(obj.parent().parent());
 						//if (index != -1) {
-							memoTable.ajax.reload();
+						memoTable.ajax.reload();
 						//}
 						$('.loading').hide();
 					}
@@ -1058,5 +1069,19 @@ $project = $this->project;
 				});
 			}
 		});
+
+		$('#worksheet_assign').autocomplete({
+			source: '/user/id',
+			minLength: 1,
+			select: function(event, ui) {
+				$('#worksheet_assign').val(ui.item.id);
+				return false;
+			}
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
+			return $("<li></li>")
+				.data("item.autocomplete", item)
+				.append("<a>" + item.id + "</br>" + item.name + "</a>")
+				.appendTo(ul);
+		}
 	});
 </script>

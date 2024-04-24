@@ -44,6 +44,9 @@ $disapproved = -1;
 					<p><?= ($project['project_location_address'] == 'N/A') ? '' : $project['project_location_address'] ?></p>
 					</br>
 					<p>by <b><?= $project['owner'] ?? '' ?></b></p>
+					<?php if (($project['worksheet_assign']) != null) { ?>
+						<p>assigned to <b><?= $project['worksheet_assign'] ?></b></p>
+					<?php } ?>
 				</div>
 				<span class='svg icon icon-list'></span>
 			</div>
