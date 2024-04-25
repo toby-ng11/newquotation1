@@ -37,6 +37,7 @@
                             <th>Project ID</th>
                             <th>Quote ID</th>
                             <th>Project Name</th>
+                            <th>Assign To</th>
                             <th>Create Date</th>
                             <th>Due Date</th>
                             <th>Specifier</th>
@@ -57,6 +58,7 @@
                             <th>Project ID</th>
                             <th>Quote ID</th>
                             <th>Project Name</th>
+                            <th>Worksheet Owner</th>
                             <th>Create Date</th>
                             <th>Due Date</th>
                             <th>Specifier</th>
@@ -149,6 +151,9 @@
                     data: "project_name"
                 },
                 {
+                    data: "worksheet_assign"
+                },
+                {
                     data: "create_date.date",
                     render: function(data) {
                         let date = new Date(data);
@@ -226,6 +231,9 @@
                     data: "project_name"
                 },
                 {
+                    data: "owner"
+                },
+                {
                     data: "create_date.date",
                     render: function(data) {
                         let date = new Date(data);
@@ -276,7 +284,7 @@
             layout: {
                 topStart: function() {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>Assigned Projects</h2><p><?= count($this->assignedproject) ?> assigned projects';
+                    info.innerHTML = '<h2>Assigned Projects</h2><p><?= count($this->assignedproject) ?> assigned projects by approval manager';
                     return info;
                 }
             }

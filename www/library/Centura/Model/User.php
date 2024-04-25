@@ -51,7 +51,7 @@ class User extends DbTable\User
 			$user['sale_role'] = 'manager';
 		}
 
-		if (strpos($user['role'], 'IT') !== false || $user['id'] == 'EJIMENEZ') {
+		if (strpos($user['role'], 'IT') !== false) {
 			$user['sale_role'] = 'admin';
 		}
 

@@ -260,6 +260,7 @@ $project = $this->project;
 							<th>Action Items Completed</th>
 							<th>Follow Up Date</th>
 							<th>Next Action Required</th>
+							<th>Added by</th>
 							<th class="action">Options</th>
 						</tr>
 					</thead>
@@ -270,6 +271,7 @@ $project = $this->project;
 		<div id="dialog-message" title="Add Log">
 			<form action="" class="dialog" id='memo'>
 				<div class="dialog-form">
+					<input type="hidden" name="author" id="memo-author" value="<?= $session->user['id'] ?>">
 					<div class="oneTwo required-field dialog-note">
 						<label for="title">Title</label>
 						<textarea rows="2" name='title' id='title' class="validate[required]" placeholder="Title"></textarea>
@@ -277,7 +279,7 @@ $project = $this->project;
 
 					<div class="oneTwo required-field dialog-note">
 						<label for="title">Content</label>
-						<textarea rows="3" name='content' id='content' class="validate[required]" placeholder="Log content"></textarea>
+						<textarea rows="8" name='content' id='content' class="validate[required]" placeholder="Log content"></textarea>
 					</div>
 
 					<div class="oneTwo required-field dialog-note">
@@ -361,12 +363,7 @@ $project = $this->project;
 
 
 <script type="text/javascript">
-	$("textarea").each(function() {
-		this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
-	}).on("input", function() {
-		this.style.height = 0;
-		this.style.height = (this.scrollHeight) + "px";
-	});
+	
 
 	let memoTable = $('#project_memo').DataTable({
 		ajax: {
@@ -402,15 +399,18 @@ $project = $this->project;
 				data: "type"
 			},
 			{
+				data: "author"
+			},
+			{
 				data: "memo_id",
 				render: function(data) {
 					<?php if ($this->owner == 1) { ?>
 						return '<div class="row-button">' +
-							'<a title="Edit this item" class="memo-edit" href="#">' +
+							'<a title="Edit this memo" class="memo-edit" href="#">' +
 							'<span class="button-wrap">' +
 							'<span class="icon icon-edit"></span>' +
 							'</span></a>' +
-							'<a class="memo_delete" target="_blank" href="/memo/delete/id/' + data +
+							'<a title="Delete this memo" class="memo_delete" target="_blank" href="/memo/delete/id/' + data +
 							'"><span class="button-wrap"><span class="icon icon-delete"></span></span></a></div>';
 					<?php } else { ?>
 						return null;
@@ -567,8 +567,6 @@ $project = $this->project;
 				.appendTo(ul);
 		};
 
-		$('#owner_name').autocomplete({})
-
 		$('#architect_loc').on("change", function() {
 			$('.loading').show();
 			$.ajax({
@@ -673,18 +671,12 @@ $project = $this->project;
 		});
 
 		function getolddata(row) {
-			//var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
 			let item_id = currentRow['product_id'];
-			//var item_name = jQuery.trim($(row).find('td').eq(1).clone().children().remove().end().text()).replace(item_id+' - ','');
-			//var note = $(row).find('textarea').eq(0).val();
+			let item_name = currentRow['item_desc'];
 			let note = currentRow['note'];
-			//var qty = $(row).find(':input:hidden').eq(0).val();
 			let qty = currentRow['qty'];
-			//var unit_price = $(row).find(':input:hidden').eq(1).val();
 			let unit_price = currentRow['unit_price'];
-			//var uom = $(row).find(':input:hidden').eq(2).val();
 			let uom = currentRow['uom'];
-			//	var total_price = $(row).find(':input:hidden').eq(3).val();
 			var data = {
 				'old_item_id': item_id,
 				'old_uom': uom,
@@ -719,7 +711,12 @@ $project = $this->project;
 					text: "Add Log",
 					click: function() {
 						if ($("#memo").validationEngine('validate') == true) {
-							addmemo();
+							if (isEditMemo == false) {
+								addmemo();
+							}
+							else {
+								editMemo();
+							}
 							$(this).dialog("close");
 						}
 					}
@@ -793,51 +790,18 @@ $project = $this->project;
 			return false;
 		});
 
-		$(document).on('click', ".item_delete", function(e) {
-			e.preventDefault();
-			//var data = getolddata($(this).closest('tr'));
-			if (confirm("Are you sure you want to delete this item?") == true) {
-				//$(this).parent().parent().remove();
-				$('.loading').show();
-				$.ajax({
-					url: $(this).attr('href'),
-					//url: '/project/deleteitem/pro/' + $('#project_id').val() + '/item/' + $(this).attr('index') + '/uom/' + data['old_uom'] + '/price/' + data['old_price'] + '/qty/' + data['old_qty'],
-					type: "get",
-					success: function(data) {
-						itemTable.ajax.reload();
-						$('.loading').hide();
-					}
-				});
-			}
-		});
-
 		function set_edit(row) {
 			$("#dialog-item").dialog("option", "title", "Edit Item");
 			$('#is_edit').val(1);
-			//var item_id = $(row).attr('name').substr(5, ($(row).attr('name').length - 6));
-			let item_id = currentRow['product_id'];
-			//var item_name = ($(row).find('td').eq(1).clone().children().remove().end().text()).trim().replace(item_id + ' - ', '');
-			let item_name = currentRow['item_desc'];
-			//var note = $(row).find('textarea').eq(0).val();
-			let note = currentRow['note'];
-			//var qty = $(row).find(':input:hidden').eq(0).val();
-			let qty = currentRow['qty'];
-			//var unit_price = $(row).find(':input:hidden').eq(1).val();
-			let unit_price = currentRow['unit_price'];
-			//var uom = $(row).find(':input:hidden').eq(2).val();
-			let uom = currentRow['uom'];
-			//var total_price = $(row).find(':input:hidden').eq(3).val();
-			//let item_id = currentRow['product_id'];
 
-			$('#item #item_input').val(item_name);
-			$('#item #item_id').val(item_id);
+			let oldData = getolddata(current_edit_row);
 
-			$('#item #price').val(unit_price);
-			$('#item #qty').val(qty);
-			$('#item #note').val(note);
+			$('#item #item_id').val(oldData['old_item_id']);
+			$('#item #price').val(oldData['old_price']);
+			$('#item #qty').val(oldData['old_qty']);
+			$('#item #note').val(oldData['old_note']);
 
-			getoumedit(item_id, uom, unit_price);
-
+			getoumedit(oldData['old_item_id'], oldData['old_uom'], oldData['old_price']);
 		}
 
 		function getoumedit(item_id, unit_number, price) {
@@ -860,6 +824,24 @@ $project = $this->project;
 			});
 
 		}
+
+		$(document).on('click', ".item_delete", function(e) {
+			e.preventDefault();
+			//var data = getolddata($(this).closest('tr'));
+			if (confirm("Are you sure you want to delete this item?") == true) {
+				//$(this).parent().parent().remove();
+				$('.loading').show();
+				$.ajax({
+					url: $(this).attr('href'),
+					//url: '/project/deleteitem/pro/' + $('#project_id').val() + '/item/' + $(this).attr('index') + '/uom/' + data['old_uom'] + '/price/' + data['old_price'] + '/qty/' + data['old_qty'],
+					type: "get",
+					success: function(data) {
+						itemTable.ajax.reload();
+						$('.loading').hide();
+					}
+				});
+			}
+		});
 
 		function getcustomerbyid(id, obj) {
 			$('.loading').show();
@@ -990,41 +972,6 @@ $project = $this->project;
 			return false;
 		});
 
-		function addmemo() {
-			$('.loading').show();
-			$.ajax({
-				url: '/memo/add/pro/' + $('#project_id').val(),
-				type: "post",
-				data: $("#memo").serialize(),
-				success: function(data) {
-					$('.loading').hide();
-					if (data > 0) {
-						memoTable.ajax.reload();
-					}
-					resetForm($('#memo'));
-				}
-			});
-		};
-
-		$(document).on('click', '.memo_delete', function(e) {
-			e.preventDefault();
-			var obj = $(this);
-			if (confirm("Confirm delete this log?") == true) {
-				$('.loading').show();
-				$.ajax({
-					url: $(this).attr('href'),
-					type: "get",
-					success: function(data) {
-						//var index = $('#project_memo tbody tr').index(obj.parent().parent());
-						//if (index != -1) {
-						memoTable.ajax.reload();
-						//}
-						$('.loading').hide();
-					}
-				});
-			}
-		});
-
 		let unsave = false;
 
 		$('#project_content').on("change", function() {
@@ -1056,7 +1003,7 @@ $project = $this->project;
 		}
 
 		$('.delete_pro').on("click", function() {
-			if (confirm("You are trying to close a project. Please add the reason to the log.") == true) {
+			if (confirm("Are you sure you want to delete this project?") == true) {
 				$('.loading').show();
 				$.ajax({
 					url: '/project/delete/id/' + $('#project_id').val(),
@@ -1083,5 +1030,73 @@ $project = $this->project;
 				.append("<a>" + item.id + "</br>" + item.name + "</a>")
 				.appendTo(ul);
 		}
+
+		let currentMemoRow = '';
+		let isEditMemo = false;
+
+		$('#project_memo tbody').on('click', 'tr', function() {
+			currentMemoRow = memoTable.row(this).data();
+		});
+
+		$(document).on("click", ".memo-edit", function(e) {
+			e.preventDefault();
+
+			$("#dialog-message").dialog("option", "title", "Edit Log");
+			$("#dialog-message").dialog("open");
+
+			isEditMemo = true;
+
+			$('#memo #title').val(currentMemoRow['title']);
+			$('#memo #content').val(currentMemoRow['content']);
+			$('#memo #type').val(currentMemoRow['type']);
+			let followUpDate = new Date(currentMemoRow['follow_up_date']['date']);
+			$('#memo #follow_up_date').val(followUpDate.toLocaleDateString());
+		})
+
+		function addmemo() {
+			$.ajax({
+				url: '/memo/add/pro/' + $('#project_id').val(),
+				type: "post",
+				data: $("#memo").serialize(),
+				success: function(data) {
+					$('.loading').hide();
+					if (data > 0) {
+						memoTable.ajax.reload();
+					}
+					resetForm($('#memo'));
+				}
+			});
+		};
+
+		function editMemo() {
+			$.ajax({
+				url: '/memo/edit/id/' + currentMemoRow['memo_id'],
+				type: "post",
+				data: $("#memo").serialize(),
+				success: function(data) {
+					memoTable.ajax.reload();
+					resetForm($('#memo'));
+				}
+			});
+		};
+
+		$(document).on('click', '.memo_delete', function(e) {
+			e.preventDefault();
+			var obj = $(this);
+			if (confirm("Confirm delete this log?") == true) {
+				$('.loading').show();
+				$.ajax({
+					url: $(this).attr('href'),
+					type: "get",
+					success: function(data) {
+						//var index = $('#project_memo tbody tr').index(obj.parent().parent());
+						//if (index != -1) {
+						memoTable.ajax.reload();
+						//}
+						$('.loading').hide();
+					}
+				});
+			}
+		});
 	});
 </script>

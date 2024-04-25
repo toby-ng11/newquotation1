@@ -126,7 +126,7 @@ class ProjectController extends Zend_Controller_Action
     	$item = new ItemsProject();
     	$this->view->items = $item->fetchallitems($project_id);
     	
-    	if($this->session->user['id'] != $project_detail['owner'] && APPLICATION_ENV == 'production' && $this->session->user['sale_role'] != 'admin' && $this->session->user['approve_id'] == null)
+    	if($this->session->user['id'] != $project_detail['worksheet_assign'] and $this->session->user['id'] != $project_detail['owner'] && APPLICATION_ENV == 'production' && $this->session->user['sale_role'] != 'admin' && $this->session->user['approve_id'] == null)
     	{
     		$this->view->owner = 0;
     	}

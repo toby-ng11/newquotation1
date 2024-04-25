@@ -199,7 +199,7 @@ $project = $this->project;
 						<select id="arch" name='arch' class="validate[required]">
 							<?php if ($session->user['approve_id'] != null) {
 								foreach ($this->arch as $a) { ?>
-									<option value="<?= $a['id']?>" <?php if ($a['id'] == 'TORTESTSALESMAN002') {echo 'selected';} ?>><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option>
+									<option value="<?= $a['id']?>" <?php if ($a['id'] == $project['owner']) {echo 'selected';} ?>><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option>
 									<?php }
 							} else {
 								foreach ($this->arch as $a) {
