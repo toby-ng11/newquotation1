@@ -41,6 +41,7 @@
                             <th>Quote #</th>
                             <th>Project Name</th>
                             <th>Project Owner</th>
+                            <th>Assigned To</th>
                             <th>Create Date</th>
                             <th>Due Date</th>
                             <th>Specifier</th>
@@ -154,6 +155,7 @@
             { data: "quote_no"},
             { data: "project_name"},
             { data: "owner"},
+            { data: "worksheet_assign"},
             { data: "create_date.date", render: function(data) {
                 let date = new Date(data);
                 return date.toLocaleDateString();

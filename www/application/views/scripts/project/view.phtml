@@ -250,6 +250,9 @@ $project = $this->project;
                         <li><a class='quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/project/print/id/" . $project['project_id'] . "?company=" . substr($project['quote_no'], 0, 3) . "&name=Centura_Project_" . preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print">
                                 <span class='icon icon-pdf'></span>
                                 Print Project</a></li>
+                        <li><a class="quick-link" target="_blank" href="/project/edit/id/<?= $project['project_id'] ?>" title="Edit this project">
+								<span class='icon icon-external'></span>
+								Go to Edit</a></li>
                     </ol>
                 </div>
             </div>

@@ -2,8 +2,7 @@
 
 namespace Centura\Model;
 
-use Centura\Model\Customer;
-use Centura\Model\Quote;
+use Centura\Model\{ Customer, Quote };
 
 use Zend_Registry;
 use Zend_Db_Table;

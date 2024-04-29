@@ -1,10 +1,12 @@
 <?php
 
-use Centura\Model\Customer;
-use Centura\Model\User;
-use Centura\Model\Project;
-use Centura\Model\Quote;
-use Centura\Model\ProductProject;
+use Centura\Model\{
+	Customer,
+	User,
+	Project,
+	Quote,
+	ProductProject
+};
 
 class ApproveController extends Zend_Controller_Action
 {
@@ -12,10 +14,15 @@ class ApproveController extends Zend_Controller_Action
     public function init()
     {
         /* Initialize action controller here */
+		$this->session =  Zend_Registry::get('session');
     }
 
     public function indexAction()
     {
+		if ($this->session->user['approve_id'] == null) {
+			$this->redirect('/index');
+		}
+
     	$quote_id = $this->getRequest()->getParam('id');
     	 
     	if($quote_id == null)

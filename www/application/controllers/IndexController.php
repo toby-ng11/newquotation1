@@ -1,8 +1,10 @@
 <?php
 
-use Centura\Model\Project;
-use Centura\Model\Quote;
-use Centura\Model\ProjectMemo;
+use Centura\Model\{ 
+	Project,
+	Quote,
+	ProjectMemo
+};
 
 class IndexController extends Zend_Controller_Action
 {

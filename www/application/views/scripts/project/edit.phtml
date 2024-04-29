@@ -32,7 +32,7 @@ $project = $this->project;
 
 		<!-- Form -->
 		<section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
-			<form method="post" class="form" id='project_content'>
+			<form action="/project/edit/id/<?= $project["project_id"] ?>" method="post" class="form" id='project_content'>
 				<div class="widget-table">
 					<h2>Project Information</h2>
 					<div class="formRow">
@@ -66,6 +66,9 @@ $project = $this->project;
 							<label for="worksheet_assign">Worksheet Assign</label>
 							<input id="worksheet_assign" name="worksheet_assign" type="text" value='<?= $project['worksheet_assign'] ?>' />
 						</div>
+						<?php }
+						else { ?>
+							<input type="hidden" id="worksheet_assign" name="worksheet_assign"/>
 						<?php } ?>
 
 						<div class="oneTwo">
@@ -428,7 +431,7 @@ $project = $this->project;
 			}
 		],
 		order: [
-			[0, "desc"]
+			[5, "desc"]
 		],
 	});
 
@@ -1041,10 +1044,10 @@ $project = $this->project;
 		$(document).on("click", ".memo-edit", function(e) {
 			e.preventDefault();
 
+			isEditMemo = true;
+
 			$("#dialog-message").dialog("option", "title", "Edit Log");
 			$("#dialog-message").dialog("open");
-
-			isEditMemo = true;
 
 			$('#memo #title').val(currentMemoRow['title']);
 			$('#memo #content').val(currentMemoRow['content']);
@@ -1052,6 +1055,13 @@ $project = $this->project;
 			let followUpDate = new Date(currentMemoRow['follow_up_date']['date']);
 			$('#memo #follow_up_date').val(followUpDate.toLocaleDateString());
 		})
+
+		$('#opener').on("click", function() {
+			isEditMemo = false;
+			document.getElementById("memo").reset();
+			$("#dialog-message").dialog("option", "title", "Add Log");
+			$("#dialog-message").dialog("open");
+		});
 
 		function addmemo() {
 			$.ajax({

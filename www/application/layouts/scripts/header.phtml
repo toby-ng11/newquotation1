@@ -33,7 +33,7 @@ $session =  Zend_Registry::get('session');
           <ul id="menu" class="nav">
             <?php if ($session->user['sale_role'] == 'admin') { ?>
               <li class="top-level-entry-container">
-                <a href="/index/admin" title="admin" class="top-level-entry">All Quotes</a>
+                <a href="/index/admin" title="admin" class="top-level-entry">Admin Portal</a>
               </li>
               <!--
             <li class="top-level-entry-container">
@@ -44,11 +44,11 @@ $session =  Zend_Registry::get('session');
 
             <?php if ($session->user['approve_id'] != null || $session->user['sale_role'] == 'admin') { ?>
               <li class="top-level-entry-container">
-                <a href="/index/index/normal/1/" class="top-level-entry">Project Manager</a>
+                <a href="/index/index/normal/1/" class="top-level-entry">Project Portal</a>
               </li>
             <?php } else { ?>
               <li class="top-level-entry-container">
-                <a href="/" class="top-level-entry">Project Manager</a>
+                <a href="/" class="top-level-entry">Project Portal</a>
               </li>
             <?php } ?>
 
@@ -57,7 +57,7 @@ $session =  Zend_Registry::get('session');
 
             <?php if ($session->user['approve_id'] != null) { ?>
               <li class="top-level-entry-container">
-                <a href="/index/approval" title="approve" class="top-level-entry">Approval Manager</a>
+                <a href="/index/approval" title="approve" class="top-level-entry">Approval Portal</a>
               </li>
             <?php } ?>
           </ul>

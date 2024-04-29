@@ -35,7 +35,7 @@
           <h2>Project Information</h2>
           <div class="formRow">
             <input type="hidden" name='owner' value='<?= $session->user['id'] ?>'>
-            <input type="hidden" id='quote_no' name='quote_no' placeholder="Auto Generate" />
+            <input type="hidden" id='quote_no' name='quote_no' />
             <input type="hidden" name='create_date' value='<?= date('Y-m-d') ?>' />
 
             <div class="oneTwo required-field">
@@ -65,8 +65,11 @@
             <?php if ($session->user['approve_id'] != null) { ?>
               <div class="oneTwo">
                 <label for="worksheet_assign">Worksheet Assign</label>
-                <input id="worksheet_assign" name="worksheet_assign" type="text" placeholder="Assign other salesrep to this project" />
+                <input type="text" id="worksheet_assign" name="worksheet_assign" placeholder="Assign other salesrep to this project" />
               </div>
+            <?php }
+            else { ?>
+              <input type="hidden" id="worksheet_assign" name="worksheet_assign"/>
             <?php } ?>
 
             <div class="oneTwo required-field">

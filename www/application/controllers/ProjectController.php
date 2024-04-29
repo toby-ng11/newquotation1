@@ -1,13 +1,15 @@
 <?php
 
-use Centura\Model\Customer;
-use Centura\Model\User;
-use Centura\Model\Quote;
-use Centura\Model\Location;
-use Centura\Model\Project;
-use Centura\Model\ProductProject;
-use Centura\Model\ProjectMemo;
-use Centura\Model\ItemsProject;
+use Centura\Model\{ 
+	Customer, 
+	User, 
+	Quote, 
+	Location, 
+	Project, 
+	ProductProject, 
+	ProjectMemo, 
+	ItemsProject
+};
 
 class ProjectController extends Zend_Controller_Action
 {

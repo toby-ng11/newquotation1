@@ -112,10 +112,15 @@ class User extends DbTable\User
 	public function fetchallsales($company = DEFAULT_COMPNAY_ID)
 	{
 		$db = $this->getAdapter();
-		$select = $db->select()->distinct()->from("P21_Users", array('id', 'name', 'default_company'))->where('P21_Users.delete_flag = ?', 'N')
+		$select = $db->select()
+			->distinct()
+			->from("P21_Users", array('id', 'name', 'default_company'))
+			->where('P21_Users.delete_flag = ?', 'N')
 			->join('P21_Roles', 'P21_Roles.role_uid = P21_Users.role_uid', null)
 			->join('P21_Location', 'P21_Location.company_id = P21_Users.default_company', null)
-			->where('P21_Roles.role LIKE ? ', '%Sales%')->orWhere('role LIKE ?', '%Operation Manager%')->orWhere('role LIKE ?', '%Accounts Receivable%');;
+			->where('P21_Roles.role LIKE ? ', '%Sales%')
+			->orWhere('role LIKE ?', '%Operation Manager%')
+			->orWhere('role LIKE ?', '%Accounts Receivable%');;
 
 		if ($company != null) {
 			$select->where('P21_Location.location_id = ?', $company);
@@ -201,6 +206,7 @@ class User extends DbTable\User
 		$select = $db->select()
 			->from("P21_Users", array('id', 'name'))
 			->where('id LIKE ?', $pattern.'%')
+			->orWhere('name LIKE ?', $pattern.'%')
 			->limit($limit);
 
 		return $db->fetchAll($select);

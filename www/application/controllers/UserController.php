@@ -4,7 +4,7 @@ use Centura\Model\User;
 
 class UserController extends Zend_Controller_Action {
     public function init() {
-
+        $this->session =  Zend_Registry::get('session');
     }
 
     public function indexAction() {

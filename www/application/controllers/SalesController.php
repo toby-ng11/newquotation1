@@ -1,9 +1,10 @@
 <?php
 
-;
-use Centura\Model\User;
-use Centura\Model\Quote;
-use Centura\Model\Project;
+use Centura\Model\{ 
+    User,
+    Quote,
+    Project
+};
 
 class SalesController extends Zend_Controller_Action
 {

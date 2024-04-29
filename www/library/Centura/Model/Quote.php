@@ -2,9 +2,7 @@
 
 namespace Centura\Model;
 
-use Centura\Model\Customer;
-use Centura\Model\ProductProject;
-use Centura\Model\Project;
+use Centura\Model\{ Customer, ProductProject, Project };
 
 use Zend_Registry;
 use Zend_Db_Select;

@@ -26,7 +26,7 @@
     <div class="main-page-content">
         <header class="main-page-content-header">
             <h1>Mail Quote</h1>
-            <p>Will send pdf file as attachment to customer.</p>
+            <p>Send quote to customer</p>
         </header>
 
         <div class="wrapper">
@@ -43,7 +43,7 @@
                             <input type="text" name='subject' id='subject' class='validate[required]' value='<?= $this->quote['quote_id'] . ' - ' . $this->subject ?>'>
                         </div>
                         <div class="oneTwo">
-                            <label>Attchment</label>
+                            <label>Attachment</label>
                             <a href='<?= $this->preview ?>'>
                                 <!--<img src="/images/icons/control/32/pdf.png" alt="">-->
                                 <span>Quote Pdf Preview</span>
@@ -72,7 +72,7 @@
                         <li>
                             <a class="back quick-link" title="Back" href='/quote/edit/id/<?= $this->quote["quote_id"] ?>'>
                                 <img src="/images/icons/control/32/back.png" alt="">
-                                Back
+                                Back to Edit
                             </a>
                         </li>
                         <li>

@@ -1,7 +1,9 @@
 <?php
 
-use Centura\Model\Quote;
-use Centura\Model\Mail;
+use Centura\Model\{ 
+	Quote,
+	Mail
+};
 
 class ExportController extends Zend_Controller_Action
 {

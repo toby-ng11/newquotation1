@@ -1,9 +1,11 @@
 <?php
 
-use Centura\Model\Customer;
-use Centura\Model\Project;
-use Centura\Model\Quote;
-use Centura\Model\Mail;
+use Centura\Model\{ 
+	Customer,
+	Project,
+	Quote,
+	Mail
+};
 
 class MailController extends Zend_Controller_Action
 {
