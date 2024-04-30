@@ -3,6 +3,7 @@ $session =  Zend_Registry::get('session');
 $project = $this->project;
 $quote = $this->quote;
 $quoteID = $quote['quote_id'];
+$customer = $this->customer;
 
 $approved = 10;
 $waitingApprove = 1;
@@ -137,71 +138,76 @@ $disapproved = -1;
 				<div class="formRow">
 					<div class="oneTwo">
 						<label for='quote'>Quote To</label>
-						<input readonly type="text" id='quote' name='name' value="<?= $this->customer['name'] ?>" />
+						<input readonly type="text" id='quote' name='name' value="<?= $customer['name'] ?>" />
 					</div>
 
 					<div class="oneTwo">
 						<label for="customer_id">Customer ID</label>
-						<input readonly type="text" name='customer_id' id='customer_id' value="<?= $this->customer['customer_id'] ?>" />
+						<input readonly type="text" name='customer_id' id='customer_id' value="<?= $customer['customer_id'] ?>" />
 					</div>
 
 					<div class="oneTwo">
 						<label for="company_id">Company ID</label>
-						<input readonly type="text" name='company_id' id='company_id' value="<?= $this->customer['company_id'] ?>" />
+						<input readonly type="text" name='company_id' id='company_id' value="<?= $customer['company_id'] ?>" />
 					</div>
 
 					<div class="oneTwo">
 						<label for="first_name">First Name</label>
-						<input readonly id='first_name' name='first_name' type="text" value="<?= $this->customer['first_name'] ?>">
+						<input readonly id='first_name' name='first_name' type="text" value="<?= $customer['first_name'] ?>">
 					</div>
 
 					<div class="oneTwo">
 						<label for="last_name">Last Name</label>
-						<input readonly id='last_name' name='last_name' type="text" value="<?= $this->customer['last_name'] ?>">
+						<input readonly id='last_name' name='last_name' type="text" value="<?= $customer['last_name'] ?>">
 					</div>
 
 					<div class="oneTwo required-field">
 						<label for="address">Address 1</label>
-						<input readonly id='address' name='phys_address1' type="text" value="<?= $this->customer['phys_address1'] ?>" />
+						<input readonly id='address' name='phys_address1' type="text" value="<?= $customer['phys_address1'] ?>" />
 					</div>
 
 					<div class="oneTwo">
 						<label for="phys_address2">Address 2</label>
-						<input readonly id='phys_address2' name='phys_address2' type="text" value="<?= $this->customer['phys_address2'] ?>">
+						<input readonly id='phys_address2' name='phys_address2' type="text" value="<?= $customer['phys_address2'] ?>">
 					</div>
 
 					<div class="oneTwo">
 						<label for="phys_city">City</label>
-						<input readonly id='phys_city' name='phys_city' type="text" value="<?= $this->customer['phys_city'] ?>">
+						<input readonly id='phys_city' name='phys_city' type="text" value="<?= $customer['phys_city'] ?>">
 					</div>
 
 					<div class="oneTwo">
 						<label for="mail_state">Province</label>
-						<input readonly id='mail_state' name='mail_state' type="text" value="<?= $this->customer['mail_state'] ?>">
+						<input readonly id='mail_state' name='mail_state' type="text" value="<?= $customer['mail_state'] ?>">
 					</div>
 
 					<div class="oneTwo">
 						<label for="mail_postal_code">Postal Code</label>
-						<input readonly id='mail_postal_code' name='mail_postal_code' type="text" value="<?= $this->customer['mail_postal_code'] ?>">
+						<input readonly id='mail_postal_code' name='mail_postal_code' type="text" value="<?= $customer['mail_postal_code'] ?>">
 					</div>
 
 					<div class="oneTwo">
 						<label for="phys_country">Country</label>
-						<input readonly id='phys_country' name='phys_country' type="text" value="<?= $this->customer['phys_country'] ?>">
+						<input readonly id='phys_country' name='phys_country' type="text" value="<?= $customer['phys_country'] ?>">
 					</div>
 
 					<div class="oneTwo required-field">
 						<label for="tel">Phone Number</label>
-						<input readonly id='tel' name='phone' type="text" class="maskPhoneExt" value="<?= $this->customer['tel'] ?>" />
+						<input readonly id='tel' name='phone' type="text" class="maskPhoneExt" value="<?= $customer['tel'] ?>" />
 					</div>
 
 					<div class="oneTwo required-field">
 						<label for="contact">Contact</label>
-						<input readonly type="text" id='contact' name='fullname' value="<?= $this->customer['fullname'] ?>" />
+						<input readonly type="text" id='contact' name='fullname' value="<?= $customer['fullname'] ?>" />
 					</div>
 					<div class="oneTwo required-field">
 						<label for="customer_email">Email</label>
-						<input readonly type="text" value="<?= $this->customer['email'] ?>" id='customer_email' name='Contacts_email'>
+						<input readonly type="text" value="<?= $customer['email'] ?>" id='customer_email' name='Contacts_email'>
+					</div>
+
+					<div class="oneTwo">
+						<label for='sale_rep'>Sales Representative</label>
+						<input id='sale_rep' name='sale_rep' type="text" value="<?= $customer['sale_rep'] ?>" readonly />
 					</div>
 				</div>
 
@@ -281,10 +287,7 @@ $disapproved = -1;
 							</select>
 						<?php } ?>
 					</div>
-					<div class="oneTwo">
-						<label for='sale_rep'>Sale Representative</label>
-						<input id='sale_rep' name='sale_rep' type="text" value="<?= $quote['sales_id'] ?>" readonly />
-					</div>
+
 					<div class="oneTwo required-field">
 						<label for="credit_term">Credit Terms</label>
 						<select name="credit_term" id="credit_term" class="validate[required]">
