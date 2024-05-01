@@ -1,8 +1,10 @@
 <?php
 
-$selectedField = array('quote_id', 'quote_no', 'project_name');
-$joinField = array('abc');
+$array = (object) array(
+    "foo" => "bar",
+    "bar" => "foo",
+);
 
-$total = $selectedField + $joinField;
+$array->foo = "halo";
 
-var_dump(array_merge($selectedField, $joinField));
+var_dump($array);

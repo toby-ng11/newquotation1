@@ -474,6 +474,7 @@ class SSP {
 
 		// Execute
 		try {
+			//echo json_encode($stmt);
 			$stmt->execute();
 		}
 		catch (PDOException $e) {

@@ -38,6 +38,9 @@ $project = $this->project;
 					<p><?= ($project['project_location_address'] == 'N/A') ? '' : $project['project_location_address'] ?></p>
 					</br>
 					<p>by <b><?= $project['owner'] ?></b></p>
+					<?php if (($project['worksheet_assign']) != null) { ?>
+						<p>shared with <b><?= $project['worksheet_assign'] ?></b></p>
+					<?php } ?>
 				</div>
 			</div>
 

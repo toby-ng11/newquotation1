@@ -10,6 +10,8 @@ use Zend_Json;
 
 use Exception;
 
+use SSP;
+
 class Quote extends DbTable\Quote
 {
 
@@ -400,6 +402,33 @@ class Quote extends DbTable\Quote
 		//$select->limit($limit);
 
 		return Zend_Json::encode($db->fetchAll($select));
+	}
+
+	// TODO: Enable server-side processing for all tables
+	public function getdata()
+	{
+		$dbDetails = array(
+			'user' => 'CENTURA\tnguyen',
+			'password' => '#9#6Draceus',
+			'host' => 'tor-sql',
+			'db' => 'Quotation'
+		);
+
+		//DB table to use
+		$table = 'quote';
+
+		// Table's primary key
+		$primaryKey = 'quote_id';
+
+		$columns = array(
+			
+		);
+
+		require( 'ssp.class.php' );
+
+		echo Zend_Json::encode(
+			SSP::simple($_GET, $dbDetails, $table, $primaryKey, $columns)
+		);
 	}
 
 	public function fetchlogbyid($quote_id)

@@ -149,7 +149,7 @@
             dataSrc: ''
         },
         processing: true,
-        //"serverSide": true,
+        // serverSide: true, // TODO: enable server-side processing
         columns: [
             {data: "quote_id", render: function(data, type, row, meta) {
                 return "<a target='_blank' href='/quote/edit/id/"+ data + "'>" + data + "</a>";
