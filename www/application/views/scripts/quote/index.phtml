@@ -5,28 +5,22 @@ $project = $this->project;
 
 <!-- Title area -->
 <main id="content" class="main-content">
-	<div class="middleNav">
-		<ul>
-			<li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
-				<ul class="mSub1">
-					<li><a href="#" title="">Share user</a></li>
-					<li><a href="#" title="">Show Teamworks</a></li>
-				</ul>
-			</li>
-
-			<li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
-				<ul class="mSub4">
-					<li><a href="#" title="">Add</a></li>
-					<li><a href="#" title="">Save</a></li>
-					<li><a href="#" title="">Edit</a></li>
-					<li><a href="#" title="">Delete</a></li>
-				</ul>
-			</li>
-		</ul>
-	</div>
-
 	<div class="main-page-content">
 		<header class="main-page-content-header">
+			<div class="options-menu">
+				<button class="quick-link options-button" id="options-button" type="button">
+					<span class='icon icon-menu'></span>
+					Options
+				</button>
+
+				<!-- Right panel -->
+				<div class="sidebar-container" id="options-menu-items">
+					<a id="save_quote" class="button quick-link save_quote" href="#" title="">
+						<span class='icon icon-save'></span>
+						Save & make quote</a>
+				</div>
+			</div>
+			
 			<h1>Make quote</h1>
 		</header>
 
@@ -207,7 +201,9 @@ $project = $this->project;
 						<select id="arch" name='arch' class="validate[required]">
 							<?php if ($session->user['approve_id'] != null) {
 								foreach ($this->arch as $a) { ?>
-									<option value="<?= $a['id']?>" <?php if ($a['id'] == $project['owner']) {echo 'selected';} ?>><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option>
+									<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $project['owner']) {
+																		echo 'selected';
+																	} ?>><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option>
 									<?php }
 							} else {
 								foreach ($this->arch as $a) {
@@ -303,28 +299,6 @@ $project = $this->project;
 	</div>
 </main>
 
-<!-- Right panel -->
-<div class="sidebar-container">
-	<aside id="sidebar-quicklinks" class="sidebar">
-		<nav aria-label="Actions" class="sidebar-inner">
-			<div class="sidebar-inner-nav">
-				<div class="quick-links">
-					<ol>
-						<!--<li><a href="#" title=""><img src="/images/icons/control/32/plus.png" alt="" /><span>Add Quote</span></a></li>-->
-						<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>-->
-						<!--<li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-						<li><a id="save_quote" class="quick-link save_quote" href="#" title="">
-								<span class='icon icon-save'></span>
-								Save & make quote</a></li>
-						<!--<li><a href="#" title=""><img src="/images/icons/control/32/mail.png" alt="" /><span>Email Quote</span></a></li>
-                    <li><a href="#" title=""><img src="/images/icons/control/32/delete.png" alt="" /><span>Delete Quote</span></a></li>-->
-					</ol>
-				</div>
-			</div>
-		</nav>
-	</aside>
-</div>
-
 <script type="text/javascript">
 	let itemTable = $("#items").DataTable({
 		ajax: {
@@ -403,6 +377,14 @@ $project = $this->project;
 	var current_edit_row = '';
 
 	$(function() {
+
+		$('#options-button').on("click", function() {
+			$('#options-menu-items').slideToggle({
+				start: function() {
+					$(this).css('display', 'flex');
+				}
+			});
+		})
 
 		let currentRow = '';
 

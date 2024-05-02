@@ -3,29 +3,22 @@
 ?>
 <!-- Title area -->
 <main id="content" class="main-content">
-
-  <div class="middleNav">
-    <ul>
-      <li class="mUser"><a href="#" title="Share"><span class="users"></span></a>
-        <ul class="mSub1">
-          <li><a href="#" title="">Share user</a></li>
-          <li><a href="#" title="">Show Teamworks</a></li>
-        </ul>
-      </li>
-
-      <li class="mOrders"><a href="#" title="Change Status"><span class="files"></span></a>
-        <ul class="mSub4">
-          <li><a href="#" title="">Add</a></li>
-          <li><a href="#" title="">Save</a></li>
-          <li><a href="#" title="">Edit</a></li>
-          <li><a href="#" title="">Delete</a></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-
   <div class="main-page-content">
     <header class="main-page-content-header">
+      <div class="options-menu">
+        <button class="quick-link options-button" id="options-button" type="button">
+          <span class='icon icon-menu'></span>
+          Options
+        </button>
+
+        <!-- Right panel -->
+        <div class="sidebar-container" id="options-menu-items">
+          <a href="/project/" target="_blank" class='button quick-link add-project' title="Add new project">
+            <span class='icon icon-add'></span>
+            Add Project</a>
+        </div>
+      </div>
+
       <h1>Add Project</h1>
     </header>
     <!-- Main content wrapper -->
@@ -67,9 +60,8 @@
                 <label for="worksheet_assign">Worksheet Assign</label>
                 <input type="text" id="worksheet_assign" name="worksheet_assign" placeholder="Assign other salesrep to this project" />
               </div>
-            <?php }
-            else { ?>
-              <input type="hidden" id="worksheet_assign" name="worksheet_assign"/>
+            <?php } else { ?>
+              <input type="hidden" id="worksheet_assign" name="worksheet_assign" />
             <?php } ?>
 
             <div class="oneTwo required-field">
@@ -176,7 +168,6 @@
             <div class="widget-footer-button">
               <button disabled id="save_pro" type="button" title="Create project" class="button action create-project-button small">
                 <span class="button-wrap">
-                  <span class="icon icon-add"></span>
                   Create Project
                 </span>
               </button>
@@ -188,26 +179,16 @@
   </div>
 </main>
 
-<!-- Right panel -->
-<div class="sidebar-container">
-  <aside id="sidebar-quicklinks" class="sidebar">
-    <nav aria-label="Actions" class="sidebar-inner">
-      <div class="sidebar-inner-nav">
-        <div class="quick-links">
-          <ol>
-            <li><a href="/project/" target="_blank" class='quick-link add_pro' title="Add new project">
-                <span class='icon icon-add'></span>
-                Add Project</a></li>
-          </ol>
-        </div>
-      </div>
-    </nav>
-  </aside>
-</div>
-
-
 <script>
   $(function() {
+    $('#options-button').on("click", function() {
+      $('#options-menu-items').slideToggle({
+        start: function() {
+          $(this).css('display', 'flex');
+        }
+      });
+    })
+
     function getcustomerbyid(id, obj) {
       $('.loading').show();
       $.ajax({

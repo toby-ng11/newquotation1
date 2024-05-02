@@ -14,6 +14,58 @@ $disapproved = -1;
 <main id="content" class="main-content">
 	<div class="main-page-content">
 		<header class="main-page-content-header">
+			<div class="options-menu">
+				<button class="quick-link options-button" id="options-button" type="button">
+					<span class='icon icon-menu'></span>
+					Options
+				</button>
+
+				<!-- Right panel -->
+				<div class="sidebar-container" id="options-menu-items">
+					<?php if ($quote['approve_status'] != $approved) { ?>
+						<a href="/quote/approve/id/<?= $quoteID ?>" title="" class='button quick-link approve'>
+							<span class='icon icon-approval'></span>
+							Approve
+						</a>
+
+					<?php } ?>
+					<?php if ($quote['approve_status'] == $approved) { ?>
+						<a class='button quick-link' href="/mail/quote/id/<?= $quoteID ?>" title="mail">
+							<span class='icon icon-mail'></span>
+							Mail Quote
+						</a>
+
+					<?php } ?>
+					<?php if ($quote['approve_status'] != $disapproved) { ?>
+
+						<a href="/quote/disapprove/id/<?= $quoteID ?>" title="" class='button quick-link disapprove'>
+							<span class='icon icon-cancel-circle'></span>
+							Disapprove
+						</a>
+
+					<?php } ?>
+					<a class="button quick-link" target="_blank" href="/quote/edit/id/<?= $quoteID ?>" title="Edit this quote">
+						<span class='icon icon-external'></span>
+						Go to Edit</a></li>
+					<a class="button quick-link" target="_blank" href="/project/edit/id/<?= $project['project_id'] ?>" title="Go to project for this quote">
+						<span class='icon icon-external'></span>
+						Go to Project</a></li>
+
+					<a class='button quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $quoteID . "?company=" . substr($quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $quoteID . '.pdf' ?>" title="print">
+						<span class='icon icon-pdf'></span>
+						Print Quote
+					</a>
+
+					<?php if ($quote['approve_status'] != $approved) { ?>
+						<a href="/quote/delete/id/<?= $quoteID ?>" title="" class='button quick-link delete_quote'>
+							<span class='icon icon-trash'></span>
+							Delete
+						</a>
+
+					<?php } ?>
+				</div>
+			</div>
+
 			<h1>Quote Approval</h1>
 		</header>
 
@@ -402,63 +454,6 @@ $disapproved = -1;
 		</div>
 	</div>
 </main>
-<!-- Right panel -->
-<div class="sidebar-container">
-	<aside id="sidebar-quicklinks" class="sidebar">
-		<nav aria-label="Actions" class="sidebar-inner">
-			<div class="sidebar-inner-nav">
-				<div class="quick-links">
-					<ol>
-						<?php if ($quote['approve_status'] != $approved) { ?>
-							<li>
-								<a href="/quote/approve/id/<?= $quoteID ?>" title="" class='quick-link approve'>
-									<span class='icon icon-approval'></span>
-									Approve
-								</a>
-							</li>
-						<?php } ?>
-						<?php if ($quote['approve_status'] == $approved) { ?>
-							<li>
-								<a class='quick-link' href="/mail/quote/id/<?= $quoteID ?>" title="mail">
-									<span class='icon icon-mail'></span>
-									Mail Quote
-								</a>
-							</li>
-						<?php } ?>
-						<?php if ($quote['approve_status'] != $disapproved) { ?>
-							<li>
-								<a href="/quote/disapprove/id/<?= $quoteID ?>" title="" class='quick-link disapprove'>
-									<span class='icon icon-cancel-circle'></span>
-									Disapprove
-								</a>
-							</li>
-						<?php } ?>
-						<li><a class="quick-link" target="_blank" href="/quote/edit/id/<?= $quoteID ?>" title="Edit this quote">
-								<span class='icon icon-external'></span>
-								Go to Edit</a></li>
-						<li><a class="quick-link" target="_blank" href="/project/edit/id/<?= $project['project_id'] ?>" title="Go to project for this quote">
-								<span class='icon icon-external'></span>
-								Go to Project</a></li>
-						<li>
-							<a class='quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $quoteID . "?company=" . substr($quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $quoteID . '.pdf' ?>" title="print">
-								<span class='icon icon-pdf'></span>
-								Print Quote
-							</a>
-						</li>
-						<?php if ($quote['approve_status'] != $approved) { ?>
-							<li>
-								<a href="/quote/delete/id/<?= $quoteID ?>" title="" class='quick-link delete_quote'>
-									<span class='icon icon-trash'></span>
-									Delete
-								</a>
-							</li>
-						<?php } ?>
-					</ol>
-				</div>
-			</div>
-		</nav>
-	</aside>
-</div>
 
 <script type="text/javascript">
 	$("textarea").each(function() {
@@ -547,6 +542,14 @@ $disapproved = -1;
 	var current_edit_row = '';
 
 	$(function() {
+
+		$('#options-button').on("click", function() {
+			$('#options-menu-items').slideToggle({
+				start: function() {
+    				$(this).css('display','flex');
+				}
+			});
+		})
 
 		let currentRow = '';
 
