@@ -35,7 +35,7 @@ class Quote extends DbTable\Quote
 		$info['project_id']                 = $data['project_id'];
 		$info['quote_date']                 = date('Y-m-d H:i:s');
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < time()) {
-			$data['expire_date'] = date('Y-m-d h:i:s', mktime(0, 0, 0, date("m"), date("d") + 90, date("Y")));
+			$data['expire_date'] = date('Y-m-d h:i:s', mktime(0, 0, 0, date("m"), date("d") + 60, date("Y")));
 		} 
 		else {
 			$info['expire_date'] = date('Y-m-d h:i:s', strtotime($data['expire_date']));
@@ -114,7 +114,7 @@ class Quote extends DbTable\Quote
 		//$info['quote_date']                 = date('Y-m-d h:i:s', strtotime($data['quote_date']));
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < 1000) //fix 1969-12-31
 		{
-			$data['expire_date'] = date('Y-m-d h:i:s', mktime(0, 0, 0, date("m"), date("d") + 90, date("Y")));
+			$data['expire_date'] = date('Y-m-d h:i:s', mktime(0, 0, 0, date("m"), date("d") + 60, date("Y")));
 		}
 		else { $info['expire_date']                = date('Y-m-d h:i:s', strtotime($data['expire_date'])); }
 		$info['quote_type_id']              = $data['quote_type_id'];
@@ -659,5 +659,34 @@ class Quote extends DbTable\Quote
 		}
 
 		return $csv;
+	}
+
+	public function fetchQuoteByProjectId($project_id) {
+		if($project_id == null)
+		{
+			return  false;
+		}
+
+		$db = $this->getAdapter();
+
+		$selectedField = array(
+			'quote_id',
+			'quote_date',
+			'expire_date',
+			'ship_required_date',
+			'approve_status'
+		);
+
+		$select = $db->select()
+			->from('quote', $selectedField)
+			->join('P21_Users', 'quote.arch = P21_Users.id', 'name')
+			->join('quote_market_segment', 'quote_market_segment.uid = quote.quote_segment', 'Market_Segment')
+			->where('quote.status =?', 1)
+			->where('project_id = ?', $project_id)
+			->order('quote_id desc');
+
+		$result = $db->fetchAll($select);
+
+		return Zend_Json::encode($result);
 	}
 }

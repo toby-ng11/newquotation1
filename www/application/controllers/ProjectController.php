@@ -316,5 +316,12 @@ class ProjectController extends Zend_Controller_Action
     	exit;
     }
 
+	public function quoteAction() {
+		$project_id = $this->getRequest()->getParam('id');
+		$quotes = new Quote();
+		echo $quotes->fetchQuoteByProjectId($project_id);
+		exit; 
+	}
+
 }
 

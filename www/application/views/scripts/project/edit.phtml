@@ -279,6 +279,35 @@ $project = $this->project;
 			</div>
 		</section>
 
+		<section aria-labelledby="quote-by-project" id="section4" data-nav="Quote by this project">
+			<div class="widget-table">
+				<div class="widget-button">
+					<?php if ($this->owner == 1) { ?>
+						<button onclick="location.href='/quote/index/project/<?= $project['project_id'] ?>'" type="button" title="Add new quote" class="button action has-icon add-quote-button small" id="add-quote">
+							<span class="button-wrap">
+								<span class="icon icon-add"></span>
+								Make Quote
+							</span>
+						</button>
+					<?php } ?>
+				</div>
+				<h2>Project Quotes</h2>
+				<table width="100%" class="display" id='project-quote-table'>
+					<thead>
+						<tr>
+							<th>Quote ID</th>
+							<th>Architectural Rep.</th>
+							<th>Market Segment</th>
+							<th>Quote Date</th>
+							<th>Expire Date</th>
+							<th>Ship Required Date</th>
+							<th>Approve Status</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</section>
+
 		<div id="dialog-message" title="Add Log">
 			<form action="" class="dialog" id='memo'>
 				<div class="dialog-form">
@@ -481,6 +510,83 @@ $project = $this->project;
 			end: 1
 		},
 		rowReorder: true
+	});
+
+	let projectQuoteTable= $('#project-quote-table').DataTable({
+		ajax: {
+            url: "/project/quote/id/" + $('#project_id').val(),
+			dataSrc: ''
+        },
+        processing: true,
+        columns: [{
+                data: "quote_id",
+                render: function(data, type, row, meta) {
+                    return "<a target='_blank' href='/quote/edit/id/" + data + "'>" + data + "</a>";
+                }
+            },
+			{
+				data: 'name'
+			},
+            {
+                data: "Market_Segment"
+            },
+            {
+                data: "quote_date.date",
+                render: function(data) {
+                    let date = new Date(data);
+                    return date.toLocaleDateString();
+                }
+            },
+            {
+                data: "expire_date.date",
+                render: function(data) {
+                    let date = new Date(data);
+                    let today = new Date();
+                    if (date <= today) {
+                        return '<span class="red">' + date.toLocaleDateString() + '</span>';
+                    } else {
+                        return date.toLocaleDateString();
+                    }
+                }
+            },
+            {
+                data: "ship_required_date.date",
+                render: function(data) {
+                    let date = new Date(data);
+                    return date.toLocaleDateString();
+                }
+            },
+            {
+                data: "approve_status",
+                render: function(data) {
+                    if (data == -1) {
+                        return '<span class="disapproved red">Disapproved</span>';
+                    } else if (data == 10) {
+                        return '<span class="approved green">Approved</span>';
+                    } else if (data == 1) {
+                        return '<span class="waiting orange">Waiting</span>';
+                    } else {
+                        return 'Not submitted';
+                    }
+                }
+            }
+        ],
+        columnDefs: [{
+            targets: [0, 2, 3, 4, 5, 6],
+            className: 'dt-body-center'
+        }],
+        order: [
+            [0, "desc"]
+        ],
+        fixedColumns: {
+            start: 1,
+            end: 1
+        },
+        scrollX: true,
+        layout: {
+            topStart: null,
+			topEnd: null
+        }
 	});
 
 
