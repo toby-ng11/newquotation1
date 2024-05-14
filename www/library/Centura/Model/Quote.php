@@ -411,13 +411,13 @@ class Quote extends DbTable\Quote
 		return Zend_Json::encode($db->fetchAll($select));
 	}
 
-	// TODO: Enable server-side processing for all tables (experimental)
+	// Enable server-side processing for all tables (experimental)
 	public function getQuoteData()
 	{
 		$dbDetails = $this->getAdapter();
 
 		//DB table to use
-		$table ="quote_x_project";
+		$table ="view_quote_x_project";
 
 		// Table's primary key
 		$primaryKey = 'quote_id';
@@ -432,12 +432,6 @@ class Quote extends DbTable\Quote
 			array( 'db' => 'Status', 'dt' => 'Status' ),
 			array( 'db' => 'approve_status', 'dt' => 'approve_status' ),
 		);
-
-		//$join = 'join project on project.project_id = quote.project_id
-		//	join quote_status on quote_status.uid = project.status
-		//	join quote_market_segment on quote_market_segment.uid = quote.quote_segment';
-
-		//$where = 'quote.status = 1';
 
 		echo Zend_Json::encode(
 			SSP::complex($_GET, $dbDetails, $table, $primaryKey, $columns)
