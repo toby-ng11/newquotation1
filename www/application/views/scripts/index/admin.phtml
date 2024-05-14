@@ -24,7 +24,6 @@
             <p>Here's all projects and quotes</p>
         </header>
 
-        <!-- Form -->
         <section aria-labelledby="all_projects" id="section1" data-nav="All Projects">
             <div class="widget-table">
                 <table width="100%" class="display nowrap" id="project_table">
@@ -34,7 +33,7 @@
                             <th>Quote #</th>
                             <th>Project Name</th>
                             <th>Project Owner</th>
-                            <th>Assigned To</th>
+                            <th>Shared With</th>
                             <th>Create Date</th>
                             <th>Due Date</th>
                             <th>Specifier</th>
@@ -153,7 +152,7 @@
         ],
         fixedColumns: {
             start: 1,
-            end: 2
+            end: 1
         },
         scrollX: true,
         layout: {
@@ -167,11 +166,10 @@
 
     $('#quote_table').DataTable({
         ajax: {
-            url: "/index/quote",
-            dataSrc: ''
+            url: "/index/quote"
         },
         processing: true,
-        // serverSide: true, // TODO: enable server-side processing
+        serverSide: true, // experimetal: server-side processing
         columns: [{
                 data: "quote_id",
                 render: function(data, type, row, meta) {
@@ -182,7 +180,7 @@
                 data: "project_name"
             },
             {
-                data: "segment"
+                data: "Market_Segment"
             },
             {
                 data: "quote_date.date",
@@ -211,7 +209,7 @@
                 }
             },
             {
-                data: "status_name"
+                data: "Status"
             },
             {
                 data: "approve_status",

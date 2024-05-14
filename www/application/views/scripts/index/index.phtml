@@ -17,7 +17,7 @@
                         Add Project</a>
                 </div>
             </div>
-            
+
             <h1>Welcome Back, <span style="font-weight: 300;"><?php echo $session->user['name'] ?></span></h1>
             <p>Here's the quick summary your projects and quotes</p>
         </header>
@@ -30,7 +30,7 @@
                             <th>Project ID</th>
                             <th>Quote ID</th>
                             <th>Project Name</th>
-                            <th>Assign To</th>
+                            <th>Shared With</th>
                             <th>Create Date</th>
                             <th>Due Date</th>
                             <th>Specifier</th>
@@ -74,6 +74,7 @@
                                 <th>Quote ID</th>
                                 <th>Project Name</th>
                                 <th>Worksheet Owner</th>
+                                <th>Shared With</th>
                                 <th>Create Date</th>
                                 <th>Due Date</th>
                                 <th>Specifier</th>
@@ -332,6 +333,9 @@
                     },
                     {
                         data: "owner"
+                    },
+                    {
+                        data: "worksheet_assign"
                     },
                     {
                         data: "create_date.date",

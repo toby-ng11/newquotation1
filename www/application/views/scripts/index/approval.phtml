@@ -222,8 +222,7 @@
             [0, "desc"]
         ],
         fixedColumns: {
-            start: 1,
-            end: 1
+            start: 1
         },
         scrollX: true,
         layout: {
@@ -292,7 +291,7 @@
             },
             {
                 data: "quote_id",
-                redner: function(data, type, row, meta) {
+                render: function(data, type, row, meta) {
                     return "<a target='_blank' href='/quote/edit/id/" + row.quote_id + "'><span class='button-wrap'><span class='icon icon-edit'></span></span></a>";
                 }
             }
@@ -307,7 +306,7 @@
         ],
         fixedColumns: {
             start: 1,
-            end: 2
+            end: 1
         },
         scrollX: true,
         layout: {

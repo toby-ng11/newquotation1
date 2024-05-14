@@ -72,7 +72,7 @@ $project = $this->project;
 
 						<?php if ($session->user['approve_id'] != null) { ?>
 							<div class="oneTwo form-worksheet-owner">
-								<label for="worksheet_assign">Worksheet Assign</label>
+								<label for="worksheet_assign">Share Worksheet</label>
 								<input id="worksheet_assign" name="worksheet_assign" type="text" value='<?= $project['worksheet_assign'] ?>' />
 							</div>
 						<?php } else { ?>
@@ -285,7 +285,7 @@ $project = $this->project;
 					<input type="hidden" name="author" id="memo-author" value="<?= $session->user['id'] ?>">
 					<div class="oneTwo required-field dialog-note">
 						<label for="title">Title</label>
-						<textarea rows="2" name='title' id='title' class="validate[required]" placeholder="Title"></textarea>
+						<textarea rows="2" name='title' id='title' placeholder="Title"></textarea>
 					</div>
 
 					<div class="oneTwo required-field dialog-note">
@@ -294,8 +294,8 @@ $project = $this->project;
 					</div>
 
 					<div class="oneTwo required-field dialog-note">
-						<label for="type">Next Action Required</label>
-						<textarea rows="3" name="type" id='type' class="validate[required]" placeholder="Critical updates note"></textarea>
+						<label for="type">Next Action</label>
+						<textarea rows="3" name="type" id='type' placeholder="Critical updates note"></textarea>
 					</div>
 
 					<div class="oneTwo dialog-note">
@@ -410,6 +410,10 @@ $project = $this->project;
 		order: [
 			[5, "desc"]
 		],
+		scrollX: true,
+		fixedColumns: {
+			end: 1
+		},
 	});
 
 	let itemTable = $("#items").DataTable({

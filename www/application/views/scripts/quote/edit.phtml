@@ -297,10 +297,6 @@ $disapproved = -1;
 					</div>
 
 					<div class="oneTwo">
-						<label for="quote-date">Quote Date</label>
-						<input id="quote-date" name='quote_date' type="text" class="datepicker" value="<?= $quote['quote_date']->format('Y-m-d') ?>" />
-					</div>
-					<div class="oneTwo">
 						<label for='ship_required_date'>Ship Required Date</label>
 						<input id='ship_required_date' type="text" class="datepicker" name='ship_required_date' value="<?php if ($quote['ship_required_date'] != null && $quote['ship_required_date']->format('Y-d-m') > '2000-01-01') {
 																															echo $quote['ship_required_date']->format('Y-m-d');

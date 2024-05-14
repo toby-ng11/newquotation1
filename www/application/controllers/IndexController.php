@@ -97,7 +97,7 @@ class IndexController extends Zend_Controller_Action
 	public function quoteAction() // ajax
 	{
 		$quote = new Quote();
-		echo $quote->fetchQuoteJson();
+		echo $quote->getQuoteData();
 		exit;
 	}
 

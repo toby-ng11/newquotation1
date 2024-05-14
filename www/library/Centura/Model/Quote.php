@@ -11,6 +11,9 @@ use Zend_Json;
 use Exception;
 
 use SSP;
+use Zend_Db_Adapter_Pdo_Sqlsrv;
+
+require( 'ssp.class.php' );
 
 class Quote extends DbTable\Quote
 {
@@ -30,7 +33,7 @@ class Quote extends DbTable\Quote
 		//add quote
 		$info['customer_id']                = $data['customer_id'];
 		$info['project_id']                 = $data['project_id'];
-		$info['quote_date']                 = date('Y-m-d h:i:s', strtotime($data['quote_date']));
+		$info['quote_date']                 = date('Y-m-d H:i:s');
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < time()) {
 			$data['expire_date'] = date('Y-m-d h:i:s', mktime(0, 0, 0, date("m"), date("d") + 90, date("Y")));
 		} 
@@ -54,13 +57,17 @@ class Quote extends DbTable\Quote
 		}
 
 		try {
+
 			$db->insert('quote', $info);
+			
+
 		} catch (Exception $e) {
-			var_dump($e);
+			error_log(print_r($e));
 			return false;
 		}
 
 		$quote = $this->fetchlatestquote($info['sales_id']);
+		//error_log(print_r($quote['quote_id']), true);
 
 		//update quote no 
 		$this->updatequoteno($quote['quote_id']);
@@ -68,12 +75,12 @@ class Quote extends DbTable\Quote
 		//add products
 
 		$item = new ItemsProject();
-		$result = $item->fetchallitems($data['project_id']);
+		$itemList = $item->fetchallitems($data['project_id']);
 
 		$item_id_list = array();
 
 		$products = new ProductProject();
-		foreach ($result as $item) {
+		foreach ($itemList as $item) {
 			$products->add($item, $quote['quote_id']);
 			$item_id_list[] = $item["product_id"];
 		}
@@ -104,7 +111,7 @@ class Quote extends DbTable\Quote
 		//add quote
 		$info['customer_id']                = $data['customer_id'];
 		$info['project_id']                 = $data['project_id'];
-		$info['quote_date']                 = date('Y-m-d h:i:s', strtotime($data['quote_date']));
+		//$info['quote_date']                 = date('Y-m-d h:i:s', strtotime($data['quote_date']));
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < 1000) //fix 1969-12-31
 		{
 			$data['expire_date'] = date('Y-m-d h:i:s', mktime(0, 0, 0, date("m"), date("d") + 90, date("Y")));
@@ -404,30 +411,36 @@ class Quote extends DbTable\Quote
 		return Zend_Json::encode($db->fetchAll($select));
 	}
 
-	// TODO: Enable server-side processing for all tables
-	public function getdata()
+	// TODO: Enable server-side processing for all tables (experimental)
+	public function getQuoteData()
 	{
-		$dbDetails = array(
-			'user' => 'CENTURA\tnguyen',
-			'password' => '#9#6Draceus',
-			'host' => 'tor-sql',
-			'db' => 'Quotation'
-		);
+		$dbDetails = $this->getAdapter();
 
 		//DB table to use
-		$table = 'quote';
+		$table ="quote_x_project";
 
 		// Table's primary key
 		$primaryKey = 'quote_id';
 
 		$columns = array(
-			
+			array( 'db' => 'quote_id', 'dt' => 'quote_id' ),
+			array( 'db' => 'project_name', 'dt' => 'project_name' ),
+			array( 'db' => 'Market_Segment', 'dt' => 'Market_Segment' ),
+			array( 'db' => 'quote_date', 'dt' => 'quote_date' ),
+			array( 'db' => 'expire_date', 'dt' => 'expire_date' ),
+			array( 'db' => 'ship_required_date', 'dt' => 'ship_required_date' ),
+			array( 'db' => 'Status', 'dt' => 'Status' ),
+			array( 'db' => 'approve_status', 'dt' => 'approve_status' ),
 		);
 
-		require( 'ssp.class.php' );
+		//$join = 'join project on project.project_id = quote.project_id
+		//	join quote_status on quote_status.uid = project.status
+		//	join quote_market_segment on quote_market_segment.uid = quote.quote_segment';
+
+		//$where = 'quote.status = 1';
 
 		echo Zend_Json::encode(
-			SSP::simple($_GET, $dbDetails, $table, $primaryKey, $columns)
+			SSP::complex($_GET, $dbDetails, $table, $primaryKey, $columns)
 		);
 	}
 
