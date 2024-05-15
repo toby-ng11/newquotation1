@@ -466,7 +466,11 @@ $disapproved = -1;
 				data: "subtotal"
 			},
 			{
-				data: "note"
+				data: "note",
+				render: function(data) {
+					let formattedText = data.replace(/(?:\r\n|\r|\n)/g, '<br>');
+					return '<p>' + formattedText + '</p>';
+				}
 			},
 			{
 				data: "product_id",

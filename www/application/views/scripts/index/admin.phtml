@@ -85,12 +85,8 @@
         },
         columns: [{
                 data: "project_id",
-                render: function(data, type, row, meta) {
-                    if (row.owner == sessionUser) {
-                        return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + row.project_id + "</a>";
-                    } else {
-                        return "<a target='_blank' href='/project/view/id/" + row.project_id + "'>" + row.project_id + "</a>";
-                    }
+                render: function(data) {
+                    return "<a target='_blank' href='/project/edit/id/" + data + "'>" + data + "</a>";
                 }
             },
             {

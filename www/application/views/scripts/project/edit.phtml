@@ -1,6 +1,7 @@
 <?php
 $session =  Zend_Registry::get('session');
 $project = $this->project;
+$projectID = $project["project_id"];
 ?>
 
 <!-- Right panel -->
@@ -41,11 +42,11 @@ $project = $this->project;
 
 		<!-- Form -->
 		<section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
-			<form action="/project/edit/id/<?= $project["project_id"] ?>" method="post" class="form" id='project_content'>
+			<form action="/project/edit/id/<?= $projectID ?>" method="post" class="form" id='project_content'>
 				<div class="widget-table">
 					<h2>Project Information</h2>
 					<div class="formRow">
-						<input type="hidden" id='project_id' value='<?= $project['project_id'] ?>'>
+						<input type="hidden" id='project_id' value='<?= $projectID ?>'>
 						<input type="hidden" id="owner" name='owner' value='<?= $project['owner'] ?>'>
 						<input type="hidden" id='create_date' name='create_date' value='<?= $project['create_date']->format('Y-m-d') ?>' />
 						<input type="hidden" id='architect' name='architect' value="<?= $project['architect'] ?>">
@@ -251,39 +252,11 @@ $project = $this->project;
 			</form>
 		</section>
 
-		<section aria-labelledby="project-log" id="section3" data-nav="Project Log">
+		<section aria-labelledby="quote-by-project" id="section3" data-nav="Quote by this project">
 			<div class="widget-table">
 				<div class="widget-button">
 					<?php if ($this->owner == 1) { ?>
-						<button type="button" title="Add new log" class="button action has-icon add-log-button small" id="opener">
-							<span class="button-wrap">
-								<span class="icon icon-add"></span>
-								Add log
-							</span>
-						</button>
-					<?php } ?>
-				</div>
-				<h2>Project Log</h2>
-				<table cellpadding="0" cellspacing="0" width="100%" class="display" id='project_memo'>
-					<thead>
-						<tr>
-							<th>Log Time</th>
-							<th>Action Items Completed</th>
-							<th>Follow Up Date</th>
-							<th>Next Action Required</th>
-							<th>Added by</th>
-							<th class="action">Options</th>
-						</tr>
-					</thead>
-				</table>
-			</div>
-		</section>
-
-		<section aria-labelledby="quote-by-project" id="section4" data-nav="Quote by this project">
-			<div class="widget-table">
-				<div class="widget-button">
-					<?php if ($this->owner == 1) { ?>
-						<button onclick="location.href='/quote/index/project/<?= $project['project_id'] ?>'" type="button" title="Add new quote" class="button action has-icon add-quote-button small" id="add-quote">
+						<button onclick="location.href='/quote/index/project/<?= $projectID ?>'" type="button" title="Add new quote" class="button action has-icon add-quote-button small" id="add-quote">
 							<span class="button-wrap">
 								<span class="icon icon-add"></span>
 								Make Quote
@@ -302,6 +275,34 @@ $project = $this->project;
 							<th>Expire Date</th>
 							<th>Ship Required Date</th>
 							<th>Approve Status</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</section>
+
+		<section aria-labelledby="project-log" id="section4" data-nav="Project Log">
+			<div class="widget-table">
+				<div class="widget-button">
+					<?php if ($this->owner == 1) { ?>
+						<button type="button" title="Add new log" class="button action has-icon add-log-button small" id="opener">
+							<span class="button-wrap">
+								<span class="icon icon-add"></span>
+								Add log
+							</span>
+						</button>
+					<?php } ?>
+				</div>
+				<h2>Project Log</h2>
+				<table cellpadding="0" cellspacing="0" width="100%" class="display cell-border" id='project_memo'>
+					<thead>
+						<tr>
+							<th>Log Time</th>
+							<th>Log</th>
+							<th>Follow Up Date</th>
+							<th>Next Action</th>
+							<th>Added by</th>
+							<th class="action">Options</th>
 						</tr>
 					</thead>
 				</table>
@@ -393,7 +394,8 @@ $project = $this->project;
 					if (row.content == null) {
 						return '<p><b>' + data + '</b></p>';
 					} else {
-						return '<p><b>' + data + '</b></br>' + row.content + '</p>';
+						let formattedText = (row.content).replace(/(?:\r\n|\r|\n)/g, '<br>');
+						return '<p><b>' + data + '</b></br>' + formattedText + '</p>';
 					}
 				}
 			},
@@ -405,7 +407,11 @@ $project = $this->project;
 				}
 			},
 			{
-				data: "type"
+				data: "type",
+				render: function(data) {
+					let formattedText = data.replace(/(?:\r\n|\r|\n)/g, '<br>');
+					return '<p>' + formattedText + '</p>';
+				}
 			},
 			{
 				data: "author"
@@ -470,7 +476,11 @@ $project = $this->project;
 				data: "subtotal"
 			},
 			{
-				data: "note"
+				data: "note",
+				render: function(data) {
+					let formattedText = data.replace(/(?:\r\n|\r|\n)/g, '<br>');
+					return '<p>' + formattedText + '</p>';
+				}
 			},
 			{
 				data: "product_id",
