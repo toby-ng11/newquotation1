@@ -5923,7 +5923,6 @@ input[readonly], input[disabled] {
   border: 1px solid var(--border-primary);
   border-radius: 15px;
   color: var(--text-secondary);
-  height: 2.8rem;
   transition: all 0.2s ease-in-out;
 }
 .widget-table input:hover {

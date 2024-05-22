@@ -177,14 +177,14 @@
                     data: "worksheet_assign"
                 },
                 {
-                    data: "create_date.date",
+                    data: "create_date",
                     render: function(data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
                     }
                 },
                 {
-                    data: "due_date.date",
+                    data: "due_date",
                     render: function(data) {
                         let date = new Date(data);
                         let today = new Date();
@@ -257,14 +257,14 @@
                     data: "owner"
                 },
                 {
-                    data: "create_date.date",
+                    data: "create_date",
                     render: function(data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
                     }
                 },
                 {
-                    data: "due_date.date",
+                    data: "due_date",
                     render: function(data) {
                         let date = new Date(data);
                         let today = new Date();
@@ -338,14 +338,14 @@
                         data: "worksheet_assign"
                     },
                     {
-                        data: "create_date.date",
+                        data: "create_date",
                         render: function(data) {
                             let date = new Date(data);
                             return date.toLocaleDateString();
                         }
                     },
                     {
-                        data: "due_date.date",
+                        data: "due_date",
                         render: function(data) {
                             let date = new Date(data);
                             let today = new Date();
@@ -415,14 +415,14 @@
                     data: "project_name"
                 },
                 {
-                    data: "quote_date.date",
+                    data: "quote_date",
                     render: function(data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
                     }
                 },
                 {
-                    data: "expire_date.date",
+                    data: "expire_date",
                     render: function(data) {
                         let date = new Date(data);
                         let today = new Date();
@@ -434,7 +434,7 @@
                     }
                 },
                 {
-                    data: "ship_required_date.date",
+                    data: "ship_required_date",
                     render: function(data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -489,7 +489,7 @@
             },
             processing: true,
             columns: [{
-                    data: "added.date",
+                    data: "added",
                     render: function(data) {
                         let date = new Date(data);
                         return date.toLocaleString();

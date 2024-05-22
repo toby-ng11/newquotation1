@@ -1,7 +1,10 @@
 <?php
 $session =  Zend_Registry::get('session');
 $project = $this->project;
-$projectID = $project["project_id"];
+$projectID = $project['project_id'];
+$projectCreateDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['create_date']);
+$projectDueDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['due_date']);
+$projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['required_date']);
 ?>
 
 <!-- Right panel -->
@@ -44,11 +47,17 @@ $projectID = $project["project_id"];
 		<section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
 			<form action="/project/edit/id/<?= $projectID ?>" method="post" class="form" id='project_content'>
 				<div class="widget-table">
+					<!--<div class="widget-button">
+						<div class="widget-pin">
+							<input type="checkbox" id="project-pin" name="project-pin">
+							<label for="project-pin">Pin project</label>
+						</div>
+					</div>-->
 					<h2>Project Information</h2>
 					<div class="formRow">
 						<input type="hidden" id='project_id' value='<?= $projectID ?>'>
 						<input type="hidden" id="owner" name='owner' value='<?= $project['owner'] ?>'>
-						<input type="hidden" id='create_date' name='create_date' value='<?= $project['create_date']->format('Y-m-d') ?>' />
+						<input type="hidden" id='create_date' name='create_date' value='<?= $projectCreateDate->format('Y-m-d') ?>' />
 						<input type="hidden" id='architect' name='architect' value="<?= $project['architect'] ?>">
 						<input type="hidden" id='specifiler' name="specifiler" value="<?= $project['specifiler'] ?>">
 
@@ -145,12 +154,12 @@ $projectID = $project["project_id"];
 
 						<div class="oneTwo">
 							<label for="due_date">Tender Due Date</label>
-							<input id="due_date" type="text" name='due_date' class="datepicker" value='<?= $project['due_date']->format('Y-m-d') ?>' />
+							<input id="due_date" type="text" name='due_date' class="datepicker" value='<?= $projectDueDate->format('Y-m-d') ?>' />
 						</div>
 
 						<div class="oneTwo">
 							<label for='required_date'>Material Required Date</label>
-							<input id='required_date' type="text" name='required_date' class="datepicker" value='<?= $project['required_date']->format('Y-m-d') ?>' />
+							<input id='required_date' type="text" name='required_date' class="datepicker" value='<?= $projectRequiredDate->format('Y-m-d') ?>' />
 						</div>
 
 						<div class="oneTwo">
@@ -330,7 +339,7 @@ $projectID = $project["project_id"];
 
 					<div class="oneTwo dialog-note">
 						<label for='follow_up_date'>Follow Up Date</label>
-						<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker" value='<?= $project['due_date']->format('Y-m-d') ?>' />
+						<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker" value='<?= $projectDueDate->format('Y-m-d') ?>' />
 					</div>
 				</div>
 			</form>
@@ -522,81 +531,81 @@ $projectID = $project["project_id"];
 		rowReorder: true
 	});
 
-	let projectQuoteTable= $('#project-quote-table').DataTable({
+	let projectQuoteTable = $('#project-quote-table').DataTable({
 		ajax: {
-            url: "/project/quote/id/" + $('#project_id').val(),
+			url: "/project/quote/id/" + $('#project_id').val(),
 			dataSrc: ''
-        },
-        processing: true,
-        columns: [{
-                data: "quote_id",
-                render: function(data, type, row, meta) {
-                    return "<a target='_blank' href='/quote/edit/id/" + data + "'>" + data + "</a>";
-                }
-            },
+		},
+		processing: true,
+		columns: [{
+				data: "quote_id",
+				render: function(data, type, row, meta) {
+					return "<a target='_blank' href='/quote/edit/id/" + data + "'>" + data + "</a>";
+				}
+			},
 			{
 				data: 'name'
 			},
-            {
-                data: "Market_Segment"
-            },
-            {
-                data: "quote_date.date",
-                render: function(data) {
-                    let date = new Date(data);
-                    return date.toLocaleDateString();
-                }
-            },
-            {
-                data: "expire_date.date",
-                render: function(data) {
-                    let date = new Date(data);
-                    let today = new Date();
-                    if (date <= today) {
-                        return '<span class="red">' + date.toLocaleDateString() + '</span>';
-                    } else {
-                        return date.toLocaleDateString();
-                    }
-                }
-            },
-            {
-                data: "ship_required_date.date",
-                render: function(data) {
-                    let date = new Date(data);
-                    return date.toLocaleDateString();
-                }
-            },
-            {
-                data: "approve_status",
-                render: function(data) {
-                    if (data == -1) {
-                        return '<span class="disapproved red">Disapproved</span>';
-                    } else if (data == 10) {
-                        return '<span class="approved green">Approved</span>';
-                    } else if (data == 1) {
-                        return '<span class="waiting orange">Waiting</span>';
-                    } else {
-                        return 'Not submitted';
-                    }
-                }
-            }
-        ],
-        columnDefs: [{
-            targets: [0, 2, 3, 4, 5, 6],
-            className: 'dt-body-center'
-        }],
-        order: [
-            [0, "desc"]
-        ],
-        fixedColumns: {
-            start: 1,
-            end: 1
-        },
-        scrollX: true,
-        layout: {
-            topStart: null,
+			{
+				data: "Market_Segment"
+			},
+			{
+				data: "quote_date.date",
+				render: function(data) {
+					let date = new Date(data);
+					return date.toLocaleDateString();
+				}
+			},
+			{
+				data: "expire_date.date",
+				render: function(data) {
+					let date = new Date(data);
+					let today = new Date();
+					if (date <= today) {
+						return '<span class="red">' + date.toLocaleDateString() + '</span>';
+					} else {
+						return date.toLocaleDateString();
+					}
+				}
+			},
+			{
+				data: "ship_required_date.date",
+				render: function(data) {
+					let date = new Date(data);
+					return date.toLocaleDateString();
+				}
+			},
+			{
+				data: "approve_status",
+				render: function(data) {
+					if (data == -1) {
+						return '<span class="disapproved red">Disapproved</span>';
+					} else if (data == 10) {
+						return '<span class="approved green">Approved</span>';
+					} else if (data == 1) {
+						return '<span class="waiting orange">Waiting</span>';
+					} else {
+						return 'Not submitted';
+					}
+				}
+			}
+		],
+		columnDefs: [{
+			targets: [0, 2, 3, 4, 5, 6],
+			className: 'dt-body-center'
+		}],
+		order: [
+			[0, "desc"]
+		],
+		fixedColumns: {
+			start: 1,
+			end: 1
+		},
+		scrollX: true,
+		layout: {
+			topStart: null,
 			topEnd: null
-        }
+		}
 	});
 
 
@@ -614,7 +623,7 @@ $projectID = $project["project_id"];
 		$('#options-button').on("click", function() {
 			$('#options-menu-items').slideToggle({
 				start: function() {
-    				$(this).css('display','flex');
+					$(this).css('display', 'flex');
 				}
 			});
 		})

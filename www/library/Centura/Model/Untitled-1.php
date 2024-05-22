@@ -1,10 +1,7 @@
 <?php
 
-$array = (object) array(
-    "foo" => "bar",
-    "bar" => "foo",
-);
+$date = '2024-05-20 12:00:00.000';
 
-$array->foo = "halo";
+$datetime = DateTime::createFromFormat('Y-m-d H:i:s', $date);
 
-var_dump($array);
+print_r($datetime->format('Y-m-d'));

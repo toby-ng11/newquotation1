@@ -1,6 +1,9 @@
 <?php
 $session =  Zend_Registry::get('session');
 $project = $this->project;
+$projectCreateDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['create_date']);
+$projectDueDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['due_date']);
+$projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['required_date']);
 ?>
 
 <!-- Title area -->
@@ -42,7 +45,7 @@ $project = $this->project;
 				<span class='svg icon icon-calender'></span>
 				<div class="project-information">
 					<p>Due date</p>
-					<h2><?= $project['due_date']->format('Y-m-d') ?></h2>
+					<h2><?= $projectDueDate->format('Y-m-d') ?></h2>
 				</div>
 			</div>
 
@@ -188,7 +191,7 @@ $project = $this->project;
 					
 					<div class="oneTwo">
 						<label for="ship-required-date">Shipment Required Date</label>
-						<input id="ship-required-date" type="text" class="datepicker" name='ship_required_date' value="<?php if ($project['required_date'] != null && $project['required_date']->format('Y-m-d') > '2000-01-01') echo $project['required_date']->format('Y-m-d'); ?>" />
+						<input id="ship-required-date" type="text" class="datepicker" name='ship_required_date' value="<?php if ($projectRequiredDate && $projectRequiredDate > new DateTime('2000-01-01')) { echo $projectRequiredDate->format('Y-m-d'); } ?>" />
 					</div>
 					<div class="oneTwo">
 						<label for="quote_date">Expire Date</label>

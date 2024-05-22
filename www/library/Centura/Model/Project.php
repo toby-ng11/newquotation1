@@ -7,6 +7,11 @@ use Zend_Json;
 
 use Exception;
 
+use DateTime;
+
+use SSP;
+
+require_once( 'ssp.class.php' );
 class Project extends DbTable\Project
 {
     
@@ -25,22 +30,22 @@ class Project extends DbTable\Project
 	    $info['reed']                     = $data['reed'];
 	    $info['general_contractor_id']    = $data['gerneral_contractor_id'];
 	    $info['awarded_sub_contracotr_id']  = $data['awarded_contractor_id'];
-	    $info['create_date']                = date('Y-m-d h:i:s');
+	    $info['create_date']                = date('Y-m-d h:i:s.v');
 	    if(!empty($data['required_date']))
 	    {
-	    	$info['required_date']              = date('Y-m-d h:i:s',strtotime($data['required_date']));
+	    	$info['required_date']              = DateTime::createFromFormat('Y-m-d', $data['required_date'])->format('Y-m-d');
 	    }
 	    else {
-	    	$info['required_date']              = date('Y-m-d h:i:s');
+	    	$info['required_date']              = date('Y-m-d h:i:s.v');
 	    }
 	    
 	    if(!empty($data['due_date']))
 	    {
-	    	$info['due_date']                   = date('Y-m-d h:i:s',strtotime($data['due_date']));
+	    	$info['due_date']                   = DateTime::createFromFormat('Y-m-d', $data['due_date'])->format('Y-m-d');
 	    }
 	    else
 	    {
-	    	$info['due_date']                   = date('Y-m-d h:i:s');
+	    	$info['due_date']                   = date('Y-m-d h:i:s.v');
 	    }
 	    
 	    
@@ -275,16 +280,35 @@ class Project extends DbTable\Project
 
 	public function fetchallprojectJson($owner = null) {
 		$db = $this->getAdapter();
-		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location', 'centura_location_id = P21_Location.location_id','company_id')
-			->join('quote_status','quote_status.uid=project.status',array('status_name'=>'Status'))
-			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment',array('segment'=>'Market_Segment'))->where('project.deleted =?','N')
-			->join('quote_specifier','quote_specifier.uid = project.specifiler',array('Specifier_name'=>'quote_specifier.Specifier'));
-		
-		if($owner != null)
-		{
-			$select->where('owner = ?',$owner);
-		}
+		$select = $db->select()->from('view_project');
+			
 		return Zend_Json::encode($db->fetchAll($select));
+	}
+
+	public function getAdminProjects()
+	{
+		$dbDetails = $this->getAdapter();
+
+		$table ="view_project";
+
+		$primaryKey = 'project_id';
+
+		$columns = array(
+			array( 'db' => 'project_id',       'dt' => 'project_id' ),
+			array( 'db' => 'quote_no',         'dt' => 'quote_no' ),
+			array( 'db' => 'project_name',     'dt' => 'project_name' ),
+			array( 'db' => 'owner',            'dt' => 'owner' ),
+			array( 'db' => 'worksheet_assign', 'dt' => 'worksheet_assign' ),
+			array( 'db' => 'create_date',      'dt' => 'create_date' ),
+			array( 'db' => 'due_date',         'dt' => 'due_date' ),
+			array( 'db' => 'Specifier',        'dt' => 'Specifier' ),
+			array( 'db' => 'Market_Segment',   'dt' => 'Market_Segment' ),
+			array( 'db' => 'Status',           'dt' => 'Status' )
+		);
+
+		echo Zend_Json::encode(
+			SSP::simple($_POST, $dbDetails, $table, $primaryKey, $columns)
+		);
 	}
 	
 	public function fetchbyid($project_id = null)
@@ -317,9 +341,9 @@ class Project extends DbTable\Project
 	    $info['reed']                     = $data['reed'];
 	    $info['general_contractor_id']    = $data['gerneral_contractor_id'];
 	    $info['awarded_sub_contracotr_id']  = $data['awarded_contractor_id'];
-	    //$info['create_date']                = date('Y-m-d h:i:s');
-	    $info['required_date']              = date('Y-m-d h:i:s',strtotime($data['required_date']));
-	    $info['due_date']                   = date('Y-m-d h:i:s',strtotime($data['due_date']));
+	    //$info['create_date']                = date('Y-m-d h:i:s.v');
+	    $info['required_date']              = DateTime::createFromFormat('Y-m-d', $data['required_date'])->format('Y-m-d');
+	    $info['due_date']                   = DateTime::createFromFormat('Y-m-d', $data['due_date'])->format('Y-m-d');
 	    $info['status']                     = $data['status'];
 	    $info['architect']                  = $data['architect'];
 	    $info['specifiler']                 = $data['specifiler'];
@@ -407,7 +431,7 @@ class Project extends DbTable\Project
 		$data['action']    = $action;
 		$data['item_id']   = $item_id;
 		$data['note']      = $note;
-		$data['added']     = date('Y-m-d h:i:s');
+		$data['added']     = date('Y-m-d h:i:s.v');
 		$data['user_id']   = $session->user['id'];
 		
 		try {

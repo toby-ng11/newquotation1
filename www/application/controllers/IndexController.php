@@ -103,8 +103,8 @@ class IndexController extends Zend_Controller_Action
 
 	public function projectAction() // ajax
 	{
-		$quote = new Project();
-		echo $quote->fetchallprojectJson();
+		$project = new Project();
+		echo $project->getAdminProjects();
 		exit;
 	}
 

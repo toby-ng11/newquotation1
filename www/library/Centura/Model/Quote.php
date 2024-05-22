@@ -10,11 +10,11 @@ use Zend_Json;
 
 use Exception;
 
+use DateTime;
+
 use SSP;
-use Zend_Db_Adapter_Pdo_Sqlsrv;
 
-require( 'ssp.class.php' );
-
+require_once( 'ssp.class.php' );
 class Quote extends DbTable\Quote
 {
 
@@ -33,12 +33,12 @@ class Quote extends DbTable\Quote
 		//add quote
 		$info['customer_id']                = $data['customer_id'];
 		$info['project_id']                 = $data['project_id'];
-		$info['quote_date']                 = date('Y-m-d H:i:s');
-		if ($data['expire_date'] == null || strtotime($data['expire_date']) < time()) {
-			$data['expire_date'] = date('Y-m-d h:i:s', mktime(0, 0, 0, date("m"), date("d") + 60, date("Y")));
+		$info['quote_date']                 = date('Y-m-d H:i:s.v');
+		if ($data['expire_date'] == null) {
+			$data['expire_date'] = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 60, date("Y")));
 		} 
 		else {
-			$info['expire_date'] = date('Y-m-d h:i:s', strtotime($data['expire_date']));
+			$info['expire_date'] = DateTime::createFromFormat('Y-m-d', $data['expire_date'])->format('Y-m-d');
 		}
 		$info['quote_type_id']              = $data['quote_type_id'];
 		$info['quote_segment']              = $data['quote_segment'];
@@ -47,7 +47,7 @@ class Quote extends DbTable\Quote
 		$info['note']                       = $data['note'];
 		$info['status']                     = 1;
 		if ($data['ship_required_date'] != null) {
-			$info['ship_required_date']         = date('Y-m-d h:i:s', strtotime($data['ship_required_date']));
+			$info['ship_required_date']         = DateTime::createFromFormat('Y-m-d', $data['ship_required_date'])->format('Y-m-d');
 		} else {
 			$info['ship_required_date'] = NULL;
 		}
@@ -114,9 +114,9 @@ class Quote extends DbTable\Quote
 		//$info['quote_date']                 = date('Y-m-d h:i:s', strtotime($data['quote_date']));
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < 1000) //fix 1969-12-31
 		{
-			$data['expire_date'] = date('Y-m-d h:i:s', mktime(0, 0, 0, date("m"), date("d") + 60, date("Y")));
+			$data['expire_date'] = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 60, date("Y")));
 		}
-		else { $info['expire_date']                = date('Y-m-d h:i:s', strtotime($data['expire_date'])); }
+		else { $info['expire_date']                = DateTime::createFromFormat('Y-m-d', $data['expire_date'])->format('Y-m-d'); }
 		$info['quote_type_id']              = $data['quote_type_id'];
 		$info['quote_segment']              = $data['quote_segment'];
 		//$info['sales_id']                   = $session->user['id'];
@@ -126,7 +126,7 @@ class Quote extends DbTable\Quote
 		$info['term']                       = $data['credit_term'];
 		$info['lead_time']                  = $data['lead_time'];
 		if ($data['ship_required_date'] != null) {
-			$info['ship_required_date']         = date('Y-m-d h:i:s', strtotime($data['ship_required_date']));
+			$info['ship_required_date']         = DateTime::createFromFormat('Y-m-d', $data['ship_required_date'])->format('Y-m-d');
 		} else {
 			$info['ship_required_date'] = NULL;
 		}
@@ -423,14 +423,14 @@ class Quote extends DbTable\Quote
 		$primaryKey = 'quote_id';
 
 		$columns = array(
-			array( 'db' => 'quote_id', 'dt' => 'quote_id' ),
-			array( 'db' => 'project_name', 'dt' => 'project_name' ),
-			array( 'db' => 'Market_Segment', 'dt' => 'Market_Segment' ),
-			array( 'db' => 'quote_date', 'dt' => 'quote_date' ),
-			array( 'db' => 'expire_date', 'dt' => 'expire_date' ),
+			array( 'db' => 'quote_id', 			 'dt' => 'quote_id' ),
+			array( 'db' => 'project_name',  	 'dt' => 'project_name' ),
+			array( 'db' => 'Market_Segment',     'dt' => 'Market_Segment' ),
+			array( 'db' => 'quote_date',         'dt' => 'quote_date' ),
+			array( 'db' => 'expire_date',        'dt' => 'expire_date' ),
 			array( 'db' => 'ship_required_date', 'dt' => 'ship_required_date' ),
-			array( 'db' => 'Status', 'dt' => 'Status' ),
-			array( 'db' => 'approve_status', 'dt' => 'approve_status' ),
+			array( 'db' => 'Status', 			 'dt' => 'Status' ),
+			array( 'db' => 'approve_status', 	 'dt' => 'approve_status' ),
 		);
 
 		echo Zend_Json::encode(

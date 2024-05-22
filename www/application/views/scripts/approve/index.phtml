@@ -1,8 +1,14 @@
 <?php
 $session =  Zend_Registry::get('session');
 $project = $this->project;
+$projectDueDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['due_date']);
+
 $quote = $this->quote;
 $quoteID = $quote['quote_id'];
+$quoteDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $quote['quote_date']);
+$quoteShipRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $quote['ship_required_date']);
+$quoteExpireDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $quote['expire_date']);
+
 $customer = $this->customer;
 
 $approved = 10;
@@ -100,7 +106,7 @@ $disapproved = -1;
 				<span class='svg icon icon-calender'></span>
 				<div class="project-information">
 					<p>Due date</p>
-					<h2><?= $project['due_date']->format('Y-m-d') ?></h2>
+					<h2><?= $projectDueDate->format('Y-m-d') ?></h2>
 				</div>
 			</div>
 
@@ -294,17 +300,17 @@ $disapproved = -1;
 					<div class="oneTwo">
 						<label for="ship_required_date">Ship Required Date</label>
 						<input id="ship_required_date" type="text" class="datepicker" name='ship_required_date' value="<?php
-																														if ($quote['ship_required_date'] != null && $quote['ship_required_date']->format('Y-m-d') > '01/01/2000') {
-																															echo $quote['ship_required_date']->format('Y-m-d');
+																														if ($quoteShipRequiredDate && $quoteShipRequiredDate > new DateTime('2000-01-01')) {
+																															echo $quoteShipRequiredDate->format('Y-m-d');
 																														} ?>" />
 					</div>
 					<div class="oneTwo">
 						<label for="expire_date">Quote Expire Date</label>
 						<input id="expire_date" type="text" class="datepicker" name='expire_date' value="<?php
-																											if ($quote['expire_date'] == null || $quote['expire_date']->format('Y-m-d') < $quote['quote_date']->format('Y-m-d')) {
-																												echo date('Y-m-d', strtotime($quote['quote_date']->modify('+60 days')->format('Y-m-d')));
+																											if ($quoteExpireDate == null || $quoteExpireDate < $quoteDate) {
+																												echo $quoteDate->modify('+60 days')->format('Y-m-d');
 																											} else {
-																												echo $quote['expire_date']->format('Y-m-d');
+																												echo $quoteExpireDate->format('Y-m-d');
 																											}
 																											?>" />
 					</div>

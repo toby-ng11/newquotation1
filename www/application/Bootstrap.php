@@ -64,6 +64,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     		 
     		//set default adapter
     		Zend_Db_Table::setDefaultAdapter($db);
+
+			//$db->->setAttribute(PDO::SQLSRV_ATTR_FETCHES_DATETIME_TYPE, true);
     		 
     		//save Db in registry for later use
     		Zend_Registry::set("db", $db);
