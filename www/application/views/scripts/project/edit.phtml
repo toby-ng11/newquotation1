@@ -391,7 +391,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 		},
 		processing: true,
 		columns: [{
-				data: "added.date",
+				data: "added",
 				render: function(data) {
 					let date = new Date(data);
 					return date.toLocaleString();
@@ -409,7 +409,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 				}
 			},
 			{
-				data: "follow_up_date.date",
+				data: "follow_up_date",
 				render: function(data) {
 					let date = new Date(data);
 					return date.toLocaleDateString();
@@ -550,14 +550,14 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 				data: "Market_Segment"
 			},
 			{
-				data: "quote_date.date",
+				data: "quote_date",
 				render: function(data) {
 					let date = new Date(data);
 					return date.toLocaleDateString();
 				}
 			},
 			{
-				data: "expire_date.date",
+				data: "expire_date",
 				render: function(data) {
 					let date = new Date(data);
 					let today = new Date();
@@ -569,7 +569,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 				}
 			},
 			{
-				data: "ship_required_date.date",
+				data: "ship_required_date",
 				render: function(data) {
 					let date = new Date(data);
 					return date.toLocaleDateString();
@@ -1165,7 +1165,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			$('#memo #title').val(currentMemoRow['title']);
 			$('#memo #content').val(currentMemoRow['content']);
 			$('#memo #type').val(currentMemoRow['type']);
-			let followUpDate = new Date(currentMemoRow['follow_up_date']['date']);
+			let followUpDate = new Date(currentMemoRow['follow_up_date']);
 			$('#memo #follow_up_date').val(followUpDate.toLocaleDateString());
 		})
 

@@ -115,7 +115,7 @@ class SSP {
 	 */
 	static function order ( $request, $columns )
 	{
-		$order = '';
+		$order = 'ORDER BY 1';
 
 		if ( isset($request['order']) && count($request['order']) ) {
 			$orderBy = array();

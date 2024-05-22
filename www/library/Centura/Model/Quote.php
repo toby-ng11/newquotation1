@@ -412,7 +412,7 @@ class Quote extends DbTable\Quote
 	}
 
 	// Enable server-side processing for all tables (experimental)
-	public function getQuoteData()
+	public function getAdminQuotes()
 	{
 		$dbDetails = $this->getAdapter();
 
@@ -434,7 +434,7 @@ class Quote extends DbTable\Quote
 		);
 
 		echo Zend_Json::encode(
-			SSP::complex($_GET, $dbDetails, $table, $primaryKey, $columns)
+			SSP::complex($_POST, $dbDetails, $table, $primaryKey, $columns)
 		);
 	}
 
@@ -500,15 +500,12 @@ class Quote extends DbTable\Quote
 	{
 		$db = $this->getAdapter();
 
-		$selectedField = array('quote_id', 'quote_no', 'project_name', 'sale_name', 'customer', 'arch_name', 'quote_segment', 'quote_date', 'expire_date', 'ship_required_date', 'status_name');
-		$joinField = array('quote_market_segment.Market_Segment');
+		$selectedField = array('quote_id', 'quote_no', 'project_name', 'sale_name', 'customer', 'arch_name', 'Market_Segment', 'quote_date', 'expire_date', 'ship_required_date', 'status_name');
 
 		$select = $db->select()
 			->from('quotes_approval_view', $selectedField)
-			->join('quote_market_segment', 'quote_market_segment.uid = quotes_approval_view.quote_segment', array(
-				'segment'=>'Market_Segment'))
 			->where('approve_status = ?', $status)
-			->group(array_merge($selectedField, $joinField))
+			->group(array_merge($selectedField))
 			->order('quote_id desc');
 
 		if ($is_admin == false) {
@@ -517,6 +514,38 @@ class Quote extends DbTable\Quote
 		$result = $db->fetchAll($select);
 
 		return Zend_Json::encode($result);
+	}
+
+	public function fetchApprovalQuotes($approvalStatus = 1, $isAdmin = false, $default_company = DEFAULT_COMPNAY) {
+		$dbDetails = $this->getAdapter();
+
+		$table ="quotes_approval_view";
+
+		$primaryKey = 'quote_id';
+
+		$columns = array(
+			array( 'db' => 'quote_id', 			 'dt' => 'quote_id' ),
+			array( 'db' => 'project_name',  	 'dt' => 'project_name' ),
+			array( 'db' => 'arch_name',			 'dt' => 'arch' ),
+			array( 'db' => 'customer',			 'dt' => 'customer' ),
+			array( 'db' => 'sale_name',			 'dt' => 'sale_name' ),
+			array( 'db' => 'Market_Segment',	 'dt' => 'Market_Segment' ),
+			array( 'db' => 'quote_date',		 'dt' => 'quote_date' ),
+			array( 'db' => 'expire_date',		 'dt' => 'expire_date' ),
+			array( 'db' => 'ship_required_date', 'dt' => 'ship_required_date' ),
+			array( 'db' => 'status_name',		 'dt' => 'status_name' ),
+		);
+
+		if ($isAdmin) {
+			$where = 'approve_status = '. $approvalStatus;
+		}
+		else {
+			$where = 'approve_status = '. $approvalStatus. 'AND default_company = '. $default_company;
+		}
+
+		echo Zend_Json::encode(
+			SSP::complex($_POST, $dbDetails, $table, $primaryKey, $columns, $where)
+		);
 	}
 
 

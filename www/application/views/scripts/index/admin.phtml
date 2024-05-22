@@ -162,7 +162,8 @@
 
     $('#quote_table').DataTable({
         ajax: {
-            url: "quote"
+            url: 'quote',
+            type: 'POST'
         },
         processing: true,
         serverSide: true, // experimetal: server-side processing

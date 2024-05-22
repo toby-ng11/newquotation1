@@ -97,7 +97,7 @@ class IndexController extends Zend_Controller_Action
 	public function quoteAction() // ajax
 	{
 		$quote = new Quote();
-		echo $quote->getQuoteData();
+		echo $quote->getAdminQuotes();
 		exit;
 	}
 
@@ -134,7 +134,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaitingJson(1, $is_admin);
+		echo $quote->fetchApprovalQuotes(1, $is_admin);
 		exit;
 	}
 
@@ -146,7 +146,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaitingJson(10, $is_admin);
+		echo $quote->fetchApprovalQuotes(10, $is_admin);
 		exit;
 	}
 
@@ -158,7 +158,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaitingJson(-1, $is_admin);
+		echo $quote->fetchApprovalQuotes(-1, $is_admin);
 		exit;
 	}
 

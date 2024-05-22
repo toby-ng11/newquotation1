@@ -93,8 +93,10 @@
     $('#waiting').DataTable({
         ajax: {
             url: "/index/approvalwaiting",
-            dataSrc: ''
+            type: 'POST'
         },
+        processing: true,
+        serverSide: true,
         columns: [{
                 data: "quote_id",
                 render: function(data, type, row, meta) {
@@ -105,7 +107,7 @@
                 data: "project_name"
             },
             {
-                data: "arch_name"
+                data: "arch"
             },
             {
                 data: "customer"
@@ -114,7 +116,7 @@
                 data: "sale_name"
             },
             {
-                data: "segment"
+                data: "Market_Segment"
             },
             {
                 data: "quote_date",
@@ -138,8 +140,6 @@
             targets: [0, 2, 3, 4, 5, 6, 7, 8],
             className: 'dt-body-center'
         }],
-        processing: true,
-        //serverSide: true,
         order: [
             [0, "desc"]
         ],
@@ -160,8 +160,10 @@
     $('#approved').DataTable({
         ajax: {
             url: "/index/approvalapproved",
-            dataSrc: ''
+            type: 'POST'
         },
+        processing: true,
+        serverSide: true,
         columns: [{
                 data: "quote_id",
                 render: function(data, type, row, meta) {
@@ -172,7 +174,7 @@
                 data: "project_name"
             },
             {
-                data: "arch_name"
+                data: "arch"
             },
             {
                 data: "customer"
@@ -181,7 +183,7 @@
                 data: "sale_name"
             },
             {
-                data: "segment"
+                data: "Market_Segment"
             },
             {
                 data: "quote_date",
@@ -217,7 +219,6 @@
             targets: [0, 2, 4, 5, 6, 7, 8, 9],
             className: 'dt-body-center'
         }],
-        processing: true,
         order: [
             [0, "desc"]
         ],
@@ -237,8 +238,10 @@
     $('#disapproved').DataTable({
         ajax: {
             url: "/index/approvaldisapproved",
-            dataSrc: ''
+            type: 'POST'
         },
+        processing: true,
+        serverSide: true,
         columns: [{
                 data: "quote_id",
                 render: function(data, type, row, meta) {
@@ -249,7 +252,7 @@
                 data: "project_name"
             },
             {
-                data: "arch_name"
+                data: "arch"
             },
             {
                 data: "customer"
@@ -258,7 +261,7 @@
                 data: "sale_name"
             },
             {
-                data: "segment"
+                data: "Market_Segment"
             },
             {
                 data: "quote_date",
@@ -300,7 +303,6 @@
             targets: [0, 2, 4, 5, 6, 7, 8, 9, 10],
             className: 'dt-body-center'
         }],
-        processing: true,
         order: [
             [0, "desc"]
         ],
