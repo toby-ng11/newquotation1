@@ -68,7 +68,7 @@ $disapproved = -1;
 							break;
 					}
 					if ($quote['status'] != 0 and $quote['approve_status'] != $approved) { ?>
-						<a href="" title="" class='button quick-link delete_quote'>
+						<a href="/quote/delete/id/<?= $quoteID ?>" title="" class='button quick-link delete_quote'>
 							<span class='icon icon-trash'></span>
 							Delete Quote</a>
 					<?php } ?>
@@ -940,11 +940,11 @@ $disapproved = -1;
 
 		$('.delete_quote').on("click", function(e) {
 			if (confirm("Are you sure you want to delete this quote?") == true) {
+				unsave = false;
 				$.ajax({
-					url: '/quote/delete/id/' + $('#quote_id').val(),
-					type: "get",
+					url: $(this).attr('href'),
+					type: "post",
 					success: function(data) {
-						window.location = "/index";
 					}
 				});
 			} else {
@@ -953,7 +953,8 @@ $disapproved = -1;
 		});
 
 		$('a.ready_quote').on("click", function(e) {
-			if (confirm("Click OK to submit quote.\nClick CANCEL to return to edit.") == true) {
+			if (confirm("You are about to submit this quote. Continue?") == true) {
+				unsave = false;
 				e.preventDefault();
 				$('.loading').show();
 				$.ajax({
@@ -977,7 +978,7 @@ $disapproved = -1;
 
 
 		$('a.quote-edit-again').on("click", function(e) {
-			if (confirm("You need submit again after edit!") == true) {
+			if (confirm("You are about to edit this approved quote. Continue?") == true) {
 				e.preventDefault();
 				$('.loading').show();
 				$.ajax({

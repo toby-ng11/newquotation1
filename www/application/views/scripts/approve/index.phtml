@@ -83,6 +83,9 @@ $disapproved = -1;
 					<p><?= ($project['project_location_address'] == 'N/A') ? '' : $project['project_location_address'] ?></p>
 					</br>
 					<p>by <b><?= $project['owner'] ?></b></p>
+					<?php if (($project['worksheet_assign']) != null) { ?>
+						<p>shared with <b><?= $project['worksheet_assign'] ?></b></p>
+					<?php } ?>
 				</div>
 			</div>
 
@@ -952,12 +955,12 @@ $disapproved = -1;
 		}
 
 		$('a.delete_quote').on("click", function(e) {
-			if (confirm("Confirm delete This Quote?") == true) {
+			if (confirm("You are about to delete this quote. Continue?") == true) {
+				unsave = false; // prevent double pop-up
 				$.ajax({
 					url: $(this).attr('href'),
 					type: "post",
 					success: function(data) {
-						window.location = "/index/approval";
 					}
 				});
 			} else {
@@ -968,14 +971,15 @@ $disapproved = -1;
 		$('a.approve').on("click", function(e) {
 			e.preventDefault();
 			if ($("#quote_content").validationEngine('validate') == true) {
-				if (confirm("Are you sure you want to approve this quote?") == true) {
-					$('.loading').show();
+				if (confirm("You are about to approve this quote. Continue?") == true) {
+					unsave = false; // prevent double pop-up
 					$.ajax({
 						url: $(this).attr('href'),
 						type: "post",
 						data: $('#quote_content').serialize(),
 						success: function(data) {
 							window.location.reload();
+							window.scrollTo(0, 0);
 						}
 					});
 				}
@@ -988,12 +992,13 @@ $disapproved = -1;
 		$('a.disapprove').on("click", function(e) {
 			e.preventDefault();
 			if (confirm("Are you sure you want to disapprove this quote?") == true) {
-				$('.loading').show();
+				unsave = false; // prevent double pop-up
 				$.ajax({
 					url: $(this).attr('href'),
 					type: "get",
 					success: function(data) {
 						window.location.reload();
+						window.scrollTo(0, 0);
 					}
 				});
 			}

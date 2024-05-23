@@ -308,8 +308,8 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 						<tr>
 							<th>Log Time</th>
 							<th>Log</th>
-							<th>Follow Up Date</th>
 							<th>Next Action</th>
+							<th>Follow Up Date</th>
 							<th>Added by</th>
 							<th class="action">Options</th>
 						</tr>
@@ -409,17 +409,17 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 				}
 			},
 			{
-				data: "follow_up_date",
-				render: function(data) {
-					let date = new Date(data);
-					return date.toLocaleDateString();
-				}
-			},
-			{
 				data: "type",
 				render: function(data) {
 					let formattedText = data.replace(/(?:\r\n|\r|\n)/g, '<br>');
 					return '<p>' + formattedText + '</p>';
+				}
+			},
+			{
+				data: "follow_up_date",
+				render: function(data) {
+					let date = new Date(data);
+					return date.toLocaleDateString();
 				}
 			},
 			{
@@ -443,7 +443,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			},
 		],
 		columnDefs: [{
-				targets: [0, 2, 4],
+				targets: [0, 3, 4],
 				className: 'dt-body-center'
 			},
 			{

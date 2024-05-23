@@ -540,7 +540,7 @@ class Quote extends DbTable\Quote
 			$where = 'approve_status = '. $approvalStatus;
 		}
 		else {
-			$where = 'approve_status = '. $approvalStatus. 'AND default_company = '. $default_company;
+			$where = 'approve_status = '. $approvalStatus. ' AND default_company = \''. $default_company .'\'';
 		}
 
 		echo Zend_Json::encode(
