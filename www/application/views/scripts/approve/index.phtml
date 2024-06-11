@@ -513,14 +513,12 @@ $disapproved = -1;
 			}
 		],
 		columnDefs: [{
-				targets: [0, 1, 2, 3, 4],
-				className: 'dt-body-center'
-			},
-			{
-				targets: [0, 1, 2, 3, 4, 5, 6],
-				className: 'dt-head-center'
-			},
-		],
+			targets: '_all',
+			className: 'dt-head-center'
+		}, {
+			targets: [0, 1, 2, 3, 4],
+			className: 'dt-body-center'
+		}],
 		layout: {
 			topStart: null,
 			topEnd: null
@@ -551,7 +549,7 @@ $disapproved = -1;
 		$('#options-button').on("click", function() {
 			$('#options-menu-items').slideToggle({
 				start: function() {
-    				$(this).css('display','flex');
+					$(this).css('display', 'flex');
 				}
 			});
 		})
@@ -960,8 +958,7 @@ $disapproved = -1;
 				$.ajax({
 					url: $(this).attr('href'),
 					type: "post",
-					success: function(data) {
-					}
+					success: function(data) {}
 				});
 			} else {
 				e.preventDefault();

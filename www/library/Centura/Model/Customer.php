@@ -171,19 +171,18 @@ class Customer extends DbTable\Customer
 			$info['sale_rep']                   = 'Centura Branches';
 		}
 		else { $info['sale_rep']                   = $data['sale_rep'];}
-		//$info['phys_country']               = $data['phys_country'];
-		$info['creator']                    = $session->user['id'];
+		$info['phys_country']               = $data['phys_country'];
+		//$info['creator']                    = $session->user['id'];
 		
 		try {
 			$db->insert('customer', $info);
+			$newCustomerID = $db->lastInsertId('customer', 'customer_id');
+			return $newCustomerID;
+
 		} catch (Exception $e) {
 			error_log($e);
 			return false;
 		}
-		
-		$customer = $this->fetchlatestcustomer($info['creator']);
-
-		return $customer['customer_id'];
 	}
 	
 	public function edit($customer_id,$data)
@@ -207,7 +206,7 @@ class Customer extends DbTable\Customer
 		$info['mail_postal_code']           = $data['mail_postal_code'];
 		$info['phys_country']               = $data['phys_country'];
 		$info['sale_rep']                   = $data['sale_rep'];
-		//$info['phys_country']               = $data['phys_country'];
+		$info['phys_country']               = $data['phys_country'];
 		
 		try {
 			$project_id = $db->update('customer', $info,'customer_id ='.$customer_id);
@@ -217,17 +216,6 @@ class Customer extends DbTable\Customer
 		}
 		
 		return $project_id;
-	}
-	
-	public function fetchlatestcustomer($creator)
-	{
-		$db = $this->getAdapter();
-		$select = $db->select()->from('customer')->order('added desc');
-		if($creator !=null)
-		{
-			$select->where('creator = ?',$creator);
-		}
-		return $db->fetchRow($select);
 	}
 }
 

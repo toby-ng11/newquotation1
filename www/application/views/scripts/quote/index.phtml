@@ -23,7 +23,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 						Save & make quote</a>
 				</div>
 			</div>
-			
+
 			<h1>Make quote</h1>
 		</header>
 
@@ -188,10 +188,12 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 					</div>
 
 					<input type="hidden" class="datepicker" id='quote_date' name='quote_date' />
-					
+
 					<div class="oneTwo">
 						<label for="ship-required-date">Shipment Required Date</label>
-						<input id="ship-required-date" type="text" class="datepicker" name='ship_required_date' value="<?php if ($projectRequiredDate && $projectRequiredDate > new DateTime('2000-01-01')) { echo $projectRequiredDate->format('Y-m-d'); } ?>" />
+						<input id="ship-required-date" type="text" class="datepicker" name='ship_required_date' value="<?php if ($projectRequiredDate && $projectRequiredDate > new DateTime('2000-01-01')) {
+																															echo $projectRequiredDate->format('Y-m-d');
+																														} ?>" />
 					</div>
 					<div class="oneTwo">
 						<label for="quote_date">Expire Date</label>
@@ -346,14 +348,12 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			}
 		],
 		columnDefs: [{
-				targets: [0, 1, 2, 3, 4],
-				className: 'dt-body-center'
-			},
-			{
-				targets: [0, 1, 2, 3, 4, 5, 6],
-				className: 'dt-head-center'
-			},
-		],
+			targets: '_all',
+			className: 'dt-head-center'
+		}, {
+			targets: [0, 1, 2, 3, 4],
+			className: 'dt-body-center'
+		}],
 		layout: {
 			topStart: null,
 			topEnd: null

@@ -2,7 +2,7 @@
 
 namespace Centura\Model;
 
-use Centura\Model\{ Customer, ProductProject, Project };
+use Centura\Model\{Customer, ProductProject, Project};
 
 use Zend_Registry;
 use Zend_Db_Select;
@@ -14,7 +14,7 @@ use DateTime;
 
 use SSP;
 
-require_once( 'ssp.class.php' );
+require_once('ssp.class.php');
 class Quote extends DbTable\Quote
 {
 
@@ -36,8 +36,7 @@ class Quote extends DbTable\Quote
 		$info['quote_date']                 = date('Y-m-d H:i:s.v');
 		if ($data['expire_date'] == null) {
 			$data['expire_date'] = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 60, date("Y")));
-		} 
-		else {
+		} else {
 			$info['expire_date'] = DateTime::createFromFormat('Y-m-d', $data['expire_date'])->format('Y-m-d');
 		}
 		$info['quote_type_id']              = $data['quote_type_id'];
@@ -59,36 +58,29 @@ class Quote extends DbTable\Quote
 		try {
 
 			$db->insert('quote', $info);
-			
+			$newQuoteID = $db->lastInsertId('quote', 'quote_id');
 
+			$this->updatequoteno($newQuoteID);
+
+			$item = new ItemsProject();
+			$itemList = $item->fetchallitems($data['project_id']);
+
+			$item_id_list = array();
+
+			$products = new ProductProject();
+			foreach ($itemList as $item) {
+				$products->add($item, $newQuoteID);
+				$item_id_list[] = $item["product_id"];
+			}
+
+			$project = new Project();
+			$project->log($data['project_id'], 'Quote Add', $newQuoteID, implode(", ", $item_id_list), $data['note']);
+
+			return $newQuoteID;
 		} catch (Exception $e) {
 			error_log(print_r($e));
 			return false;
 		}
-
-		$quote = $this->fetchlatestquote($info['sales_id']);
-		//error_log(print_r($quote['quote_id']), true);
-
-		//update quote no 
-		$this->updatequoteno($quote['quote_id']);
-
-		//add products
-
-		$item = new ItemsProject();
-		$itemList = $item->fetchallitems($data['project_id']);
-
-		$item_id_list = array();
-
-		$products = new ProductProject();
-		foreach ($itemList as $item) {
-			$products->add($item, $quote['quote_id']);
-			$item_id_list[] = $item["product_id"];
-		}
-
-		$project = new Project();
-		$project->log($data['project_id'], 'Quote Add', $quote['quote_id'], implode(", ", $item_id_list), $data['note']);
-
-		return $quote['quote_id'];
 	}
 
 	public function edit($data, $quote_id)
@@ -103,7 +95,7 @@ class Quote extends DbTable\Quote
 		{
 			$customer = new Customer();
 			$data['customer_id'] = $customer->newcustomer($data);
-		} 
+		}
 		//else {
 		//	$customer = new Customer();
 		//	$data['customer_id'] = $customer->edit($data['customer_id'], $data);
@@ -115,8 +107,9 @@ class Quote extends DbTable\Quote
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < 1000) //fix 1969-12-31
 		{
 			$data['expire_date'] = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 60, date("Y")));
+		} else {
+			$info['expire_date']                = DateTime::createFromFormat('Y-m-d', $data['expire_date'])->format('Y-m-d');
 		}
-		else { $info['expire_date']                = DateTime::createFromFormat('Y-m-d', $data['expire_date'])->format('Y-m-d'); }
 		$info['quote_type_id']              = $data['quote_type_id'];
 		$info['quote_segment']              = $data['quote_segment'];
 		//$info['sales_id']                   = $session->user['id'];
@@ -150,7 +143,7 @@ class Quote extends DbTable\Quote
 
 		return $quote_id;
 	}
-	
+
 	public function fetchquotebyid($quote_id)
 	{
 		if ($quote_id == null) {
@@ -234,7 +227,7 @@ class Quote extends DbTable\Quote
 		$data['status'] = 0;
 
 		try {
-			$db->update('quote', $data, 'quote_id ='.$quote_id);
+			$db->update('quote', $data, 'quote_id =' . $quote_id);
 		} catch (Exception $e) {
 			error_log($e);
 			return false;
@@ -355,7 +348,7 @@ class Quote extends DbTable\Quote
 		$db = $this->getAdapter();
 
 		$selectedField = array(
-			'quote_id', 
+			'quote_id',
 			'quote_no',
 			'project_id',
 			'project_name',
@@ -402,7 +395,7 @@ class Quote extends DbTable\Quote
 			->order('quote_id desc')
 			->join('project', 'project.project_id = quote.project_id', 'project_name')
 			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))
-			->join('quote_market_segment', 'quote_market_segment.uid = quote.quote_segment', array('segment'=>'Market_Segment'))
+			->join('quote_market_segment', 'quote_market_segment.uid = quote.quote_segment', array('segment' => 'Market_Segment'))
 			->where('quote.status =?', 1)
 			->where('project.deleted =?', 'N');
 
@@ -417,20 +410,20 @@ class Quote extends DbTable\Quote
 		$dbDetails = $this->getAdapter();
 
 		//DB table to use
-		$table ="view_quote_x_project";
+		$table = "view_quote_x_project";
 
 		// Table's primary key
 		$primaryKey = 'quote_id';
 
 		$columns = array(
-			array( 'db' => 'quote_id', 			 'dt' => 'quote_id' ),
-			array( 'db' => 'project_name',  	 'dt' => 'project_name' ),
-			array( 'db' => 'Market_Segment',     'dt' => 'Market_Segment' ),
-			array( 'db' => 'quote_date',         'dt' => 'quote_date' ),
-			array( 'db' => 'expire_date',        'dt' => 'expire_date' ),
-			array( 'db' => 'ship_required_date', 'dt' => 'ship_required_date' ),
-			array( 'db' => 'Status', 			 'dt' => 'Status' ),
-			array( 'db' => 'approve_status', 	 'dt' => 'approve_status' ),
+			array('db' => 'quote_id', 			 'dt' => 'quote_id'),
+			array('db' => 'project_name',  	 'dt' => 'project_name'),
+			array('db' => 'Market_Segment',     'dt' => 'Market_Segment'),
+			array('db' => 'quote_date',         'dt' => 'quote_date'),
+			array('db' => 'expire_date',        'dt' => 'expire_date'),
+			array('db' => 'ship_required_date', 'dt' => 'ship_required_date'),
+			array('db' => 'Status', 			 'dt' => 'Status'),
+			array('db' => 'approve_status', 	 'dt' => 'approve_status'),
 		);
 
 		echo Zend_Json::encode(
@@ -449,7 +442,8 @@ class Quote extends DbTable\Quote
 			->from('project_log')
 			->join('project', 'project.project_id = project_log.project_id', array(
 				'address' => 'project_location_address',
-				'project_name'))
+				'project_name'
+			))
 			->where('project_log.quote_id = ?', $quote_id)->order('added desc');
 
 		return $db->fetchAll($select);
@@ -465,7 +459,8 @@ class Quote extends DbTable\Quote
 			->from('project_log')
 			->join('project', 'project.project_id = project_log.project_id', array(
 				'address' => 'project_location_address',
-				'project_name'))
+				'project_name'
+			))
 			->join('quote', 'quote.project_id = project.project_id')
 			->where('quote.sales_id = ?', $owner)
 			->order('project_log.added desc');
@@ -516,31 +511,31 @@ class Quote extends DbTable\Quote
 		return Zend_Json::encode($result);
 	}
 
-	public function fetchApprovalQuotes($approvalStatus = 1, $isAdmin = false, $default_company = DEFAULT_COMPNAY) {
+	public function fetchApprovalQuotes($approvalStatus = 1, $isAdmin = false, $default_company = DEFAULT_COMPNAY)
+	{
 		$dbDetails = $this->getAdapter();
 
-		$table ="quotes_approval_view";
+		$table = "quotes_approval_view";
 
 		$primaryKey = 'quote_id';
 
 		$columns = array(
-			array( 'db' => 'quote_id', 			 'dt' => 'quote_id' ),
-			array( 'db' => 'project_name',  	 'dt' => 'project_name' ),
-			array( 'db' => 'arch_name',			 'dt' => 'arch' ),
-			array( 'db' => 'customer',			 'dt' => 'customer' ),
-			array( 'db' => 'sale_name',			 'dt' => 'sale_name' ),
-			array( 'db' => 'Market_Segment',	 'dt' => 'Market_Segment' ),
-			array( 'db' => 'quote_date',		 'dt' => 'quote_date' ),
-			array( 'db' => 'expire_date',		 'dt' => 'expire_date' ),
-			array( 'db' => 'ship_required_date', 'dt' => 'ship_required_date' ),
-			array( 'db' => 'status_name',		 'dt' => 'status_name' ),
+			array('db' => 'quote_id', 			 'dt' => 'quote_id'),
+			array('db' => 'project_name',  	 'dt' => 'project_name'),
+			array('db' => 'arch_name',			 'dt' => 'arch'),
+			array('db' => 'customer',			 'dt' => 'customer'),
+			array('db' => 'sale_name',			 'dt' => 'sale_name'),
+			array('db' => 'Market_Segment',	 'dt' => 'Market_Segment'),
+			array('db' => 'quote_date',		 'dt' => 'quote_date'),
+			array('db' => 'expire_date',		 'dt' => 'expire_date'),
+			array('db' => 'ship_required_date', 'dt' => 'ship_required_date'),
+			array('db' => 'status_name',		 'dt' => 'status_name'),
 		);
 
 		if ($isAdmin) {
-			$where = 'approve_status = '. $approvalStatus;
-		}
-		else {
-			$where = 'approve_status = '. $approvalStatus. ' AND default_company = \''. $default_company .'\'';
+			$where = 'approve_status = ' . $approvalStatus;
+		} else {
+			$where = 'approve_status = ' . $approvalStatus . ' AND default_company = \'' . $default_company . '\'';
 		}
 
 		echo Zend_Json::encode(
@@ -604,9 +599,11 @@ class Quote extends DbTable\Quote
 			->order('quote_id desc')
 			->join('project', 'project.project_id = quote.project_id', 'project_name')
 			->join('P21_Customer_X_Address_X_Contacts', 'P21_Customer_X_Address_X_Contacts.customer_id=quote.customer_id', array(
-				'p21_customer_id' => 'duplicate_customer_id'))
+				'p21_customer_id' => 'duplicate_customer_id'
+			))
 			->join('P21_Users', 'quote.arch = P21_Users.id', array(
-				'arch_rep' => 'P21_Users.name'))
+				'arch_rep' => 'P21_Users.name'
+			))
 			->where('quote.customer_id < ?', 900000)
 			->where('P21_Customer_X_Address_X_Contacts.duplicate_customer_id NOT IN (?)', $internalCustomers);
 
@@ -684,9 +681,9 @@ class Quote extends DbTable\Quote
 		return $csv;
 	}
 
-	public function fetchQuoteByProjectId($project_id) {
-		if($project_id == null)
-		{
+	public function fetchQuoteByProjectId($project_id)
+	{
+		if ($project_id == null) {
 			return  false;
 		}
 

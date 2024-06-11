@@ -322,7 +322,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			<form action="" class="dialog" id='memo'>
 				<div class="dialog-form">
 					<input type="hidden" name="author" id="memo-author" value="<?= $session->user['id'] ?>">
-					<div class="oneTwo required-field dialog-note">
+					<div class="oneTwo dialog-note">
 						<label for="title">Title</label>
 						<textarea rows="2" name='title' id='title' placeholder="Title"></textarea>
 					</div>
@@ -332,9 +332,9 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 						<textarea rows="8" name='content' id='content' class="validate[required]" placeholder="Log content"></textarea>
 					</div>
 
-					<div class="oneTwo required-field dialog-note">
+					<div class="oneTwo dialog-note">
 						<label for="type">Next Action</label>
-						<textarea rows="3" name="type" id='type' placeholder="Critical updates note"></textarea>
+						<textarea rows="3" name="type" id='type' placeholder="Can be left empty"></textarea>
 					</div>
 
 					<div class="oneTwo dialog-note">
@@ -400,8 +400,12 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			{
 				data: "title",
 				render: function(data, type, row, meta) {
-					if (row.content == null) {
-						return '<p><b>' + data + '</b></p>';
+					if (data == '') {
+						let formattedText = (row.content).replace(/(?:\r\n|\r|\n)/g, '<br>');
+						return '<p>' + formattedText + '</p>';
+					}
+					else if (row.content == null) { // this is for old quote system rendering
+						return '<p>' + data + '</p>';
 					} else {
 						let formattedText = (row.content).replace(/(?:\r\n|\r|\n)/g, '<br>');
 						return '<p><b>' + data + '</b></br>' + formattedText + '</p>';
@@ -443,12 +447,11 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			},
 		],
 		columnDefs: [{
+                targets: '_all',
+                className: 'dt-head-center'
+                }, {
 				targets: [0, 3, 4],
 				className: 'dt-body-center'
-			},
-			{
-				targets: [0, 1, 2, 3, 4],
-				className: 'dt-head-center'
 			}
 		],
 		order: [
@@ -509,13 +512,12 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			}
 		],
 		columnDefs: [{
+                targets: '_all',
+                className: 'dt-head-center'
+                }, {
 				targets: [0, 1, 2, 3, 4],
 				className: 'dt-body-center'
-			},
-			{
-				targets: [0, 1, 2, 3, 4, 5, 6],
-				className: 'dt-head-center'
-			},
+			}
 		],
 		layout: {
 			topStart: null,
@@ -591,6 +593,9 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			}
 		],
 		columnDefs: [{
+                targets: '_all',
+                className: 'dt-head-center'
+                }, {
 			targets: [0, 2, 3, 4, 5, 6],
 			className: 'dt-body-center'
 		}],
