@@ -29,11 +29,10 @@
                 <table width="100%" class="display nowrap" id="project_table">
                     <thead>
                         <tr>
-                            <th>Project #</th>
                             <th>Quote #</th>
                             <th>Name</th>
                             <th>Owner</th>
-                            <th>Shared With</th>
+                            <th>Shared</th>
                             <th>Create Date</th>
                             <th>Due Date</th>
                             <th>Specifier</th>
@@ -83,14 +82,12 @@
         },
         processing: true,
         serverSide: true, //TODO: Error 404
-        columns: [{
-                data: "project_id",
-                render: function(data) {
-                    return "<a target='_blank' href='/project/edit/id/" + data + "'>" + data + "</a>";
-                }
-            },
+        columns: [
             {
-                data: "quote_no"
+                data: "quote_no",
+                render: function(data, type, row, meta) {
+                        return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + data + "</a>";
+                }
             },
             {
                 data: "project_name"
@@ -141,7 +138,7 @@
             targets: '_all',
             className: 'dt-head-center'
         }, {
-            targets: [0, 1, 3, 4, 5, 6, 7, 8],
+            targets: [0, 2, 3, 4, 5, 7, 8],
             className: 'dt-body-center'
         }],
         //"responsive": true,

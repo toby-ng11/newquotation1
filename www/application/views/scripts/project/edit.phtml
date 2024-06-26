@@ -339,7 +339,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 
 					<div class="oneTwo dialog-note">
 						<label for='follow_up_date'>Follow Up Date</label>
-						<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker" value='<?= $projectDueDate->format('Y-m-d') ?>' />
+						<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker" value='<?= date('Y-m-d') ?>' />
 					</div>
 				</div>
 			</form>
@@ -394,7 +394,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 				data: "added",
 				render: function(data) {
 					let date = new Date(data);
-					return date.toLocaleString();
+					return '<p><b>' + date.toLocaleString() + '</b></p>';
 				}
 			},
 			{
@@ -403,8 +403,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 					if (data == '') {
 						let formattedText = (row.content).replace(/(?:\r\n|\r|\n)/g, '<br>');
 						return '<p>' + formattedText + '</p>';
-					}
-					else if (row.content == null) { // this is for old quote system rendering
+					} else if (row.content == null) { // this is for old quote system rendering
 						return '<p>' + data + '</p>';
 					} else {
 						let formattedText = (row.content).replace(/(?:\r\n|\r|\n)/g, '<br>');
@@ -423,11 +422,18 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 				data: "follow_up_date",
 				render: function(data) {
 					let date = new Date(data);
-					return date.toLocaleDateString();
+					return '<p><b>' + date.toLocaleDateString() + '</b></p>';
 				}
 			},
 			{
-				data: "author"
+				data: "author",
+				render: function(data) {
+					if (data != null) {
+						return '<p><b>' + data + '</b></p>';
+					} else {
+						return data;
+					}
+				}
 			},
 			{
 				data: "memo_id",
@@ -447,13 +453,12 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			},
 		],
 		columnDefs: [{
-                targets: '_all',
-                className: 'dt-head-center'
-                }, {
-				targets: [0, 3, 4],
-				className: 'dt-body-center'
-			}
-		],
+			targets: '_all',
+			className: 'dt-head-center'
+		}, {
+			targets: [0, 3, 4],
+			className: 'dt-body-center'
+		}],
 		order: [
 			[5, "desc"]
 		],
@@ -512,13 +517,12 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			}
 		],
 		columnDefs: [{
-                targets: '_all',
-                className: 'dt-head-center'
-                }, {
-				targets: [0, 1, 2, 3, 4],
-				className: 'dt-body-center'
-			}
-		],
+			targets: '_all',
+			className: 'dt-head-center'
+		}, {
+			targets: [0, 1, 2, 3, 4],
+			className: 'dt-body-center'
+		}],
 		layout: {
 			topStart: null,
 			topEnd: null
@@ -593,9 +597,9 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			}
 		],
 		columnDefs: [{
-                targets: '_all',
-                className: 'dt-head-center'
-                }, {
+			targets: '_all',
+			className: 'dt-head-center'
+		}, {
 			targets: [0, 2, 3, 4, 5, 6],
 			className: 'dt-body-center'
 		}],

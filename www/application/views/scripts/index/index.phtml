@@ -27,14 +27,13 @@
                 <table width="100%" class="display nowrap" id='project_table'>
                     <thead>
                         <tr>
-                            <th>Project ID</th>
                             <th>Quote ID</th>
                             <th>Project Name</th>
-                            <th>Shared With</th>
+                            <th>Shared</th>
+                            <th>Segment</th>
+                            <th>Specifier</th>
                             <th>Create Date</th>
                             <th>Due Date</th>
-                            <th>Specifier</th>
-                            <th>Market Segment</th>
                             <th>Status</th>
                             <th>Make Quote</th>
                         </tr>
@@ -48,14 +47,13 @@
                 <table width="100%" class="display nowrap" id='assigned_projects_table'>
                     <thead>
                         <tr>
-                            <th>Project ID</th>
                             <th>Quote ID</th>
                             <th>Project Name</th>
-                            <th>Worksheet Owner</th>
+                            <th>Owner</th>
+                            <th>Segment</th>
+                            <th>Specifier</th>
                             <th>Create Date</th>
                             <th>Due Date</th>
-                            <th>Specifier</th>
-                            <th>Market Segment</th>
                             <th>Status</th>
                             <th>Make Quote</th>
                         </tr>
@@ -70,16 +68,15 @@
                     <table width="100%" class="display nowrap" id='other_project_table'>
                         <thead>
                             <tr>
-                                <th>Project ID</th>
                                 <th>Quote ID</th>
                                 <th>Project Name</th>
-                                <th>Worksheet Owner</th>
-                                <th>Shared With</th>
+                                <th>Owner</th>
+                                <th>Shared</th>
+                                <th>Segment</th>
+                                <th>Specifier</th>
                                 <th>Create Date</th>
                                 <th>Due Date</th>
-                                <th>Specifier</th>
-                                <th>Market Segment</th>
-                                <th class="action">Make Quote</th>
+                                <th>Make Quote</th>
                             </tr>
                         </thead>
                     </table>
@@ -159,22 +156,24 @@
                 url: "/index/projectsalesrep",
                 dataSrc: ''
             },
-            columns: [{
-                    data: "project_id",
-                    render: function(data, type, row, meta) {
-                        {
-                            return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + row.project_id + "</a>";
-                        }
-                    }
-                },
+            columns: [
                 {
-                    data: "quote_no"
+                    data: "quote_no",
+                    render: function(data, type, row, meta) {
+                        return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + data + "</a>";
+                    }
                 },
                 {
                     data: "project_name"
                 },
                 {
                     data: "worksheet_assign"
+                },
+                {
+                    data: "segment"
+                },
+                {
+                    data: "Specifier_name"
                 },
                 {
                     data: "create_date",
@@ -196,12 +195,6 @@
                     }
                 },
                 {
-                    data: "Specifier_name"
-                },
-                {
-                    data: "segment"
-                },
-                {
                     data: "status_name"
                 },
                 {
@@ -215,13 +208,14 @@
                 targets: '_all',
                 className: 'dt-head-center'
             }, {
-                targets: [0, 1, 3, 4, 6, 7, 8],
+                targets: [0, 2, 3, 5, 6, 7],
                 className: 'dt-body-center'
             }],
             processing: true,
-            order: [
-                [0, "desc"]
-            ],
+            order: {
+                name: 'project_id',
+                dir: 'desc'
+            },
             fixedColumns: {
                 start: 1,
                 end: 2
@@ -242,22 +236,26 @@
                 url: "/index/assignedprojects",
                 dataSrc: ''
             },
-            columns: [{
-                    data: "project_id",
+            columns: [
+                {
+                    data: "quote_no",
                     render: function(data, type, row, meta) {
                         {
-                            return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + row.project_id + "</a>";
+                            return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + data + "</a>";
                         }
                     }
-                },
-                {
-                    data: "quote_no"
                 },
                 {
                     data: "project_name"
                 },
                 {
                     data: "owner"
+                },
+                {
+                    data: "segment"
+                },
+                {
+                    data: "Specifier_name"
                 },
                 {
                     data: "create_date",
@@ -279,12 +277,6 @@
                     }
                 },
                 {
-                    data: "Specifier_name"
-                },
-                {
-                    data: "segment"
-                },
-                {
                     data: "status_name"
                 },
                 {
@@ -298,13 +290,14 @@
                 targets: '_all',
                 className: 'dt-head-center'
             }, {
-                targets: [0, 1, 3, 4, 6, 7, 8],
+                targets: [0, 2, 3, 5, 6, 7],
                 className: 'dt-body-center'
             }],
             processing: true,
-            order: [
-                [0, "desc"]
-            ],
+            order: {
+                name: 'project_id',
+                dir: 'desc'
+            },
             fixedColumns: {
                 start: 1,
                 end: 2
@@ -325,14 +318,12 @@
                     url: "/index/otherprojects",
                     dataSrc: ''
                 },
-                columns: [{
-                        data: "project_id",
-                        render: function(data, type, row, meta) {
-                            return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + row.project_id + "</a>";
-                        }
-                    },
+                columns: [
                     {
-                        data: "quote_no"
+                        data: "quote_no",
+                        render: function(data, type, row, meta) {
+                            return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + data + "</a>";
+                        }
                     },
                     {
                         data: "project_name"
@@ -342,6 +333,12 @@
                     },
                     {
                         data: "worksheet_assign"
+                    },
+                    {
+                        data: "segment"
+                    },
+                    {
+                        data: "Specifier_name"
                     },
                     {
                         data: "create_date",
@@ -363,12 +360,6 @@
                         }
                     },
                     {
-                        data: "Specifier_name"
-                    },
-                    {
-                        data: "segment"
-                    },
-                    {
                         data: "project_id",
                         render: function(data, type, row, meta) {
                             return "<a target='_blank' href='/quote/index/project/" + row.project_id + "'><span class='button-wrap'><span class='icon icon-money'></span></span></a>";
@@ -379,13 +370,14 @@
                     targets: '_all',
                     className: 'dt-head-center'
                 }, {
-                    targets: [0, 1, 3, 4, 6, 8],
+                    targets: [0, 2, 3, 4, 6, 7],
                     className: 'dt-body-center'
                 }],
                 processing: true,
-                order: [
-                    [0, "desc"]
-                ],
+                order: {
+                    name: 'project_id',
+                    dir: 'desc'
+                },
                 fixedColumns: {
                     start: 1,
                     end: 1

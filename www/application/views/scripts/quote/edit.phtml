@@ -249,7 +249,7 @@ $disapproved = -1;
 						<input readonly id='phys_country' name='phys_country' type="text" value="<?= $customer['phys_country'] ?? '' ?>">
 					</div>
 
-					<div class="oneTwo required-field">
+					<div class="oneTwo">
 						<label for="tel">Phone Number</label>
 						<input readonly id='tel' name='phone' type="text" class="maskPhoneExt" value="<?= $customer['tel'] ?? '' ?>" />
 					</div>
@@ -321,29 +321,34 @@ $disapproved = -1;
 								<?php } ?>
 							<?php } else { ?>
 								<?php foreach ($this->arch as $a) { ?>
-									<?php if ($a['id'] == $quote['arch']) { ?><option value="<?= $a['id'] ?>" selected><?= $a['name'] . ' - ' . $a['default_company'] ?></option> <?php } ?>
+									<?php if ($a['id'] == $quote['arch']) { ?>
+										<option value="<?= $a['id'] ?>" selected><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
+									<?php } ?>
 								<?php } ?>
 							<?php } ?>
 						</select>
 					</div>
+				</div>
 
-					<?php if ($quote['approve_status'] == $approved) { ?>
+				<?php if ($quote['approve_status'] == $approved) { ?>
+					<div class="line"></div>
+					<h2>Approval</h2>
+					<div class="formRow">
 						<div class="oneTwo">
 							<label for="quote_approval">Quote Approval</label>
 							<select id="quote_approval" name="quote_approval">
 								<?php foreach ($this->approval as $a) {
 									if ($a['uid'] == $quote['quote_approval']) { ?>
-										<option value="
-											<?= $a['uid'] ?>" selected><?= $a['Name'] . ' - ' . $a['Company_ID'] ?>
+										<option value="<?= $a['uid'] ?>" selected><?= $a['Name'] . ' - ' . $a['Company_ID'] ?>
 										</option>
 								<?php }
 								} ?>
 							</select>
 						</div>
-					<?php } else { ?>
-						<input type="hidden" id='quote_approval' name='quote_approval' value="<?= $quote['quote_approval'] ?>" />
-					<?php } ?>
-				</div>
+					</div>
+				<?php } else { ?>
+					<input type="hidden" id='quote_approval' name='quote_approval' value="<?= $quote['quote_approval'] ?>" />
+				<?php } ?>
 
 				<div class="line"></div>
 
@@ -845,16 +850,16 @@ $disapproved = -1;
 
 		$('#add_new_mode').on("click", function() {
 			oldCustomer = getOldCustomer();
-			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #sale_rep').prop('readonly', false);
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #customer_id, #sale_rep').prop('readonly', false);
 			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #customer_id, #sale_rep').val('');
-			$('#quote, #address, #tel, #customer_email').addClass('validate[required]');
+			$('#quote, #address, #customer_email').addClass('validate[required]');
 			$('#add_new_mode').hide();
 			$('#discard_new_mode').show();
 			//console.log(oldCustomer);
 		});
 
 		$('#discard_new_mode').on("click", function() {
-			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email').prop('readonly', true);
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #customer_id, #sale_rep').prop('readonly', true);
 			$('#quote').val(oldCustomer['oldQuoteTo']);
 			$('#first_name').val(oldCustomer['oldFirstName']);
 			$('#last_name').val(oldCustomer['oldLastName']);

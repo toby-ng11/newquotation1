@@ -140,9 +140,9 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 						<input id='phys_country' name='phys_country' type="text" placeholder="Optional">
 					</div>
 
-					<div class="oneTwo required-field">
+					<div class="oneTwo">
 						<label for="tel">Phone Number</label>
-						<input type="text" id='tel' name='phone' class="maskPhoneExt" value="" id='tel' name='tel' />
+						<input type="text" id='tel' name='phone' class="maskPhoneExt" value="" id='tel' name='tel' placeholder="Optional" />
 					</div>
 
 					<div class="oneTwo required-field">
@@ -156,7 +156,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 
 					<div class="oneTwo">
 						<label for="sale_rep">Sales Representative</label>
-						<input id="sale_rep" type="text" value="<?= $session->user['id'] ?>" readonly />
+						<input id="sale_rep" name="sale_rep" type="text" placeholder="Optional" />
 					</div>
 				</div>
 
@@ -206,7 +206,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 								foreach ($this->arch as $a) { ?>
 									<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $project['owner']) {
 																		echo 'selected';
-																	} ?>><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option>
+																	} else if ($a['id'] == 'TORTESTSALESMAN002') echo 'selected'; ?>><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option>
 									<?php }
 							} else {
 								foreach ($this->arch as $a) {
@@ -671,7 +671,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 		$('#add_new_mode').on("click", function() {
 			oldCustomer = getOldCustomer();
 			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #customer_id, #sale_rep').val('');
-			$('#quote, #address, #tel, #customer_email').addClass('validate[required]');
+			$('#quote, #address, #customer_email').addClass('validate[required]');
 			$('#add_new_mode').hide();
 			$('#discard_new_mode').show();
 			//console.log(oldCustomer);

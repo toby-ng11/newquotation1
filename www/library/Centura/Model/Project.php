@@ -304,7 +304,7 @@ class Project extends DbTable\Project
 
 		$db = $this->getAdapter();
 		$select = $db->select()->from('project')->where('project_id = ?', $project_id)
-			->join('P21_Users', 'P21_Users.id = project.owner', array('owner_name' => 'P21_Users.name'))
+			->joinLeft('P21_Users', 'P21_Users.id = project.owner', array('owner_name' => 'P21_Users.name'))
 			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'));
 		$result = $db->fetchRow($select);
 		return $result;

@@ -326,11 +326,15 @@ $disapproved = -1;
 						</select>
 						<input type="hidden" name="sales_id" value="<?= $session->user['id'] ?>" />
 					</div>
+				</div>
 
+				<div class="line"></div>
+				<h2>Approval</h2>
+				<div class="formRow">
 					<div class="oneTwo required-field">
 						<label for="quote_approval">Quote Approval</label>
 						<?php if ($session->user['approve_id'] != null) { ?>
-							<select name="quote_approval" id="quote_approval">
+							<select name="quote_approval" id="quote_approval" class="validate[required]">
 								<option value="">Select Approval</option>
 								<?php foreach ($this->approval as $a) { ?>
 									<option value="<?= $a['uid'] ?>" <?php if ($a['uid'] == $quote['quote_approval']) echo 'selected'; ?>><?= $a['Name'] . ' - ' . $a['Company_ID'] ?></option>
@@ -859,15 +863,15 @@ $disapproved = -1;
 
 		$('#add_new_mode').on("click", function() {
 			oldCustomer = getOldCustomer();
-			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id').prop('readonly', false);
-			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #customer_id').val('');
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #customer_id, #sale_rep').prop('readonly', false);
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #customer_id, #sale_rep').val('');
 			$('#quote, #address, #tel, #customer_email').addClass('validate[required]');
 			$('#add_new_mode').hide();
 			$('#discard_new_mode').show();
 		});
 
 		$('#discard_new_mode').on("click", function() {
-			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email').prop('readonly', true);
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #customer_id, #sale_rep').prop('readonly', true);
 			$('#quote').val(oldCustomer['oldQuoteTo']);
 			$('#first_name').val(oldCustomer['oldFirstName']);
 			$('#last_name').val(oldCustomer['oldLastName']);
@@ -968,7 +972,7 @@ $disapproved = -1;
 		$('a.approve').on("click", function(e) {
 			e.preventDefault();
 			if ($("#quote_content").validationEngine('validate') == true) {
-				if (confirm("You are about to approve this quote. Continue?") == true) {
+				if (confirm("You are about to approve this quote. Any changes will be saved. Continue?") == true) {
 					unsave = false; // prevent double pop-up
 					$.ajax({
 						url: $(this).attr('href'),
