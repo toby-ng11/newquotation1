@@ -252,13 +252,13 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 				<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="items">
 					<thead>
 						<tr>
-							<td>Item</td>
-							<td>Quality Quoted</td>
-							<td>Unit Price</td>
-							<td>Unit Of Measure</td>
-							<td>Price Quoted</td>
-							<td>Note</td>
-							<td>Options</td>
+							<th>Item</th>
+							<th>Quality</th>
+							<th>Unit Price</th>
+							<th>UOM</th>
+							<th>Total Price</th>
+							<th>Note</th>
+							<th>Options</th>
 						</tr>
 					</thead>
 				</table>
@@ -316,7 +316,11 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 				}
 			},
 			{
-				data: "qty"
+				data: "qty",
+				render: function(data) {
+					let qty = Number.parseFloat(data).toFixed(0);
+					return qty;
+				}
 			},
 			{
 				data: "unit_price"

@@ -156,7 +156,8 @@
                 let info = document.createElement('div');
                 info.innerHTML = '<h2>Waiting for Approval</h2><p><?= count($this->waiting) ?> quotes waiting for approval</p>';
                 return info;
-            }
+            },
+            bottomStart: 'pageLength'
         }
     });
 
@@ -237,7 +238,8 @@
                 let info = document.createElement('div');
                 info.innerHTML = '<h2>Approved</h2><p><?= count($this->approved) ?> approved quotes';
                 return info;
-            }
+            },
+            bottomStart: 'pageLength'
         }
     });
 
@@ -325,7 +327,8 @@
                 let info = document.createElement('div');
                 info.innerHTML = '<h2>Disapproved</h2><p><?= count($this->disapproved) ?> disapproved quotes';
                 return info;
-            }
+            },
+            bottomStart: 'pageLength'
         }
     });
 </script>

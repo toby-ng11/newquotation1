@@ -27,7 +27,7 @@
                 <table width="100%" class="display nowrap" id='project_table'>
                     <thead>
                         <tr>
-                            <th>Quote ID</th>
+                            <th>Project ID</th>
                             <th>Project Name</th>
                             <th>Shared</th>
                             <th>Segment</th>
@@ -226,7 +226,8 @@
                     let info = document.createElement('div');
                     info.innerHTML = '<h2>My Projects</h2><p><?= count($this->ownproject) ?> projects';
                     return info;
-                }
+                },
+                bottomStart: 'pageLength'
             }
         });
 
@@ -308,7 +309,8 @@
                     let info = document.createElement('div');
                     info.innerHTML = '<h2>Shared Projects</h2><p><?= count($this->assignedproject) ?> shared projects';
                     return info;
-                }
+                },
+                bottomStart: 'pageLength'
             }
         });
 
@@ -388,7 +390,8 @@
                         let info = document.createElement('div');
                         info.innerHTML = '<h2>Other Projects At <?= $session->user['company'] ?></h2><p> <?= count($this->otherprojects) ?> projects at <?= $session->user['company'] ?>';
                         return info;
-                    }
+                    },
+                    bottomStart: 'pageLength'
                 }
             });
         <?php } ?>
@@ -484,7 +487,8 @@
                     let info = document.createElement('div');
                     info.innerHTML = '<h2>My Quotes</h2><p> <?= count($this->ownquotes) ?> quotes';
                     return info;
-                }
+                },
+                bottomStart: 'pageLength'
             }
         });
 
@@ -541,7 +545,8 @@
                     let info = document.createElement('div');
                     info.innerHTML = '<h2>Follow Up Logs</h2><p> <?= count($this->memo) ?> logs';
                     return info;
-                }
+                },
+                bottomStart: 'pageLength'
             }
         });
     })
