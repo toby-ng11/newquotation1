@@ -18,11 +18,11 @@ $context = stream_context_create(array(
 ));
 $html =getUrl($url, $username, $password );
 
-$dompdf = new DOMPDF();
-$dompdf->set_protocol('http://'); 
-$dompdf->set_host('newstatic.centura.local');
-$dompdf->set_base_path('/'); 
-$dompdf->load_html($html);
+$dompdf = new Dompdf();
+$dompdf->setProtocol('http://'); 
+$dompdf->setBaseHost('newstatic.centura.local');
+$dompdf->setBasePath('/'); 
+$dompdf->loadHtml($html);
 
 $dompdf->render();
 $dompdf->stream($name);

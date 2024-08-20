@@ -2,9 +2,9 @@
 $session =  Zend_Registry::get('session');
 $project = $this->project;
 $projectID = $project['project_id'];
-$projectCreateDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['create_date']);
-$projectDueDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['due_date']);
-$projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['required_date']);
+$projectCreateDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['create_date']);
+$projectDueDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['due_date']);
+$projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['required_date']);
 ?>
 
 <!-- Right panel -->
@@ -274,7 +274,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 					<?php } ?>
 				</div>
 				<h2>Project Quotes</h2>
-				<table width="100%" class="display" id='project-quote-table'>
+				<table width="100%" class="sTable display" id='project-quote-table'>
 					<thead>
 						<tr>
 							<th>Quote ID</th>
@@ -303,14 +303,13 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 					<?php } ?>
 				</div>
 				<h2>Project Log</h2>
-				<table cellpadding="0" cellspacing="0" width="100%" class="display cell-border" id='project_memo'>
+				<table cellpadding="0" cellspacing="0" width="100%" class="sTable display" id='project_memo'>
 					<thead>
 						<tr>
 							<th>Log Time</th>
 							<th>Log</th>
 							<th>Next Action</th>
-							<th>Follow Up Date</th>
-							<th>Added by</th>
+							<th>Author</th>
 							<th class="action">Options</th>
 						</tr>
 					</thead>
@@ -329,12 +328,12 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 
 					<div class="oneTwo required-field dialog-note">
 						<label for="title">Content</label>
-						<textarea rows="8" name='content' id='content' class="validate[required]" placeholder="Log content"></textarea>
+						<textarea rows="10" name='content' id='content' class="validate[required]" placeholder="Log content"></textarea>
 					</div>
 
 					<div class="oneTwo dialog-note">
 						<label for="type">Next Action</label>
-						<textarea rows="3" name="type" id='type' placeholder="Can be left empty"></textarea>
+						<textarea rows="5" name="type" id='type' placeholder="Can be left empty"></textarea>
 					</div>
 
 					<div class="oneTwo dialog-note">
@@ -373,7 +372,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 
 					<div class="oneTwo dialog-note">
 						<label for='note'>Note</label>
-						<textarea rows="5" name='note' id='note' maxlength="255" class="validate[maxSize[255]]"></textarea>
+						<textarea rows="10" name='note' id='note' maxlength="255" class="validate[maxSize[255]]"></textarea>
 						<input type="hidden" id="is_edit" value='0' />
 					</div>
 				</div>
@@ -394,7 +393,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 				data: "added",
 				render: function(data) {
 					let date = new Date(data);
-					return '<p><b>' + date.toLocaleString() + '</b></p>';
+					return '<p><b>' + date.toLocaleString('en-CA') + '</b></p>';
 				}
 			},
 			{
@@ -418,13 +417,13 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 					return '<p>' + formattedText + '</p>';
 				}
 			},
-			{
-				data: "follow_up_date",
-				render: function(data) {
-					let date = new Date(data);
-					return '<p><b>' + date.toLocaleDateString() + '</b></p>';
-				}
-			},
+			//{
+			//	data: "follow_up_date",
+			//	render: function(data) {
+			//		let date = new Date(data);
+			//		return '<p><b>' + date.toLocaleDateString() + '</b></p>';
+			//	}
+			//},
 			{
 				data: "author",
 				render: function(data) {
@@ -460,7 +459,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			className: 'dt-body-center'
 		}],
 		order: [
-			[5, "desc"]
+			[0, "desc"]
 		],
 		scrollX: true,
 		fixedColumns: {
@@ -821,7 +820,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 			autoOpen: false,
 			modal: true,
 			minWidth: 800,
-			width: 800,
+			width: 1000,
 			//minHeight: 600,
 			open: function() { // fade in background
 				$('.ui-widget-overlay').hide().fadeIn();

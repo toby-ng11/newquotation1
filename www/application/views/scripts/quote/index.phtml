@@ -1,9 +1,9 @@
 <?php
 $session =  Zend_Registry::get('session');
 $project = $this->project;
-$projectCreateDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['create_date']);
-$projectDueDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['due_date']);
-$projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['required_date']);
+$projectCreateDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['create_date']);
+$projectDueDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['due_date']);
+$projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['required_date']);
 ?>
 
 <!-- Title area -->
@@ -293,7 +293,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['req
 
 					<div class="oneTwo dialog-note">
 						<label for='note'>Note</label>
-						<textarea rows="5" name='note' id="note" maxlength="255" class="validate[maxSize[255]]"></textarea>
+						<textarea rows="10" name='note' id="note" maxlength="255" class="validate[maxSize[255]]"></textarea>
 						<input type="hidden" id="is_edit" value='0' />
 					</div>
 				</div>

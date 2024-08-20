@@ -1,12 +1,12 @@
 <?php
 $session =  Zend_Registry::get('session');
 $project = $this->project;
-$projectDueDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $project['due_date']);
+$projectDueDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['due_date']);
 
 $quote = $this->quote;
 $quoteID = $quote['quote_id'];
-$quoteShipRequiredDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $quote['ship_required_date']);
-$quoteExpireDate = DateTime::createFromFormat('Y-m-d h:i:s.v', $quote['expire_date']);
+$quoteShipRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $quote['ship_required_date']);
+$quoteExpireDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $quote['expire_date']);
 
 $customer = $this->customer;
 
@@ -95,7 +95,7 @@ $disapproved = -1;
 
 			<div class="widget-table dashboard">
 				<div class="project-information">
-					<p>Quote number</p>
+					<p>Quote ID</p>
 					<h2><?= $project['quote_no'] ?? '' ?></h2>
 				</div>
 				<span class='svg icon icon-number'></span>
@@ -434,7 +434,7 @@ $disapproved = -1;
 
 					<div class="oneTwo dialog-note">
 						<label for='note'>Note</label>
-						<textarea rows="5" name='note' id='note' maxlength="255" class="validate[maxSize[255]]"></textarea>
+						<textarea rows="10" name='note' id='note' maxlength="255" class="validate[maxSize[255]]"></textarea>
 						<input type="hidden" id="is_edit" value='0' />
 					</div>
 				</div>

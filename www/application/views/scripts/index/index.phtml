@@ -24,7 +24,7 @@
 
         <section aria-labelledby="my_projects" id="section1" data-nav="My Projects" class="active">
             <div class="widget-table">
-                <table width="100%" class="display nowrap" id='project_table'>
+                <table width="100%" class="sTable display nowrap" id='project_table'>
                     <thead>
                         <tr>
                             <th>Project ID</th>
@@ -44,7 +44,7 @@
 
         <section aria-labelledby="assigned_projects" id="section2" data-nav="Assigned Projects">
             <div class="widget-table">
-                <table width="100%" class="display nowrap" id='assigned_projects_table'>
+                <table width="100%" class="sTable display nowrap" id='assigned_projects_table'>
                     <thead>
                         <tr>
                             <th>Quote ID</th>
@@ -65,10 +65,10 @@
         <?php if ($session->user['approve_id'] != null) { ?>
             <section aria-labelledby="other_projects" id="section3" data-nav="Other Projects">
                 <div class="widget-table">
-                    <table width="100%" class="display nowrap" id='other_project_table'>
+                    <table width="100%" class="sTable display nowrap" id='other_project_table'>
                         <thead>
                             <tr>
-                                <th>Quote ID</th>
+                                <th>Project ID</th>
                                 <th>Project Name</th>
                                 <th>Owner</th>
                                 <th>Shared</th>
@@ -86,11 +86,11 @@
 
         <section aria-labelledby="my_quotes" <?php if ($session->user['approve_id'] != null) { ?> id="section4" <?php } else { ?> id="section3" <?php } ?> data-nav="My Quotes">
             <div class="widget-table">
-                <table width="100%" class="display nowrap" id='quote_table'>
+                <table width="100%" class="sTable display nowrap" id='quote_table'>
                     <thead>
                         <tr>
-                            <th>Quote #</th>
-                            <th>Project #</th>
+                            <th>Quote ID</th>
+                            <th>Project ID</th>
                             <th>Project Name</th>
                             <th>Quote Date</th>
                             <th>Expire Date</th>
@@ -106,13 +106,13 @@
 
         <section aria-labelledby="follow_up_logs" <?php if ($session->user['approve_id'] != null) { ?> id="section5" <?php } else { ?> id="section4" <?php } ?> data-nav="Follow Up Logs">
             <div class="widget-table">
-                <table width="100%" class="display nowrap" id='project_log'>
+                <table width="100%" class="sTable display" id='project_log'>
                     <thead>
                         <tr>
                             <th>Log Time</th>
                             <th>Project ID</th>
                             <th>Project Name</th>
-                            <th>Critical Updates</th>
+                            <th>Next Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -406,13 +406,13 @@
             columns: [{
                     data: "quote_id",
                     render: function(data, type, row, meta) {
-                        return "<a target='_blank' href='/quote/edit/id/" + row.quote_id + "'>" + row.quote_id + "</a>";
+                        return "<a target='_blank' href='/quote/edit/id/" + data + "'>" + data + "</a>";
                     }
                 },
                 {
                     data: "project_id",
                     render: function(data, type, row, meta) {
-                        return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + row.project_id + "</a>";
+                        return "<a target='_blank' href='/project/edit/id/" + data + "'>" + data + "</a>";
                     }
                 },
                 {
@@ -502,7 +502,7 @@
                     data: "added",
                     render: function(data) {
                         let date = new Date(data);
-                        return date.toLocaleString();
+                        return date.toLocaleString('en-CA');
                     }
                 },
                 {

@@ -29,17 +29,17 @@ class Project extends DbTable\Project
 		$info['reed']                     = $data['reed'];
 		$info['general_contractor_id']    = $data['gerneral_contractor_id'];
 		$info['awarded_sub_contracotr_id']  = $data['awarded_contractor_id'];
-		$info['create_date']                = date('Y-m-d h:i:s.v');
+		$info['create_date']                = date('Y-m-d H:i:s.v');
 		if (!empty($data['required_date'])) {
 			$info['required_date']              = DateTime::createFromFormat('Y-m-d', $data['required_date'])->format('Y-m-d');
 		} else {
-			$info['required_date']              = date('Y-m-d h:i:s.v');
+			$info['required_date']              = date('Y-m-d H:i:s.v');
 		}
 
 		if (!empty($data['due_date'])) {
 			$info['due_date']                   = DateTime::createFromFormat('Y-m-d', $data['due_date'])->format('Y-m-d');
 		} else {
-			$info['due_date']                   = date('Y-m-d h:i:s.v');
+			$info['due_date']                   = date('Y-m-d H:i:s.v');
 		}
 
 
@@ -324,7 +324,7 @@ class Project extends DbTable\Project
 		$info['reed']                     = $data['reed'];
 		$info['general_contractor_id']    = $data['gerneral_contractor_id'];
 		$info['awarded_sub_contracotr_id']  = $data['awarded_contractor_id'];
-		//$info['create_date']                = date('Y-m-d h:i:s.v');
+		//$info['create_date']                = date('Y-m-d H:i:s.v');
 		$info['required_date']              = DateTime::createFromFormat('Y-m-d', $data['required_date'])->format('Y-m-d');
 		$info['due_date']                   = DateTime::createFromFormat('Y-m-d', $data['due_date'])->format('Y-m-d');
 		$info['status']                     = $data['status'];
@@ -404,7 +404,7 @@ class Project extends DbTable\Project
 		$data['action']    = $action;
 		$data['item_id']   = $item_id;
 		$data['note']      = $note;
-		$data['added']     = date('Y-m-d h:i:s.v');
+		$data['added']     = date('Y-m-d H:i:s.v');
 		$data['user_id']   = $session->user['id'];
 
 		try {

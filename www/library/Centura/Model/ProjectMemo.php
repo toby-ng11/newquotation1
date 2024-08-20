@@ -23,7 +23,7 @@ class ProjectMemo extends Zend_Db_Table
 		$info['project_id'] = $project_id;
 		$info['title'] = $data['title'];
 		$info['content'] = $data['content'];
-		$info['follow_up_date'] = date('Y-m-d h:i:s', strtotime($data['follow_up_date']));
+		$info['follow_up_date'] = date('Y-m-d H:i:s', strtotime($data['follow_up_date']));
 		$info['author'] = $data['author'];
 
 		try {
@@ -46,7 +46,7 @@ class ProjectMemo extends Zend_Db_Table
 		$info['type'] = $data['type'];
 		$info['title'] = $data['title'];
 		$info['content'] = $data['content'];
-		$info['follow_up_date'] = date('Y-m-d h:i:s', strtotime($data['follow_up_date']));
+		$info['follow_up_date'] = date('Y-m-d H:i:s', strtotime($data['follow_up_date']));
 
 		try {
 			$db->update('project_memo', $info, 'memo_id =' . $memo_id);

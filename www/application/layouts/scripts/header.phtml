@@ -31,7 +31,7 @@ $session =  Zend_Registry::get('session');
       <div class="top-navigation-main">
         <nav class="main-nav" id="leftSide">
           <ul id="menu" class="nav">
-            <?php if ($session->user['sale_role'] == 'admin') { ?>
+            <?php if ($session->user['sale_role'] ?? '' == 'admin') { ?>
               <li class="top-level-entry-container">
                 <a href="/index/admin" title="admin" class="top-level-entry">Admin Portal</a>
               </li>
@@ -42,7 +42,7 @@ $session =  Zend_Registry::get('session');
             -->
             <?php } ?>
 
-            <?php if ($session->user['approve_id'] != null || $session->user['sale_role'] == 'admin') { ?>
+            <?php if (($session->user['approve_id'] ?? null) != null || ($session->user['sale_role'] ?? '') == 'admin') { ?>
               <li class="top-level-entry-container">
                 <a href="/index/index/normal/1/" class="top-level-entry">Project Portal</a>
               </li>
@@ -55,7 +55,7 @@ $session =  Zend_Registry::get('session');
             <!-- <li class="forms"><a href="/index/sales" title="" ><span>Quote Manager</span></a>
             </li>-->
 
-            <?php if ($session->user['approve_id'] != null) { ?>
+            <?php if ($session->user['approve_id'] ?? '' != null) { ?>
               <li class="top-level-entry-container">
                 <a href="/index/approval" title="approve" class="top-level-entry">Approval Portal</a>
               </li>
@@ -89,7 +89,7 @@ $session =  Zend_Registry::get('session');
               <div class="submenu-item">
                 <div class="submenu-content-container">
                   <div class="submenu-item-heading">
-                    Signed in as <?php echo $session->user['id'] ?>
+                    Signed in as <?php echo $session->user['id'] ?? '' ?>
                   </div>
                 </div>
               </div>

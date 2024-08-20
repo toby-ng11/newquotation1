@@ -103,7 +103,7 @@ class Quote extends DbTable\Quote
 		//add quote
 		$info['customer_id']                = $data['customer_id'];
 		$info['project_id']                 = $data['project_id'];
-		//$info['quote_date']                 = date('Y-m-d h:i:s', strtotime($data['quote_date']));
+		//$info['quote_date']                 = date('Y-m-d H:i:s', strtotime($data['quote_date']));
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < 1000) //fix 1969-12-31
 		{
 			$data['expire_date'] = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 60, date("Y")));
@@ -623,10 +623,10 @@ class Quote extends DbTable\Quote
 				'customer' => $r['p21_customer_id'],
 				'contact' => $r['customer_id'],
 				'job_name' => substr(trim($r['quote_id'] . ' - ' . $r['project_name']), 0, 40),
-				'expire_date' => $r['expire_date']->format('m/d/Y'),
+				'expire_date' => DateTime::createFromFormat('Y-m-d H:i:s.v', $r['expire_date'])->format('m/d/Y'),
 				'quote_id' => $r['quote_id'],
 				'note' => $r['arch_rep'] . ' - ' . $r['note'],
-				'approve_date' => $r['approve_date']->format('m/d/Y')
+				'approve_date' => DateTime::createFromFormat('Y-m-d H:i:s.v', $r['approve_date'])->format('m/d/Y')
 
 			);
 		}
@@ -674,7 +674,7 @@ class Quote extends DbTable\Quote
 				'quote_id' => $r['quote_id'],
 				'sort_id' => $sort[$r['quote_id']],
 				'note' => $r['note'],
-				'approve_date' => $r['approve_date']->format('m/d/Y')
+				'approve_date' => DateTime::createFromFormat('Y-m-d H:i:s.v', $r['approve_date'])->format('m/d/Y')
 			);
 		}
 

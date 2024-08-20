@@ -120,7 +120,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
            
            /*override company*/
            $user = $model->fetchsalebyid($name);
-          
+           
+		   if (!$user) {
+			$user = array(
+				"id" => "QUOTEEXPORT",
+				"default_company" => "TOR",
+				"default_location_id" => 101,
+				"sale_role" => "Export",
+				"approve_id" => 0
+			);
+		   }
            
            if(isset($_GET['company']) && $_GET['company'] != null) //allow override
            {
@@ -131,7 +140,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
            else {
            		$default_company = $user["default_company"];
            		$company_id = $user['default_location_id'];
-
            }
            
          

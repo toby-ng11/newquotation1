@@ -189,13 +189,13 @@ class QuoteController extends Zend_Controller_Action
 			$data = null;
 			$data['quote_approval'] = $approver_id;
 			$data['approve_status'] = 10; // approved
-			$data['approve_date'] = date('Y-m-d h:i:s'); //approve date
+			$data['approve_date'] = date('Y-m-d H:i:s'); //approve date
 		} else {
 			$data = null;
 			if ($this->session->user['approve_id'] != null) {
 				$data['quote_approval'] = $this->session->user['approve_id']; // approved user
 				$data['approve_status'] = 10; // approved
-				$data['approve_date'] = date('Y-m-d h:i:s'); //approve date
+				$data['approve_date'] = date('Y-m-d H:i:s'); //approve date
 			}
 		}
 		$quote->update($data, 'quote_id = ' . $quote_id);

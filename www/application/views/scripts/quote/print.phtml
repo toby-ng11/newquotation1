@@ -184,11 +184,19 @@ $img_w = 54; // 2 inches, in points
 </style>
 
 <?php
-  $quote = $this->quote;
-  $project = $this->project;
-  $customer = $this->customer;
-  $type = $this->type;
-  $this->headTitle('Quote For ' . $project['project_name'] . ' - Centura', 'SET')
+$quote = $this->quote;
+$project = $this->project;
+$customer = $this->customer;
+
+$quoteID = $quote['quote_id'];
+$quoteDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $quote['quote_date']);
+$quoteShipRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $quote['ship_required_date']);
+$quoteExpireDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $quote['expire_date']);
+
+$customer = $this->customer;
+
+$type = $this->type;
+$this->headTitle('Quote For ' . $project['project_name'] . ' - Centura', 'SET')
 ?>
 
 <div id="page-wrap">
@@ -241,10 +249,10 @@ $img_w = 54; // 2 inches, in points
     </tr>
     <tr>
       <td><?= $quote['quote_id'] ?></td>
-      <td><?= $quote['quote_date']->format('Y-m-d') ?></td>
-      <td><?= $quote['expire_date']->format('Y-m-d') ?></td>
-      <td><?php if ($quote['ship_required_date'] != null && $quote['ship_required_date']->format('Y-m-d') > '2000-01-01') {
-            echo $quote['ship_required_date']->format('Y-m-d');
+      <td><?= $quoteDate->format('Y-m-d') ?></td>
+      <td><?= $quoteExpireDate->format('Y-m-d') ?></td>
+      <td><?php if ($quoteShipRequiredDate && $quoteShipRequiredDate > new DateTime('2000-01-01')) {
+            echo $quoteShipRequiredDate->format('Y-m-d');
           } ?></td>
 
       <td><?= $this->spec_name ?></td>
