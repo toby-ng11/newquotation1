@@ -40,6 +40,7 @@ class ApproveController extends Zend_Controller_Action
     	$quote_detail = $quote->fetchquotebyid($quote_id);
     	$project_detail = $project->fetchbyid($quote_detail['project_id']);
 
+		$this->view->headTitle()->set('Approval: ' . $quote_id . ' - ' . $project_detail['project_name']);
 
     	$this->view->customer = $customer->fetchCustomerById($quote_detail['customer_id']);
     	$this->view->quote = $quote_detail;
@@ -56,6 +57,8 @@ class ApproveController extends Zend_Controller_Action
     	$this->view->leadtime = $quote->fetchleadtimes();
     	
 		$this->view->seg = $quote->fetchseg();
+
+		$this->view->oe_id = $quote->fetchP21OrderNumber($quote_id);
 
 		if ($this->_request->isPost()) {
 			$data = $this->_request->getPost();

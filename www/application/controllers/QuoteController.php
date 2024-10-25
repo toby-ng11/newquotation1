@@ -47,6 +47,8 @@ class QuoteController extends Zend_Controller_Action
 			$this->redirect('/project/view/id/' . $project_id);
 		}
 
+		$this->view->headTitle()->set('Make Quote: ' . $project_id . ' - ' . $project_detail['project_name']);
+
 		$item = new ItemsProject();
 		$this->view->items = $item->fetchallitems($project_id);
 
@@ -55,6 +57,51 @@ class QuoteController extends Zend_Controller_Action
 		$this->view->project = $project_detail;
 		$this->view->type = $quote->fetchquotetype();
 		$this->view->seg = $quote->fetchseg();
+	}
+
+	public function editAction()
+	{
+		$quote_id = $this->getRequest()->getParam('id');
+
+		if ($quote_id == null) {
+			$this->redirect('/');
+		}
+
+		$customer = new Customer();
+		$sales = new User();
+		$project = new Project();
+		$quote = new Quote();
+		$products = new ProductProject();
+
+		$quote_detail = $quote->fetchquotebyid($quote_id);
+		//echo Zend_Json::encode($quote_detail);
+		$project_detail = $project->fetchbyid($quote_detail['project_id']);
+
+		$this->view->headTitle()->set('Quote Edit: ' . $quote_id . ' - ' . $project_detail['project_name']);
+
+		$this->view->customer = $customer->fetchCustomerById($quote_detail['customer_id']);
+		$this->view->quote = $quote_detail;
+		$this->view->arch = $sales->fetchallsales();
+		$this->view->approval = $sales->getQuoteapproval();
+		$this->view->project = $project_detail;
+		$this->view->type = $quote->fetchquotetype();
+		$this->view->items = $products->fetchallitems($quote_id);
+		$this->view->seg = $quote->fetchseg();
+		$this->view->oe_id = $quote->fetchP21OrderNumber($quote_id);
+
+		if ($this->_request->isPost()) {
+			$data = $this->_request->getPost();
+
+			$model = new Quote();
+
+			$result = $model->edit($data, $quote_id);
+			if($result == true) {
+				$this->redirect('/quote/edit/id/' . $result);
+			}
+			else {
+				echo 'false';
+			}
+		}
 	}
 
 	public function itemAction()
@@ -228,50 +275,6 @@ class QuoteController extends Zend_Controller_Action
 		$quote->update($data, 'quote_id = ' . $quote_id);
 		$this->redirect('/quote/edit/id/' . $quote_id);
 		exit;
-	}
-
-	public function editAction()
-	{
-		$quote_id = $this->getRequest()->getParam('id');
-
-		if ($quote_id == null) {
-			$this->redirect('/');
-		}
-
-
-		$customer = new Customer();
-		$sales = new User();
-		$project = new Project();
-		$quote = new Quote();
-		$products = new ProductProject();
-
-		$quote_detail = $quote->fetchquotebyid($quote_id);
-		//echo Zend_Json::encode($quote_detail);
-		$project_detail = $project->fetchbyid($quote_detail['project_id']);
-
-
-		$this->view->customer = $customer->fetchCustomerById($quote_detail['customer_id']);
-		$this->view->quote = $quote_detail;
-		$this->view->arch = $sales->fetchallsales();
-		$this->view->approval = $sales->getQuoteapproval();
-		$this->view->project = $project_detail;
-		$this->view->type = $quote->fetchquotetype();
-		$this->view->items = $products->fetchallitems($quote_id);
-		$this->view->seg = $quote->fetchseg();
-
-		if ($this->_request->isPost()) {
-			$data = $this->_request->getPost();
-
-			$model = new Quote();
-
-			$result = $model->edit($data, $quote_id);
-			if($result == true) {
-				$this->redirect('/quote/edit/id/' . $result);
-			}
-			else {
-				echo 'false';
-			}
-		}
 	}
 
 	private function getcompany_name()

@@ -142,14 +142,7 @@
 
 <script>
     $(document).ready(function() {
-        $('#options-button').on("click", function() {
-            $('#options-menu-items').slideToggle({
-                start: function() {
-                    $(this).css('display', 'flex');
-                }
-            });
-        })
-
+        
         $('#project_table').DataTable({
             //select: true,
             ajax: {

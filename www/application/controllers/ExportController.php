@@ -20,7 +20,19 @@ class ExportController extends Zend_Controller_Action
     	$model = new Quote();
     	
     	$result = $model->fetcsv(null,$past_days);
-    	$header = array('Company','Customer','Contact','Job Name','Quote Expire Date','Quote_Number','Note','approve_date');
+    	$header = array(
+			'Quote Number',
+			'Company',
+			'Customer',
+			'Contact',
+			'Job Name',
+			'Note',
+			'PO Number',
+			'Taker',
+			'Order Date',
+			'Requested Date',
+			'Quote Expire Date'
+		);
     	
     	$fp = fopen(APPLICATION_PATH . '/../tmp/'.$this->file_appx.'header.csv', 'w');
     	fputs($fp, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) ));

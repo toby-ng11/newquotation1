@@ -831,8 +831,11 @@ kbd {
 }
 
 .options-menu {
-  float: right;
-  position: relative;
+  position: fixed;
+  right: 0;
+  z-index: 1000;
+  transform: translateX(60%);
+  transition: all 0.3s ease;
 
   .options-button {
     //width: auto;
@@ -841,6 +844,7 @@ kbd {
     gap: 0.5rem;
     font: inherit;
     align-items: center;
+    margin-bottom: 1rem;
   }
 
   .icon {
@@ -852,7 +856,7 @@ kbd {
 .sidebar-container {
   z-index: 1;
   position: absolute;
-  margin-top: 2rem;
+  //margin-top: 1rem;
   width: 9rem;
   right: 0;
   display: flex;

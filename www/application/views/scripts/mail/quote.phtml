@@ -86,15 +86,8 @@
 </div>
 
 <script type="text/javascript">
-    $('#options-button').on("click", function() {
-        $('#options-menu-items').slideToggle({
-            start: function() {
-                $(this).css('display', 'flex');
-            }
-        });
-    });
 
-    $('a#mail').on("click", function(e) {
+    $('#mail').on("click", function(e) {
         e.preventDefault();
         if ($("#mail_content").validationEngine('validate') == true) {
             $('.loading').show();

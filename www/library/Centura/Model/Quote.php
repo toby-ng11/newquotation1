@@ -45,6 +45,7 @@ class Quote extends DbTable\Quote
 		//		$info['quote_approval']             = $data['quote_approval'];
 		$info['note']                       = $data['note'];
 		$info['status']                     = 1;
+		$info['delete_flag']                = 'N';
 		if ($data['ship_required_date'] != null) {
 			$info['ship_required_date']         = DateTime::createFromFormat('Y-m-d', $data['ship_required_date'])->format('Y-m-d');
 		} else {
@@ -60,7 +61,7 @@ class Quote extends DbTable\Quote
 			$db->insert('quote', $info);
 			$newQuoteID = $db->lastInsertId('quote', 'quote_id');
 
-			$this->updatequoteno($newQuoteID);
+			$this->updateQuoteInfo($newQuoteID);
 
 			$item = new ItemsProject();
 			$itemList = $item->fetchallitems($data['project_id']);
@@ -195,7 +196,7 @@ class Quote extends DbTable\Quote
 		}
 	}
 
-	public function updatequoteno($quote_id)
+	public function updateQuoteInfo($quote_id) // update Quote # and Job Name
 	{
 		if ($quote_id == null) {
 			return  false;
@@ -207,6 +208,8 @@ class Quote extends DbTable\Quote
 		$total = $this->fetchTotalProjectQuotes($quote['project_id']);
 
 		$data['quote_no'] = $project_info['quote_no'] . '_' . sprintf('%05d', ($total + 1));
+		$data['job_name'] = substr($project_info['project_name'], 0, 40);
+		$data['po_number'] = substr($quote_id . ' - P2Q', 0, 40);
 
 		$db = $this->getAdapter();
 
@@ -224,7 +227,8 @@ class Quote extends DbTable\Quote
 		}
 		$db = $this->getAdapter();
 
-		$data['status'] = 0;
+		//$data['status'] = 0; // legacy
+		$data['delete_flag'] = 'Y';
 
 		try {
 			$db->update('quote', $data, 'quote_id =' . $quote_id);
@@ -306,7 +310,7 @@ class Quote extends DbTable\Quote
 			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))
 			->where('sales_id = ?', $owner)
 			->where('quote.status = ?', $status)
-			->where('project.deleted =?', 'N')
+			->where('project.delete_flag =?', 'N')
 			->order('quote_id desc');
 
 		return $db->fetchAll($select);
@@ -382,7 +386,7 @@ class Quote extends DbTable\Quote
 			->join('project', 'project.project_id = quote.project_id', 'project_name')
 			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))
 			->where('quote.status =?', 1)
-			->where('project.deleted =?', 'N');
+			->where('project.delete_flag =?', 'N');
 
 		return $db->fetchAll($select);
 	}
@@ -397,7 +401,7 @@ class Quote extends DbTable\Quote
 			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))
 			->join('quote_market_segment', 'quote_market_segment.uid = quote.quote_segment', array('segment' => 'Market_Segment'))
 			->where('quote.status =?', 1)
-			->where('project.deleted =?', 'N');
+			->where('project.delete_flag =?', 'N');
 
 		//$select->limit($limit);
 
@@ -495,10 +499,22 @@ class Quote extends DbTable\Quote
 	{
 		$db = $this->getAdapter();
 
-		$selectedField = array('quote_id', 'quote_no', 'project_name', 'sale_name', 'customer', 'arch_name', 'Market_Segment', 'quote_date', 'expire_date', 'ship_required_date', 'status_name');
+		$selectedField = array(
+			'quote_id',
+			'project_name',
+			'sale_name',
+			'customer',
+			'arch_name',
+			'Market_Segment',
+			'quote_date',
+			'expire_date',
+			'ship_required_date',
+			'status_name',
+			'order_no'
+		);
 
 		$select = $db->select()
-			->from('quotes_approval_view', $selectedField)
+			->from('view_quote_approval_x_oe', $selectedField)
 			->where('approve_status = ?', $status)
 			->group(array_merge($selectedField))
 			->order('quote_id desc');
@@ -597,21 +613,22 @@ class Quote extends DbTable\Quote
 		$select = $db->select()
 			->from('quote')
 			->order('quote_id desc')
-			->join('project', 'project.project_id = quote.project_id', 'project_name')
-			->join('P21_Customer_X_Address_X_Contacts', 'P21_Customer_X_Address_X_Contacts.customer_id=quote.customer_id', array(
+			->joinLeft('project', 'project.project_id = quote.project_id', 'project_name')
+			->joinLeft('P21_Customer_X_Address_X_Contacts', 'P21_Customer_X_Address_X_Contacts.contact_id=quote.customer_id', array(
 				'p21_customer_id' => 'duplicate_customer_id'
 			))
-			->join('P21_Users', 'quote.arch = P21_Users.id', array(
+			->joinLeft('P21_Users', 'quote.arch = P21_Users.id', array(
 				'arch_rep' => 'P21_Users.name'
-			))
-			->where('quote.customer_id < ?', 900000)
-			->where('P21_Customer_X_Address_X_Contacts.duplicate_customer_id NOT IN (?)', $internalCustomers);
+			));
+			//->where('quote.customer_id < ?', 900000)
+			//->where('P21_Customer_X_Address_X_Contacts.duplicate_customer_id NOT IN (?)', $internalCustomers);
 
 		if ($company != null) {
 			$select->where('quote_no LIKE ? ', $company . '%');
 		}
 
-		$select->where('quote.approve_date >= ?', date('Y-m-d', strtotime('- ' . $day . ' days')));
+		$select->where('quote.approve_date >= ?', date('Y-m-d', strtotime('-' . $day . ' days')));
+		$select->where('quote.approve_date < ?', date('Y-m-d'));
 
 		$result = $db->fetchAll($select);
 
@@ -619,15 +636,17 @@ class Quote extends DbTable\Quote
 
 		foreach ($result as $r) {
 			$csv[$r['quote_id']] = array(
+				'quote_id' => $r['quote_id'],
 				'company' => substr($r['quote_no'], 0, 3),
 				'customer' => $r['p21_customer_id'],
 				'contact' => $r['customer_id'],
-				'job_name' => substr(trim($r['quote_id'] . ' - ' . $r['project_name']), 0, 40),
-				'expire_date' => DateTime::createFromFormat('Y-m-d H:i:s.v', $r['expire_date'])->format('m/d/Y'),
-				'quote_id' => $r['quote_id'],
+				'job_name' => $r['job_name'],
 				'note' => $r['arch_rep'] . ' - ' . $r['note'],
-				'approve_date' => DateTime::createFromFormat('Y-m-d H:i:s.v', $r['approve_date'])->format('m/d/Y')
-
+				'po_number' => $r['po_number'],
+				'taker' => $r['sales_id'],
+				'order_date' => DateTime::createFromFormat('Y-m-d H:i:s.v', $r['approve_date'])->format('m/d/Y'),
+				'requested_date' => DateTime::createFromFormat('Y-m-d H:i:s.v', $r['ship_required_date'])->format('m/d/Y'),
+				'expire_date' => DateTime::createFromFormat('Y-m-d H:i:s.v', $r['expire_date'])->format('m/d/Y')
 			);
 		}
 
@@ -641,18 +660,20 @@ class Quote extends DbTable\Quote
 		$db = $this->getAdapter();
 
 		$select = $db->select()->from('quotes_products')
-			->join('P21_Inv_Mast', 'quotes_products.product_id = P21_Inv_Mast.item_id', 'item_desc')
-			->join('quote', 'quote.quote_id = quotes_products.quote_id', array('approve_date'))
-			->join('P21_Customer_X_Address_X_Contacts', 'P21_Customer_X_Address_X_Contacts.customer_id=quote.customer_id', array('p21_customer_id' => 'duplicate_customer_id'))
-			->order('quotes_products.quote_id desc')->order('quotes_products.sort_id asc')
-			->where('quotes_products.status = 1')->where('quote.customer_id  < ?', 900000)
-			->where('P21_Customer_X_Address_X_Contacts.duplicate_customer_id NOT IN (?)', $internalCustomers);
-
+			->joinLeft('P21_Inv_Mast', 'quotes_products.product_id = P21_Inv_Mast.item_id', 'item_desc')
+			->joinLeft('quote', 'quote.quote_id = quotes_products.quote_id', array('approve_date'))
+			->joinLeft('P21_Customer_X_Address_X_Contacts', 'P21_Customer_X_Address_X_Contacts.contact_id=quote.customer_id', array('p21_customer_id' => 'duplicate_customer_id'))
+			->order('quotes_products.quote_id desc')
+			->order('quotes_products.sort_id asc')
+			->where('quotes_products.status = 1');
+			//->where('quote.customer_id  < ?', 900000)
+			//->where('P21_Customer_X_Address_X_Contacts.duplicate_customer_id NOT IN (?)', $internalCustomers);
 		if ($company != null) {
 			$select->where('quote.quote_no LIKE ? ', $company . '%');
 		}
 
-		$select->where('quote.approve_date >= ?', date('Y-m-d', strtotime('- ' . $day . ' days')));
+		$select->where('quote.approve_date >= ?', date('Y-m-d', strtotime('-' . $day . ' days')));
+		$select->where('quote.approve_date < ?', date('Y-m-d'));
 
 		$result =  $db->fetchAll($select);
 
@@ -673,7 +694,7 @@ class Quote extends DbTable\Quote
 				'unit_price' => $r['unit_price'],
 				'quote_id' => $r['quote_id'],
 				'sort_id' => $sort[$r['quote_id']],
-				'note' => $r['note'],
+				'note' => trim(preg_replace('/\s+/', ' ', $r['note'])),
 				'approve_date' => DateTime::createFromFormat('Y-m-d H:i:s.v', $r['approve_date'])->format('m/d/Y')
 			);
 		}
@@ -690,23 +711,40 @@ class Quote extends DbTable\Quote
 		$db = $this->getAdapter();
 
 		$selectedField = array(
-			'quote_id',
-			'quote_date',
-			'expire_date',
-			'ship_required_date',
-			'approve_status'
+			'quote.quote_id',
+			'quote.quote_date',
+			'quote.expire_date',
+			'quote.ship_required_date',
+			'quote.approve_status'
 		);
 
 		$select = $db->select()
 			->from('quote', $selectedField)
-			->join('P21_Users', 'quote.arch = P21_Users.id', 'name')
-			->join('quote_market_segment', 'quote_market_segment.uid = quote.quote_segment', 'Market_Segment')
-			->where('quote.status =?', 1)
+			->joinLeft('quote_market_segment', 'quote_market_segment.uid = quote.quote_segment', 'Market_Segment')
+			->joinLeft('P21_Users', 'quote.arch = P21_Users.id', 'name')
+			->joinLeft('view_quote_x_oe', 'view_quote_x_oe.quote_id = quote.quote_id', 'order_no')
+			->where('quote.status =?', 1) // legacy
+			->where('quote.delete_flag =?', 'N')
 			->where('project_id = ?', $project_id)
 			->order('quote_id desc');
 
 		$result = $db->fetchAll($select);
 
 		return Zend_Json::encode($result);
+	}
+
+	public function fetchP21OrderNumber($quote_id) {
+		if ($quote_id == null) {
+			return  false;
+		}
+
+		$db = $this->getAdapter();
+
+		$select = $db->select()
+			->from('view_quote_x_oe', 'order_no')
+			->where('quote_id = ?', $quote_id);
+	
+		$result = $db->fetchRow($select);
+		return $result;
 	}
 }

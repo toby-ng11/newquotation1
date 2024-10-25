@@ -72,6 +72,27 @@ function createTocList(itemsArray) {
 }
 
 $(function () {
+
+	let sideBarExpanded = false;
+
+    $('#options-button').on("click", function() {
+        if (sideBarExpanded != true) {
+            $('#options-menu-items').slideToggle({
+                start: function() {
+                    $(this).css('display', 'flex');
+                    $(".options-menu").css("transform", "translateX(-20%)");
+                }
+            });
+            sideBarExpanded = true;
+        }
+        else {
+            $('#options-menu-items').slideToggle();
+            $(".options-menu").css("transform", "translateX(60%)");
+            sideBarExpanded = false;
+        }
+    })
+	
+
 	$(".pat1").on("click", function () {
 		$("html").css(
 			"background",

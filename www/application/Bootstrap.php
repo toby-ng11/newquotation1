@@ -95,8 +95,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     	{
     		$view = $this->bootstrap('view')->getResource('view');
     		$view->doctype('XHTML11'); //end the html element with '/>'
-    		$view->headTitle('Centura Project to Quote System');
-    		$view->headMeta('Centura');
+    		$view->headTitle('P2Q');
     		$view->headMeta('Centura');
     	}
     	 

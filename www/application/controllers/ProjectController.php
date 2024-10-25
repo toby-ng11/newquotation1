@@ -28,6 +28,8 @@ class ProjectController extends Zend_Controller_Action
 
     public function indexAction()
     {
+		$this->view->headTitle()->set('Add Project');
+
         $db = new User();
         
         $model = new Quote();
@@ -75,7 +77,7 @@ class ProjectController extends Zend_Controller_Action
     public function editAction()
     {
     	$project_id = $this->getRequest()->getParam('id');
-    	
+		
     	if($project_id == null)
     	{
     		$this->redirect('/project');
@@ -88,6 +90,8 @@ class ProjectController extends Zend_Controller_Action
 		$project_detail = $project->fetchbyid($project_id);
 		//echo Zend_Json::encode($project_detail);
 		$this->view->project = $project_detail;
+
+		$this->view->headTitle()->set('Project Edit: ' . $project_id . ' - '. $project_detail['project_name']);
     
     	$this->view->status = $quote->fetchstatus();
     	$this->view->seg = $quote->fetchseg();

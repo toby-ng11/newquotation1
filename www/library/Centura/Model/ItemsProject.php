@@ -25,7 +25,7 @@ class ItemsProject extends DbTable\Products
 	    $i['project_id'] = $project_id;
 	    $i['product_id'] = $data['item_id'];
 	    $i['qty'] = $data['qty'];
-	    $i['note'] = $data['note'];
+	    $i['note'] = trim($data['note']);
 	    $i['unit_price'] = $data['price'];
 	    $i['uom'] = $data['uom'];
 	    $i['subtotal'] = $data['qty'] * $data['price'];
@@ -55,7 +55,7 @@ class ItemsProject extends DbTable\Products
 		$i['project_id'] = $project_id;
 		$i['product_id'] = $data['item_id'];
 		$i['qty'] = $data['qty'];
-		$i['note'] = $data['note'];
+		$i['note'] = trim($data['note']);
 		$i['unit_price'] = $data['price'];
 		$i['uom'] = $data['uom'];
 		$i['subtotal'] = $data['qty'] * $data['price'];

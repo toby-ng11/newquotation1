@@ -53,149 +53,157 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 							<label for="project-pin">Pin project</label>
 						</div>
 					</div>-->
-					<h2>Project Information</h2>
-					<div class="formRow">
-						<input type="hidden" id='project_id' value='<?= $projectID ?>'>
-						<input type="hidden" id="owner" name='owner' value='<?= $project['owner'] ?>'>
-						<input type="hidden" id='create_date' name='create_date' value='<?= $projectCreateDate->format('Y-m-d') ?>' />
-						<input type="hidden" id='architect' name='architect' value="<?= $project['architect'] ?>">
-						<input type="hidden" id='specifiler' name="specifiler" value="<?= $project['specifiler'] ?>">
-
-						<div class="oneTwo required-field">
-							<label for="project_name">Project Name</label>
-							<input type="text" id='project_name' class="validate[required]" placeholder="Project Name" name='project_name' value="<?= $project['project_name'] ?>" />
+					<div class="widget-header">
+						<div class="widget-title">
+							<h2>Project Information</h2>
 						</div>
+					</div>
+					<div class="line"></div>
 
-						<div class="oneTwo">
-							<label for="location">Centura Location</label>
-							<select name="location" id="location">
-								<?php foreach ($this->locations as $l) { ?>
-									<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $project['centura_location_id']) echo 'selected' ?>><?= $l['name'] ?></option>
-								<?php } ?>
-							</select>
-						</div>
+					<div class="widget-section">
+						<div class="formRow">
+							<input type="hidden" id='project_id' value='<?= $projectID ?>'>
+							<input type="hidden" id="owner" name='owner' value='<?= $project['owner'] ?>'>
+							<input type="hidden" id='create_date' name='create_date' value='<?= $projectCreateDate->format('Y-m-d') ?>' />
+							<input type="hidden" id='architect' name='architect' value="<?= $project['architect'] ?>">
+							<input type="hidden" id='specifiler' name="specifiler" value="<?= $project['specifiler'] ?>">
 
-						<div class="oneTwo form-worksheet-owner">
-							<label for="owner_name">Worksheet Owner</label>
-							<input id="owner_name" name="owner_name" type="text" value='<?= $project['owner_name'] ?>' readonly />
-						</div>
-
-						<?php if ($session->user['approve_id'] != null) { ?>
-							<div class="oneTwo form-worksheet-owner">
-								<label for="worksheet_assign">Share Worksheet</label>
-								<input id="worksheet_assign" name="worksheet_assign" type="text" value='<?= $project['worksheet_assign'] ?>' />
+							<div class="oneTwo required-field">
+								<label for="project_name">Project Name</label>
+								<input type="text" id='project_name' class="validate[required]" placeholder="Project Name" name='project_name' value="<?= $project['project_name'] ?>" />
 							</div>
-						<?php } else { ?>
-							<input type="hidden" id="worksheet_assign" name="worksheet_assign" />
-						<?php } ?>
 
-						<div class="oneTwo">
-							<label for="quote_no">Project ID</label>
-							<input id="quote_no" type="text" placeholder="123456" name='quote_no' value="<?= $project['quote_no'] ?>" readonly />
-						</div>
+							<div class="oneTwo">
+								<label for="location">Centura Location</label>
+								<select name="location" id="location">
+									<?php foreach ($this->locations as $l) { ?>
+										<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $project['centura_location_id']) echo 'selected' ?>><?= $l['name'] ?></option>
+									<?php } ?>
+								</select>
+							</div>
 
-						<div class="oneTwo required-field">
-							<label for="project_location_address">Project Location</label>
-							<input type="text" name='project_location_address' id="project_location_address" class="validate[required]" value='<?= $project['project_location_address'] ?>' />
-						</div>
+							<div class="oneTwo form-worksheet-owner">
+								<label for="owner_name">Worksheet Owner</label>
+								<input id="owner_name" name="owner_name" type="text" value='<?= $project['owner_name'] ?>' readonly />
+							</div>
 
-						<div class="oneTwo required-field">
-							<label for="status">Status</label>
-							<select name="status" id="status" class="validate[required]">
-								<option value="">-- Select Status --</option>
-								<?php foreach ($this->status as $s) { ?>
-									<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $project['status']) echo 'selected' ?>><?= $s['Status'] ?></option>
-								<?php } ?>
-							</select>
-						</div>
+							<?php if ($session->user['approve_id'] != null) { ?>
+								<div class="oneTwo form-worksheet-owner">
+									<label for="worksheet_assign">Share Worksheet</label>
+									<input id="worksheet_assign" name="worksheet_assign" type="text" value='<?= $project['worksheet_assign'] ?>' />
+								</div>
+							<?php } else { ?>
+								<input type="hidden" id="worksheet_assign" name="worksheet_assign" />
+							<?php } ?>
 
-						<div class="oneTwo required-field">
-							<label for="reed">REED ID</label>
-							<input type="text" name="reed" id="reed" value="<?= $project['reed'] ?>" class="validate[required]" />
-						</div>
+							<div class="oneTwo">
+								<label for="quote_no">Project ID</label>
+								<input id="quote_no" type="text" placeholder="123456" name='quote_no' value="<?= $project['quote_no'] ?>" readonly />
+							</div>
 
-						<div class="oneTwo required-field">
-							<label for='market_segment'>Market Segment</label>
-							<select name="market_segment" id='market_segment' class="validate[required]">
-								<option value="">Choose Segment</option>
-								<?php foreach ($this->seg as $s) { ?>
-									<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $project['market_segment']) echo 'selected' ?>><?= $s['Market_Segment'] ?></option>
-								<?php } ?>
-							</select>
-						</div>
+							<div class="oneTwo required-field">
+								<label for="project_location_address">Project Location</label>
+								<input type="text" name='project_location_address' id="project_location_address" class="validate[required]" value='<?= $project['project_location_address'] ?>' />
+							</div>
 
-						<div class="oneTwo required-field">
-							<label for='architect_name'>Project Architect / Owner</label>
-							<input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" value='<?= $this->arch_name ?>' />
-						</div>
+							<div class="oneTwo required-field">
+								<label for="status">Status</label>
+								<select name="status" id="status" class="validate[required]">
+									<option value="">-- Select Status --</option>
+									<?php foreach ($this->status as $s) { ?>
+										<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $project['status']) echo 'selected' ?>><?= $s['Status'] ?></option>
+									<?php } ?>
+								</select>
+							</div>
 
-						<div class="oneTwo">
-							<label for="architect_loc">Architect Location</label>
-							<select id="architect_loc" name="architect_loc">
-								<?php foreach ($this->locations as $l) { ?>
-									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->architect['Company_ID']) echo 'selected' ?>><?= $l['name'] ?></option>
-								<?php } ?>
-							</select>
-						</div>
+							<div class="oneTwo required-field">
+								<label for="reed">REED ID</label>
+								<input type="text" name="reed" id="reed" value="<?= $project['reed'] ?>" class="validate[required]" />
+							</div>
 
-						<div class="oneTwo required-field">
-							<label for='specifiler_name'>Specifier</label>
-							<input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN" original-title="Type 2 letter to start or add your own">
-						</div>
+							<div class="oneTwo required-field">
+								<label for='market_segment'>Market Segment</label>
+								<select name="market_segment" id='market_segment' class="validate[required]">
+									<option value="">Choose Segment</option>
+									<?php foreach ($this->seg as $s) { ?>
+										<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $project['market_segment']) echo 'selected' ?>><?= $s['Market_Segment'] ?></option>
+									<?php } ?>
+								</select>
+							</div>
 
-						<div class="oneTwo">
-							<label for="specifiler_loc">Specifier Location</label>
-							<select id="specifiler_loc" name="specifiler_loc">
-								<?php foreach ($this->locations as $l) { ?>
-									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->sepcloc['Company_ID']) echo 'selected' ?>><?= $l['name'] ?></option>
-								<?php } ?>
-							</select>
-						</div>
+							<div class="oneTwo required-field">
+								<label for='architect_name'>Project Architect / Owner</label>
+								<input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" value='<?= $this->arch_name ?>' />
+							</div>
 
-						<div class="oneTwo">
-							<label for="due_date">Tender Due Date</label>
-							<input id="due_date" type="text" name='due_date' class="datepicker" value='<?= $projectDueDate->format('Y-m-d') ?>' />
-						</div>
+							<div class="oneTwo">
+								<label for="architect_loc">Architect Location</label>
+								<select id="architect_loc" name="architect_loc">
+									<?php foreach ($this->locations as $l) { ?>
+										<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->architect['Company_ID']) echo 'selected' ?>><?= $l['name'] ?></option>
+									<?php } ?>
+								</select>
+							</div>
 
-						<div class="oneTwo">
-							<label for='required_date'>Material Required Date</label>
-							<input id='required_date' type="text" name='required_date' class="datepicker" value='<?= $projectRequiredDate->format('Y-m-d') ?>' />
-						</div>
+							<div class="oneTwo required-field">
+								<label for='specifiler_name'>Specifier</label>
+								<input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN" original-title="Type 2 letter to start or add your own">
+							</div>
 
-						<div class="oneTwo">
-							<label for="gerneral_contractor">General Contractor</label>
-							<input type="text" id="gerneral_contractor" name="gerneral_contractor" placeholder="Add general contractor" value='<?php if (!empty($this->gerneral_contractor)) {
-																																					echo $this->gerneral_contractor['name'] . ' - ' . $this->gerneral_contractor['company_id'];
-																																				} ?>' />
-							<input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" value="<?= $project['general_contractor_id'] ?>" />
-						</div>
+							<div class="oneTwo">
+								<label for="specifiler_loc">Specifier Location</label>
+								<select id="specifiler_loc" name="specifiler_loc">
+									<?php foreach ($this->locations as $l) { ?>
+										<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->sepcloc['Company_ID']) echo 'selected' ?>><?= $l['name'] ?></option>
+									<?php } ?>
+								</select>
+							</div>
 
-						<div class="oneTwo">
-							<label for="gerneral_contractor_loc">General Contractor Location</label>
-							<select id="gerneral_contractor_loc" name="gerneral_contractor_loc">
-								<?php if ($this->gerneral_contractor['company_id'] ?? '' == null) $this->gerneral_contractor['company_id'] = DEFAULT_COMPNAY; ?>
-								<?php foreach ($this->locations as $l) { ?>
-									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->gerneral_contractor['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
-								<?php } ?>
-							</select>
-						</div>
+							<div class="oneTwo">
+								<label for="due_date">Tender Due Date</label>
+								<input id="due_date" type="text" name='due_date' class="datepicker" value='<?= $projectDueDate->format('Y-m-d') ?>' />
+							</div>
 
-						<div class="oneTwo">
-							<label for="awarded_contractor">Awarded Sub Contractor</label>
-							<input type="text" id="awarded_contractor" name="awarded_contractor" placeholder="Add awarded contractor" value='<?php if (!empty($this->awarded_sub_contracotr)) {
-																																					echo $this->awarded_sub_contracotr['name'] . ' - ' . $this->awarded_sub_contracotr['company_id'];
-																																				} ?>' />
-							<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id' value="<?= $project['awarded_sub_contracotr_id'] ?>">
-						</div>
+							<div class="oneTwo">
+								<label for='required_date'>Material Required Date</label>
+								<input id='required_date' type="text" name='required_date' class="datepicker" value='<?= $projectRequiredDate->format('Y-m-d') ?>' />
+							</div>
 
-						<div class="oneTwo">
-							<label for="awarded_contractor_loc">Awarded Contractor Location</label>
-							<select id="awarded_contractor_loc" name="awarded_contractor_loc">
-								<?php $this->awarded_sub_contracotr['company_id'] = $this->awarded_sub_contracotr['company_id'] ?? DEFAULT_COMPNAY; ?>
-								<?php foreach ($this->locations as $l) { ?>
-									<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->awarded_sub_contracotr['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
-								<?php } ?>
-							</select>
+							<div class="oneTwo">
+								<label for="gerneral_contractor">General Contractor</label>
+								<input type="text" id="gerneral_contractor" name="gerneral_contractor" placeholder="Add general contractor" value='<?php if (!empty($this->gerneral_contractor)) {
+																																						echo $this->gerneral_contractor['name'] . ' - ' . $this->gerneral_contractor['company_id'];
+																																					} ?>' />
+								<input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" value="<?= $project['general_contractor_id'] ?>" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="gerneral_contractor_loc">General Contractor Location</label>
+								<select id="gerneral_contractor_loc" name="gerneral_contractor_loc">
+									<?php if ($this->gerneral_contractor['company_id'] ?? '' == null) $this->gerneral_contractor['company_id'] = DEFAULT_COMPNAY; ?>
+									<?php foreach ($this->locations as $l) { ?>
+										<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->gerneral_contractor['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
+									<?php } ?>
+								</select>
+							</div>
+
+							<div class="oneTwo">
+								<label for="awarded_contractor">Awarded Sub Contractor</label>
+								<input type="text" id="awarded_contractor" name="awarded_contractor" placeholder="Add awarded contractor" value='<?php if (!empty($this->awarded_sub_contracotr)) {
+																																						echo $this->awarded_sub_contracotr['name'] . ' - ' . $this->awarded_sub_contracotr['company_id'];
+																																					} ?>' />
+								<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id' value="<?= $project['awarded_sub_contracotr_id'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="awarded_contractor_loc">Awarded Contractor Location</label>
+								<select id="awarded_contractor_loc" name="awarded_contractor_loc">
+									<?php $this->awarded_sub_contracotr['company_id'] = $this->awarded_sub_contracotr['company_id'] ?? DEFAULT_COMPNAY; ?>
+									<?php foreach ($this->locations as $l) { ?>
+										<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->awarded_sub_contracotr['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
+									<?php } ?>
+								</select>
+							</div>
 						</div>
 					</div>
 
@@ -221,15 +229,19 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 		<section aria-labelledby="quoted-items" id="section2" data-nav="Quoted Items">
 			<form method="post" class="form" id='project_log'>
 				<div class="widget-table">
-					<div class="widget-button">
-						<?php if ($this->owner == 1) { ?>
-							<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="add_item">
-								<span class="button-wrap">
-									<span class="icon icon-add"></span>
-									Add Item
-								</span>
-							</button>
-							<!--<button type="submit" title="Save new items" class="button action has-icon small" id="save_item" disabled>
+					<div class="widget-header">
+						<div class="widget-title">
+							<h2>Quoted Items</h2>
+						</div>
+						<div class="widget-button">
+							<?php if ($this->owner == 1) { ?>
+								<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="add_item">
+									<span class="button-wrap">
+										<span class="icon icon-add"></span>
+										Add Item
+									</span>
+								</button>
+								<!--<button type="submit" title="Save new items" class="button action has-icon small" id="save_item" disabled>
 								<span class="button-wrap">
 									<span class="icon icon-save"></span>
 									Save
@@ -241,79 +253,101 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 									Delete item
 								</span>
 							</button>-->
-						<?php } ?>
+							<?php } ?>
+						</div>
 					</div>
-					<h2>Quoted Items</h2>
-					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="items">
-						<thead>
-							<tr>
-								<th>Item</th>
-								<th>Quality</th>
-								<th>Unit Price</th>
-								<th>UOM</th>
-								<th>Total Price</th>
-								<th>Note</th>
-								<th>Options</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
+
+					<div class="line"></div>
+
+					<div class="widget-section">
+						<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="items">
+							<thead>
+								<tr>
+									<th>Item</th>
+									<th>Quality</th>
+									<th>Unit Price</th>
+									<th>UOM</th>
+									<th>Total Price</th>
+									<th>Note</th>
+									<th>Options</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
 			</form>
 		</section>
 
 		<section aria-labelledby="quote-by-project" id="section3" data-nav="Quote by this project">
 			<div class="widget-table">
-				<div class="widget-button">
-					<?php if ($this->owner == 1) { ?>
-						<button onclick="location.href='/quote/index/project/<?= $projectID ?>'" type="button" title="Add new quote" class="button action has-icon add-quote-button small" id="add-quote">
-							<span class="button-wrap">
-								<span class="icon icon-add"></span>
-								Make Quote
-							</span>
-						</button>
-					<?php } ?>
+				<div class="widget-header">
+					<div class="widget-title">
+						<h2>Project Quotes</h2>
+					</div>
+					<div class="widget-button">
+						<?php if ($this->owner == 1) { ?>
+							<button onclick="location.href='/quote/index/project/<?= $projectID ?>'" type="button" title="Add new quote" class="button action has-icon add-quote-button small" id="add-quote">
+								<span class="button-wrap">
+									<span class="icon icon-add"></span>
+									Make Quote
+								</span>
+							</button>
+						<?php } ?>
+					</div>
 				</div>
-				<h2>Project Quotes</h2>
-				<table width="100%" class="sTable display" id='project-quote-table'>
-					<thead>
-						<tr>
-							<th>Quote ID</th>
-							<th>Architectural Rep.</th>
-							<th>Market Segment</th>
-							<th>Quote Date</th>
-							<th>Expire Date</th>
-							<th>Ship Required Date</th>
-							<th>Approve Status</th>
-						</tr>
-					</thead>
-				</table>
+
+				<div class="line"></div>
+
+				<div class="widget-section">
+					<table width="100%" class="sTable display" id='project-quote-table'>
+						<thead>
+							<tr>
+								<th>Quote ID</th>
+								<th>Architectural Rep.</th>
+								<th>Quote Date</th>
+								<th>Expire Date</th>
+								<th>Ship Required Date</th>
+								<th>Approve Status</th>
+								<th>P21 Order ID</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
 			</div>
 		</section>
 
 		<section aria-labelledby="project-log" id="section4" data-nav="Project Log">
 			<div class="widget-table">
-				<div class="widget-button">
-					<?php if ($this->owner == 1) { ?>
-						<button type="button" title="Add new log" class="button action has-icon add-log-button small" id="opener">
-							<span class="button-wrap">
-								<span class="icon icon-add"></span>
-								Add log
-							</span>
-						</button>
-					<?php } ?>
+				<div class="widget-header">
+					<div class="widget-title">
+						<h2>Project Log</h2>
+					</div>
+					<div class="widget-button">
+						<?php if ($this->owner == 1) { ?>
+							<button type="button" title="Add new log" class="button action has-icon add-log-button small" id="opener">
+								<span class="button-wrap">
+									<span class="icon icon-add"></span>
+									Add log
+								</span>
+							</button>
+						<?php } ?>
+					</div>
 				</div>
-				<h2>Project Log</h2>
-				<table cellpadding="0" cellspacing="0" width="100%" class="sTable display" id='project_memo'>
-					<thead>
-						<tr>
-							<th>Log Time</th>
-							<th>Log</th>
-							<th>Next Action</th>
-							<th>Author</th>
-							<th class="action">Options</th>
-						</tr>
-					</thead>
-				</table>
+
+				<div class="line"></div>
+
+				<div class="widget-section">
+					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display" id='project_memo'>
+						<thead>
+							<tr>
+								<th>Log Time</th>
+								<th>Log</th>
+								<th>Next Action</th>
+								<th>Author</th>
+								<th class="action">Options</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
 			</div>
 		</section>
 
@@ -362,7 +396,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 
 					<div class="oneTwo required-field">
 						<label for='price'>Price ($)</label>
-						<input type="text" class="validate[required,custom[number]]" name="price" id='price' placeholder="You can override the price" />
+						<input type="text" class="validate[required,custom[number]]" name="price" id='price' placeholder="*You can override the price" />
 					</div>
 
 					<div class="oneTwo required-field">
@@ -372,7 +406,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 
 					<div class="oneTwo dialog-note">
 						<label for='note'>Note</label>
-						<textarea rows="10" name='note' id='note' maxlength="255" class="validate[maxSize[255]]"></textarea>
+						<textarea rows="10" name='note' id='note' maxlength="255" class="validate[maxSize[255]]" placeholder="*Please type item note in one line only"></textarea>
 						<input type="hidden" id="is_edit" value='0' />
 					</div>
 				</div>
@@ -483,17 +517,26 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 				data: "qty",
 				render: function(data) {
 					let qty = Number.parseFloat(data).toFixed(0);
-					return qty;
+					return '<b>' + qty + '</b>';
 				}
 			},
 			{
-				data: "unit_price"
+				data: "unit_price",
+				render: function(data) {
+					return '<b>' + data + '</b>';
+				}
 			},
 			{
-				data: "uom"
+				data: "uom",
+				render: function(data) {
+					return '<b>' + data + '</b>';
+				}
 			},
 			{
-				data: "subtotal"
+				data: "subtotal",
+				render: function(data) {
+					return '<b>' + data + '</b>';
+				}
 			},
 			{
 				data: "note",
@@ -556,9 +599,6 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 				data: 'name'
 			},
 			{
-				data: "Market_Segment"
-			},
-			{
 				data: "quote_date",
 				render: function(data) {
 					let date = new Date(data);
@@ -597,6 +637,9 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 						return 'Not submitted';
 					}
 				}
+			},
+			{
+				data: "order_no"
 			}
 		],
 		columnDefs: [{
@@ -609,10 +652,6 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 		order: [
 			[0, "desc"]
 		],
-		fixedColumns: {
-			start: 1,
-			end: 1
-		},
 		scrollX: true,
 		layout: {
 			topStart: null,
@@ -631,14 +670,6 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 	var current_edit_row = '';
 
 	$(function() {
-
-		$('#options-button').on("click", function() {
-			$('#options-menu-items').slideToggle({
-				start: function() {
-					$(this).css('display', 'flex');
-				}
-			});
-		})
 
 		$("#awarded_contractor").autocomplete({
 			source: function(request, response) {

@@ -25,140 +25,148 @@
     <section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
       <form action="/project/save" method="post" class="form" id='project_content'>
         <div class="widget-table">
-          <h2>Project Information</h2>
-          <div class="formRow">
-            <input type="hidden" name='owner' value='<?= $session->user['id'] ?>'>
-            <input type="hidden" id='quote_no' name='quote_no' />
-            <input type="hidden" name='create_date' value='<?= date('Y-m-d H:i:s.v') ?>' />
-
-            <div class="oneTwo required-field">
-              <label for="project_name">Project Name</label>
-              <input type="text" id='project_name' name='project_name' class="validate[required]" />
+          <div class="widget-header">
+            <div class="widget-title">
+              <h2>Project Information</h2>
             </div>
+          </div>
 
-            <div class="oneTwo required-field">
-              <label for='project_location_address'>Project Location</label>
-              <input id='project_location_address' name='project_location_address' type="text" class="validate[required] tipN" original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" />
-            </div>
+          <div class="line"></div>
+          <div class="widget-section">
+            <div class="formRow">
+              <input type="hidden" name='owner' value='<?= $session->user['id'] ?>'>
+              <input type="hidden" id='quote_no' name='quote_no' />
+              <input type="hidden" name='create_date' value='<?= date('Y-m-d H:i:s.v') ?>' />
 
-            <div class="oneTwo">
-              <label for="location">Centura Location</label>
-              <select name="location" id="location">
-                <?php foreach ($this->locations as $l) { ?>
-                  <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
-                <?php } ?>
-              </select>
-            </div>
-
-            <div class="oneTwo">
-              <label for="owner">Worksheet Owner</label>
-              <input type="text" id="owner" value='<?= $session->user['name'] ?>' readonly />
-            </div>
-
-            <?php if ($session->user['approve_id'] != null) { ?>
-              <div class="oneTwo">
-                <label for="worksheet_assign">Share Worksheet</label>
-                <input type="text" id="worksheet_assign" name="worksheet_assign" placeholder="Share this project with other salesrep" />
+              <div class="oneTwo required-field">
+                <label for="project_name">Project Name</label>
+                <input type="text" id='project_name' name='project_name' class="validate[required]" />
               </div>
-            <?php } else { ?>
-              <input type="hidden" id="worksheet_assign" name="worksheet_assign" />
-            <?php } ?>
 
-            <div class="oneTwo required-field">
-              <label for="status">Status</label>
-              <select name="status" id='status' class="validate[required]">
-                <option value="">-- Select Status --</option>
-                <?php foreach ($this->status as $s) { ?>
-                  <option value="<?= $s['uid'] ?>"><?= $s['Status'] ?></option>
-                <?php } ?>
-              </select>
-            </div>
+              <div class="oneTwo required-field">
+                <label for='project_location_address'>Project Location</label>
+                <input id='project_location_address' name='project_location_address' type="text" class="validate[required] tipN" original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" />
+              </div>
 
-            <div class="oneTwo required-field">
-              <label for="reed">REED ID</label>
-              <input type="text" name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" />
-            </div>
+              <div class="oneTwo">
+                <label for="location">Centura Location</label>
+                <select name="location" id="location">
+                  <?php foreach ($this->locations as $l) { ?>
+                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
 
-            <div class="oneTwo required-field">
-              <label for="market_segment">Market Segment</label>
-              <select name="market_segment" id='market_segment' class="validate[required]">
-                <option value="">-- Choose Segment --</option>
-                <?php foreach ($this->seg as $s) { ?>
-                  <option value="<?= $s['uid'] ?>"><?= $s['Market_Segment'] ?></option>
-                <?php } ?>
-              </select>
-            </div>
+              <div class="oneTwo">
+                <label for="owner">Worksheet Owner</label>
+                <input type="text" id="owner" value='<?= $session->user['name'] ?>' readonly />
+              </div>
 
-            <div class="oneTwo required-field">
-              <label for="architect_name">Project Architect/Owner</label>
-              <input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" />
-              <input type="hidden" name='architect' id='architect' value="<?php // echo $project['architect'] 
-                                                                          ?>">
-            </div>
+              <?php if ($session->user['approve_id'] != null) { ?>
+                <div class="oneTwo">
+                  <label for="worksheet_assign">Share Worksheet</label>
+                  <input type="text" id="worksheet_assign" name="worksheet_assign" placeholder="Share this project with other salesrep" />
+                </div>
+              <?php } else { ?>
+                <input type="hidden" id="worksheet_assign" name="worksheet_assign" />
+              <?php } ?>
 
-            <div class="oneTwo">
-              <label for="architect_loc">Architect Location</label>
-              <select id="architect_loc" name="architect_loc">
-                <?php foreach ($this->locations as $l) { ?>
-                  <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
-                <?php } ?>
-              </select>
-            </div>
+              <div class="oneTwo required-field">
+                <label for="status">Status</label>
+                <select name="status" id='status' class="validate[required]">
+                  <option value="">-- Select Status --</option>
+                  <?php foreach ($this->status as $s) { ?>
+                    <option value="<?= $s['uid'] ?>"><?= $s['Status'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
 
-            <div class="oneTwo required-field">
-              <label for="specifiler_name">Specifier</label>
-              <input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN">
-              <input type="hidden" id='specifiler' name="specifiler" value="<?php //echo $project['specifiler'] 
+              <div class="oneTwo required-field">
+                <label for="reed">REED ID</label>
+                <input type="text" name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" />
+              </div>
+
+              <div class="oneTwo required-field">
+                <label for="market_segment">Market Segment</label>
+                <select name="market_segment" id='market_segment' class="validate[required]">
+                  <option value="">-- Choose Segment --</option>
+                  <?php foreach ($this->seg as $s) { ?>
+                    <option value="<?= $s['uid'] ?>"><?= $s['Market_Segment'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="oneTwo required-field">
+                <label for="architect_name">Project Architect/Owner</label>
+                <input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" />
+                <input type="hidden" name='architect' id='architect' value="<?php // echo $project['architect'] 
                                                                             ?>">
-            </div>
+              </div>
 
-            <div class="oneTwo">
-              <label for="specifiler_loc">Specifier Location</label>
-              <select id="specifiler_loc" name="specifiler_loc">
-                <?php foreach ($this->locations as $l) { ?>
-                  <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
-                <?php } ?>
-              </select>
-            </div>
+              <div class="oneTwo">
+                <label for="architect_loc">Architect Location</label>
+                <select id="architect_loc" name="architect_loc">
+                  <?php foreach ($this->locations as $l) { ?>
+                    <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
 
-            <div class="oneTwo">
-              <label for="due_date">Tender Due Date</label>
-              <input type="text" id="due_date" name='due_date' class="datepicker" />
-            </div>
+              <div class="oneTwo required-field">
+                <label for="specifiler_name">Specifier</label>
+                <input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN">
+                <input type="hidden" id='specifiler' name="specifiler" value="<?php //echo $project['specifiler'] 
+                                                                              ?>">
+              </div>
 
-            <div class="oneTwo">
-              <label for="required_date">Material Required Date</label>
-              <input type="text" id="required_date" name='required_date' placeholder="Material required date" class="datepicker" />
-            </div>
+              <div class="oneTwo">
+                <label for="specifiler_loc">Specifier Location</label>
+                <select id="specifiler_loc" name="specifiler_loc">
+                  <?php foreach ($this->locations as $l) { ?>
+                    <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
 
-            <div class="oneTwo">
-              <label for="gerneral_contractor">General Contractor</label>
-              <input type="text" id="gerneral_contractor" name="gerneral_contractor" class='tipN' placeholder="Add general contractor" original-title="Type Company Name" />
-              <input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" />
-            </div>
+              <div class="oneTwo">
+                <label for="due_date">Tender Due Date</label>
+                <input type="text" id="due_date" name='due_date' class="datepicker" />
+              </div>
 
-            <div class="oneTwo">
-              <label for="gerneral_contractor_loc">General Contractor Location</label>
-              <select id="gerneral_contractor_loc" name="gerneral_contractor_loc">
-                <?php foreach ($this->locations as $l) { ?>
-                  <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
-                <?php } ?>
-              </select>
-            </div>
+              <div class="oneTwo">
+                <label for="required_date">Material Required Date</label>
+                <input type="text" id="required_date" name='required_date' placeholder="Material required date" class="datepicker" />
+              </div>
 
-            <div class="oneTwo">
-              <label for="awarded_contractor">Awarded Contractor</label>
-              <input id="awarded_contractor" name="awarded_contractor" type="text" class='tipN' placeholder="Add awarded contractor" original-title="Type Company Name" />
-              <input id="awarded_contractor_id" name="awarded_contractor_id" type="hidden" />
-            </div>
+              <div class="oneTwo">
+                <label for="gerneral_contractor">General Contractor</label>
+                <input type="text" id="gerneral_contractor" name="gerneral_contractor" class='tipN' placeholder="Add general contractor" original-title="Type Company Name" />
+                <input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" />
+              </div>
 
-            <div class="oneTwo">
-              <label for="awarded_contractor_loc">Awarded Contractor Location</label>
-              <select id="awarded_contractor_loc" name='awarded_contractor_loc'>
-                <?php foreach ($this->locations as $l) { ?>
-                  <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
-                <?php } ?>
-              </select>
+              <div class="oneTwo">
+                <label for="gerneral_contractor_loc">General Contractor Location</label>
+                <select id="gerneral_contractor_loc" name="gerneral_contractor_loc">
+                  <?php foreach ($this->locations as $l) { ?>
+                    <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="oneTwo">
+                <label for="awarded_contractor">Awarded Contractor</label>
+                <input id="awarded_contractor" name="awarded_contractor" type="text" class='tipN' placeholder="Add awarded contractor" original-title="Type Company Name" />
+                <input id="awarded_contractor_id" name="awarded_contractor_id" type="hidden" />
+              </div>
+
+              <div class="oneTwo">
+                <label for="awarded_contractor_loc">Awarded Contractor Location</label>
+                <select id="awarded_contractor_loc" name='awarded_contractor_loc'>
+                  <?php foreach ($this->locations as $l) { ?>
+                    <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -181,14 +189,7 @@
 
 <script>
   $(function() {
-    $('#options-button').on("click", function() {
-      $('#options-menu-items').slideToggle({
-        start: function() {
-          $(this).css('display', 'flex');
-        }
-      });
-    })
-
+    
     function getcustomerbyid(id, obj) {
       $('.loading').show();
       $.ajax({

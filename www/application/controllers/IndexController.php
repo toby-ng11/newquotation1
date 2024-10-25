@@ -22,6 +22,7 @@ class IndexController extends Zend_Controller_Action
 
 	public function indexAction()
 	{
+		$this->view->headTitle()->set('P2Q - Project Portal');
 
 		if ($this->session->user['sale_role'] == 'admin' && APPLICATION_ENV == 'production' && $this->_getParam('normal') == null) {
 			$this->redirect('/index/admin');
@@ -43,6 +44,43 @@ class IndexController extends Zend_Controller_Action
 		if ($this->session->user['approve_id'] != null) {
 			$this->view->otherprojects = $project->fetchothers($this->sale_id, DEFAULT_COMPNAY);
 		}
+	}
+
+	public function adminAction()
+	{
+		$this->view->headTitle()->set('P2Q - Admin Portal');
+
+		if ($this->session->user['sale_role'] != 'admin' && APPLICATION_ENV == 'production') {
+			$this->redirect('/index/');
+		}
+
+		$quote = new Quote();
+		$project = new Project();
+
+		$this->view->ownproject = $quote->fetchtotal();
+		$this->view->log = null;
+		$this->view->projects = $project->fetchallproject();
+	}
+
+	public function approvalAction()
+	{
+		if ($this->session->user['approve_id'] == null && APPLICATION_ENV == 'production') {
+			$this->redirect('/index');
+		}
+
+		$this->view->headTitle()->set('P2Q - Approval Portal');
+
+		$quote = new Quote();
+		$project = new Project();
+
+		if ($this->session->user['sale_role'] == 'admin') {
+			$is_admin = true;
+		} else {
+			$is_admin = false;
+		}
+		$this->view->waiting = $quote->fetchwaiting(1, $is_admin);
+		$this->view->approved = $quote->fetchwaiting(10, $is_admin);
+		$this->view->disapproved = $quote->fetchwaiting(-1, $is_admin);
 	}
 
 	public function projectsalesrepAction() // ajax
@@ -80,20 +118,6 @@ class IndexController extends Zend_Controller_Action
 		exit;
 	}
 
-	public function adminAction()
-	{
-		if ($this->session->user['sale_role'] != 'admin' && APPLICATION_ENV == 'production') {
-			$this->redirect('/index/');
-		}
-
-		$quote = new Quote();
-		$project = new Project();
-
-		$this->view->ownproject = $quote->fetchtotal();
-		$this->view->log = null;
-		$this->view->projects = $project->fetchallproject();
-	}
-
 	public function quoteAction() // ajax
 	{
 		$quote = new Quote();
@@ -108,24 +132,6 @@ class IndexController extends Zend_Controller_Action
 		exit;
 	}
 
-	public function approvalAction()
-	{
-		if ($this->session->user['approve_id'] == null && APPLICATION_ENV == 'production') {
-			$this->redirect('/index');
-		}
-		$quote = new Quote();
-		$project = new Project();
-
-		if ($this->session->user['sale_role'] == 'admin') {
-			$is_admin = true;
-		} else {
-			$is_admin = false;
-		}
-		$this->view->waiting = $quote->fetchwaiting(1, $is_admin);
-		$this->view->approved = $quote->fetchwaiting(10, $is_admin);
-		$this->view->disapproved = $quote->fetchwaiting(-1, $is_admin);
-	}
-
 	public function approvalwaitingAction() // ajax
 	{
 		$quote = new Quote();
@@ -134,7 +140,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchApprovalQuotes(1, $is_admin);
+		echo $quote->fetchwaitingJson(1, $is_admin);
 		exit;
 	}
 
@@ -146,7 +152,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchApprovalQuotes(10, $is_admin);
+		echo $quote->fetchwaitingJson(10, $is_admin);
 		exit;
 	}
 
@@ -158,7 +164,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchApprovalQuotes(-1, $is_admin);
+		echo $quote->fetchwaitingJson(-1, $is_admin);
 		exit;
 	}
 

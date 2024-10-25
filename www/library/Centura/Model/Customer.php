@@ -16,13 +16,13 @@ class Customer extends DbTable\Customer
 	        return  false;
 	    }
 	    $db = $this->getAdapter();
-	    $select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('customer_id','name','email'=>'Contacts_email','company_id',
+	    $select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('contact_id','name','email'=>'Contacts_email','company_id',
 	    			'tel'=>'central_phone_number','first_name',"last_name",'fullname','phys_address1','phys_address2','phys_city','mail_state','mail_postal_code','phys_country','sale_rep'))
-	    			->where('customer_id = ?',$id);
+	    			->where('contact_id = ?',$id);
 	    
-		$select2 = $db->select()->from('customer',array('customer_id','name','email'=>'Contacts_email','company_id',
+		$select2 = $db->select()->from('contact',array('contact_id','name','email'=>'Contacts_email','company_id',
 	    			'tel'=>'central_phone_number','first_name',"last_name",'fullname','phys_address1','phys_address2','phys_city','mail_state','mail_postal_code','phys_country','sale_rep'))
-	    			->where('customer_id = ?',$id);
+	    			->where('contact_id = ?',$id);
 		$result = $this->merge( $db->fetchRow($select),$db->fetchRow($select2));
 
 		//echo Zend_Json::encode($result);
@@ -37,11 +37,11 @@ class Customer extends DbTable\Customer
 			return  false;
 		}
 		 $db = $this->getAdapter();
-	    $select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('customer_id','name','email'=>'Contacts_email','company_id',
+	    $select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('contact_id','name','email'=>'Contacts_email','company_id',
 	    			'tel'=>'central_phone_number','first_name',"last_name",'phys_address1','phys_address2','phys_city','mail_state','mail_postal_code','phys_country'))
 	    	->where('Contacts_email = ?',$email)->where('company_id = ?',$company);
 	    
-	    $select2 = $db->select()->from('customer',array('customer_id','name','email'=>'Contacts_email','company_id',
+	    $select2 = $db->select()->from('contact',array('contact_id','name','email'=>'Contacts_email','company_id',
 	    		'tel'=>'central_phone_number','first_name',"last_name",'phys_address1','phys_address2','phys_city','mail_state','mail_postal_code','phys_country'))
 	    		->where('Contacts_email = ?',$email)->where('company_id = ?',$company);
 	    
@@ -53,11 +53,11 @@ class Customer extends DbTable\Customer
 	public function fetchCustomerEmailByIdPatten($patten,$limit=20, $company = DEFAULT_COMPNAY)
 	{
 	    $db = $this->getAdapter();
-	    $select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('customer_id','email'=>'Contacts_email','first_name',"last_name"))
+	    $select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('contact_id','email'=>'Contacts_email','first_name',"last_name"))
 	    	->where('Contacts_email LIKE ?','%'.$patten.'%')->where('company_id = ?',$company);
 	    $select->limit($limit);
 	    
-	    $select2 = $db->select()->from('customer',array('customer_id','email'=>'Contacts_email','first_name',"last_name"))
+	    $select2 = $db->select()->from('contact',array('contact_id','email'=>'Contacts_email','first_name',"last_name"))
 	    ->where('Contacts_email LIKE ?','%'.$patten.'%')->where('company_id = ?',$company);
 	    $select->limit($limit);
 	    
@@ -69,12 +69,12 @@ class Customer extends DbTable\Customer
 	public function fetchCustomeridByIdPatten($patten,$limit=20, $company = DEFAULT_COMPNAY)
 	{
 		$db = $this->getAdapter();
-		$select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('customer_id','first_name',"last_name"))
-		->where('customer_id LIKE ?',$patten.'%')->where('company_id = ?',$company);;
+		$select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('contact_id','first_name',"last_name"))
+		->where('contact_id LIKE ?',$patten.'%')->where('company_id = ?',$company);;
 		$select->limit($limit);
 		
-		$select2 = $db->select()->from('customer',array('customer_id','first_name',"last_name"))
-		->where('customer_id LIKE ?',$patten.'%')->where('company_id = ?',$company);;
+		$select2 = $db->select()->from('contact',array('contact_id','first_name',"last_name"))
+		->where('contact_id LIKE ?',$patten.'%')->where('company_id = ?',$company);;
 		$select->limit($limit);
 		
 		$result = $this->merge($db->fetchAll($select2), $db->fetchAll($select));
@@ -85,11 +85,11 @@ class Customer extends DbTable\Customer
 	public function fetchCustomerInfoBynamePatten($patten,$limit=40, $company = DEFAULT_COMPNAY)
 	{
 		$db = $this->getAdapter();
-		$select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('customer_id','fullname','city'=>'phys_city','tel'=>'central_phone_number','name'))
+		$select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('contact_id','fullname','city'=>'phys_city','tel'=>'central_phone_number','name'))
 		->where('fullname LIKE ?','%'.$patten.'%')->where('company_id = ?',$company);
 		$select->limit($limit);
 		
-		$select2 = $db->select()->from('customer',array('customer_id','fullname','city'=>'phys_city','tel'=>'central_phone_number','name'))
+		$select2 = $db->select()->from('contact',array('contact_id','fullname','city'=>'phys_city','tel'=>'central_phone_number','name'))
 		->where('fullname LIKE ?','%'.$patten.'%')->where('company_id = ?',$company);
 		$select->limit($limit);
 		
@@ -101,11 +101,11 @@ class Customer extends DbTable\Customer
 	public function fetchCustomerInfoByquotePatten($patten,$limit=40, $company = DEFAULT_COMPNAY)
 	{
 		$db = $this->getAdapter();
-		$select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('customer_id','fullname','city'=>'phys_city','tel'=>'central_phone_number','name'))
+		$select = $db->select()->from('P21_Customer_X_Address_X_Contacts',array('contact_id','fullname','city'=>'phys_city','tel'=>'central_phone_number','name'))
 		->where('name LIKE ?','%'.$patten.'%')->where('company_id = ?',$company);
 		$select->limit($limit);
 	
-		$select2 = $db->select()->from('customer',array('customer_id','fullname','city'=>'phys_city','tel'=>'central_phone_number','name'))
+		$select2 = $db->select()->from('contact',array('contact_id','fullname','city'=>'phys_city','tel'=>'central_phone_number','name'))
 		->where('name LIKE ?','%'.$patten.'%')->where('company_id = ?',$company);
 		$select->limit($limit);
 	
@@ -175,8 +175,8 @@ class Customer extends DbTable\Customer
 		//$info['creator']                    = $session->user['id'];
 		
 		try {
-			$db->insert('customer', $info);
-			$newCustomerID = $db->lastInsertId('customer', 'customer_id');
+			$db->insert('contact', $info);
+			$newCustomerID = $db->lastInsertId('contact', 'contact_id');
 			return $newCustomerID;
 
 		} catch (Exception $e) {
@@ -209,7 +209,7 @@ class Customer extends DbTable\Customer
 		$info['phys_country']               = $data['phys_country'];
 		
 		try {
-			$project_id = $db->update('customer', $info,'customer_id ='.$customer_id);
+			$project_id = $db->update('contact', $info,'contact_id ='.$customer_id);
 		} catch (Exception $e) {
 			error_log($e);
 			return false;

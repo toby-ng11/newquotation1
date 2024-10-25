@@ -21,8 +21,8 @@ class ProjectMemo extends Zend_Db_Table
 
 		$info['type'] = $data['type'];
 		$info['project_id'] = $project_id;
-		$info['title'] = $data['title'];
-		$info['content'] = $data['content'];
+		$info['title'] = trim($data['title']);
+		$info['content'] = trim($data['content']);
 		$info['follow_up_date'] = date('Y-m-d H:i:s', strtotime($data['follow_up_date']));
 		$info['author'] = $data['author'];
 
@@ -44,8 +44,8 @@ class ProjectMemo extends Zend_Db_Table
 		$db = $this->getAdapter();
 
 		$info['type'] = $data['type'];
-		$info['title'] = $data['title'];
-		$info['content'] = $data['content'];
+		$info['title'] = trim($data['title']);
+		$info['content'] = trim($data['content']);
 		$info['follow_up_date'] = date('Y-m-d H:i:s', strtotime($data['follow_up_date']));
 
 		try {

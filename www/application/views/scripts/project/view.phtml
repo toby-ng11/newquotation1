@@ -238,13 +238,6 @@ $project = $this->project;
 </main>
 
 <script type="text/javascript">
-    $('#options-button').on("click", function() {
-        $('#options-menu-items').slideToggle({
-            start: function() {
-                $(this).css('display', 'flex');
-            }
-        });
-    })
 
     $("textarea").each(function() {
         this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");

@@ -54,6 +54,7 @@
                         <th>Expire Date</th>
                         <th>Ship Required Date</th>
                         <th>Status</th>
+                        <th>P21 OE#</th>
                     </tr>
                 </thead>
             </table>
@@ -82,21 +83,13 @@
 </main>
 
 <script>
-    $('#options-button').on("click", function() {
-        $('#options-menu-items').slideToggle({
-            start: function() {
-                $(this).css('display', 'flex');
-            }
-        });
-    })
-
     $('#waiting').DataTable({
         ajax: {
             url: "/index/approvalwaiting",
-            type: 'POST'
+            dataSrc: ''
         },
         processing: true,
-        serverSide: true,
+        //serverSide: true,
         columns: [{
                 data: "quote_id",
                 render: function(data, type, row, meta) {
@@ -107,7 +100,7 @@
                 data: "project_name"
             },
             {
-                data: "arch"
+                data: "arch_name"
             },
             {
                 data: "customer"
@@ -164,10 +157,10 @@
     $('#approved').DataTable({
         ajax: {
             url: "/index/approvalapproved",
-            type: 'POST'
+            dataSrc: ''
         },
         processing: true,
-        serverSide: true,
+        //serverSide: true,
         columns: [{
                 data: "quote_id",
                 render: function(data, type, row, meta) {
@@ -178,7 +171,7 @@
                 data: "project_name"
             },
             {
-                data: "arch"
+                data: "arch_name"
             },
             {
                 data: "customer"
@@ -217,20 +210,24 @@
             },
             {
                 data: "status_name"
+            },
+            {
+                data: "order_no"
             }
         ],
         columnDefs: [{
                 targets: '_all',
                 className: 'dt-head-center'
                 }, {
-            targets: [0, 2, 4, 5, 6, 7, 8, 9],
+            targets: [0, 2, 4, 5, 6, 7, 8, 9, 10],
             className: 'dt-body-center'
         }],
         order: [
             [0, "desc"]
         ],
         fixedColumns: {
-            start: 1
+            start: 1,
+            end: 1
         },
         scrollX: true,
         layout: {
@@ -246,10 +243,10 @@
     $('#disapproved').DataTable({
         ajax: {
             url: "/index/approvaldisapproved",
-            type: 'POST'
+            dataSrc: ''
         },
         processing: true,
-        serverSide: true,
+        //serverSide: true,
         columns: [{
                 data: "quote_id",
                 render: function(data, type, row, meta) {
@@ -260,7 +257,7 @@
                 data: "project_name"
             },
             {
-                data: "arch"
+                data: "arch_name"
             },
             {
                 data: "customer"

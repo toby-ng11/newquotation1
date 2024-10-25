@@ -42,6 +42,7 @@ class MailController extends Zend_Controller_Action
     	
     	$pdf_url = 'http://'.SITEURL.'/dompdf/print.php?url=http://'.SITEURL.'/quote/print/id/'.$quote_id."?company=".$this->getCompany($quote_detail);
     	
+		$this->view->headTitle()->set('Mail Quote: ' . $quote_id . ' - ' . $project_detail['project_name']);
 
     	$this->view->quote = $quote_detail;
     	$this->view->customer = $customer->fetchCustomerById($quote_detail['customer_id']);
