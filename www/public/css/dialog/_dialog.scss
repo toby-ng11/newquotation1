@@ -112,11 +112,22 @@
         grid-template-columns: repeat(2, 1fr);
 
         label {
-            color: var(--text-primary);
+            color: var(--text-secondary);
         }
 
         .dialog-note {
             grid-column: 1 / 3;
+        }
+    }
+
+    .dialog-form-3 {
+        padding: 1rem;
+        display: grid;
+        gap: 1.5rem 3.5rem;
+        grid-template-columns: repeat(3, 1fr);
+
+        label {
+            color: var(--text-secondary);
         }
     }
 

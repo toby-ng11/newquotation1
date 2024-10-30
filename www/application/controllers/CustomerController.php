@@ -94,6 +94,22 @@ class CustomerController extends Zend_Controller_Action
     	
     }
 
+    public function contactAction() {
+        $customerID = $this->getRequest()->getParam('id');
+    	$contact = new Customer();
 
+        $result = $contact->fetchContactsByCustomer($customerID);
+        echo json_encode($result);
+        exit;
+    }
+
+    public function contactinfoAction() {
+        $customerID = $this->getRequest()->getParam('id');
+    	$contact = new Customer();
+
+        $result = $contact->fetchContactByID($customerID);
+        echo json_encode($result);
+        exit;
+    }
 }
 

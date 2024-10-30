@@ -25,13 +25,13 @@ class Quote extends DbTable\Quote
 			return  false;
 		}
 		$db = $this->getAdapter();
-		if (empty($data['customer_id'])) // if customer id is empty add new customer
+		if (empty($data['contact_id'])) // if customer id is empty add new customer
 		{
 			$customer = new Customer();
-			$data['customer_id'] = $customer->newcustomer($data);
+			$data['contact_id'] = $customer->newcustomer($data);
 		}
 		//add quote
-		$info['customer_id']                = $data['customer_id'];
+		$info['contact_id']                = $data['contact_id'];
 		$info['project_id']                 = $data['project_id'];
 		$info['quote_date']                 = date('Y-m-d H:i:s.v');
 		if ($data['expire_date'] == null) {
@@ -102,7 +102,7 @@ class Quote extends DbTable\Quote
 		//	$data['customer_id'] = $customer->edit($data['customer_id'], $data);
 		//}
 		//add quote
-		$info['customer_id']                = $data['customer_id'];
+		$info['contact_id']                = $data['contact_id'];
 		$info['project_id']                 = $data['project_id'];
 		//$info['quote_date']                 = date('Y-m-d H:i:s', strtotime($data['quote_date']));
 		if ($data['expire_date'] == null || strtotime($data['expire_date']) < 1000) //fix 1969-12-31
@@ -502,14 +502,14 @@ class Quote extends DbTable\Quote
 		$selectedField = array(
 			'quote_id',
 			'project_name',
-			'sale_name',
-			'customer',
+			'taker_name',
 			'arch_name',
 			'Market_Segment',
+			'customer_name',
 			'quote_date',
 			'expire_date',
 			'ship_required_date',
-			'status_name',
+			'Status',
 			'order_no'
 		);
 
@@ -614,12 +614,13 @@ class Quote extends DbTable\Quote
 			->from('quote')
 			->order('quote_id desc')
 			->joinLeft('project', 'project.project_id = quote.project_id', 'project_name')
-			->joinLeft('P21_Customer_X_Address_X_Contacts', 'P21_Customer_X_Address_X_Contacts.contact_id=quote.customer_id', array(
-				'p21_customer_id' => 'duplicate_customer_id'
-			))
+			->joinLeft('P21_Customer_X_Address_X_Contacts', 'P21_Customer_X_Address_X_Contacts.contact_id = quote.contact_id', 'customer_id')
 			->joinLeft('P21_Users', 'quote.arch = P21_Users.id', array(
 				'arch_rep' => 'P21_Users.name'
-			));
+			))
+			->where('quote.status = ?', 1)
+			->where('quote.delete_flag = ?', 'N')
+			->where('quote.approve_status = ?', 10);
 			//->where('quote.customer_id < ?', 900000)
 			//->where('P21_Customer_X_Address_X_Contacts.duplicate_customer_id NOT IN (?)', $internalCustomers);
 
@@ -638,8 +639,8 @@ class Quote extends DbTable\Quote
 			$csv[$r['quote_id']] = array(
 				'quote_id' => $r['quote_id'],
 				'company' => substr($r['quote_no'], 0, 3),
-				'customer' => $r['p21_customer_id'],
-				'contact' => $r['customer_id'],
+				'customer' => $r['customer_id'],
+				'contact' => $r['contact_id'],
 				'job_name' => $r['job_name'],
 				'note' => $r['arch_rep'] . ' - ' . $r['note'],
 				'po_number' => $r['po_number'],
@@ -662,9 +663,12 @@ class Quote extends DbTable\Quote
 		$select = $db->select()->from('quotes_products')
 			->joinLeft('P21_Inv_Mast', 'quotes_products.product_id = P21_Inv_Mast.item_id', 'item_desc')
 			->joinLeft('quote', 'quote.quote_id = quotes_products.quote_id', array('approve_date'))
-			->joinLeft('P21_Customer_X_Address_X_Contacts', 'P21_Customer_X_Address_X_Contacts.contact_id=quote.customer_id', array('p21_customer_id' => 'duplicate_customer_id'))
+			->joinLeft('P21_Customer_X_Address_X_Contacts', 'P21_Customer_X_Address_X_Contacts.contact_id=quote.contact_id', array('p21_customer_id' => 'customer_id'))
 			->order('quotes_products.quote_id desc')
 			->order('quotes_products.sort_id asc')
+			->where('quote.status = ?', 1)
+			->where('quote.delete_flag = ?', 'N')
+			->where('quote.approve_status = ?', 10)
 			->where('quotes_products.status = 1');
 			//->where('quote.customer_id  < ?', 900000)
 			//->where('P21_Customer_X_Address_X_Contacts.duplicate_customer_id NOT IN (?)', $internalCustomers);

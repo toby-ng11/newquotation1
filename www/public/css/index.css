@@ -4092,10 +4092,19 @@ button.signout-button:hover, button.signout-button:focus {
   grid-template-columns: repeat(2, 1fr);
 }
 .ui-dialog .dialog-form label {
-  color: var(--text-primary);
+  color: var(--text-secondary);
 }
 .ui-dialog .dialog-form .dialog-note {
   grid-column: 1/3;
+}
+.ui-dialog .dialog-form-3 {
+  padding: 1rem;
+  display: grid;
+  gap: 1.5rem 3.5rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+.ui-dialog .dialog-form-3 label {
+  color: var(--text-secondary);
 }
 .ui-dialog .ui-dialog-buttonpane {
   border-radius: 15px;

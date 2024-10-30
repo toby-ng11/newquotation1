@@ -3,7 +3,7 @@ error_reporting(0);
 require_once 'dompdf\autoload.inc.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
-$url = 'http://newstatic.centura.local/index.php/export/mail';
+$url = 'http://devquotation.centura.local/index.php/export/mail';
 $username= 'centura\join';
 $password = 'C3ntura!';
 if($name == null)

@@ -1,4 +1,17 @@
-<?php $session = Zend_Registry::get('session'); ?>
+<?php $session = Zend_Registry::get('session');
+
+$maintainenceMode = 0;
+
+if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
+?>
+	<main id="content" class="main-content">
+		<div class="main-page-content">
+			<header class="main-page-content-header">
+				<h1>This page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h1>
+			</header>
+		</div>
+	</main>
+<?php } else { ?>
 
 <!-- Main page -->
 <main id="content" class="main-content">
@@ -28,9 +41,9 @@
                     <tr>
                         <th>Quote ID</th>
                         <th>Project Name</th>
-                        <th>Arch. Sales Rep.</th>
-                        <th>Contractor</th>
-                        <th>Sales Rep.</th>
+                        <th>Arch Rep</th>
+                        <th>Customer</th>
+                        <th>Taker</th>
                         <th>Segment</th>
                         <th>Date</td>
                         <th>Ship Required Date</th>
@@ -46,15 +59,15 @@
                     <tr>
                         <th>Quote ID</th>
                         <th>Project Name</th>
-                        <th>Arch. Sale Rep.</th>
-                        <th>Contractor/Company</th>
-                        <th>Sales Rep.</th>
+                        <th>Arch Rep</th>
+                        <th>Customer</th>
+                        <th>Taker</th>
                         <th>Segment</th>
                         <th>Quote Date</th>
                         <th>Expire Date</th>
                         <th>Ship Required Date</th>
                         <th>Status</th>
-                        <th>P21 OE#</th>
+                        <th>P21 OE #</th>
                     </tr>
                 </thead>
             </table>
@@ -66,9 +79,9 @@
                     <tr>
                         <th>Quote ID</th>
                         <th>Project Name</th>
-                        <th>Arch. Sale Rep.</th>
-                        <th>Contractor/Company</th>
-                        <th>Sales Rep.</th>
+                        <th>Arch Rep</th>
+                        <th>Customer</th>
+                        <th>Taker</th>
                         <th>Segment</th>
                         <th>Quote Date</th>
                         <th>Expire Date</th>
@@ -81,6 +94,9 @@
         </div>
     </div>
 </main>
+
+<?php }
+?>
 
 <script>
     $('#waiting').DataTable({
@@ -103,10 +119,10 @@
                 data: "arch_name"
             },
             {
-                data: "customer"
+                data: "customer_name"
             },
             {
-                data: "sale_name"
+                data: "taker_name"
             },
             {
                 data: "Market_Segment"
@@ -126,7 +142,7 @@
                 }
             },
             {
-                data: "status_name"
+                data: "Status"
             }
         ],
         columnDefs: [{
@@ -174,10 +190,10 @@
                 data: "arch_name"
             },
             {
-                data: "customer"
+                data: "customer_name"
             },
             {
-                data: "sale_name"
+                data: "taker_name"
             },
             {
                 data: "Market_Segment"
@@ -209,7 +225,7 @@
                 }
             },
             {
-                data: "status_name"
+                data: "Status"
             },
             {
                 data: "order_no"
@@ -260,10 +276,10 @@
                 data: "arch_name"
             },
             {
-                data: "customer"
+                data: "customer_name"
             },
             {
-                data: "sale_name"
+                data: "taker_name"
             },
             {
                 data: "Market_Segment"
@@ -295,7 +311,7 @@
                 }
             },
             {
-                data: "status_name"
+                data: "Status"
             },
             {
                 data: "quote_id",

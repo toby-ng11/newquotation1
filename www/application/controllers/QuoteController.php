@@ -68,6 +68,8 @@ class QuoteController extends Zend_Controller_Action
 		}
 
 		$customer = new Customer();
+		$contact = new Customer();
+		$contactList = new Customer();
 		$sales = new User();
 		$project = new Project();
 		$quote = new Quote();
@@ -76,10 +78,13 @@ class QuoteController extends Zend_Controller_Action
 		$quote_detail = $quote->fetchquotebyid($quote_id);
 		//echo Zend_Json::encode($quote_detail);
 		$project_detail = $project->fetchbyid($quote_detail['project_id']);
+		$customerDetail = $customer->fetchCustomerByContact($quote_detail['contact_id']);
 
 		$this->view->headTitle()->set('Quote Edit: ' . $quote_id . ' - ' . $project_detail['project_name']);
 
-		$this->view->customer = $customer->fetchCustomerById($quote_detail['customer_id']);
+		$this->view->contact = $contact->fetchContactByID($quote_detail['contact_id']);
+		$this->view->customer = $customerDetail;
+		$this->view->contactList = $contactList->fetchContactsByCustomer($customerDetail['customer_id']);
 		$this->view->quote = $quote_detail;
 		$this->view->arch = $sales->fetchallsales();
 		$this->view->approval = $sales->getQuoteapproval();
@@ -304,6 +309,7 @@ class QuoteController extends Zend_Controller_Action
 		}
 
 		$customer = new Customer();
+		$contact = new Customer();
 		$sales = new User();
 		$project = new Project();
 		$quote = new Quote();
@@ -312,8 +318,12 @@ class QuoteController extends Zend_Controller_Action
 
 		$quote_detail = $quote->fetchquotebyid($quote_id);
 		$project_detail = $project->fetchbyid($quote_detail['project_id']);
+		$customerDetail = $customer->fetchCustomerByContact($quote_detail['contact_id']);
 
-		$this->view->customer = $customer->fetchCustomerById($quote_detail['customer_id']);
+		$this->view->headTitle()->set('Quote For ' . $project_detail['project_name'] . ' - Centura', 'SET');
+
+		$this->view->contact = $contact->fetchContactByID($quote_detail['contact_id']);
+		$this->view->customer = $customerDetail;
 		$this->view->quote = $quote_detail;
 		$this->view->arch = $sales->fetchallsales();
 		$this->view->approval = $sales->getQuoteapproval();

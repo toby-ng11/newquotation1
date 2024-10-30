@@ -3,7 +3,8 @@
 use Centura\Model\{ 
 	Project,
 	Quote,
-	ProjectMemo
+	ProjectMemo,
+	Location
 };
 
 class IndexController extends Zend_Controller_Action
@@ -56,10 +57,12 @@ class IndexController extends Zend_Controller_Action
 
 		$quote = new Quote();
 		$project = new Project();
+		$location = new Location();
 
 		$this->view->ownproject = $quote->fetchtotal();
 		$this->view->log = null;
 		$this->view->projects = $project->fetchallproject();
+		$this->view->companyId = $location->fetCompanyId();
 	}
 
 	public function approvalAction()

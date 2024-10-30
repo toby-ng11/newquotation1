@@ -28,4 +28,14 @@ class Location extends Zend_Db_Table
 
 		return $db->fetchAll($select);
 	}
+
+	function fetCompanyId() {
+		$unusedCompanyId =  array('M98', 'LTD', 'H97');
+		$db = $this->getAdapter();
+		$select = $db->select()
+			->distinct()
+			->from('P21_Location', 'company_id')
+			->where('company_id not in (?)', $unusedCompanyId);
+		return $db->fetchAll($select);
+	}
 }

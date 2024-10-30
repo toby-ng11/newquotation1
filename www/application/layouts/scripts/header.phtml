@@ -31,7 +31,7 @@ $session =  Zend_Registry::get('session');
       <div class="top-navigation-main">
         <nav class="main-nav" id="leftSide">
           <ul id="menu" class="nav">
-            <?php if ($session->user['sale_role'] ?? '' == 'admin') { ?>
+            <?php if ($session->user['sale_role'] == 'admin') { ?>
               <li class="top-level-entry-container">
                 <a href="/index/admin" title="admin" class="top-level-entry">Admin Portal</a>
               </li>
