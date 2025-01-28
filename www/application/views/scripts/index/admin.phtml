@@ -155,7 +155,7 @@ $session = Zend_Registry::get('session');
         processing: true,
         serverSide: true, //TODO: Error 404
         columns: [{
-                data: "quote_no",
+                data: "project_id_ext",
                 render: function(data, type, row, meta) {
                     return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + data + "</a>";
                 }
@@ -164,10 +164,10 @@ $session = Zend_Registry::get('session');
                 data: "project_name"
             },
             {
-                data: "owner"
+                data: "owner_id"
             },
             {
-                data: "worksheet_assign"
+                data: "shared_id"
             },
             {
                 data: "create_date",
@@ -189,13 +189,13 @@ $session = Zend_Registry::get('session');
                 }
             },
             {
-                data: "Specifier"
+                data: "specifier_name"
             },
             {
-                data: "Market_Segment"
+                data: "market_segment_desc"
             },
             {
-                data: "Status"
+                data: "status"
             },
             {
                 data: "project_id",
@@ -248,7 +248,7 @@ $session = Zend_Registry::get('session');
                 data: "project_name"
             },
             {
-                data: "Market_Segment"
+                data: "market_segment_desc"
             },
             {
                 data: "quote_date",
@@ -277,10 +277,10 @@ $session = Zend_Registry::get('session');
                 }
             },
             {
-                data: "Status"
+                data: "project_status"
             },
             {
-                data: "approve_status",
+                data: "quote_status",
                 render: function(data) {
                     if (data == -1) {
                         return '<span class="disapproved red">Disapproved</span>';

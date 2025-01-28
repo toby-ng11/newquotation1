@@ -63,7 +63,7 @@ class ProjectController extends Zend_Controller_Action
 	public function memoAction() {
 		$project_id = $this->getRequest()->getParam('id');
 		$mono = new ProjectMemo();
-    	echo $mono->fetchmemosbyprojectJson($project_id);
+    	echo $mono->fetchmemosbyproject($project_id, true);
 		exit;
 	}
 

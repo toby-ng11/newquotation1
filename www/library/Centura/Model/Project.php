@@ -22,10 +22,12 @@ class Project extends DbTable\Project
 		}
 		$db = $this->getAdapter();
 
+		$info['project_name']               = trim($data['project_name']);
+		$info['project_address'] = trim($data['project_address']);
+		$info['centura_location_id'] = $data['location_id'];
 		$info['market_segment']      = $data['market_segment'];
-		$info['centura_location_id'] = $data['location'];
-		$info['owner']               = $data['owner'];
-		$info['project_location_address'] = $data['project_location_address'];
+		$info['owner_id']               = $data['owner_id'];
+		$info['shared_id'] = $data['shared_id'];
 		$info['reed']                     = $data['reed'];
 		$info['general_contractor_id']    = $data['gerneral_contractor_id'];
 		$info['awarded_sub_contracotr_id']  = $data['awarded_contractor_id'];
@@ -47,8 +49,8 @@ class Project extends DbTable\Project
 		$info['architect']                  = $data['architect']; // null need check
 		$info['specifiler']                  = $data['specifiler']; // null need check
 		$info['delete_flag']                     = 'N';
-		$info['project_name']               = trim($data['project_name']);
-		$info['worksheet_assign'] = $data['worksheet_assign'];
+		
+		
 
 		if ($info['architect'] == null || $info['architect'] == 0) // no id or not match
 		{
@@ -128,12 +130,11 @@ class Project extends DbTable\Project
 			return  false;
 		}
 		$db = $this->getAdapter();
-		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location', 'centura_location_id = P21_Location.location_id', 'company_id')
-			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))
-			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment', array('segment' => 'Market_Segment'))
-			->join('quote_specifier', 'quote_specifier.uid = project.specifiler', array('Specifier_name' => 'quote_specifier.Specifier'));
-
-		$select->where('owner = ?', $owner)->where('project.delete_flag =?', 'N');
+		$db = $this->getAdapter();
+		$select = $db->select()
+			->from('p2q_view_project')
+			->where('owner_id = ?', $owner)
+			->order('project_id desc');
 
 		return $db->fetchAll($select);
 	}
@@ -144,20 +145,10 @@ class Project extends DbTable\Project
 			return  false;
 		}
 		$db = $this->getAdapter();
-		$select = $db->select()->from('project')
-			->order('project_id desc')
-			->join('P21_Location', 'centura_location_id = P21_Location.location_id', 'company_id')
-			->join('quote_status', 'quote_status.uid=project.status', array(
-				'status_name' => 'Status'
-			))
-			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment', array(
-				'segment' => 'Market_Segment'
-			))
-			->join('quote_specifier', 'quote_specifier.uid = project.specifiler', array(
-				'Specifier_name' => 'quote_specifier.Specifier'
-			))
-			->where('owner = ?', $owner)
-			->where('project.delete_flag =?', 'N');
+		$select = $db->select()
+			->from('p2q_view_project')
+			->where('owner_id = ?', $owner)
+			->order('project_id desc');
 
 		return Zend_Json::encode($db->fetchAll($select));
 	}
@@ -168,20 +159,10 @@ class Project extends DbTable\Project
 			return  false;
 		}
 		$db = $this->getAdapter();
-		$select = $db->select()->from('project')
-			->order('project_id desc')
-			->join('P21_Location', 'centura_location_id = P21_Location.location_id', 'company_id')
-			->join('quote_status', 'quote_status.uid=project.status', array(
-				'status_name' => 'Status'
-			))
-			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment', array(
-				'segment' => 'Market_Segment'
-			))
-			->join('quote_specifier', 'quote_specifier.uid = project.specifiler', array(
-				'Specifier_name' => 'quote_specifier.Specifier'
-			))
-			->where('worksheet_assign = ?', $owner)
-			->where('project.delete_flag =?', 'N');
+		$select = $db->select()
+			->from('p2q_view_project')
+			->where('shared_id = ?', $owner)
+			->order('project_id desc');
 
 		return $db->fetchAll($select);
 	}
@@ -192,20 +173,10 @@ class Project extends DbTable\Project
 			return  false;
 		}
 		$db = $this->getAdapter();
-		$select = $db->select()->from('project')
-			->order('project_id desc')
-			->join('P21_Location', 'centura_location_id = P21_Location.location_id', 'company_id')
-			->join('quote_status', 'quote_status.uid=project.status', array(
-				'status_name' => 'Status'
-			))
-			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment', array(
-				'segment' => 'Market_Segment'
-			))
-			->join('quote_specifier', 'quote_specifier.uid = project.specifiler', array(
-				'Specifier_name' => 'quote_specifier.Specifier'
-			))
-			->where('worksheet_assign = ?', $owner)
-			->where('project.delete_flag =?', 'N');
+		$select = $db->select()
+		->from('p2q_view_project')
+		->where('shared_id = ?', $owner)
+		->order('project_id desc');
 
 		return Zend_Json::encode($db->fetchAll($select));
 	}
@@ -216,15 +187,10 @@ class Project extends DbTable\Project
 			return  false;
 		}
 		$db = $this->getAdapter();
-		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location', 'centura_location_id = P21_Location.location_id', 'company_id')
-			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))
-			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment', array('segment' => 'Market_Segment'))
-			->join('quote_specifier', 'quote_specifier.uid = project.specifiler', array('Specifier_name' => 'quote_specifier.Specifier'));
-
-		$select->where('owner != ?', $owner)->where('project.delete_flag =?', 'N');;
-		$select->where('quote_status.uid != 13');
-		$select->where('P21_Location.company_id = ?', $company_id);
-
+		$select = $db->select()
+			->from('p2q_view_project')
+			->where('owner_id != ?', $owner)
+			->order('project_id desc');
 
 		return $db->fetchAll($select);
 	}
@@ -235,14 +201,10 @@ class Project extends DbTable\Project
 			return  false;
 		}
 		$db = $this->getAdapter();
-		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location', 'centura_location_id = P21_Location.location_id', 'company_id')
-			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))
-			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment', array('segment' => 'Market_Segment'))
-			->join('quote_specifier', 'quote_specifier.uid = project.specifiler', array('Specifier_name' => 'quote_specifier.Specifier'));
-
-		$select->where('owner != ?', $owner)->where('project.delete_flag =?', 'N');;
-		$select->where('quote_status.uid != 13');
-		$select->where('P21_Location.company_id = ?', $company_id);
+		$select = $db->select()
+			->from('p2q_view_project')
+			->where('owner_id != ?', $owner)
+			->order('project_id desc');
 
 
 		return Zend_Json::encode($db->fetchAll($select));
@@ -251,7 +213,7 @@ class Project extends DbTable\Project
 	public function fetchallproject($owner = null)
 	{
 		$db = $this->getAdapter();
-		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location', 'centura_location_id = P21_Location.location_id', 'company_id')
+		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location_x_Branch', 'centura_location_id = P21_Location_x_Branch.location_id', 'company_id')
 			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))
 			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment', array('segment' => 'Market_Segment'))->where('project.delete_flag =?', 'N')
 			->join('quote_specifier', 'quote_specifier.uid = project.specifiler', array('Specifier_name' => 'quote_specifier.Specifier'));
@@ -274,21 +236,21 @@ class Project extends DbTable\Project
 	{
 		$dbDetails = $this->getAdapter();
 
-		$table = "view_project";
+		$table = "p2q_view_project";
 
 		$primaryKey = 'project_id';
 
 		$columns = array(
-			array('db' => 'project_id',       'dt' => 'project_id'),
-			array('db' => 'quote_no',         'dt' => 'quote_no'),
-			array('db' => 'project_name',     'dt' => 'project_name'),
-			array('db' => 'owner',            'dt' => 'owner'),
-			array('db' => 'worksheet_assign', 'dt' => 'worksheet_assign'),
-			array('db' => 'create_date',      'dt' => 'create_date'),
-			array('db' => 'due_date',         'dt' => 'due_date'),
-			array('db' => 'Specifier',        'dt' => 'Specifier'),
-			array('db' => 'Market_Segment',   'dt' => 'Market_Segment'),
-			array('db' => 'Status',           'dt' => 'Status')
+			array('db' => 'project_id',       	 'dt' => 'project_id'),
+			array('db' => 'project_id_ext',   	 'dt' => 'project_id_ext'),
+			array('db' => 'project_name',     	 'dt' => 'project_name'),
+			array('db' => 'owner_id',         	 'dt' => 'owner_id'),
+			array('db' => 'shared_id', 		  	 'dt' => 'shared_id'),
+			array('db' => 'create_date',      	 'dt' => 'create_date'),
+			array('db' => 'due_date',         	 'dt' => 'due_date'),
+			array('db' => 'specifier_name',   	 'dt' => 'specifier_name'),
+			array('db' => 'market_segment_desc', 'dt' => 'market_segment_desc'),
+			array('db' => 'status',           	 'dt' => 'status')
 		);
 
 		echo Zend_Json::encode(

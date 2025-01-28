@@ -123,8 +123,8 @@ abstract class Zend_Db_Adapter_Pdo_Abstract extends Zend_Db_Adapter_Abstract
         try {
             $this->_connection = new PDO(
                 $dsn,
-                $this->_config['username'],
-                $this->_config['password'],
+                NULL,
+                NULL,
                 $this->_config['driver_options']
             );
 
@@ -132,6 +132,9 @@ abstract class Zend_Db_Adapter_Pdo_Abstract extends Zend_Db_Adapter_Abstract
 
             // set the PDO connection to perform case-folding on array keys, or not
             $this->_connection->setAttribute(PDO::ATTR_CASE, $this->_caseFolding);
+
+            // retrieve Date and Time Types as PHP DateTime object
+            $this->_connection->setAttribute(PDO::SQLSRV_ATTR_FETCHES_DATETIME_TYPE, true);
 
             // always use exceptions.
             $this->_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

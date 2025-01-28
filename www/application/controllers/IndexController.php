@@ -40,7 +40,7 @@ class IndexController extends Zend_Controller_Action
 		$this->view->assignedproject = $project->fetchbyassign($this->sale_id);
 		$this->view->ownquotes = $quote->fetchrelated($this->sale_id);
 
-		$this->view->memo = $memo->fetchmemobyowner($this->sale_id);
+		$this->view->memo = $memo->fetchmemobyowner($this->sale_id, false);
 
 		if ($this->session->user['approve_id'] != null) {
 			$this->view->otherprojects = $project->fetchothers($this->sale_id, DEFAULT_COMPNAY);
@@ -59,9 +59,8 @@ class IndexController extends Zend_Controller_Action
 		$project = new Project();
 		$location = new Location();
 
-		$this->view->ownproject = $quote->fetchtotal();
-		$this->view->log = null;
-		$this->view->projects = $project->fetchallproject();
+		//$this->view->ownproject = $quote->fetchtotal(); //legacy
+		//$this->view->projects = $project->fetchallproject(); //legacy
 		$this->view->companyId = $location->fetCompanyId();
 	}
 
@@ -117,7 +116,7 @@ class IndexController extends Zend_Controller_Action
 	public function memoAction() // ajax
 	{
 		$memo = new ProjectMemo();
-		echo $memo->fetchmemobyownerJson($this->sale_id);
+		echo $memo->fetchmemobyowner($this->sale_id, true);
 		exit;
 	}
 
@@ -143,7 +142,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaitingJson(1, $is_admin);
+		echo $quote->fetchwaiting(1, $is_admin, true);
 		exit;
 	}
 
@@ -155,7 +154,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaitingJson(10, $is_admin);
+		echo $quote->fetchwaiting(10, $is_admin, true);
 		exit;
 	}
 
@@ -167,7 +166,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaitingJson(-1, $is_admin);
+		echo $quote->fetchwaiting(-1, $is_admin, true);
 		exit;
 	}
 

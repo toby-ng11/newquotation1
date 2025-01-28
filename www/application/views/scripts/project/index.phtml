@@ -34,7 +34,6 @@
           <div class="line"></div>
           <div class="widget-section">
             <div class="formRow">
-              <input type="hidden" name='owner' value='<?= $session->user['id'] ?>'>
               <input type="hidden" id='quote_no' name='quote_no' />
               <input type="hidden" name='create_date' value='<?= date('Y-m-d H:i:s.v') ?>' />
 
@@ -44,31 +43,31 @@
               </div>
 
               <div class="oneTwo required-field">
-                <label for='project_location_address'>Project Location</label>
-                <input id='project_location_address' name='project_location_address' type="text" class="validate[required] tipN" original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" />
+                <label for='project_address'>Project Location</label>
+                <input id='project_address' name='project_address' type="text" class="validate[required] tipN" original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" />
               </div>
 
               <div class="oneTwo">
-                <label for="location">Centura Location</label>
-                <select name="location" id="location">
+                <label for="location_id">Centura Location</label>
+                <select name="location_id" id="location_id">
                   <?php foreach ($this->locations as $l) { ?>
-                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
+                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
                   <?php } ?>
                 </select>
               </div>
 
               <div class="oneTwo">
-                <label for="owner">Worksheet Owner</label>
-                <input type="text" id="owner" value='<?= $session->user['name'] ?>' readonly />
+                <label for="owner_id">Worksheet Owner</label>
+                <input type="text" id="owner_id" name="owner_id" value='<?= $session->user['id'] ?>' readonly />
               </div>
 
               <?php if ($session->user['approve_id'] != null) { ?>
                 <div class="oneTwo">
-                  <label for="worksheet_assign">Share Worksheet</label>
-                  <input type="text" id="worksheet_assign" name="worksheet_assign" placeholder="Share this project with other salesrep" />
+                  <label for="shared_id">Share Worksheet</label>
+                  <input type="text" id="shared_id" name="shared_id" placeholder="Share this project with other salesrep" />
                 </div>
               <?php } else { ?>
-                <input type="hidden" id="worksheet_assign" name="worksheet_assign" />
+                <input type="hidden" id="shared_id" name="shared_id" />
               <?php } ?>
 
               <div class="oneTwo required-field">
@@ -107,7 +106,7 @@
                 <label for="architect_loc">Architect Location</label>
                 <select id="architect_loc" name="architect_loc">
                   <?php foreach ($this->locations as $l) { ?>
-                    <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
+                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -123,7 +122,7 @@
                 <label for="specifiler_loc">Specifier Location</label>
                 <select id="specifiler_loc" name="specifiler_loc">
                   <?php foreach ($this->locations as $l) { ?>
-                    <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
+                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -148,7 +147,7 @@
                 <label for="gerneral_contractor_loc">General Contractor Location</label>
                 <select id="gerneral_contractor_loc" name="gerneral_contractor_loc">
                   <?php foreach ($this->locations as $l) { ?>
-                    <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
+                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -163,7 +162,7 @@
                 <label for="awarded_contractor_loc">Awarded Contractor Location</label>
                 <select id="awarded_contractor_loc" name='awarded_contractor_loc'>
                   <?php foreach ($this->locations as $l) { ?>
-                    <option value="<?= $l['company_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['name'] ?></option>
+                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -209,11 +208,11 @@
       });
     }
 
-    $('#worksheet_assign').autocomplete({
+    $('#shared_id').autocomplete({
       source: '/user/id',
       minLength: 1,
       select: function(event, ui) {
-        $('#worksheet_assign').val(ui.item.id);
+        $('#shared_id').val(ui.item.id);
         return false;
       }
     }).data("ui-autocomplete")._renderItem = function(ul, item) {

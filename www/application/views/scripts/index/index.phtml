@@ -151,7 +151,7 @@
             },
             columns: [
                 {
-                    data: "quote_no",
+                    data: "project_id_ext",
                     render: function(data, type, row, meta) {
                         return "<a target='_blank' href='/project/edit/id/" + row.project_id + "'>" + data + "</a>";
                     }
@@ -160,13 +160,13 @@
                     data: "project_name"
                 },
                 {
-                    data: "worksheet_assign"
+                    data: "shared_id"
                 },
                 {
-                    data: "segment"
+                    data: ".market_segment_desc"
                 },
                 {
-                    data: "Specifier_name"
+                    data: "specifier_name"
                 },
                 {
                     data: "create_date",
@@ -188,7 +188,7 @@
                     }
                 },
                 {
-                    data: "status_name"
+                    data: "status"
                 },
                 {
                     data: "project_id",

@@ -243,9 +243,9 @@ class Quote extends DbTable\Quote
 	{
 		$db = $this->getAdapter();
 		$select = $db->select()
-			->from('quote_status')
-			->where('DeleteFlag = ?', 'N')
-			->order('Status asc');
+			->from('status')
+			->where('delete_flag = ?', 'N')
+			->order('status_desc asc');
 
 		return $db->fetchAll($select);
 	}
@@ -254,9 +254,9 @@ class Quote extends DbTable\Quote
 	{
 		$db = $this->getAdapter();
 		$select = $db->select()
-			->from('quote_market_segment')
-			->where('DeleteFlag = ?', 'N')
-			->order('Market_Segment asc');
+			->from('market_segment')
+			->where('delete_flag = ?', 'N')
+			->order('market_segment_desc asc');
 
 		return $db->fetchAll($select);
 	}
@@ -264,13 +264,12 @@ class Quote extends DbTable\Quote
 	{
 		$db = $this->getAdapter();
 		$select = $db->select()->distinct()
-			->from('quote_specifier')
-			->where('DeleteFlag = ?', 'N')
-			->where("NULLIF(Specifier, '') IS NOT NULL")
-			->order('Specifier asc');
+			->from('specifier')
+			->where('delete_flag = ?', 'N')
+			->order('specifier_name asc');
 
 		if ($company != null) {
-			$select->where('Company_ID = ?', $company);
+			$select->where('company_id = ?', $company);
 		}
 
 		return $db->fetchAll($select);
@@ -322,26 +321,28 @@ class Quote extends DbTable\Quote
 			return  false;
 		}
 		$db = $this->getAdapter();
-		$select = $db->select()->from('quotes_manager_view')->order('quote_id desc');
-		//$select->where('sales_id = ?',$owner)->where('quote.status = ?',$status);
+		$selectedField = array(
+			'quote_id',
+			'quote_id_ext',
+			'project_id',
+			'project_name',
+			//'customer', #todo add contact and customer
+			'quote_date',
+			'expire_date',
+			'ship_required_date',
+			'project_status',
+			'quote_status'
+		);
 
-		$conditions = $db->select()
-			->orWhere('sales_id = ?', $owner)
-			->orWhere('project_owner = ?', $owner)
-			->orWhere('arch = ?', $owner)
-			->getPart(Zend_Db_Select::WHERE);
-		//$select->reset(Zend_Db_Select::WHERE
-		$select->where($conditions[0] . $conditions[1] . $conditions[2])->where('status = ?', $status);
+		$select = $db->select()
+			->from('p2q_view_quote_x_project', $selectedField)
+			//->where('sales_id = ?', $owner) //#TODO: add salesrep_id
+			->orWhere('owner_id = ?', $owner)
+			->orWhere('architect_id = ?', $owner)
+			->order('quote_id desc');
 
 		$result = $db->fetchAll($select);
-
-		$merged_result = array();
-
-		foreach ($result as $r) {
-			$merged_result[$r['quote_id']] = $r;
-		}
-
-		return $merged_result;
+		return $result;
 	}
 
 	public function fetchrelatedJson($owner, $status = 1)
@@ -353,24 +354,22 @@ class Quote extends DbTable\Quote
 
 		$selectedField = array(
 			'quote_id',
-			'quote_no',
+			'quote_id_ext',
 			'project_id',
 			'project_name',
-			'customer',
+			//'customer', #todo add contact and customer
 			'quote_date',
 			'expire_date',
 			'ship_required_date',
-			'status_name',
-			'approve_status'
+			'project_status',
+			'quote_status'
 		);
 
 		$select = $db->select()
-			->from('quotes_manager_view', $selectedField)
-			->where('sales_id = ?', $owner)
-			->orWhere('project_owner = ?', $owner)
-			->orWhere('arch = ?', $owner)
-			->where('status = ?', $status)
-			->group($selectedField)
+			->from('p2q_view_quote_x_project', $selectedField)
+			//->where('sales_id = ?', $owner) //#TODO: add salesrep_id
+			->orWhere('owner_id = ?', $owner)
+			->orWhere('architect_id = ?', $owner)
 			->order('quote_id desc');
 
 		$result = $db->fetchAll($select);
@@ -414,7 +413,7 @@ class Quote extends DbTable\Quote
 		$dbDetails = $this->getAdapter();
 
 		//DB table to use
-		$table = "view_quote_x_project";
+		$table = "p2q_view_quote_x_project";
 
 		// Table's primary key
 		$primaryKey = 'quote_id';
@@ -422,12 +421,12 @@ class Quote extends DbTable\Quote
 		$columns = array(
 			array('db' => 'quote_id', 			 'dt' => 'quote_id'),
 			array('db' => 'project_name',  	 'dt' => 'project_name'),
-			array('db' => 'Market_Segment',     'dt' => 'Market_Segment'),
+			array('db' => 'market_segment_desc',     'dt' => 'market_segment_desc'),
 			array('db' => 'quote_date',         'dt' => 'quote_date'),
 			array('db' => 'expire_date',        'dt' => 'expire_date'),
 			array('db' => 'ship_required_date', 'dt' => 'ship_required_date'),
-			array('db' => 'Status', 			 'dt' => 'Status'),
-			array('db' => 'approve_status', 	 'dt' => 'approve_status'),
+			array('db' => 'project_status', 			 'dt' => 'project_status'),
+			array('db' => 'quote_status', 	 'dt' => 'quote_status'),
 		);
 
 		echo Zend_Json::encode(
@@ -472,59 +471,25 @@ class Quote extends DbTable\Quote
 		return $db->fetchAll($select);
 	}
 
-	public function fetchwaiting($status = 1, $is_admin = false, $default_company = DEFAULT_COMPNAY)
+	public function fetchwaiting($status = 1, $is_admin = false, $Json = false, $default_company = DEFAULT_COMPNAY)
 	{
 		$db = $this->getAdapter();
 		$select = $db->select()
-			->from('quotes_approval_view')
+			->from('p2q_view_quote_x_project')
 			->order('quote_id desc');
 
-		$select->where('approve_status = ?', $status); // not delete and waiting approve
+		$select->where('quote_status = ?', $status); // not delete and waiting approve
 
 		if ($is_admin == false) {
-			$select->where('default_company = ?', $default_company);
+			$select->where('centura_location_id = ?', $default_company);
 		}
 		$result = $db->fetchAll($select);
 
-		$merged_result = array();
-
-		foreach ($result as $r) {
-			$merged_result[$r['quote_id']] = $r;
+		if ($Json) {
+			return Zend_Json::encode($result);
+		} else {
+			return $result;
 		}
-
-		return $merged_result;
-	}
-
-	public function fetchwaitingJson($status = 1, $is_admin = false, $default_company = DEFAULT_COMPNAY)
-	{
-		$db = $this->getAdapter();
-
-		$selectedField = array(
-			'quote_id',
-			'project_name',
-			'taker_name',
-			'arch_name',
-			'Market_Segment',
-			'customer_name',
-			'quote_date',
-			'expire_date',
-			'ship_required_date',
-			'Status',
-			'order_no'
-		);
-
-		$select = $db->select()
-			->from('view_quote_approval_x_oe', $selectedField)
-			->where('approve_status = ?', $status)
-			->group(array_merge($selectedField))
-			->order('quote_id desc');
-
-		if ($is_admin == false) {
-			$select->where('default_company = ?', $default_company);
-		}
-		$result = $db->fetchAll($select);
-
-		return Zend_Json::encode($result);
 	}
 
 	public function fetchApprovalQuotes($approvalStatus = 1, $isAdmin = false, $default_company = DEFAULT_COMPNAY)

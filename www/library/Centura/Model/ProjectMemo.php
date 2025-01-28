@@ -19,15 +19,16 @@ class ProjectMemo extends Zend_Db_Table
 
 		$db = $this->getAdapter();
 
-		$info['type'] = $data['type'];
-		$info['project_id'] = $project_id;
-		$info['title'] = trim($data['title']);
-		$info['content'] = trim($data['content']);
-		$info['follow_up_date'] = date('Y-m-d H:i:s', strtotime($data['follow_up_date']));
-		$info['author'] = $data['author'];
+		$info['project_id']   = $project_id;
+		$info['note_title']   = trim($data['note_title']);
+		$info['project_note'] = trim($data['project_note']);
+		$info['next_action']  = trim($data['next_action']);
+		$info['date_added']   = date('Y-m-d H:i:s', strtotime($data['date_added']));
+		$info['owner_id']     = $data['owner_id'];
+		$info['delete_flag']  = 'N';
 
 		try {
-			$db->insert('project_memo', $info);
+			$db->insert('project_note', $info);
 		} catch (Exception $e) {
 			echo error_log($e->getMessage());
 			return false;
@@ -43,13 +44,13 @@ class ProjectMemo extends Zend_Db_Table
 
 		$db = $this->getAdapter();
 
-		$info['type'] = $data['type'];
-		$info['title'] = trim($data['title']);
-		$info['content'] = trim($data['content']);
-		$info['follow_up_date'] = date('Y-m-d H:i:s', strtotime($data['follow_up_date']));
+		$info['note_title']   = trim($data['note_title']);
+		$info['project_note'] = trim($data['project_note']);
+		$info['next_action']  = trim($data['next_action']);
+		$info['date_added']   = date('Y-m-d H:i:s', strtotime($data['date_added']));
 
 		try {
-			$db->update('project_memo', $info, 'memo_id =' . $memo_id);
+			$db->update('project_note', $info, 'project_note_id =' . $memo_id);
 		} catch (Exception $e) {
 			echo error_log($e->getMessage());
 			return false;
@@ -85,72 +86,46 @@ class ProjectMemo extends Zend_Db_Table
 		return true;
 	}
 
-	public function fetchmemosbyproject($project_id)
+	public function fetchmemosbyproject($project_id, $Json = false)
 	{
 		if ($project_id == null) {
 			return  false;
 		}
 		$db = $this->getAdapter();
 
-		$select = $db->select()->from('project_memo')->where('project_id =?', $project_id)->where('project_memo.Delete_Flag = ?', 'N');
+		$select = $db->select()
+			->from('p2q_view_project_note')
+			->where('project_id =?', $project_id);
 
-		return $db->fetchAll($select);
-	}
-
-	public function fetchmemosbyprojectJson($project_id)
-	{
-		if ($project_id == null) {
-			return  false;
-		}
-		$db = $this->getAdapter();
-
-		$select = $db->select()->from('project_memo')
-			->where('project_id =?', $project_id)
-			->where('project_memo.Delete_Flag = ?', 'N');
-
-		return Zend_Json::encode($db->fetchAll($select));
-	}
-
-	public function fetchalltypes()
-	{
-		$db = $this->getAdapter();
-
-		$select = $db->select()->from('project_memo_types')
-			->where('Delete_Flag = ?', 'N');
-		return $db->fetchAll($select);
-	}
-
-
-	public function fetchmemobyowner($owner = null)
-	{
-		if ($owner == null) {
-			$session =  Zend_Registry::get('session');
-			$owner = $session->user['id'];
-		}
-		$db = $this->getAdapter();
-
-		$select = $db->select()->from('project_memo')
-			->join('project', 'project.project_id = project_memo.project_id', array('address' => 'project_location_address', 'project_name'))
-			->where('project.owner = ?', $owner)
-			->orWhere('project.worksheet_assign = ?', $owner)
-			->order('added desc');
-		return $db->fetchAll($select);
-	}
-
-	public function fetchmemobyownerJson($owner = null)
-	{
-		if ($owner == null) {
-			$session =  Zend_Registry::get('session');
-			$owner = $session->user['id'];
-		}
-		$db = $this->getAdapter();
-
-		$select = $db->select()->from('project_memo')
-			->join('project', 'project.project_id = project_memo.project_id', array('address' => 'project_location_address', 'project_name'))
-			->where('project.owner = ?', $owner)
-			->orWhere('project.worksheet_assign = ?', $owner)
-			->order('added desc');
 		$result = $db->fetchAll($select);
-		return Zend_Json::encode($result);
+
+		if ($Json) {
+			return Zend_Json::encode($result);
+		} else {
+			return $result;
+		}
+	}
+
+	public function fetchmemobyowner($owner = null, $Json = false)
+	{
+		if ($owner == null) {
+			$session =  Zend_Registry::get('session');
+			$owner = $session->user['id'];
+		}
+		$db = $this->getAdapter();
+
+		$select = $db->select()
+			->from('p2q_view_project_note')
+			->where('owner_id = ?', $owner)
+			->orWhere('shared_id = ?', $owner)
+			->order('project_note_id desc');
+
+		$result = $db->fetchAll($select);
+
+		if ($Json) {
+			return Zend_Json::encode($result);
+		} else {
+			return $result;
+		}
 	}
 }
