@@ -56,7 +56,7 @@ class QuoteController extends Zend_Controller_Action
 		$this->view->approval = $sales->getQuoteapproval();
 		$this->view->project = $project_detail;
 		$this->view->type = $quote->fetchquotetype();
-		$this->view->seg = $quote->fetchseg();
+		$this->view->seg = $project->fetchProjectSegment();
 	}
 
 	public function editAction()
@@ -91,7 +91,7 @@ class QuoteController extends Zend_Controller_Action
 		$this->view->project = $project_detail;
 		$this->view->type = $quote->fetchquotetype();
 		$this->view->items = $products->fetchallitems($quote_id);
-		$this->view->seg = $quote->fetchseg();
+		$this->view->seg = $project->fetchProjectSegment();
 		$this->view->oe_id = $quote->fetchP21OrderNumber($quote_id);
 
 		if ($this->_request->isPost()) {

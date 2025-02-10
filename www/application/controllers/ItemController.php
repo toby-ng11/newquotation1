@@ -17,7 +17,6 @@ class ItemController extends Zend_Controller_Action
         
         $results = $item->fetchItemByPatten($patten);
         
-     
         echo json_encode($results);
         
         exit;

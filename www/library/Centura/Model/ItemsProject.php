@@ -5,7 +5,9 @@ namespace Centura\Model;
 use Zend_Registry;
 use Zend_Date;
 use Exception;
+use Zend_Db;
 use Zend_Json;
+use Zend_Db_Expr;
 
 class ItemsProject extends DbTable\Products
 {
@@ -23,18 +25,21 @@ class ItemsProject extends DbTable\Products
 	    
 	  
 	    $i['project_id'] = $project_id;
-	    $i['product_id'] = $data['item_id'];
-	    $i['qty'] = $data['qty'];
+	    $i['item_id'] = $data['item_id'];
+	    $i['quantity'] = $data['qty'];
 	    $i['note'] = trim($data['note']);
 	    $i['unit_price'] = $data['price'];
 	    $i['uom'] = $data['uom'];
-	    $i['subtotal'] = $data['qty'] * $data['price'];
-	    $i['editor'] = $this->session->user['id'];
-	    $i['sort_id'] = Zend_Date::now()->get(Zend_Date::TIMESTAMP);
+	    $i['subtotal'] = round($data['qty'] * $data['price'],2);
+	    $i['added_by'] = $this->session->user['id'];
+		$i['last_maintained_by'] = $this->session->user['id'];
+		$i['date_add'] = new Zend_Db_Expr('GETDATE()');
+		$i['date_last_maintained'] = new Zend_Db_Expr('GETDATE()');
+		$i['delete_flag'] = 'N';
 	    try {
-	    	$db->insert('projects_products', $i);
+	    	$db->insert('project_items', $i);
 	    } catch (Exception $e) {
-	    	echo $e->getMessage(); 	
+	    	error_log($e->getMessage(), 0); 	
 	    	return false;
 	    }
 	   
@@ -42,77 +47,51 @@ class ItemsProject extends DbTable\Products
 	    
 	}
 	
-	public function edititem($data,$project_id)
+	public function edititem($data, $item_uid)
 	{
-		$this->session =  Zend_Registry::get('session');
-		if($data == null || $project_id == null)
-		{
-			return  false;
+		if($data == null || $item_uid == null) {
+			return false;
 		}
 
+		$this->session =  Zend_Registry::get('session');
 		$db = $this->getAdapter();
-		$sort = 0;
-		$i['project_id'] = $project_id;
-		$i['product_id'] = $data['item_id'];
-		$i['qty'] = $data['qty'];
+
+		$i['item_id'] = $data['item_id'];
+		$i['quantity'] = $data['qty'];
 		$i['note'] = trim($data['note']);
 		$i['unit_price'] = $data['price'];
 		$i['uom'] = $data['uom'];
 		$i['subtotal'] = $data['qty'] * $data['price'];
-		$i['editor'] = $this->session->user['id'];
-
+		$i['last_maintained_by'] = $this->session->user['id'];
+		$i['date_last_maintained'] = new Zend_Db_Expr('GETDATE()');
 
 		try {
-			$sql = $db->select()->from('projects_products')
-				->where('product_id = ?',$data['old_item_id'])
-				->where('qty = ?',$data['old_qty'])
-				->where('uom = ?',$data['old_uom'])
-				->where('unit_price=?',$data['old_price'])
-				->where('note=?',$data['old_note'])
-				->where('status = 1')
-				->limit(1);
-			$product = $db->fetchRow($sql);
-			echo Zend_Json::encode($product);
-			$id = $product['id'];
-			$db->update('projects_products', $i,implode(' ', $sql->getPart('where')).' and id = '.$id);
+			$db->update('project_items', $i, 'item_uid = '.$item_uid);
 
 		} catch (Exception $e) {
-			echo $e->getMessage();
+			error_log($e->getMessage(), 0);
 			return false;
 		}
 	
 		return true;
-		 
 	}
 	
-	public function refresh($project_id)
+	public function remove($item_uid)
 	{
-		if($project_id == null)
-		{
+		if($item_uid == null) {
 			return  false;
 		}
-		
-	}
-	
-	public function remove($project_id,$item_id,$uom,$price,$qty)
-	{
-		if($project_id == null && $item_id != null)
-		{
-			return  false;
-		}
+
+		$this->session =  Zend_Registry::get('session');
 		$db = $this->getAdapter();
-		$data['status'] = 0;
-		$sql = $db->select()->from('projects_products',null)
-			->where('project_id = ?',$project_id)
-			->where('product_id = ?',$item_id)
-			->where('qty = ?',$qty)
-			->where('uom = ?',$uom)
-			->where('unit_price=?',$price);
-		
-		$db->update('projects_products',$data,implode(' ', $sql->getPart('where')));
+
+		$data['delete_flag'] = 'Y';
+		$data['last_maintained_by'] = $this->session->user['id'];
+		$data['date_last_maintained'] = new Zend_Db_Expr('GETDATE()');
+
+		$db->update('project_items', $data, 'item_uid = '.$item_uid);
 		
 		return true;
-		
 	}
 	
 	public function edit($data,$project_id)
@@ -137,9 +116,9 @@ class ItemsProject extends DbTable\Products
 		}
 		$db = $this->getAdapter();
 		
-		$select = $db->select()->from('projects_products')->where('project_id =?',$project_id)->order('sort_id asc')->where('status = 1')
-			->join('P21_Inv_Mast', 'projects_products.product_id = P21_Inv_Mast.item_id','item_desc');
-		
+		$select = $db->select()
+			->from('p2q_view_project_items')
+			->where('project_id =?',$project_id);
 		return $db->fetchAll($select);
 	}
 
@@ -151,25 +130,11 @@ class ItemsProject extends DbTable\Products
 		}
 		$db = $this->getAdapter();
 		
-		$select = $db->select()->from('projects_products')->where('project_id =?',$project_id)->order('sort_id asc')->where('status = 1')
-			->join('P21_Inv_Mast', 'projects_products.product_id = P21_Inv_Mast.item_id','item_desc');
-		
+		$select = $db->select()
+			->from('p2q_view_project_items')
+			->where('location_id = ?',DEFAULT_COMPNAY_ID)
+			->where('project_id =?',$project_id);
 		return Zend_Json::encode($db->fetchAll($select));
 	}
-	
-	public function fetchallitemsbyprojectid($project_id)
-	{
-		if($project_id == null)
-		{
-			return  false;
-		}
-		$db = $this->getAdapter();
-		
-		$select = $db->select()->from('projects_products')->join('quote','quote.project_id = projects_products.project_id',null)->where('project_id =?',$project_id)->order('sort_id asc')->where('projects_products.status = 1')
-		->join('P21_Inv_Mast', 'projects_products.product_id = P21_Inv_Mast.item_id','item_desc')->order('sort_id asc');
-		
-		return $db->fetchAll($select);
-	}
-	
 }
 

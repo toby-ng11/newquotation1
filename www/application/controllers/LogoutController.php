@@ -11,9 +11,9 @@ class LogoutController extends Zend_Controller_Action
 
     public function indexAction()
     {
-   		echo "Session Has been cleared.";
-   		echo( "<a href=\"#\" onclick=\"window.close(); return false\">CLOSE WINDOW</a>");
-       exit;
+   		header("HTTP/1.1 401 Unauthorized");
+        header("Location: /");
+        exit;
     }
 
 

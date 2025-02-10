@@ -2,6 +2,8 @@
 
 namespace Centura\Model;
 
+use Centura\Model\{Specifier};
+
 use Zend_Registry;
 use Zend_Json;
 
@@ -10,6 +12,8 @@ use Exception;
 use DateTime;
 
 use SSP;
+use Zend_Db;
+use Zend_Db_Expr;
 
 require_once('ssp.class.php');
 class Project extends DbTable\Project
@@ -22,82 +26,76 @@ class Project extends DbTable\Project
 		}
 		$db = $this->getAdapter();
 
-		$info['project_name']               = trim($data['project_name']);
+		$info['delete_flag'] = 'N';
+		$info['project_name'] = trim($data['project_name']);
 		$info['project_address'] = trim($data['project_address']);
 		$info['centura_location_id'] = $data['location_id'];
-		$info['market_segment']      = $data['market_segment'];
+		$info['market_segment_id']      = $data['market_segment_id'];
 		$info['owner_id']               = $data['owner_id'];
+		$info['last_maintained_by']     = $data['owner_id'];
 		$info['shared_id'] = $data['shared_id'];
 		$info['reed']                     = $data['reed'];
-		$info['general_contractor_id']    = $data['gerneral_contractor_id'];
-		$info['awarded_sub_contracotr_id']  = $data['awarded_contractor_id'];
-		$info['create_date']                = date('Y-m-d H:i:s.v');
-		if (!empty($data['required_date'])) {
-			$info['required_date']              = DateTime::createFromFormat('Y-m-d', $data['required_date'])->format('Y-m-d');
+		$info['status']                     = $data['status'];
+
+		if ($data['general_contractor_id'] != '') {
+			$info['general_contractor_id'] = $data['general_contractor_id'];
+		}
+
+		if ($data['awarded_contractor_id'] != '') {
+			$info['awarded_contractor_id'] = $data['awarded_contractor_id'];
+		}
+
+		$info['create_date']                = new Zend_Db_Expr('GETDATE()');
+
+		if (!empty($data['require_date'])) {
+			$info['require_date']              = $data['require_date'];
 		} else {
-			$info['required_date']              = date('Y-m-d H:i:s.v');
+			$info['require_date']              = new Zend_Db_Expr('GETDATE()');
 		}
 
 		if (!empty($data['due_date'])) {
-			$info['due_date']                   = DateTime::createFromFormat('Y-m-d', $data['due_date'])->format('Y-m-d');
+			$info['due_date']                   = $data['due_date'];
 		} else {
-			$info['due_date']                   = date('Y-m-d H:i:s.v');
+			$info['due_date']                   = new Zend_Db_Expr('GETDATE()');
 		}
 
-
-		$info['status']                     = $data['status'];
-		$info['architect']                  = $data['architect']; // null need check
-		$info['specifiler']                  = $data['specifiler']; // null need check
-		$info['delete_flag']                     = 'N';
-		
-		
-
-		if ($info['architect'] == null || $info['architect'] == 0) // no id or not match
+		if (empty($data['specifier_id'])) // if specifier id is empty add new
 		{
-
-			$info['architect'] = $this->addspec($data['architect_name']);
+			$specifier = new Specifier();
+			$info['specifier_id'] = $specifier->addspec($data['specifier_name'], $data['specifier_location'], $data['owner_id']);
 		} else {
-			if (strtolower($this->fetchspecbyid($info['architect'])) == strtolower($data['architect_name'])) // same name already exitst
-			{
-
-				$result = $this->fetchspec($info['architect']);
-				$info['architect'] = $result['uid'];
-			}
+			$info['specifier_id'] = $data['specifier_id'];
 		}
 
-		if ($info['specifiler'] == null || $info['specifiler'] == 0) // no id
+		if (empty($data['architect_id'])) // if specifier id is empty add new
 		{
-
-			$info['specifiler'] = $this->addspec($data['specifiler_name']);
+			$architect = new Specifier();
+			$info['architect_id'] = $architect->addspec($data['architect_name'], $data['architect_location'], $data['owner_id']);
 		} else {
-			if (strtolower($this->fetchspecbyid($info['specifiler'])) == strtolower($data['specifiler_name'])) // same name already exitst
-			{
-				$result = $this->fetchspec($data['specifiler']);
-				$info['specifiler'] = $result['uid'];
-			}
+			$info['architect_id'] = $data['architect_id'];
 		}
 
 		try {
 			$db->insert('project', $info);
-			$newProjectID = $db->lastInsertId('project', 'project_id');
-			$result = $this->fetchbyid($newProjectID);
-			//$project_id = $result['project_id'];
-			if ($newProjectID != null) // update
-			{
-				$data = null;
-				$data['quote_no'] = DEFAULT_COMPNAY . '_' . $newProjectID;
-				if ($result['project_name'] == null) // no name 
-				{
-					$data['project_name'] = DEFAULT_COMPNAY . '_' . $newProjectID;
-				}
-				$this->updateproject($newProjectID, $data);
-			}
-			$this->log($newProjectID, 'Project Create', null, null, serialize($info));
-			return $newProjectID;
-
 		} catch (Exception $e) {
-			var_dump($e);
+			print_r($e);
+			return  false;
 		}
+
+		$newProjectID = $db->lastInsertId('project', 'project_id');
+		$result = $this->fetchbyid($newProjectID);
+		if ($newProjectID != null) // update
+		{
+			$data = null;
+			$data['project_id_ext'] = DEFAULT_COMPNAY . '_' . $newProjectID;
+			if ($result['project_name'] == null) // no name 
+			{
+				$data['project_name'] = DEFAULT_COMPNAY . '_' . $newProjectID;
+			}
+			$this->updateproject($newProjectID, $data);
+		}
+		//$this->log($newProjectID, 'Project Create', null, null, serialize($info));
+		return $newProjectID;
 	}
 
 	public function updateproject($project_id, $data)
@@ -117,7 +115,9 @@ class Project extends DbTable\Project
 	public function fetchlatest($owner = null)
 	{
 		$db = $this->getAdapter();
-		$select = $db->select()->from('project')->order('project_id desc');
+		$select = $db->select()
+			->from('project')
+			->order('project_id desc');
 		if ($owner != null) {
 			$select->where('owner = ?', $owner);
 		}
@@ -174,9 +174,9 @@ class Project extends DbTable\Project
 		}
 		$db = $this->getAdapter();
 		$select = $db->select()
-		->from('p2q_view_project')
-		->where('shared_id = ?', $owner)
-		->order('project_id desc');
+			->from('p2q_view_project')
+			->where('shared_id = ?', $owner)
+			->order('project_id desc');
 
 		return Zend_Json::encode($db->fetchAll($select));
 	}
@@ -216,7 +216,7 @@ class Project extends DbTable\Project
 		$select = $db->select()->from('project')->order('project_id desc')->join('P21_Location_x_Branch', 'centura_location_id = P21_Location_x_Branch.location_id', 'company_id')
 			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))
 			->join('quote_market_segment', 'quote_market_segment.uid = project.market_segment', array('segment' => 'Market_Segment'))->where('project.delete_flag =?', 'N')
-			->join('quote_specifier', 'quote_specifier.uid = project.specifiler', array('Specifier_name' => 'quote_specifier.Specifier'));
+			->join('quote_specifier', 'quote_specifier.uid = project.specifier', array('Specifier_name' => 'quote_specifier.Specifier'));
 
 		if ($owner != null) {
 			$select->where('owner = ?', $owner);
@@ -265,9 +265,8 @@ class Project extends DbTable\Project
 		}
 
 		$db = $this->getAdapter();
-		$select = $db->select()->from('project')->where('project_id = ?', $project_id)
-			->joinLeft('P21_Users', 'P21_Users.id = project.owner', array('owner_name' => 'P21_Users.name'))
-			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'));
+		$select = $db->select()->from('p2q_view_project')
+			->where('project_id = ?', $project_id);
 		$result = $db->fetchRow($select);
 		return $result;
 	}
@@ -286,12 +285,12 @@ class Project extends DbTable\Project
 		$info['reed']                     = $data['reed'];
 		$info['general_contractor_id']    = $data['gerneral_contractor_id'];
 		$info['awarded_sub_contracotr_id']  = $data['awarded_contractor_id'];
-		//$info['create_date']                = date('Y-m-d H:i:s.v');
+		//$info['create_date']                = date('Y-m-d H:i:s');
 		$info['required_date']              = DateTime::createFromFormat('Y-m-d', $data['required_date'])->format('Y-m-d');
 		$info['due_date']                   = DateTime::createFromFormat('Y-m-d', $data['due_date'])->format('Y-m-d');
 		$info['status']                     = $data['status'];
 		$info['architect']                  = $data['architect'];
-		$info['specifiler']                 = $data['specifiler'];
+		$info['specifier']                 = $data['specifier'];
 		$info['delete_flag']                     = 'N';
 		$info['quote_no']                   = $data['quote_no'];
 		$info['project_name']                = $data['project_name'];
@@ -310,15 +309,15 @@ class Project extends DbTable\Project
 			}
 		}
 
-		if ($info['specifiler'] == null || $info['specifiler'] == 0  || strtolower($this->fetchspecbyid($info['specifiler'])) != strtolower($data['specifiler_name'])) // no id
+		if ($info['specifier'] == null || $info['specifier'] == 0  || strtolower($this->fetchspecbyid($info['specifier'])) != strtolower($data['specifier_name'])) // no id
 		{
-			$info['specifiler'] = $this->addspec($data['specifiler_name']);
+			$info['specifier'] = $this->addspec($data['specifier_name']);
 		} else {
-			if (strtolower($this->fetchspecbyid($info['specifiler'])) == strtolower($data['specifiler_name'])) // same name already exitst
+			if (strtolower($this->fetchspecbyid($info['specifier'])) == strtolower($data['specifier_name'])) // same name already exitst
 			{
 
-				$result = $this->fetchspec($data['specifiler']);
-				$info['specifiler'] = $result['uid'];
+				$result = $this->fetchspec($data['specifier']);
+				$info['specifier'] = $result['uid'];
 			}
 		}
 
@@ -367,7 +366,7 @@ class Project extends DbTable\Project
 		$data['action']    = $action;
 		$data['item_id']   = $item_id;
 		$data['note']      = $note;
-		$data['added']     = date('Y-m-d H:i:s.v');
+		$data['added']     = date('Y-m-d H:i:s');
 		$data['user_id']   = $session->user['id'];
 
 		try {
@@ -407,64 +406,25 @@ class Project extends DbTable\Project
 		return $db->fetchAll($select);
 	}
 
-	public function addspec($spec, $company = DEFAULT_COMPNAY)
+	public function fetchProjectStatus()
 	{
-		if ($spec == null) {
-			return false;
-		}
-
 		$db = $this->getAdapter();
+		$select = $db->select()
+			->from('status')
+			->where('delete_flag = ?', 'N')
+			->where('project_flag = ?', 'Y')
+			->order('status_desc asc');
 
-		$info['Specifier'] = $spec;
-		$info['DeleteFlag'] = 'N';
-		$info['Company_ID'] = $company;
-
-		try {
-			$db->insert('quote_specifier', $info);
-		} catch (Exception $e) {
-			//return false;
-		}
-
-		$select = $db->select()->from('quote_specifier', 'uid')->where('Specifier = ?', $spec)->where('Company_ID = ?', $company);
-
-		$result = $db->fetchRow($select);
-
-		return $result['uid'];
+		return $db->fetchAll($select);
 	}
 
-	public function fetchspecbyid($uid)
-	{
-		if ($uid == null) {
-			return false;
-		}
-		$db = $this->getAdapter();
-
-		$select = $db->select()->from('quote_specifier')->where('uid = ?', $uid);
-
-		$result = $db->fetchRow($select);
-
-		return $result['Specifier'];
-	}
-
-	public function fetchspec($uid)
-	{
-		if ($uid == null) {
-			return false;
-		}
-		$db = $this->getAdapter();
-
-		$select = $db->select()->from('quote_specifier')->where('uid = ?', $uid);
-
-		$result = $db->fetchRow($select);
-
-		return $result;
-	}
-
-	public function fetchspecbypattern($patten, $company = DEFAULT_COMPNAY, $limit = 20)
+	public function fetchProjectSegment()
 	{
 		$db = $this->getAdapter();
-
-		$select = $db->select()->from('quote_specifier', array('uid', 'Specifier'))->where('Company_ID =?', $company)->where('Specifier LIKE ?', '%' . $patten . '%')->where('DeleteFlag = ?', 'N')->limit(20);
+		$select = $db->select()
+			->from('market_segment')
+			->where('delete_flag = ?', 'N')
+			->order('market_segment_desc asc');
 
 		return $db->fetchAll($select);
 	}

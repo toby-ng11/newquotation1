@@ -163,20 +163,20 @@
                     data: "shared_id"
                 },
                 {
-                    data: ".market_segment_desc"
+                    data: "market_segment_desc"
                 },
                 {
                     data: "specifier_name"
                 },
                 {
-                    data: "create_date",
+                    data: "create_date.date",
                     render: function(data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
                     }
                 },
                 {
-                    data: "due_date",
+                    data: "due_date.date",
                     render: function(data) {
                         let date = new Date(data);
                         let today = new Date();
@@ -252,14 +252,14 @@
                     data: "Specifier_name"
                 },
                 {
-                    data: "create_date",
+                    data: "create_date.date",
                     render: function(data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
                     }
                 },
                 {
-                    data: "due_date",
+                    data: "due_date.date",
                     render: function(data) {
                         let date = new Date(data);
                         let today = new Date();
@@ -336,14 +336,14 @@
                         data: "Specifier_name"
                     },
                     {
-                        data: "create_date",
+                        data: "create_date.date",
                         render: function(data) {
                             let date = new Date(data);
                             return date.toLocaleDateString();
                         }
                     },
                     {
-                        data: "due_date",
+                        data: "due_date.date",
                         render: function(data) {
                             let date = new Date(data);
                             let today = new Date();
@@ -412,14 +412,14 @@
                     data: "project_name"
                 },
                 {
-                    data: "quote_date",
+                    data: "quote_date.date",
                     render: function(data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
                     }
                 },
                 {
-                    data: "expire_date",
+                    data: "expire_date.date",
                     render: function(data) {
                         let date = new Date(data);
                         let today = new Date();
@@ -431,7 +431,7 @@
                     }
                 },
                 {
-                    data: "ship_required_date",
+                    data: "ship_required_date.date",
                     render: function(data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -492,11 +492,11 @@
             },
             processing: true,
             columns: [{
-                    data: "added",
+                    data: "date_added.date",
                     render: function(data) {
-                        let date = new Date(data);
-                        return date.toLocaleString('en-CA');
-                    }
+					let date = new Date(data);
+					return '<p><b>' + date.toLocaleString('en-CA') + '</b></p>';
+				}
                 },
                 {
                     data: "project_id",
@@ -510,7 +510,7 @@
                     data: "project_name"
                 },
                 {
-                    data: "type",
+                    data: "next_action",
                     render: function(data) {
                         let formattedText = data.replace(/(?:\r\n|\r|\n)/g, '<br>');
                         return '<p>' + formattedText + '</p>';

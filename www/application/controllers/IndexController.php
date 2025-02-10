@@ -3,7 +3,7 @@
 use Centura\Model\{ 
 	Project,
 	Quote,
-	ProjectMemo,
+	ProjectNote,
 	Location
 };
 
@@ -34,7 +34,7 @@ class IndexController extends Zend_Controller_Action
 
 		$project = new Project();
 		$quote = new Quote();
-		$memo = new ProjectMemo();
+		$memo = new ProjectNote();
 
 		$this->view->ownproject = $project->fetchbyowner($this->sale_id);
 		$this->view->assignedproject = $project->fetchbyassign($this->sale_id);
@@ -115,7 +115,7 @@ class IndexController extends Zend_Controller_Action
 
 	public function memoAction() // ajax
 	{
-		$memo = new ProjectMemo();
+		$memo = new ProjectNote();
 		echo $memo->fetchmemobyowner($this->sale_id, true);
 		exit;
 	}

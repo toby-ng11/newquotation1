@@ -137,7 +137,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
            		$company_id = $company['location_id'];
            }
            else {
-           		$default_company = $user["default_company"];
+           		$default_company = $user['default_company'];
            		$company_id = $user['default_location_id'];
            }
            

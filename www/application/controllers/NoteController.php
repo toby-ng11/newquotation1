@@ -1,10 +1,10 @@
 <?php
 
-use Centura\Model\ProjectMemo;
+use Centura\Model\ProjectNote;
 
 //use Zend_Controller_Action;
 
-class MemoController extends Zend_Controller_Action
+class NoteController extends Zend_Controller_Action
 {
 
 	public function init()
@@ -22,7 +22,7 @@ class MemoController extends Zend_Controller_Action
 		if ($this->_request->isXmlHttpRequest() && $this->_request->isPost() && $project_id != null) {
 			$data = $this->_request->getPost();
 
-			$memo = new ProjectMemo();
+			$memo = new ProjectNote();
 
 			echo $memo->add($project_id, $data);
 		} else {
@@ -36,7 +36,7 @@ class MemoController extends Zend_Controller_Action
 	{
 		$memoId = $this->getRequest()->getParam('id');
 		$data = $this->_request->getPost();
-		$memo = new ProjectMemo();
+		$memo = new ProjectNote();
 		$memo->edit($memoId, $data);
 		exit;
 	}
@@ -44,7 +44,7 @@ class MemoController extends Zend_Controller_Action
 	public function deleteAction()
 	{
 		$id = $this->getRequest()->getParam('id');
-		$memo = new ProjectMemo();
+		$memo = new ProjectNote();
 
 		$memo->remove($id);
 

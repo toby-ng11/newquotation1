@@ -239,54 +239,16 @@ class Quote extends DbTable\Quote
 		return true;
 	}
 
-	public function fetchstatus()
+	public function fetchQuoteStatus()
 	{
 		$db = $this->getAdapter();
 		$select = $db->select()
 			->from('status')
 			->where('delete_flag = ?', 'N')
+			->where('quote_flag = ?', 'Y')
 			->order('status_desc asc');
 
 		return $db->fetchAll($select);
-	}
-
-	public function fetchseg()
-	{
-		$db = $this->getAdapter();
-		$select = $db->select()
-			->from('market_segment')
-			->where('delete_flag = ?', 'N')
-			->order('market_segment_desc asc');
-
-		return $db->fetchAll($select);
-	}
-	public function fetchsepc($company = DEFAULT_COMPNAY)
-	{
-		$db = $this->getAdapter();
-		$select = $db->select()->distinct()
-			->from('specifier')
-			->where('delete_flag = ?', 'N')
-			->order('specifier_name asc');
-
-		if ($company != null) {
-			$select->where('company_id = ?', $company);
-		}
-
-		return $db->fetchAll($select);
-	}
-
-	public function fetchsepcloc($spec_id)
-	{
-		if ($spec_id == null) {
-			return false;
-		}
-
-		$db = $this->getAdapter();
-		$select = $db->select()
-			->from('quote_specifier')
-			->where('uid = ?', $spec_id);
-
-		return $db->fetchRow($select);;
 	}
 
 	public function fetchquotetype()
@@ -679,21 +641,8 @@ class Quote extends DbTable\Quote
 
 		$db = $this->getAdapter();
 
-		$selectedField = array(
-			'quote.quote_id',
-			'quote.quote_date',
-			'quote.expire_date',
-			'quote.ship_required_date',
-			'quote.approve_status'
-		);
-
 		$select = $db->select()
-			->from('quote', $selectedField)
-			->joinLeft('quote_market_segment', 'quote_market_segment.uid = quote.quote_segment', 'Market_Segment')
-			->joinLeft('P21_Users', 'quote.arch = P21_Users.id', 'name')
-			->joinLeft('view_quote_x_oe', 'view_quote_x_oe.quote_id = quote.quote_id', 'order_no')
-			->where('quote.status =?', 1) // legacy
-			->where('quote.delete_flag =?', 'N')
+			->from('p2q_view_quote_x_project')
 			->where('project_id = ?', $project_id)
 			->order('quote_id desc');
 

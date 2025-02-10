@@ -34,8 +34,8 @@
           <div class="line"></div>
           <div class="widget-section">
             <div class="formRow">
-              <input type="hidden" id='quote_no' name='quote_no' />
-              <input type="hidden" name='create_date' value='<?= date('Y-m-d H:i:s.v') ?>' />
+              <input type="hidden" id='project_id_ext' name='project_id_ext' />
+              <input type="hidden" name='create_date' value='' />
 
               <div class="oneTwo required-field">
                 <label for="project_name">Project Name</label>
@@ -56,9 +56,44 @@
                 </select>
               </div>
 
+              <div class="oneTwo required-field">
+                <label for="status">Project Stage</label>
+                <select name="status" id='status' class="validate[required]">
+                  <option value="">-- Select stage --</option>
+                  <?php foreach ($this->status as $s) { ?>
+                    <option value="<?= $s['status_id'] ?>"><?= $s['status_desc'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="oneTwo required-field">
+                <label for="market_segment_id">Project Category</label>
+                <select name="market_segment_id" id='market_segment_id' class="validate[required]">
+                  <option value="">-- Choose category --</option>
+                  <?php foreach ($this->seg as $s) { ?>
+                    <option value="<?= $s['market_segment_id'] ?>"><?= $s['market_segment_desc'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
               <div class="oneTwo">
                 <label for="owner_id">Worksheet Owner</label>
                 <input type="text" id="owner_id" name="owner_id" value='<?= $session->user['id'] ?>' readonly />
+              </div>
+
+              <div class="oneTwo required-field">
+                <label for="reed">REED ID</label>
+                <input type="text" name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" />
+              </div>
+
+              <div class="oneTwo">
+                <label for="due_date">Tender Due Date</label>
+                <input type="text" id="due_date" name='due_date' class="datepicker" />
+              </div>
+
+              <div class="oneTwo">
+                <label for="require_date">Required Date</label>
+                <input type="text" id="require_date" name='require_date' placeholder="Required date" class="datepicker" />
               </div>
 
               <?php if ($session->user['approve_id'] != null) { ?>
@@ -69,102 +104,65 @@
               <?php } else { ?>
                 <input type="hidden" id="shared_id" name="shared_id" />
               <?php } ?>
+            </div>
+          </div>
 
-              <div class="oneTwo required-field">
-                <label for="status">Status</label>
-                <select name="status" id='status' class="validate[required]">
-                  <option value="">-- Select Status --</option>
-                  <?php foreach ($this->status as $s) { ?>
-                    <option value="<?= $s['uid'] ?>"><?= $s['Status'] ?></option>
-                  <?php } ?>
-                </select>
-              </div>
+          <div class="line"></div>
 
-              <div class="oneTwo required-field">
-                <label for="reed">REED ID</label>
-                <input type="text" name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" />
-              </div>
-
-              <div class="oneTwo required-field">
-                <label for="market_segment">Market Segment</label>
-                <select name="market_segment" id='market_segment' class="validate[required]">
-                  <option value="">-- Choose Segment --</option>
-                  <?php foreach ($this->seg as $s) { ?>
-                    <option value="<?= $s['uid'] ?>"><?= $s['Market_Segment'] ?></option>
-                  <?php } ?>
-                </select>
-              </div>
-
+          <div class="widget-section">
+            <div class="formRow">
               <div class="oneTwo required-field">
                 <label for="architect_name">Project Architect/Owner</label>
-                <input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" />
-                <input type="hidden" name='architect' id='architect' value="<?php // echo $project['architect'] 
-                                                                            ?>">
+                <input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="You can change the architect / specifier location even if they exist in other branchs" />
+                <input type="hidden" name='architect_id' id='architect_id' />
               </div>
 
               <div class="oneTwo">
-                <label for="architect_loc">Architect Location</label>
-                <select id="architect_loc" name="architect_loc">
+                <label for="architect_location">Architect Location</label>
+                <select id="architect_location" name="architect_location">
                   <?php foreach ($this->locations as $l) { ?>
                     <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
                   <?php } ?>
                 </select>
               </div>
+            </div>
+          </div>
 
+          <div class="line"></div>
+
+          <div class="widget-section">
+            <div class="formRow">
               <div class="oneTwo required-field">
-                <label for="specifiler_name">Specifier</label>
-                <input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN">
-                <input type="hidden" id='specifiler' name="specifiler" value="<?php //echo $project['specifiler'] 
-                                                                              ?>">
+                <label for="specifier_name">Specifier</label>
+                <input type='text' id='specifier_name' name="specifier_name" class="validate[required] tipN" />
+                <input type="hidden" id='specifier_id' name="specifier_id" />
               </div>
 
               <div class="oneTwo">
-                <label for="specifiler_loc">Specifier Location</label>
-                <select id="specifiler_loc" name="specifiler_loc">
+                <label for="specifier_location">Specifier Location</label>
+                <select id="specifier_location" name="specifier_location">
                   <?php foreach ($this->locations as $l) { ?>
                     <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
                   <?php } ?>
                 </select>
               </div>
+            </div>
+          </div>
 
+          <div class="line"></div>
+
+          <div class="widget-section">
+            <div class="formRow">
               <div class="oneTwo">
-                <label for="due_date">Tender Due Date</label>
-                <input type="text" id="due_date" name='due_date' class="datepicker" />
+                <label for="general_contractor_name">General Contractor</label>
+                <input type="text" id="general_contractor_name" name="general_contractor_name" class='tipN' placeholder="Add general contractor" original-title="Type Company Name" />
+                <input type="hidden" id="general_contractor_id" name="general_contractor_id" />
               </div>
 
               <div class="oneTwo">
-                <label for="required_date">Material Required Date</label>
-                <input type="text" id="required_date" name='required_date' placeholder="Material required date" class="datepicker" />
-              </div>
-
-              <div class="oneTwo">
-                <label for="gerneral_contractor">General Contractor</label>
-                <input type="text" id="gerneral_contractor" name="gerneral_contractor" class='tipN' placeholder="Add general contractor" original-title="Type Company Name" />
-                <input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" />
-              </div>
-
-              <div class="oneTwo">
-                <label for="gerneral_contractor_loc">General Contractor Location</label>
-                <select id="gerneral_contractor_loc" name="gerneral_contractor_loc">
-                  <?php foreach ($this->locations as $l) { ?>
-                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
-                  <?php } ?>
-                </select>
-              </div>
-
-              <div class="oneTwo">
-                <label for="awarded_contractor">Awarded Contractor</label>
-                <input id="awarded_contractor" name="awarded_contractor" type="text" class='tipN' placeholder="Add awarded contractor" original-title="Type Company Name" />
+                <label for="awarded_contractor_name">Awarded Contractor</label>
+                <input id="awarded_contractor_name" name="awarded_contractor_name" type="text" class='tipN' placeholder="Add awarded contractor" original-title="Type Company Name" />
                 <input id="awarded_contractor_id" name="awarded_contractor_id" type="hidden" />
-              </div>
-
-              <div class="oneTwo">
-                <label for="awarded_contractor_loc">Awarded Contractor Location</label>
-                <select id="awarded_contractor_loc" name='awarded_contractor_loc'>
-                  <?php foreach ($this->locations as $l) { ?>
-                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPNAY_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
-                  <?php } ?>
-                </select>
               </div>
             </div>
           </div>
@@ -188,151 +186,88 @@
 
 <script>
   $(function() {
-    
-    function getcustomerbyid(id, obj) {
-      $('.loading').show();
+    if ($("#shared_id").length) {
+      $('#shared_id').autocomplete({
+        source: '/user/id',
+        minLength: 1,
+        select: function(event, ui) {
+          $('#shared_id').val(ui.item.id);
+          return false;
+        }
+      }).data("ui-autocomplete")._renderItem = function(ul, item) {
+        return $("<li></li>")
+          .data("item.autocomplete", item)
+          .append("<a>" + item.id + "</br>" + item.name + "</a>")
+          .appendTo(ul);
+      }
+    };
+
+    function getContractor(id, targetPrefix) {
       $.ajax({
         url: '/customer/fetchbyid/id/' + id,
         type: "get",
         success: function(data) {
-          var result = JSON.parse(data);
-          if (result != null) {
-            $(obj).val(result.name);
-            $('input[name=' + $(obj).attr('id') + ']').val(result.name);
-          } else {
-            alert('Can\'t find customer');
-            $('#customer_info input').val('');
+          var result = data ? JSON.parse(data) : null;
+          if (result) {
+            $('#' + targetPrefix + '_id').val(result.customer_id);
+            $('#' + targetPrefix + '_name').val(result.customer_name);
           }
-          $('.loading').hide();
         }
       });
     }
 
-    $('#shared_id').autocomplete({
-      source: '/user/id',
-      minLength: 1,
-      select: function(event, ui) {
-        $('#shared_id').val(ui.item.id);
-        return false;
-      }
-    }).data("ui-autocomplete")._renderItem = function(ul, item) {
-      return $("<li></li>")
-        .data("item.autocomplete", item)
-        .append("<a>" + item.id + "</br>" + item.name + "</a>")
-        .appendTo(ul);
+    function getSpecifierOrArchitect(id, type) {
+      $.ajax({
+        url: '/specifier/fetchspecbyid/id/' + id,
+        type: "get",
+        success: function(data) {
+          var result = data ? JSON.parse(data) : null;
+          if (result) {
+            $('#' + type + '_name').val(result.specifier_name);
+            $('#' + type + '_id').val(result.specifier_id);
+            $('#' + type + '_location').val(result.location_id);
+          }
+        }
+      });
     }
 
-    $("#awarded_contractor").autocomplete({
-      source: function(request, response) {
-        $.ajax({
-          url: '/customer/fetchbynamecompany/',
-          dataType: "json",
-          data: {
-            term: request.term,
-            company: $('#awarded_contractor_loc').val()
-          },
-          success: function(data) {
-            response(data);
-          }
-        });
-      },
-      minLength: 2,
-      select: function(event, ul) {
-        $('#awarded_contractor').val(ul.item.name);
-        $('#awarded_contractor_id').val(ul.item.customer_id);
-        getcustomerbyid(ul.item.customer_id, $('#awarded_contractor'));
-      }
-    }).data("ui-autocomplete")._renderItem = function(ul, item) {
-      return $("<li></li>")
-        .data("item.autocomplete", item)
-        .append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
-        .appendTo(ul);
-    };
+    function setupAutocomplete(selector, sourceUrl, selectCallback, isContractor = false) {
+      $(selector).autocomplete({
+        source: sourceUrl,
+        minLength: 2,
+        select: function(event, ui) {
+          selectCallback(ui.item);
+        }
+      }).data("ui-autocomplete")._renderItem = function(ul, item) {
+        return $("<li>")
+          .data("item.autocomplete", item)
+          .append("<a>" +
+            (isContractor ? (item.customer_id + " - " + item.company_id + "<br>" + item.customer_name) :
+              (item.specifier_name + " - " + item.location_id + "<br>" + item.branch_description)) +
+            "</a>")
+          .appendTo(ul);
+      };
+    }
 
-    $("#gerneral_contractor").autocomplete({
-      source: function(request, response) {
-        $.ajax({
-          url: '/customer/fetchbynamecompany/',
-          dataType: "json",
-          data: {
-            term: request.term,
-            company: $('#gerneral_contractor_loc').val()
-          },
-          success: function(data) {
-            response(data);
-          }
-        });
-      },
-      minLength: 2,
-      select: function(event, ul) {
-        $('#gerneral_contractor').val(ul.item.name);
-        $('#gerneral_contractor_id').val(ul.item.customer_id);
-        getcustomerbyid(ul.item.customer_id, $('#gerneral_contractor'));
-      },
+    setupAutocomplete("#architect_name", "/specifier/fetchspecbyname/", function(item) {
+      getSpecifierOrArchitect(item.specifier_id, 'architect');
+    });
 
-    }).data("ui-autocomplete")._renderItem = function(ul, item) {
-      return $("<li></li>")
-        .data("item.autocomplete", item)
-        .append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
-        .appendTo(ul);
-    };
+    setupAutocomplete("#specifier_name", "/specifier/fetchspecbyname/", function(item) {
+      getSpecifierOrArchitect(item.specifier_id, 'specifier');
+    });
 
-    $("#architect_name").autocomplete({
-      source: function(request, response) {
-        $('#architect').val('');
-        $.ajax({
-          url: '/sales/fetchspec/',
-          dataType: "json",
-          data: {
-            term: request.term,
-            loc: $('#architect_loc').val()
-          },
-          success: function(data) {
-            response(data);
-          }
-        });
-      },
-      minLength: 2,
-      select: function(event, ul) {
-        $("#architect_name").val(ul.item.Specifier);
-        $('#architect').val(ul.item.uid);
-        return false;
-      },
+    setupAutocomplete("#general_contractor_name", "/customer/quote/", function(item) {
+      getContractor(item.customer_id, 'general_contractor');
+    }, true);
 
-    }).data("ui-autocomplete")._renderItem = function(ul, item) {
-      return $("<li></li>")
-        .data("item.autocomplete", item)
-        .append("<a>" + item.Specifier + "</a>")
-        .appendTo(ul);
-    };
+    setupAutocomplete("#awarded_contractor_name", "/customer/quote/", function(item) {
+      getContractor(item.customer_id, 'awarded_contractor');
+    }, true);
 
-    $("#specifiler_name").autocomplete({
-      source: function(request, response) {
-        $.ajax({
-          url: '/sales/fetchspec/',
-          dataType: "json",
-          data: {
-            term: request.term,
-            loc: $('#specifiler_loc').val()
-          },
-          success: function(data) {
-            response(data);
-          }
-        });
-      },
-      minLength: 2,
-      select: function(event, ul) {
-        $("#specifiler_name").val(ul.item.Specifier);
-        $('#specifiler').val(ul.item.uid);
-        return false;
-      },
-
-    }).data("ui-autocomplete")._renderItem = function(ul, item) {
-      return $("<li></li>")
-        .data("item.autocomplete", item)
-        .append("<a>" + item.Specifier + "</a>")
-        .appendTo(ul);
-    };
+    $('#architect_location, #specifier_location').on('change', function() {
+      $('#' + $(this).attr('id').replace('_location', '_id')).val('');
+    });
 
     let unsave = false;
 

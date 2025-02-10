@@ -1,13 +1,14 @@
 <?php
 
 use Centura\Model\{ 
-	Customer, 
-	User, 
+	Customer,
+	Specifier, 
+	User,
 	Quote, 
 	Location, 
 	Project, 
 	ProductProject, 
-	ProjectMemo, 
+	ProjectNote, 
 	ItemsProject
 };
 
@@ -33,12 +34,13 @@ class ProjectController extends Zend_Controller_Action
         $db = new User();
         
         $model = new Quote();
-        
-        $this->view->status = $model->fetchstatus();
-        $this->view->seg = $model->fetchseg();
-        $this->view->sepc = $model->fetchsepc();
+		$project = new Project();
+        $this->view->seg = $project->fetchProjectSegment();
+        //$this->view->sepc = $model->fetchsepc();
+
+		$this->view->status = $project->fetchProjectStatus();
+
         $sales = new User();
-        
         $this->view->arch = $sales->fetchallsales();
         
         $locations = new Location();
@@ -60,10 +62,10 @@ class ProjectController extends Zend_Controller_Action
     	}
     }
 
-	public function memoAction() {
+	public function noteAction() {
 		$project_id = $this->getRequest()->getParam('id');
-		$mono = new ProjectMemo();
-    	echo $mono->fetchmemosbyproject($project_id, true);
+		$note = new ProjectNote();
+    	echo $note->fetchProjectNote($project_id, true);
 		exit;
 	}
 
@@ -83,19 +85,19 @@ class ProjectController extends Zend_Controller_Action
     		$this->redirect('/project');
     	}
     	
-    	
+    	$project = new Project();
+		$specifier = new Specifier();
     	$quote = new Quote();
 
-		$project = new Project();
 		$project_detail = $project->fetchbyid($project_id);
 		//echo Zend_Json::encode($project_detail);
 		$this->view->project = $project_detail;
 
 		$this->view->headTitle()->set('Project Edit: ' . $project_id . ' - '. $project_detail['project_name']);
     
-    	$this->view->status = $quote->fetchstatus();
-    	$this->view->seg = $quote->fetchseg();
-    	$this->view->sepc = $quote->fetchsepc();
+    	$this->view->status = $project->fetchProjectStatus();
+    	$this->view->seg = $project->fetchProjectSegment();
+    	//$this->view->sepc = $quote->fetchsepc();
     	$sales = new User();
 
     	
@@ -108,31 +110,24 @@ class ProjectController extends Zend_Controller_Action
     	
 		$locations = new Location();
     	$this->view->locations = $locations->fetchAllBranches();
-		//$this->view->locations = $locations->fetchBranchesByCompanyId($project_detail['company_id']);
-
-    	$this->view->spec_name = $project->fetchspecbyid($project_detail['specifiler']);
-    	$this->view->arch_name = $project->fetchspecbyid($project_detail['architect']);
-    	
-    	$this->view->architect = $project->fetchspec($project_detail['architect']);
-    	//$this->view->arch = $sales->fetchallsales($this->view->architect['default_company']);
-    	$this->view->sepcloc = $quote->fetchsepcloc($project_detail['specifiler']);
-    	
+    	$this->view->specifier = $specifier->fetchspecbyid($project_detail['specifier_id']);
+    	$this->view->architect = $specifier->fetchspecbyid($project_detail['architect_id']);
     	$this->view->gerneral_contractor = $customer->fetchCustomerById($project_detail['general_contractor_id']);
-    	$this->view->awarded_sub_contracotr = $customer->fetchCustomerById($project_detail['awarded_sub_contracotr_id']);
+    	$this->view->awarded_sub_contracotr = $customer->fetchCustomerById($project_detail['awarded_contractor_id']);
     	//$this->view->log = $project->fetchlogbyid($project_id);
     	
-    	$product = new ProductProject();
+    	//$product = new ProductProject();
     	
-    	$this->view->items = $product->fetchallitemsbyprojectid($project_id);
+    	//$this->view->items = $product->fetchallitemsbyprojectid($project_id);
     	
-    	$mono = new ProjectMemo();
-    	$this->view->memo = $mono->fetchmemosbyproject($project_id);
+    	$mono = new ProjectNote();
+    	$this->view->memo = $mono->fetchProjectNote($project_id);
     	//$this->view->memo_type = $mono->fetchalltypes();
     	
     	$item = new ItemsProject();
-    	$this->view->items = $item->fetchallitems($project_id);
+    	//$this->view->items = $item->fetchallitems($project_id);
     	
-    	if($this->session->user['id'] != $project_detail['worksheet_assign'] and $this->session->user['id'] != $project_detail['owner'] && APPLICATION_ENV == 'production' && $this->session->user['sale_role'] != 'admin' && $this->session->user['approve_id'] == null)
+    	if($this->session->user['id'] != $project_detail['shared_id'] and $this->session->user['id'] != $project_detail['owner_id'] && APPLICATION_ENV == 'production' && $this->session->user['sale_role'] != 'admin' && $this->session->user['approve_id'] == null)
     	{
     		$this->view->owner = 0;
     	}
@@ -168,20 +163,21 @@ class ProjectController extends Zend_Controller_Action
     	}
     	
     	$quote = new Quote();
-    	
-    	$this->view->status = $quote->fetchstatus();
-    	$this->view->seg = $quote->fetchseg();
-    	$this->view->sepc = $quote->fetchsepc();
+		$project = new Project();
+
+    	$this->view->seg = $project->fetchProjectSegment();
+    	//$this->view->sepc = $quote->fetchsepc();
     	$sales = new User();
     	
     	$locations = new Location();
     	$this->view->locations = $locations->fetchAllBranches();
     	 
-    	$project = new Project();
     	$customer = new Customer();
     	 
     	$project_detail = $project->fetchbyid($project_id);
+		
     	$this->view->project = $project_detail;
+		$this->view->status = $project->fetchProjectStatus();
     	$this->view->spec_name = $project->fetchspecbyid($project_detail['specifiler']);
     	$this->view->arch_name = $project->fetchspecbyid($project_detail['architect']);
     	
@@ -193,16 +189,16 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->awarded_sub_contracotr = $customer->fetchCustomerById($project_detail['awarded_sub_contracotr_id']);
     	$this->view->log = $project->fetchlogbyid($project_id);
     	
-    	$product = new ProductProject();
+    	//$product = new ProductProject();
     	 
-    	$this->view->items = $product->fetchallitemsbyprojectid($project_id); 
+    	//$this->view->items = $product->fetchallitemsbyprojectid($project_id); 
     	
-    	$mono = new ProjectMemo();
-    	$this->view->memo = $mono->fetchmemosbyproject($project_id);
+    	$mono = new ProjectNote();
+    	$this->view->memo = $mono->fetchProjectNote($project_id);
     	//$this->view->memo_type = $mono->fetchalltypes();
     	
     	$item = new ItemsProject();
-    	$this->view->items = $item->fetchallitems($project_id);
+    	//$this->view->items = $item->fetchallitems($project_id);
     	 
     }
     
@@ -216,22 +212,22 @@ class ProjectController extends Zend_Controller_Action
     	}
     	 
     	$quote = new Quote();
-    	 
-    	$this->view->status = $quote->fetchstatus();
-    	$this->view->seg = $quote->fetchseg();
-    	$this->view->sepc = $quote->fetchsepc();
+		$specifier = new Specifier();
+		$project = new Project();
+
+    	$this->view->seg = $project->fetchProjectSegment();
     	$sales = new User();
     	 
     	$locations = new Location();
     	$this->view->locations = $locations->fetchAllBranches();
-    
-    	$project = new Project();
+
     	$customer = new Customer();
     
     	$project_detail = $project->fetchbyid($project_id);
     	$this->view->project = $project_detail;
-    	$this->view->spec_name = $project->fetchspecbyid($project_detail['specifiler']);
-    	$this->view->arch_name = $project->fetchspecbyid($project_detail['architect']);
+		$this->view->status = $project->fetchProjectStatus();
+    	$this->view->spec_name = $specifier->fetchspecbyid($project_detail['specifiler']);
+    	$this->view->arch_name = $specifier->fetchspecbyid($project_detail['architect']);
     	 
     	$this->view->architect = $project->fetchspec($project_detail['architect']);
     	//$this->view->arch = $sales->fetchallsales($this->view->architect['default_company']);
@@ -241,8 +237,8 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->awarded_sub_contracotr = $customer->fetchCustomerById($project_detail['awarded_sub_contracotr_id']);
     	$this->view->log = $project->fetchlogbyid($project_id);
     	
-    	$mono = new ProjectMemo();
-    	$this->view->memo = $mono->fetchmemosbyproject($project_id);
+    	$mono = new ProjectNote();
+    	$this->view->memo = $mono->fetchProjectNote($project_id);
     
     	$item = new ItemsProject();
     	$this->view->items = $item->fetchallitems($project_id);
@@ -281,18 +277,15 @@ class ProjectController extends Zend_Controller_Action
     
     public function edititemAction()
     {
-    	$project_id = $this->getRequest()->getParam('pro');
+    	$item_uid = $this->getRequest()->getParam('uid');
     
-    	if ($this->_request->isXmlHttpRequest() && $this->_request->isPost() && $project_id != null)
-    	{
-    		
+    	if ($this->_request->isXmlHttpRequest() && $this->_request->isPost() && $item_uid != null) {
     		$data = $this->_request->getPost();
     		$item = new ItemsProject();
-    		echo $item->edititem( $data,$project_id);
+    		echo $item->edititem($data, $item_uid);
     
     	}
-    	else
-    	{
+    	else {
     		echo '0';
     	}
     
@@ -301,19 +294,13 @@ class ProjectController extends Zend_Controller_Action
     
     public function deleteitemAction()
     {
-    	$project_id = $this->getRequest()->getParam('pro');
-    	$item_id = $this->getRequest()->getParam('item');
-    	$price = $this->getRequest()->getParam('price');
-    	$qty = $this->getRequest()->getParam('qty');
-    	$uom  = $this->getRequest()->getParam('uom');
-    	
-    	if ($project_id != null && $item_id != null)
-    	{
+    	$item_uid = $this->getRequest()->getParam('uid');
+
+    	if ($item_uid != null) {
     		$item = new ItemsProject();
-    		echo $item->remove($project_id,$item_id,$uom,$price,$qty);
+    		echo $item->remove($item_uid);
     	}
-    	else
-    	{
+    	else {
     		echo '0';
     	}
     

@@ -4,11 +4,12 @@ namespace Centura\Model;
 
 use Zend_Db_Table;
 use Zend_Registry;
+use Zend_db_Expr;
 
 use Exception;
 use Zend_Json;
 
-class ProjectMemo extends Zend_Db_Table
+class ProjectNote extends Zend_Db_Table
 {
 
 	public function add($project_id, $data)
@@ -23,17 +24,17 @@ class ProjectMemo extends Zend_Db_Table
 		$info['note_title']   = trim($data['note_title']);
 		$info['project_note'] = trim($data['project_note']);
 		$info['next_action']  = trim($data['next_action']);
-		$info['date_added']   = date('Y-m-d H:i:s', strtotime($data['date_added']));
+		$info['date_added']   = new Zend_Db_Expr('GETDATE()');
 		$info['owner_id']     = $data['owner_id'];
 		$info['delete_flag']  = 'N';
 
 		try {
 			$db->insert('project_note', $info);
 		} catch (Exception $e) {
-			echo error_log($e->getMessage());
+			error_log($e->getMessage());
 			return false;
 		}
-		return $this->fetchlatest($project_id);
+		return true;
 	}
 
 	public function edit($memo_id, $data)
@@ -47,25 +48,15 @@ class ProjectMemo extends Zend_Db_Table
 		$info['note_title']   = trim($data['note_title']);
 		$info['project_note'] = trim($data['project_note']);
 		$info['next_action']  = trim($data['next_action']);
-		$info['date_added']   = date('Y-m-d H:i:s', strtotime($data['date_added']));
+		//$info['date_added']   = date('Y-m-d H:i:s', strtotime($data['date_added']));
 
 		try {
 			$db->update('project_note', $info, 'project_note_id =' . $memo_id);
 		} catch (Exception $e) {
-			echo error_log($e->getMessage());
+			error_log($e->getMessage());
 			return false;
 		}
 		return true;
-	}
-
-	public function fetchlatest($project_id)
-	{
-		$db = $this->getAdapter();
-		$select = $db->select()->from('project_memo')->where('project_id =?', $project_id)->order('added desc');
-
-		$result = $db->fetchRow($select);
-
-		return $result['memo_id'];
 	}
 
 	public function remove($momo_id)
@@ -76,17 +67,18 @@ class ProjectMemo extends Zend_Db_Table
 
 		$db = $this->getAdapter();
 
-		$data['Delete_Flag'] = 'Y';
+		$data['delete_flag'] = 'Y';
 
 		try {
-			$db->update('project_memo', $data, 'memo_id = ' . $momo_id);
+			$db->update('project_note', $data, 'project_note_id = ' . $momo_id);
 		} catch (Exception $e) {
+			error_log($e->getMessage());
 			return false;
 		}
 		return true;
 	}
 
-	public function fetchmemosbyproject($project_id, $Json = false)
+	public function fetchProjectNote($project_id, $Json = false)
 	{
 		if ($project_id == null) {
 			return  false;

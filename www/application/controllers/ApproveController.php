@@ -61,7 +61,7 @@ class ApproveController extends Zend_Controller_Action
     	$this->view->userterm = $quote->fetchuserterm($quote_detail['customer_id']);
     	$this->view->leadtime = $quote->fetchleadtimes();
     	
-		$this->view->seg = $quote->fetchseg();
+		$this->view->seg = $project->fetchProjectSegment();
 
 		$this->view->oe_id = $quote->fetchP21OrderNumber($quote_id);
 

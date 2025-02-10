@@ -56,7 +56,7 @@ class Customer extends DbTable\Customer
 		//echo Zend_Json::encode($result);
 		$db = $this->getAdapter();
 		$select = $db->select()
-			->from('view_customer_x_P21_Customer')
+			->from('P21_customers_x_address')
 			->where('customer_id = ?', $id);
 
 		$result = $db->fetchRow($select);
@@ -171,7 +171,7 @@ class Customer extends DbTable\Customer
 		$result = $this->merge($db->fetchAll($select2), $db->fetchAll($select));*/ // legacy
 
 		$select = $db->select()
-			->from('view_customer_x_P21_Customer')
+			->from('P21_customers_x_address')
 			->where('customer_id LIKE ?', '%' . $patten . '%')
 			->orWhere('customer_name LIKE ?', '%' . $patten . '%')
 			->where('company_id = ?', $company)

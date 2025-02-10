@@ -33,7 +33,7 @@ class ProductProject extends DbTable\Products
 	    $i['subtotal'] = $data['qty'] * $data['unit_price'];
 		//$i['status'] = $data['status'];
 		try {
-	    	$db->insert('quotes_products', $i);
+	    	$db->insert('quote_items', $i);
 	    } catch (Exception $e) {
 	    	return $e->getMessage();
 	    }
@@ -65,7 +65,7 @@ class ProductProject extends DbTable\Products
 		$timestamp = Zend_Date::now()->get(Zend_Date::TIMESTAMP);
 	    $i['sort_id'] = Zend_Date::now()->get(Zend_Date::TIMESTAMP);
 	    try {
-	    	$db->insert('quotes_products', $i);
+	    	$db->insert('quote_items', $i);
 	    } catch (Exception $e) {
 	    	return $e->getMessage();
 	    }
@@ -94,7 +94,7 @@ class ProductProject extends DbTable\Products
 		//$i['editor'] = $this->session->user['id'];
 
 		try {
-			$sql = $db->select()->from('quotes_products')
+			$sql = $db->select()->from('quote_items')
 				->where('quote_id = ?', $quote_id)
 				->where('product_id = ?', $data['old_item_id'])
 				->where('qty = ?', $data['old_qty'])
@@ -105,7 +105,7 @@ class ProductProject extends DbTable\Products
 				->where('status = 1')
 				->limit(1);
 			$product = $db->fetchRow($sql);
-			$db->update('quotes_products', $i, implode(' ', $sql->getPart('where')));
+			$db->update('quote_items', $i, implode(' ', $sql->getPart('where')));
 
 		} catch (Exception $e) {
 			echo $e->getMessage();
@@ -146,7 +146,7 @@ class ProductProject extends DbTable\Products
 				$i['uom'] =$item['uom'][$k];
 				$i['subtotal'] = $item['total_price'][$k];
 				$sort++;
-				$db->insert('quotes_products', $i);
+				$db->insert('quote_items', $i);
 				$i = null;
 			}
 		}
@@ -173,7 +173,7 @@ class ProductProject extends DbTable\Products
 		}
 		$db = $this->getAdapter();
 		//$data['status'] = 0 ;
-		$sql = $db->select()->from('quotes_products',null)
+		$sql = $db->select()->from('quote_items',null)
 			->where('quote_id = ?',$quote_id)
 			->where('product_id = ?',$item_id)
 			->where('qty = ?',$qty)
@@ -182,8 +182,8 @@ class ProductProject extends DbTable\Products
 			->where('unit_price=?',$price);
 
 		try {
-			//$db->update('quotes_products', $data, implode(' ', $sql->getPart('where')));
-			$db->delete('quotes_products', implode(' ', $sql->getPart('where')));
+			//$db->update('quote_items', $data, implode(' ', $sql->getPart('where')));
+			$db->delete('quote_items', implode(' ', $sql->getPart('where')));
 		} catch (Exception $e) {
 			error_log($e);
 			return false;
@@ -214,8 +214,8 @@ class ProductProject extends DbTable\Products
 		}
 		$db = $this->getAdapter();
 		
-		$select = $db->select()->from('quotes_products')->where('quote_id =?',$quote_id)->order('sort_id asc')->where('status = 1')
-			->join('P21_Inv_Mast', 'quotes_products.product_id = P21_Inv_Mast.item_id','item_desc');
+		$select = $db->select()->from('quote_items')->where('quote_id =?',$quote_id)->order('sort_id asc')->where('status = 1')
+			->join('P21_Items', 'quote_items.product_id = P21_Items.item_id','item_desc');
 		
 		return $db->fetchAll($select);
 	}
@@ -228,8 +228,8 @@ class ProductProject extends DbTable\Products
 		}
 		$db = $this->getAdapter();
 		
-		$select = $db->select()->from('quotes_products')->where('quote_id =?',$quote_id)->order('sort_id asc')->where('status = 1')
-			->join('P21_Inv_Mast', 'quotes_products.product_id = P21_Inv_Mast.item_id','item_desc');
+		$select = $db->select()->from('quote_items')->where('quote_id =?',$quote_id)->order('sort_id asc')->where('status = 1')
+			->join('P21_Items', 'quote_items.product_id = P21_Items.item_id','item_desc');
 		
 		return Zend_Json::encode($db->fetchAll($select));
 	}
@@ -248,9 +248,9 @@ class ProductProject extends DbTable\Products
 		}
 		$company = DEFAULT_COMPNAY_ID;
 	
-		$select = $db->select()->from('quotes_products')->where('quote_id =?',$quote_id)->order('sort_id asc')->where('status = 1')
-		//->join('P21_Inv_Mast', 'quotes_products.product_id = P21_Inv_Mast.item_id','item_desc')
-		->join('P21_Item_UOM_Price_Conversion', 'quotes_products.product_id = P21_Item_UOM_Price_Conversion.item_id and quotes_products.uom = P21_Item_UOM_Price_Conversion.unit_of_measure',
+		$select = $db->select()->from('quote_items')->where('quote_id =?',$quote_id)->order('sort_id asc')->where('status = 1')
+		//->join('P21_Items', 'quote_items.product_id = P21_Items.item_id','item_desc')
+		->join('P21_Item_UOM_Price_Conversion', 'quote_items.product_id = P21_Item_UOM_Price_Conversion.item_id and quote_items.uom = P21_Item_UOM_Price_Conversion.unit_of_measure',
 				array('item_desc','initprice'=>'P21_Cost'))->where('P21_Item_UOM_Price_Conversion.location_id = ?',$company);
 		
 		
@@ -265,8 +265,8 @@ class ProductProject extends DbTable\Products
 		}
 		$db = $this->getAdapter();
 		
-		$select = $db->select()->from('quotes_products')->join('quote','quote.quote_id = quotes_products.quote_id',null)->where('project_id =?',$project_id)->order('sort_id asc')->where('quotes_products.status = 1')
-		->join('P21_Inv_Mast', 'quotes_products.product_id = P21_Inv_Mast.item_id','item_desc');
+		$select = $db->select()->from('quote_items')->join('quote','quote.quote_id = quote_items.quote_id',null)->where('project_id =?',$project_id)->order('sort_id asc')->where('quote_items.status = 1')
+		->join('P21_Items', 'quote_items.product_id = P21_Items.item_id','item_desc');
 		
 		return $db->fetchAll($select);
 	}
@@ -279,8 +279,8 @@ class ProductProject extends DbTable\Products
 		}
 		$db = $this->getAdapter();
 		
-		$select = $db->select()->from('quotes_products')->join('quote','quote.quote_id = quotes_products.quote_id',null)->where('project_id =?',$project_id)->order('sort_id asc')->where('quotes_products.status = 1')
-		->join('P21_Inv_Mast', 'quotes_products.product_id = P21_Inv_Mast.item_id','item_desc');
+		$select = $db->select()->from('quote_items')->join('quote','quote.quote_id = quote_items.quote_id',null)->where('project_id =?',$project_id)->order('sort_id asc')->where('quote_items.status = 1')
+		->join('P21_Items', 'quote_items.product_id = P21_Items.item_id','item_desc');
 		
 		return Zend_Json::encode($db->fetchAll($select));
 	}

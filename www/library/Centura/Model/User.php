@@ -58,24 +58,12 @@ class User extends DbTable\User
 			$user['sale_role'] = 'manager';
 		}
 
-
-		$db = $this->getAdapter();
-		$select = $db->select()
-			->from('quote_approval', 'quote_approval_uid')
-			->where('user_id = ?', $username);
-
-		$result = $db->fetchRow($select);
-
-		if ($result != null) {
-			$user['approve_id'] = $result['uid'];
+		if ($user['sale_role'] = 'manager' || $user['sale_role'] = 'admin') {
+			$user['approve_id'] = $user['role_uid'];
 		} else {
-			if ($user['id'] == 'TNGUYEN') {
-				$user['approve_id'] = 1;
-			} else {
-				$user['approve_id'] = null;
-			}
+			$user['approve_id'] = null;
+			
 		}
-
 
 		return $user;
 	}

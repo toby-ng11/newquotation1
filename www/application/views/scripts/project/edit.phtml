@@ -2,9 +2,9 @@
 $session =  Zend_Registry::get('session');
 $project = $this->project;
 $projectID = $project['project_id'];
-$projectCreateDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['create_date']);
-$projectDueDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['due_date']);
-$projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['required_date']);
+$projectCreateDate = $project['create_date'];
+$projectDueDate = $project['due_date'];
+$projectRequiredDate = $project['require_date'];
 ?>
 
 <!-- Right panel -->
@@ -27,7 +27,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 						Add Project</a>
 					<!--<li><a href="#" class='edit_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
 					<!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
-					<a class='button quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/project/print/id/" . $project['project_id'] . "?company=" . substr($project['quote_no'], 0, 3) . "&name=Centura_Project_" . preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print">
+					<a class='button quick-link' href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/project/print/id/" . $project['project_id'] . "?company=" . substr($project['project_id_ext'], 0, 3) . "&name=Centura_Project_" . preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print">
 						<span class='icon icon-pdf'></span>
 						Print Project</a>
 					<a class='button quick-link make-quote' href="/quote/index/project/<?= $project['project_id'] ?>" title="Make quote">
@@ -63,10 +63,10 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 					<div class="widget-section">
 						<div class="formRow">
 							<input type="hidden" id='project_id' value='<?= $projectID ?>'>
-							<input type="hidden" id="owner" name='owner' value='<?= $project['owner'] ?>'>
-							<input type="hidden" id='create_date' name='create_date' value='<?= $projectCreateDate->format('Y-m-d') ?>' />
-							<input type="hidden" id='architect' name='architect' value="<?= $project['architect'] ?>">
-							<input type="hidden" id='specifiler' name="specifiler" value="<?= $project['specifiler'] ?>">
+							<input type="hidden" id="owner_id" name='owner_id' value='<?= $project['owner_id'] ?>'>
+							<input type="hidden" id='create_date' name='create_date' value='<?= $projectCreateDate->format('Y-m-d') ?? '' ?>' />
+							<input type="hidden" id='architect_id' name='architect_id' value="<?= $project['architect_id'] ?>">
+							<input type="hidden" id='specifier_id' name="specifier_id" value="<?= $project['specifier_id'] ?>">
 
 							<div class="oneTwo required-field">
 								<label for="project_name">Project Name</label>
@@ -77,7 +77,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 								<label for="location">Centura Location</label>
 								<select name="location" id="location">
 									<?php foreach ($this->locations as $l) { ?>
-										<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $project['centura_location_id']) echo 'selected' ?>><?= $l['name'] ?></option>
+										<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $project['centura_location_id']) echo 'selected' ?>><?= $l['branch_description'] ?></option>
 									<?php } ?>
 								</select>
 							</div>
@@ -89,21 +89,21 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 
 							<?php if ($session->user['approve_id'] != null) { ?>
 								<div class="oneTwo form-worksheet-owner">
-									<label for="worksheet_assign">Share Worksheet</label>
-									<input id="worksheet_assign" name="worksheet_assign" type="text" value='<?= $project['worksheet_assign'] ?>' />
+									<label for="shared_id">Share Worksheet</label>
+									<input id="shared_id" name="shared_id" type="text" value='<?= $project['shared_id'] ?>' />
 								</div>
 							<?php } else { ?>
-								<input type="hidden" id="worksheet_assign" name="worksheet_assign" />
+								<input type="hidden" id="shared_id" name="shared_id" />
 							<?php } ?>
 
 							<div class="oneTwo">
-								<label for="quote_no">Project ID</label>
-								<input id="quote_no" type="text" placeholder="123456" name='quote_no' value="<?= $project['quote_no'] ?>" readonly />
+								<label for="project_id_ext">Project ID</label>
+								<input id="project_id_ext" type="text" placeholder="123456" name='project_id_ext' value="<?= $project['project_id_ext'] ?>" readonly />
 							</div>
 
 							<div class="oneTwo required-field">
-								<label for="project_location_address">Project Location</label>
-								<input type="text" name='project_location_address' id="project_location_address" class="validate[required]" value='<?= $project['project_location_address'] ?>' />
+								<label for="centura_location_id">Project Location</label>
+								<input type="text" name='centura_location_id' id="centura_location_id" class="validate[required]" value='<?= $project['centura_location_id'] ?>' />
 							</div>
 
 							<div class="oneTwo required-field">
@@ -111,7 +111,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 								<select name="status" id="status" class="validate[required]">
 									<option value="">-- Select Status --</option>
 									<?php foreach ($this->status as $s) { ?>
-										<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $project['status']) echo 'selected' ?>><?= $s['Status'] ?></option>
+										<option value="<?= $s['status_id'] ?>" <?php if ($s['status_id'] == $project['status']) echo 'selected' ?>><?= $s['status_desc'] ?></option>
 									<?php } ?>
 								</select>
 							</div>
@@ -126,42 +126,14 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 								<select name="market_segment" id='market_segment' class="validate[required]">
 									<option value="">Choose Segment</option>
 									<?php foreach ($this->seg as $s) { ?>
-										<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $project['market_segment']) echo 'selected' ?>><?= $s['Market_Segment'] ?></option>
-									<?php } ?>
-								</select>
-							</div>
-
-							<div class="oneTwo required-field">
-								<label for='architect_name'>Project Architect / Owner</label>
-								<input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" value='<?= $this->arch_name ?>' />
-							</div>
-
-							<div class="oneTwo">
-								<label for="architect_loc">Architect Location</label>
-								<select id="architect_loc" name="architect_loc">
-									<?php foreach ($this->locations as $l) { ?>
-										<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->architect['Company_ID']) echo 'selected' ?>><?= $l['name'] ?></option>
-									<?php } ?>
-								</select>
-							</div>
-
-							<div class="oneTwo required-field">
-								<label for='specifiler_name'>Specifier</label>
-								<input type='text' id='specifiler_name' name="specifiler_name" value='<?= $this->spec_name ?>' class="validate[required] tipN" original-title="Type 2 letter to start or add your own">
-							</div>
-
-							<div class="oneTwo">
-								<label for="specifiler_loc">Specifier Location</label>
-								<select id="specifiler_loc" name="specifiler_loc">
-									<?php foreach ($this->locations as $l) { ?>
-										<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->sepcloc['Company_ID']) echo 'selected' ?>><?= $l['name'] ?></option>
+										<option value="<?= $s['market_segment_id'] ?>" <?php if ($s['market_segment_id'] == $project['market_segment_id']) echo 'selected' ?>><?= $s['market_segment_desc'] ?></option>
 									<?php } ?>
 								</select>
 							</div>
 
 							<div class="oneTwo">
 								<label for="due_date">Tender Due Date</label>
-								<input id="due_date" type="text" name='due_date' class="datepicker" value='<?= $projectDueDate->format('Y-m-d') ?>' />
+								<input id="due_date" type="text" name='due_date' class="datepicker" value='<?= $projectDueDate->format('Y-m-d') ?? '' ?>' />
 							</div>
 
 							<div class="oneTwo">
@@ -169,40 +141,49 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 								<input id='required_date' type="text" name='required_date' class="datepicker" value='<?= $projectRequiredDate->format('Y-m-d') ?>' />
 							</div>
 
-							<div class="oneTwo">
-								<label for="gerneral_contractor">General Contractor</label>
-								<input type="text" id="gerneral_contractor" name="gerneral_contractor" placeholder="Add general contractor" value='<?php if (!empty($this->gerneral_contractor)) {
-																																						echo $this->gerneral_contractor['name'] . ' - ' . $this->gerneral_contractor['company_id'];
-																																					} ?>' />
-								<input type="hidden" id="gerneral_contractor_id" name="gerneral_contractor_id" value="<?= $project['general_contractor_id'] ?>" />
+							<div class="oneTwo required-field">
+								<label for='architect_name'>Project Architect / Owner</label>
+								<input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" value='<?= $this->architect['specifier_name'] ?>' />
 							</div>
 
 							<div class="oneTwo">
-								<label for="gerneral_contractor_loc">General Contractor Location</label>
-								<select id="gerneral_contractor_loc" name="gerneral_contractor_loc">
-									<?php if ($this->gerneral_contractor['company_id'] ?? '' == null) $this->gerneral_contractor['company_id'] = DEFAULT_COMPNAY; ?>
+								<label for="architect_location">Architect Location</label>
+								<select id="architect_location" name="architect_location">
 									<?php foreach ($this->locations as $l) { ?>
-										<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->gerneral_contractor['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
+										<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $this->architect['location_id']) echo 'selected' ?>><?= $l['branch_description'] ?></option>
 									<?php } ?>
 								</select>
 							</div>
 
-							<div class="oneTwo">
-								<label for="awarded_contractor">Awarded Sub Contractor</label>
-								<input type="text" id="awarded_contractor" name="awarded_contractor" placeholder="Add awarded contractor" value='<?php if (!empty($this->awarded_sub_contracotr)) {
-																																						echo $this->awarded_sub_contracotr['name'] . ' - ' . $this->awarded_sub_contracotr['company_id'];
-																																					} ?>' />
-								<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id' value="<?= $project['awarded_sub_contracotr_id'] ?>">
+							<div class="oneTwo required-field">
+								<label for='specifier_name'>Specifier</label>
+								<input type='text' id='specifier_name' name="specifier_name" value='<?= $this->specifier['specifier_name'] ?>' class="validate[required] tipN" original-title="Type 2 letter to start or add your own">
 							</div>
 
 							<div class="oneTwo">
-								<label for="awarded_contractor_loc">Awarded Contractor Location</label>
-								<select id="awarded_contractor_loc" name="awarded_contractor_loc">
-									<?php $this->awarded_sub_contracotr['company_id'] = $this->awarded_sub_contracotr['company_id'] ?? DEFAULT_COMPNAY; ?>
+								<label for="specifier_location">Specifier Location</label>
+								<select id="specifier_location" name="specifier_location">
 									<?php foreach ($this->locations as $l) { ?>
-										<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == $this->awarded_sub_contracotr['company_id']) echo 'selected' ?>><?= $l['name'] ?></option>
+										<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $this->specifier['location_id']) echo 'selected' ?>><?= $l['branch_description'] ?></option>
 									<?php } ?>
 								</select>
+							</div>
+
+
+							<div class="oneTwo">
+								<label for="general_contractor_name">General Contractor</label>
+								<input type="text" id="general_contractor_name" name="general_contractor_name" placeholder="Add general contractor" value='<?php if (!empty($this->gerneral_contractor)) {
+																																						echo $this->gerneral_contractor['customer_name'] . ' - ' . $this->gerneral_contractor['company_id'];
+																																					} ?>' />
+								<input type="hidden" id="general_contractor_id" name="general_contractor_id" value="<?= $project['general_contractor_id'] ?>" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="awarded_contractor_name">Awarded Sub Contractor</label>
+								<input type="text" id="awarded_contractor_name" name="awarded_contractor_name" placeholder="Add awarded contractor" value='<?php if (!empty($this->awarded_sub_contracotr)) {
+																																						echo $this->awarded_sub_contracotr['customer_name'] . ' - ' . $this->awarded_sub_contracotr['company_id'];
+																																					} ?>' />
+								<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id' value="<?= $project['awarded_contractor_id'] ?>">
 							</div>
 						</div>
 					</div>
@@ -336,7 +317,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 				<div class="line"></div>
 
 				<div class="widget-section">
-					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display" id='project_memo'>
+					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display" id='project_note'>
 						<thead>
 							<tr>
 								<th>Log Time</th>
@@ -352,27 +333,27 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 		</section>
 
 		<div id="dialog-message" title="Add Log">
-			<form action="" class="dialog" id='memo'>
+			<form action="" class="dialog" id='note'>
 				<div class="dialog-form">
-					<input type="hidden" name="author" id="memo-author" value="<?= $session->user['id'] ?>">
+					<input type="hidden" name="owner_id" id="owner_id" value="<?= $session->user['id'] ?>">
 					<div class="oneTwo dialog-note">
-						<label for="title">Title</label>
-						<textarea rows="2" name='title' id='title' placeholder="Title"></textarea>
+						<label for="note_title">Title</label>
+						<textarea rows="2" name='note_title' id='note_title' placeholder="Title"></textarea>
 					</div>
 
 					<div class="oneTwo required-field dialog-note">
-						<label for="title">Content</label>
-						<textarea rows="10" name='content' id='content' class="validate[required]" placeholder="Log content"></textarea>
+						<label for="project_note">Content</label>
+						<textarea rows="8" name='project_note' id='project_note' class="validate[required]" placeholder="Log content"></textarea>
 					</div>
 
 					<div class="oneTwo dialog-note">
-						<label for="type">Next Action</label>
-						<textarea rows="5" name="type" id='type' placeholder="Can be left empty"></textarea>
+						<label for="next_action">Next Action</label>
+						<textarea rows="3" name="next_action" id='next_action' placeholder="Can be left empty"></textarea>
 					</div>
 
 					<div class="oneTwo dialog-note">
-						<label for='follow_up_date'>Follow Up Date</label>
-						<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker" value='<?= date('Y-m-d') ?>' />
+						<label for='date_added'>Follow Up Date</label>
+						<input type="text" name='date_added' id='date_added' class="datepicker" value='<?= date('Y-m-d') ?>' />
 					</div>
 				</div>
 			</form>
@@ -406,7 +387,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 
 					<div class="oneTwo dialog-note">
 						<label for='note'>Note</label>
-						<textarea rows="10" name='note' id='note' maxlength="255" class="validate[maxSize[255]]" placeholder="*Please type item note in one line only"></textarea>
+						<textarea rows="8" name='note' id='note' maxlength="255" class="validate[maxSize[255]]"></textarea>
 						<input type="hidden" id="is_edit" value='0' />
 					</div>
 				</div>
@@ -417,35 +398,35 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 
 
 <script type="text/javascript">
-	let memoTable = $('#project_memo').DataTable({
+	let noteTable = $('#project_note').DataTable({
 		ajax: {
-			url: "/project/memo/id/" + $('#project_id').val(),
+			url: "/project/note/id/" + $('#project_id').val(),
 			dataSrc: ''
 		},
 		processing: true,
 		columns: [{
-				data: "added",
+				data: "date_added.date",
 				render: function(data) {
 					let date = new Date(data);
 					return '<p><b>' + date.toLocaleString('en-CA') + '</b></p>';
 				}
 			},
 			{
-				data: "title",
+				data: "note_title",
 				render: function(data, type, row, meta) {
 					if (data == '') {
-						let formattedText = (row.content).replace(/(?:\r\n|\r|\n)/g, '<br>');
+						let formattedText = (row.project_note).replace(/(?:\r\n|\r|\n)/g, '<br>');
 						return '<p>' + formattedText + '</p>';
-					} else if (row.content == null) { // this is for old quote system rendering
+					} else if (row.project_note == null) { // this is for old quote system rendering
 						return '<p>' + data + '</p>';
 					} else {
-						let formattedText = (row.content).replace(/(?:\r\n|\r|\n)/g, '<br>');
+						let formattedText = (row.project_note).replace(/(?:\r\n|\r|\n)/g, '<br>');
 						return '<p><b>' + data + '</b></br>' + formattedText + '</p>';
 					}
 				}
 			},
 			{
-				data: "type",
+				data: "next_action",
 				render: function(data) {
 					let formattedText = data.replace(/(?:\r\n|\r|\n)/g, '<br>');
 					return '<p>' + formattedText + '</p>';
@@ -459,7 +440,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 			//	}
 			//},
 			{
-				data: "author",
+				data: "owner_id",
 				render: function(data) {
 					if (data != null) {
 						return '<p><b>' + data + '</b></p>';
@@ -469,15 +450,15 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 				}
 			},
 			{
-				data: "memo_id",
+				data: "project_note_id",
 				render: function(data) {
 					<?php if ($this->owner == 1) { ?>
 						return '<div class="row-button">' +
-							'<a title="Edit this memo" class="memo-edit" href="#">' +
+							'<a title="Edit this note" class="note-edit" href="#">' +
 							'<span class="button-wrap">' +
 							'<span class="icon icon-edit"></span>' +
 							'</span></a>' +
-							'<a title="Delete this memo" class="memo_delete" target="_blank" href="/memo/delete/id/' + data +
+							'<a title="Delete this note" class="note_delete" target="_blank" href="/note/delete/id/' + data +
 							'"><span class="button-wrap"><span class="icon icon-delete"></span></span></a></div>';
 					<?php } else { ?>
 						return null;
@@ -508,13 +489,13 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 		},
 		processing: true,
 		columns: [{
-				data: "product_id",
+				data: "item_id",
 				render: function(data, type, row, meta) {
 					return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
 				}
 			},
 			{
-				data: "qty",
+				data: "quantity",
 				render: function(data) {
 					let qty = Number.parseFloat(data).toFixed(0);
 					return '<b>' + qty + '</b>';
@@ -546,7 +527,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 				}
 			},
 			{
-				data: "product_id",
+				data: "item_id",
 				render: function(data, type, row, meta) {
 					//var oldData = getolddata($(this).closest('tr'));
 					return '<div class="row-button">' +
@@ -554,12 +535,16 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 						'<span class="button-wrap">' +
 						'<span class="icon icon-edit"></span>' +
 						'</span></a>' +
-						'<a title="Delete this item" class="item_delete" href="/project/deleteitem/pro/' + row.project_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty + '"' +
+						'<a title="Delete this item" class="item_delete" href="/project/deleteitem/uid/' + row.item_uid + '"' +
 						'index="' + data + '">' +
 						'<span class="button-wrap">' +
 						'<span class="icon icon-delete"></span>' +
 						'</span></a></div>';
 				}
+			},
+			{
+				data: "item_uid",
+				visible: false
 			}
 		],
 		columnDefs: [{
@@ -573,14 +558,14 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 			topStart: null,
 			topEnd: null
 		},
-		//order: { data: "added.date" },
+		order: [[7, 'desc']], // newest item on top, sort by item uid
 		paging: false,
 		scrollX: true,
 		fixedColumns: {
 			start: 1,
 			end: 1
 		},
-		rowReorder: true
+		//rowReorder: true
 	});
 
 	let projectQuoteTable = $('#project-quote-table').DataTable({
@@ -596,7 +581,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 				}
 			},
 			{
-				data: 'name'
+				data: 'project_name'
 			},
 			{
 				data: "quote_date",
@@ -606,7 +591,7 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 				}
 			},
 			{
-				data: "expire_date",
+				data: "expire_date.date",
 				render: function(data) {
 					let date = new Date(data);
 					let today = new Date();
@@ -618,14 +603,14 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 				}
 			},
 			{
-				data: "ship_required_date",
+				data: "ship_required_date.date",
 				render: function(data) {
 					let date = new Date(data);
 					return date.toLocaleDateString();
 				}
 			},
 			{
-				data: "approve_status",
+				data: "quote_status",
 				render: function(data) {
 					if (data == -1) {
 						return '<span class="disapproved red">Disapproved</span>';
@@ -671,157 +656,72 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 
 	$(function() {
 
-		$("#awarded_contractor").autocomplete({
-			source: function(request, response) {
-				$.ajax({
-					url: '/customer/fetchbynamecompany/',
-					dataType: "json",
-					data: {
-						term: request.term,
-						company: $('#awarded_contractor_loc').val()
-					},
-					success: function(data) {
-						response(data);
-					}
-				});
-			},
-			minLength: 2,
-			select: function(event, ul) {
-				$('#awarded_contractor').val(ul.item.name);
-				$('#awarded_contractor_id').val(ul.item.customer_id);
-				getcustomerbyid(ul.item.customer_id, $('#awarded_contractor'));
-			},
-
-		}).data("ui-autocomplete")._renderItem = function(ul, item) {
-			return $("<li></li>")
-				.data("item.autocomplete", item)
-				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
-				.appendTo(ul);
-		};
-
-		$("#gerneral_contractor").autocomplete({
-			source: function(request, response) {
-				$.ajax({
-					url: '/customer/fetchbynamecompany/',
-					dataType: "json",
-					data: {
-						term: request.term,
-						company: $('#gerneral_contractor_loc').val()
-					},
-					success: function(data) {
-						response(data);
-					}
-				});
-			},
-			minLength: 2,
-			select: function(event, ul) {
-				$('#gerneral_contractor').val(ul.item.name);
-				$('#gerneral_contractor_id').val(ul.item.customer_id);
-				getcustomerbyid(ul.item.customer_id, $('#gerneral_contractor'));
-			},
-
-		}).data("ui-autocomplete")._renderItem = function(ul, item) {
-			return $("<li></li>")
-				.data("item.autocomplete", item)
-				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
-				.appendTo(ul);
-		};
-
-		$('#architect_loc').on("change", function() {
-			$('.loading').show();
+		function getContractor(id, targetPrefix) {
 			$.ajax({
-				url: '/sales/fetchbylocation/loc/' + $(this).val(),
+				url: '/customer/fetchbyid/id/' + id,
 				type: "get",
 				success: function(data) {
-					var result = JSON.parse(data);
-					var list = '<option >Select Architect / Owner</option>';
-					$.each(result, function(i, item) {
-						list = list + '<option value="' + item.id + '">' + item.name + ' - ' + item.default_company + '</option>';
-					});
-					$('#architect').html(list);
-					$('.loading').hide();
+					var result = data ? JSON.parse(data) : null;
+					if (result) {
+						$('#' + targetPrefix + '_id').val(result.customer_id);
+						$('#' + targetPrefix + '_name').val(result.customer_name);
+					}
 				}
 			});
-			$('.loading').show();
-		});
+		}
 
-		$('#specifiler_loc').on("change", function() {
-			$('.loading').show();
+		function getSpecifierOrArchitect(id, type) {
 			$.ajax({
-				url: '/sales/fetchspecbylocation/loc/' + $(this).val(),
+				url: '/specifier/fetchspecbyid/id/' + id,
 				type: "get",
 				success: function(data) {
-					var result = JSON.parse(data);
-					var list = '<option >Choose Specifiler</option>';
-					if (result.length == 0) {
-						$('#specifiler').html(list);
-					} else {
-						$.each(result, function(i, item) {
-							list = list + '<option value="' + item.uid + '">' + item.Specifier + ' - ' + item.Company_ID + '</option>';
-						});
-						$('#specifiler').html(list);
+					var result = data ? JSON.parse(data) : null;
+					if (result) {
+						$('#' + type + '_name').val(result.specifier_name);
+						$('#' + type + '_id').val(result.specifier_id);
+						$('#' + type + '_location').val(result.location_id);
 					}
-					$('.loading').hide();
 				}
 			});
+		}
+
+		function setupAutocomplete(selector, sourceUrl, selectCallback, isContractor = false) {
+			$(selector).autocomplete({
+				source: sourceUrl,
+				minLength: 2,
+				select: function(event, ui) {
+					selectCallback(ui.item);
+				}
+			}).data("ui-autocomplete")._renderItem = function(ul, item) {
+				return $("<li>")
+					.data("item.autocomplete", item)
+					.append("<a>" +
+						(isContractor ? (item.customer_id + " - " + item.company_id + "<br>" + item.customer_name) :
+							(item.specifier_name + " - " + item.location_id + "<br>" + item.branch_description)) +
+						"</a>")
+					.appendTo(ul);
+			};
+		}
+
+		setupAutocomplete("#architect_name", "/specifier/fetchspecbyname/", function(item) {
+			getSpecifierOrArchitect(item.specifier_id, 'architect');
 		});
 
-		$("#architect_name").autocomplete({
-			source: function(request, response) {
-				$('#architect').val('');
-				$.ajax({
-					url: '/sales/fetchspec/',
-					dataType: "json",
-					data: {
-						term: request.term,
-						loc: $('#architect_loc').val()
-					},
-					success: function(data) {
-						response(data);
-					}
-				});
-			},
-			minLength: 2,
-			select: function(event, ul) {
-				$("#architect_name").val(ul.item.Specifier);
-				$('#architect').val(ul.item.uid);
-				return false;
-			},
+		setupAutocomplete("#specifier_name", "/specifier/fetchspecbyname/", function(item) {
+			getSpecifierOrArchitect(item.specifier_id, 'specifier');
+		});
 
-		}).data("ui-autocomplete")._renderItem = function(ul, item) {
-			return $("<li></li>")
-				.data("item.autocomplete", item)
-				.append("<a>" + item.Specifier + "</a>")
-				.appendTo(ul);
-		};
+		setupAutocomplete("#general_contractor_name", "/customer/quote/", function(item) {
+			getContractor(item.customer_id, 'general_contractor');
+		}, true);
 
-		$("#specifiler_name").autocomplete({
-			source: function(request, response) {
-				$.ajax({
-					url: '/sales/fetchspec/',
-					dataType: "json",
-					data: {
-						term: request.term,
-						loc: $('#specifiler_loc').val()
-					},
-					success: function(data) {
-						response(data);
-					}
-				});
-			},
-			minLength: 2,
-			select: function(event, ul) {
-				$("#specifiler_name").val(ul.item.Specifier);
-				$('#specifiler').val(ul.item.uid);
-				return false;
-			},
+		setupAutocomplete("#awarded_contractor_name", "/customer/quote/", function(item) {
+			getContractor(item.customer_id, 'awarded_contractor');
+		}, true);
 
-		}).data("ui-autocomplete")._renderItem = function(ul, item) {
-			return $("<li></li>")
-				.data("item.autocomplete", item)
-				.append("<a>" + item.Specifier + "</a>")
-				.appendTo(ul);
-		};
+		$('#architect_location, #specifier_location').on('change', function() {
+			$('#' + $(this).attr('id').replace('_location', '_id')).val('');
+		});
 
 		let currentRow = '';
 
@@ -831,13 +731,14 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 		});
 
 		function getolddata(row) {
-			let item_id = currentRow['product_id'];
-			let item_name = currentRow['item_desc'];
+			let item_uid = currentRow['item_uid'];
+			let item_id = currentRow['item_id'];
 			let note = currentRow['note'];
-			let qty = currentRow['qty'];
+			let qty = currentRow['quantity'];
 			let unit_price = currentRow['unit_price'];
 			let uom = currentRow['uom'];
 			var data = {
+				'item_uid': item_uid,
 				'old_item_id': item_id,
 				'old_uom': uom,
 				'old_price': unit_price,
@@ -870,11 +771,11 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 					id: "btn-add",
 					text: "Add Log",
 					click: function() {
-						if ($("#memo").validationEngine('validate') == true) {
-							if (isEditMemo == false) {
-								addmemo();
+						if ($("#note").validationEngine('validate') == true) {
+							if (isEditnote == false) {
+								addnote();
 							} else {
-								editMemo();
+								editnote();
 							}
 							$(this).dialog("close");
 						}
@@ -1002,25 +903,6 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 			}
 		});
 
-		function getcustomerbyid(id, obj) {
-			$('.loading').show();
-			$.ajax({
-				url: '/customer/fetchbyid/id/' + id,
-				type: "get",
-				success: function(data) {
-					var result = JSON.parse(data);
-					if (result != null) {
-						$(obj).val(result.name);
-						$('input[name=' + $(obj).attr('id') + ']').val(result.name);
-					} else {
-						alert('Can\'t find customer');
-						$('#customer_info input').val('');
-					}
-					$('.loading').hide();
-				}
-			});
-		}
-
 		$(".dialog #item_id").autocomplete({
 			source: '/item/index/',
 			minLength: 2,
@@ -1070,14 +952,12 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 		};
 
 		function getprice() {
-			$('.loading').show();
 			$.ajax({
 				url: '/item/price/id/' + $("#item_id ").val() + '/uom/' + $("#uom ").val(),
 				type: "get",
 				success: function(data) {
 					var price = JSON.parse(data);
 					$('#price').val(price.price);
-					$('.loading').hide();
 				}
 			});
 
@@ -1097,34 +977,24 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 		};
 
 		function edititem(item_id, item_desc, uom, price, qty, note) {
-			ajaxedititem(item_id, uom, price, qty, note);
-			//current_edit_row.replaceWith(str);
-		}
-
-		function ajaxedititem(item_id, uom, price, qty, note) {
 			var olddata = getolddata(current_edit_row);
 			var data = {
 				'item_id': item_id,
 				'uom': uom,
 				'price': price,
 				'qty': qty,
-				'note': note,
-				'old_item_id': olddata['old_item_id'],
-				'old_uom': olddata['old_uom'],
-				'old_price': olddata['old_price'],
-				'old_qty': olddata['old_qty'],
-				'old_note': olddata['old_note']
+				'note': note
 			};
 			console.log(data);
 			$.ajax({
-				url: '/project/edititem/pro/' + $('#project_id').val(),
+				url: '/project/edititem/uid/' + olddata['item_uid'],
 				type: "post",
 				data: data,
 				success: function(data) {
 					itemTable.ajax.reload();
 				}
 			});
-		};
+		}
 
 		$("#uom, #uniform-uom").on("change", function() {
 			getprice();
@@ -1176,11 +1046,11 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 			}
 		});
 
-		$('#worksheet_assign').autocomplete({
+		$('#shared_id').autocomplete({
 			source: '/user/id',
 			minLength: 1,
 			select: function(event, ui) {
-				$('#worksheet_assign').val(ui.item.id);
+				$('#shared_id').val(ui.item.id);
 				return false;
 			}
 		}).data("ui-autocomplete")._renderItem = function(ul, item) {
@@ -1190,74 +1060,74 @@ $projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['req
 				.appendTo(ul);
 		}
 
-		let currentMemoRow = '';
-		let isEditMemo = false;
+		let currentnoteRow = '';
+		let isEditnote = false;
 
-		$('#project_memo tbody').on('click', 'tr', function() {
-			currentMemoRow = memoTable.row(this).data();
+		$('#project_note tbody').on('click', 'tr', function() {
+			currentnoteRow = noteTable.row(this).data();
 		});
 
-		$(document).on("click", ".memo-edit", function(e) {
+		$(document).on("click", ".note-edit", function(e) {
 			e.preventDefault();
 
-			isEditMemo = true;
+			isEditnote = true;
 
 			$("#dialog-message").dialog("option", "title", "Edit Log");
 			$("#dialog-message").dialog("open");
 
-			$('#memo #title').val(currentMemoRow['title']);
-			$('#memo #content').val(currentMemoRow['content']);
-			$('#memo #type').val(currentMemoRow['type']);
-			let followUpDate = new Date(currentMemoRow['follow_up_date']);
-			$('#memo #follow_up_date').val(followUpDate.toLocaleDateString());
+			$('#note #note_title').val(currentnoteRow['note_title']);
+			$('#note #project_note').val(currentnoteRow['project_note']);
+			$('#note #next_action').val(currentnoteRow['next_action']);
+			let followUpDate = new Date(currentnoteRow['date_added']['date']);
+			$('#note #date_added').val(followUpDate.toLocaleDateString());
 		})
 
 		$('#opener').on("click", function() {
-			isEditMemo = false;
-			document.getElementById("memo").reset();
+			isEditnote = false;
+			document.getElementById("note").reset();
 			$("#dialog-message").dialog("option", "title", "Add Log");
 			$("#dialog-message").dialog("open");
 		});
 
-		function addmemo() {
+		function addnote() {
 			$.ajax({
-				url: '/memo/add/pro/' + $('#project_id').val(),
+				url: '/note/add/pro/' + $('#project_id').val(),
 				type: "post",
-				data: $("#memo").serialize(),
+				data: $("#note").serialize(),
 				success: function(data) {
 					$('.loading').hide();
 					if (data > 0) {
-						memoTable.ajax.reload();
+						noteTable.ajax.reload();
 					}
-					resetForm($('#memo'));
+					resetForm($('#note'));
 				}
 			});
 		};
 
-		function editMemo() {
+		function editnote() {
 			$.ajax({
-				url: '/memo/edit/id/' + currentMemoRow['memo_id'],
+				url: '/note/edit/id/' + currentnoteRow['note_id'],
 				type: "post",
-				data: $("#memo").serialize(),
+				data: $("#note").serialize(),
 				success: function(data) {
-					memoTable.ajax.reload();
-					resetForm($('#memo'));
+					noteTable.ajax.reload();
+					resetForm($('#note'));
 				}
 			});
 		};
 
-		$(document).on('click', '.memo_delete', function(e) {
+		$(document).on('click', '.note_delete', function(e) {
 			e.preventDefault();
 			var obj = $(this);
-			if (confirm("Confirm delete this log?") == true) {
+			if (confirm("Are you sure you want to delete this log?") == true) {
 				$('.loading').show();
 				$.ajax({
 					url: $(this).attr('href'),
 					type: "get",
 					success: function(data) {
-						//var index = $('#project_memo tbody tr').index(obj.parent().parent());
+						//var index = $('#project_note tbody tr').index(obj.parent().parent());
 						//if (index != -1) {
-						memoTable.ajax.reload();
+						noteTable.ajax.reload();
 						//}
 						$('.loading').hide();
 					}
