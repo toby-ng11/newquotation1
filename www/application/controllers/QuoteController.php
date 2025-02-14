@@ -53,7 +53,7 @@ class QuoteController extends Zend_Controller_Action
 		$this->view->items = $item->fetchallitems($project_id);
 
 		$this->view->arch = $sales->fetchallsales();
-		$this->view->approval = $sales->getQuoteapproval();
+		//$this->view->approval = $sales->getQuoteapproval();
 		$this->view->project = $project_detail;
 		$this->view->type = $quote->fetchquotetype();
 		$this->view->seg = $project->fetchProjectSegment();
@@ -86,8 +86,8 @@ class QuoteController extends Zend_Controller_Action
 		$this->view->customer = $customerDetail;
 		$this->view->contactList = $contactList->fetchContactsByCustomer($customerDetail['customer_id']);
 		$this->view->quote = $quote_detail;
-		$this->view->arch = $sales->fetchallsales();
-		$this->view->approval = $sales->getQuoteapproval();
+		$this->view->architect_rep = $sales->fetchsalebyid($quote_detail['architect_rep_id']);
+		//$this->view->approval = $sales->getQuoteapproval();
 		$this->view->project = $project_detail;
 		$this->view->type = $quote->fetchquotetype();
 		$this->view->items = $products->fetchallitems($quote_id);
@@ -117,48 +117,35 @@ class QuoteController extends Zend_Controller_Action
 
 		$quote_id = $this->getRequest()->getParam('id');
 		$products = new ProductProject();
-		echo $products->fetchallitemsJson($quote_id);
+		echo $products->fetchallitems($quote_id, true);
 		exit;
 	}
 
 	public function additemAction()
-	{
-		$quote_id = $this->getRequest()->getParam('id');
-
-		if ($this->_request->isXmlHttpRequest() && $this->_request->isPost() && $quote_id != null) {
-			$data = $this->_request->getPost();
-
-			$products = new ProductProject();
-			echo $products->addsingle($data, $quote_id);
-		} else {
-			echo '0';
+    { 
+    	$quote_id = $this->getRequest()->getParam('id');
+    
+    	if ($this->_request->isXmlHttpRequest() && $this->_request->isPost() && $quote_id != null)
+    	{
+    		$data = $this->_request->getPost();
+    
+    		$item = new ProductProject();
+    		echo $item->add($data, $quote_id);
+    	}
+    	else {
+    		echo '0';
 		}
-		exit;
-	}
-
-	public function importitemAction()
-	{
-		$quote_id = $this->getRequest()->getParam('id');
-
-		if ($this->_request->isXmlHttpRequest() && $this->_request->isPost() && $quote_id != null) {
-			$data = $this->_request->getPost();
-
-			$products = new ProductProject();
-			echo $products->addsingle($data, $quote_id);
-		} else {
-			echo '0';
-		}
-		exit;
-	}
+    	exit;
+    }
 
 	public function edititemAction()
     {
-    	$quote_id = $this->getRequest()->getParam('id');
+    	$item_uid = $this->getRequest()->getParam('uid');
     
-    	if ($this->_request->isXmlHttpRequest() && $this->_request->isPost() && $quote_id != null) {
+    	if ($this->_request->isXmlHttpRequest() && $this->_request->isPost() && $item_uid != null) {
     		$data = $this->_request->getPost();
-    		$products = new ProductProject();
-    		echo $products->edititem($data, $quote_id);
+    		$item = new ProductProject();
+    		echo $item->edititem($data, $item_uid);
     	} 
 		else {
     		echo '0';
@@ -168,20 +155,16 @@ class QuoteController extends Zend_Controller_Action
 
 	public function deleteitemAction()
     {
-    	$quote_id = $this->getRequest()->getParam('id');
-    	$item_id = $this->getRequest()->getParam('item');
-    	$price = $this->getRequest()->getParam('price');
-    	$qty = $this->getRequest()->getParam('qty');
-    	$uom  = $this->getRequest()->getParam('uom');
-		$sort_id  = $this->getRequest()->getParam('sort');
-    	
-    	if ($quote_id != null && $item_id != null) {
-    		$products = new ProductProject();
-    		echo $products->remove($quote_id, $item_id, $uom, $price, $qty, $sort_id);
+    	$item_uid = $this->getRequest()->getParam('uid');
+
+    	if ($item_uid != null) {
+    		$item = new ProductProject();
+    		echo $item->remove($item_uid);
     	}
     	else {
     		echo '0';
     	}
+    
     	exit;
     }
 
@@ -214,7 +197,7 @@ class QuoteController extends Zend_Controller_Action
 			return false;
 		}
 		$quote = new Quote();
-		$data['approve_status'] = 1; // waiting approve
+		$data['status'] = 2; // waiting approve
 		$quote->update($data, 'quote_id = ' . $quote_id);
 		exit;
 	}
@@ -239,14 +222,14 @@ class QuoteController extends Zend_Controller_Action
 		if (($data['quote_approval'] != null || $data['quote_approval'] < 0) && $this->session->user['approve_id'] != null) {
 			$approver_id  = $data['quote_approval'];
 			$data = null;
-			$data['quote_approval'] = $approver_id;
-			$data['approve_status'] = 10; // approved
+			//$data['quote_approval'] = $approver_id;
+			$data['status'] = 3; // approved
 			$data['approve_date'] = date('Y-m-d H:i:s'); //approve date
 		} else {
 			$data = null;
 			if ($this->session->user['approve_id'] != null) {
-				$data['quote_approval'] = $this->session->user['approve_id']; // approved user
-				$data['approve_status'] = 10; // approved
+				//$data['quote_approval'] = $this->session->user['approve_id']; // approved user
+				$data['status'] = 3; // approved
 				$data['approve_date'] = date('Y-m-d H:i:s'); //approve date
 			}
 		}
@@ -262,8 +245,8 @@ class QuoteController extends Zend_Controller_Action
 			return false;
 		}
 		$quote = new Quote();
-		$data['approve_status'] = -1; // disapproved
-		$data['quote_approval'] = ''; // disapproved
+		$data['status'] = 4; // disapproved
+		//$data['quote_approval'] = ''; // disapproved
 		$quote->update($data, 'quote_id = ' . $quote_id);
 
 		exit;
@@ -276,7 +259,7 @@ class QuoteController extends Zend_Controller_Action
 			return false;
 		}
 		$quote = new Quote();
-		$data['approve_status'] = 0; // unsubmit
+		$data['status'] = 5; // unsubmit
 		$quote->update($data, 'quote_id = ' . $quote_id);
 		$this->redirect('/quote/edit/id/' . $quote_id);
 		exit;

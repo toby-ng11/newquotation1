@@ -2,9 +2,9 @@
 $session =  Zend_Registry::get('session');
 $project = $this->project;
 $projectName = $project['project_name'];
-$projectCreateDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['create_date']);
-$projectDueDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['due_date']);
-$projectRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['required_date']);
+$projectCreateDate = $project['create_date'];
+$projectDueDate = $project['due_date'];
+$projectRequiredDate = $project['require_date'];
 
 $maintainenceMode = 0;
 
@@ -45,11 +45,11 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 					<span class='svg icon icon-list'></span>
 					<div class="project-information project-name">
 						<h2><?= $projectName ?></h2>
-						<p><?= ($project['project_location_address'] == 'N/A') ? '' : $project['project_location_address'] ?></p>
+						<p><?= ($project['project_address'] == 'N/A') ? '' : $project['project_address'] ?></p>
 						</br>
-						<p>by <b><?= $project['owner'] ?></b></p>
-						<?php if (($project['worksheet_assign']) != null) { ?>
-							<p>shared with <b><?= $project['worksheet_assign'] ?></b></p>
+						<p>by <b><?= $project['owner_id'] ?></b></p>
+						<?php if (($project['shared_id']) != null) { ?>
+							<p>shared with <b><?= $project['shared_id'] ?></b></p>
 						<?php } ?>
 					</div>
 				</div>
@@ -68,7 +68,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 						<p>Project status</p>
 						<h2>
 							<?php if ($project['status'] != 13) {
-								echo $project['status_name'];
+								echo $project['status_desc'];
 							} else {
 								echo 'Closed';
 							} ?>
@@ -111,11 +111,11 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 								<input id="quote-number" type="text" placeholder="Auto Generate" readonly />
 							</div>
 							<div class="oneTwo required-field">
-								<label for="quote_type">Quote Type</label>
-								<select name="quote_type_id" id="quote_type" class="validate[required]">
+								<label for="type_id">Quote Type</label>
+								<select name="type_id" id="type_id" class="validate[required]">
 									<option value="">-- Select --</option>
 									<?php foreach ($this->type as $t) { ?>
-										<option value="<?= $t['uid'] ?>"><?= $t['type'] ?></option>
+										<option value="<?= $t['type_id'] ?>"><?= $t['type_desc'] ?></option>
 									<?php } ?>
 								</select>
 							</div>
@@ -124,7 +124,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 								<select name="quote_segment" id='Segment' class="validate[required]">
 									<option value="">-- Choose Segment --</option>
 									<?php foreach ($this->seg as $s) { ?>
-										<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $project['market_segment']) echo 'selected' ?>><?= $s['Market_Segment'] ?></option>
+										<option value="<?= $s['market_segment_id'] ?>" <?php if ($s['market_segment_id'] == $project['market_segment_id']) echo 'selected' ?>><?= $s['market_segment_desc'] ?></option>
 									<?php } ?>
 								</select>
 							</div>
@@ -146,24 +146,21 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 								<select id="arch" name='arch' class="validate[required]">
 									<?php if ($session->user['approve_id'] != null) {
 										foreach ($this->arch as $a) { ?>
-											<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $project['owner']) {
+											<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $project['owner_id']) {
 																				echo 'selected';
 																			} else if ($a['id'] == 'TORTESTSALESMAN002') echo 'selected'; ?>><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option>
 											<?php }
 									} else {
 										foreach ($this->arch as $a) {
-											if (($a['id']) == ($project['owner']) or $a['id'] == (($project['worksheet_assign']))) { ?>
+											if (($a['id']) == ($project['owner_id']) or $a['id'] == (($project['shared_id']))) { ?>
 												<option value="<?= $a['id'] ?>" selected><?= ($a['name'] ?? '') . ' - ' . ($a['default_company'] ?? '') ?></option>
 									<?php }
 										}
 									} ?>
 								</select>
 							</div>
-							<input type="hidden" name="sales_id" value="<?= $session->user['id'] ?>" />
 
-							<?php foreach ($this->seg as $s) { ?>
-								<?php if ($s['uid'] == $project['market_segment']) $seg = $s['Market_Segment'] ?>
-							<?php } ?>
+							<input type="hidden" name="sales_id" value="<?= $session->user['id'] ?>" />
 
 						</div>
 					</div>
@@ -231,13 +228,13 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 							</div>
 
 							<div class="oneTwo">
-								<label for="mail_state">Province</label>
-								<input id='mail_state' name='mail_state' type="text" placeholder="Optional">
+								<label for="phys_state">Province</label>
+								<input id='phys_state' name='phys_state' type="text" placeholder="Optional">
 							</div>
 
 							<div class="oneTwo">
-								<label for="mail_postal_code">Postal Code</label>
-								<input id='mail_postal_code' name='mail_postal_code' type="text" placeholder="Optional">
+								<label for="phys_postal_code">Postal Code</label>
+								<input id='phys_postal_code' name='phys_postal_code' type="text" placeholder="Optional">
 							</div>
 
 							<div class="oneTwo">
@@ -251,8 +248,8 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 							</div>
 
 							<div class="oneTwo">
-								<label for="Contacts_Email">Email</label>
-								<input type="text" value="" id='Contacts_Email' name='Contacts_Email' placeholder="Optional">
+								<label for="email_address">Email</label>
+								<input type="text" value="" id='email_address' name='email_address' placeholder="Optional">
 							</div>
 						</div>
 					</div>
@@ -279,7 +276,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 							<h2>Items</h2>
 						</div>
 						<div class="widget-button">
-							<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="opener">
+							<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="add_item">
 								<span class="button-wrap">
 									<span class="icon icon-add"></span>
 									Add Item
@@ -306,7 +303,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 				</div>
 			</section>
 
-			<div id="dialog-message" title="Add Item">
+			<div id="dialog-item" title="Add Item">
 				<form action="" class="dialog" id='item'>
 					<div class="dialog-form">
 						<div class="oneTwo required-field">
@@ -353,13 +350,13 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 		},
 		processing: true,
 		columns: [{
-				data: "product_id",
+				data: "item_id",
 				render: function(data, type, row, meta) {
 					return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
 				}
 			},
 			{
-				data: "qty",
+				data: "quantity",
 				render: function(data) {
 					let qty = Number.parseFloat(data).toFixed(0);
 					return '<b>' + qty + '</b>';
@@ -391,7 +388,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 				}
 			},
 			{
-				data: "product_id",
+				data: "item_id",
 				render: function(data, type, row, meta) {
 					//var oldData = getolddata($(this).closest('tr'));
 					return '<div class="row-button">' +
@@ -399,12 +396,16 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 						'<span class="button-wrap">' +
 						'<span class="icon icon-edit"></span>' +
 						'</span></a>' +
-						'<a title="Delete this item" class="item_delete" href="/project/deleteitem/pro/' + row.project_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty + '"' +
+						'<a title="Delete this item" class="item_delete" href="/project/deleteitem/uid/' + row.item_uid + '"' +
 						'index="' + data + '">' +
 						'<span class="button-wrap">' +
 						'<span class="icon icon-delete"></span>' +
 						'</span></a></div>';
 				}
+			},
+			{
+				data: "item_uid",
+				visible: false
 			}
 		],
 		columnDefs: [{
@@ -418,9 +419,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 			topStart: null,
 			topEnd: null
 		},
-		order: {
-			data: "added.date"
-		},
+		order: [[7, 'desc']], // sort by item uid, newest item on top
 		paging: false,
 		scrollX: true,
 		fixedColumns: {
@@ -446,12 +445,14 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 		});
 
 		function getolddata(row) {
-			let item_id = currentRow['product_id'];
+			let item_uid = currentRow['item_uid'];
+			let item_id = currentRow['item_id'];
 			let note = currentRow['note'];
-			let qty = currentRow['qty'];
+			let qty = currentRow['quantity'];
 			let unit_price = currentRow['unit_price'];
 			let uom = currentRow['uom'];
 			var data = {
+				'item_uid': item_uid,
 				'old_item_id': item_id,
 				'old_uom': uom,
 				'old_price': unit_price,
@@ -461,7 +462,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 			return data;
 		}
 
-		$("#dialog-message").dialog({
+		$("#dialog-item").dialog({
 			autoOpen: false,
 			modal: true,
 			minWidth: 800,
@@ -504,14 +505,15 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 			]
 		});
 
-		$('#opener').on("click", function() {
+		$('#add_item').on("click", function() {
 			resetForm($('#item'));
 			$('#is_edit').val(0);
+			$("#dialog-item").dialog("open");
 			return false;
 		});
 
 		$(document).on("click", "a.edit", function() {
-			$("#dialog-message").dialog("open");
+			$("#dialog-item").dialog("open");
 			current_edit_row = $(this).closest('tr');
 			set_edit(current_edit_row);
 			return false;
@@ -533,24 +535,17 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 		});
 
 		function set_edit(row) {
-			$("#dialog-message").dialog("option", "title", "Edit Item");
+			$("#dialog-item").dialog("option", "title", "Edit Item");
 			$('#is_edit').val(1);
 
-			let item_id = currentRow['product_id'];
-			let item_name = currentRow['item_desc'];
-			let note = currentRow['note'];
-			let qty = currentRow['qty'];
-			let unit_price = currentRow['unit_price'];
-			let uom = currentRow['uom'];
+			let oldData = getolddata(current_edit_row);
 
-			$('#item #item_input').val(item_name);
-			$('#item #item_id').val(item_id);
+			$('#item #item_id').val(oldData['old_item_id']);
+			$('#item #price').val(oldData['old_price']);
+			$('#item #qty').val(oldData['old_qty']);
+			$('#item #note').val(oldData['old_note']);
 
-			$('#item #price').val(unit_price);
-			$('#item #qty').val(qty);
-			$('#item #note').val(note);
-
-			getoumedit(item_id, uom, unit_price);
+			getoumedit(oldData['old_item_id'], oldData['old_uom'], oldData['old_price']);
 		}
 
 		function getoumedit(item_id, unit_number, price) {
@@ -575,32 +570,16 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 		}
 
 		function edititem(item_id, item_desc, uom, price, qty, note) {
-			ajaxedititem(item_id, uom, price, qty, note);
-		}
-
-		function ajaxedititem(item_id, uom, price, qty, note) {
 			var olddata = getolddata(current_edit_row);
-			var data = {
-				'item_id': item_id,
-				'uom': uom,
-				'price': price,
-				'qty': qty,
-				'note': note,
-				'old_item_id': olddata['old_item_id'],
-				'old_uom': olddata['old_uom'],
-				'old_price': olddata['old_price'],
-				'old_qty': olddata['old_qty'],
-				'old_note': olddata['old_note']
-			};
 			$.ajax({
-				url: '/project/edititem/pro/' + $('#project_id').val(),
+				url: '/project/edititem/uid/' + olddata['item_uid'],
 				type: "post",
-				data: data,
+				data: $("#item").serialize(),
 				success: function(data) {
 					itemTable.ajax.reload();
 				}
 			});
-		};
+		}
 
 		$(".dialog #item_id").autocomplete({
 			source: '/item/index/',
@@ -642,17 +621,14 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 		}
 
 		function getprice() {
-			$('.loading').show();
 			$.ajax({
 				url: '/item/price/id/' + $("#item_id ").val() + '/uom/' + $("#uom ").val(),
 				type: "get",
 				success: function(data) {
 					var price = JSON.parse(data);
 					$('#price').val(price.price);
-					$('.loading').hide();
 				}
 			});
-
 		}
 
 		function additem(item_id, item_desc, uom, price, qty) {
@@ -779,11 +755,11 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 						$('#phys_address1').val(result.phys_address1);
 						$('#phys_address2').val(result.phys_address2);
 						$('#phys_city').val(result.phys_city);
-						$('#mail_state').val(result.mail_state);
-						$('#mail_postal_code').val(result.mail_postal_code);
+						$('#phys_state').val(result.phys_state);
+						$('#phys_postal_code').val(result.phys_postal_code);
 						$('#phys_country').val(result.phys_country);
 						$('#central_phone_number').val(result.central_phone_number);
-						$('#Contacts_Email').val(result.Contacts_Email);
+						$('#email_address').val(result.email_address);
 					}
 				}
 			});

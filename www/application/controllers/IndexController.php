@@ -109,7 +109,7 @@ class IndexController extends Zend_Controller_Action
 	public function quotesalesrepAction() // ajax
 	{
 		$quote = new Quote();
-		echo $quote->fetchrelatedJson($this->sale_id);
+		echo $quote->fetchrelated($this->sale_id, true);
 		exit;
 	}
 
@@ -142,7 +142,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaiting(1, $is_admin, true);
+		echo $quote->fetchwaiting(2, $is_admin, true);
 		exit;
 	}
 
@@ -154,7 +154,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaiting(10, $is_admin, true);
+		echo $quote->fetchwaiting(3, $is_admin, true);
 		exit;
 	}
 
@@ -166,7 +166,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaiting(-1, $is_admin, true);
+		echo $quote->fetchwaiting(4, $is_admin, true);
 		exit;
 	}
 

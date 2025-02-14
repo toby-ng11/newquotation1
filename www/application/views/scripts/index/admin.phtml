@@ -170,14 +170,14 @@ $session = Zend_Registry::get('session');
                 data: "shared_id"
             },
             {
-                data: "create_date",
+                data: "create_date.date",
                 render: function(data) {
                     let date = new Date(data);
                     return date.toLocaleDateString();
                 }
             },
             {
-                data: "due_date",
+                data: "due_date.date",
                 render: function(data) {
                     let date = new Date(data);
                     let today = new Date();
@@ -195,7 +195,7 @@ $session = Zend_Registry::get('session');
                 data: "market_segment_desc"
             },
             {
-                data: "status"
+                data: "status_desc"
             },
             {
                 data: "project_id",
@@ -251,14 +251,14 @@ $session = Zend_Registry::get('session');
                 data: "market_segment_desc"
             },
             {
-                data: "quote_date",
+                data: "quote_date.date",
                 render: function(data) {
                     let date = new Date(data);
                     return date.toLocaleDateString();
                 }
             },
             {
-                data: "expire_date",
+                data: "expire_date.date",
                 render: function(data) {
                     let date = new Date(data);
                     let today = new Date();
@@ -270,7 +270,7 @@ $session = Zend_Registry::get('session');
                 }
             },
             {
-                data: "ship_required_date",
+                data: "ship_required_date.date",
                 render: function(data) {
                     let date = new Date(data);
                     return date.toLocaleDateString();

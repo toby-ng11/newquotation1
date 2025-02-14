@@ -5,6 +5,8 @@ $projectID = $project['project_id'];
 $projectCreateDate = $project['create_date'];
 $projectDueDate = $project['due_date'];
 $projectRequiredDate = $project['require_date'];
+
+$architect = $this->architect;
 ?>
 
 <!-- Right panel -->
@@ -143,14 +145,31 @@ $projectRequiredDate = $project['require_date'];
 
 							<div class="oneTwo required-field">
 								<label for='architect_name'>Project Architect / Owner</label>
-								<input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" value='<?= $this->architect['specifier_name'] ?>' />
+								<input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" value='<?= $architect['specifier_name'] ?>' />
 							</div>
 
 							<div class="oneTwo">
 								<label for="architect_location">Architect Location</label>
 								<select id="architect_location" name="architect_location">
 									<?php foreach ($this->locations as $l) { ?>
-										<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $this->architect['location_id']) echo 'selected' ?>><?= $l['branch_description'] ?></option>
+										<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $architect['location_id']) echo 'selected' ?>><?= $l['branch_description'] ?></option>
+									<?php } ?>
+								</select>
+							</div>
+
+							<div class="oneTwo required-field">
+								<label for="architect_rep_id">Architect Rep.</label>
+								<select id='architect_rep_id' name='architect_rep_id' class="validate[required]">
+									<?php if ($session->user['approve_id'] != null) { ?>
+										<?php foreach ($this->arch as $a) { ?>
+											<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $architect['architect_rep_id']) echo 'selected'; ?>><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
+										<?php } ?>
+									<?php } else { ?>
+										<?php foreach ($this->arch as $a) { ?>
+											<?php if ($a['id'] == $quote['arch']) { ?>
+												<option value="<?= $a['id'] ?>" selected><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
+											<?php } ?>
+										<?php } ?>
 									<?php } ?>
 								</select>
 							</div>
@@ -173,16 +192,16 @@ $projectRequiredDate = $project['require_date'];
 							<div class="oneTwo">
 								<label for="general_contractor_name">General Contractor</label>
 								<input type="text" id="general_contractor_name" name="general_contractor_name" placeholder="Add general contractor" value='<?php if (!empty($this->gerneral_contractor)) {
-																																						echo $this->gerneral_contractor['customer_name'] . ' - ' . $this->gerneral_contractor['company_id'];
-																																					} ?>' />
+																																								echo $this->gerneral_contractor['customer_name'] . ' - ' . $this->gerneral_contractor['company_id'];
+																																							} ?>' />
 								<input type="hidden" id="general_contractor_id" name="general_contractor_id" value="<?= $project['general_contractor_id'] ?>" />
 							</div>
 
 							<div class="oneTwo">
 								<label for="awarded_contractor_name">Awarded Sub Contractor</label>
 								<input type="text" id="awarded_contractor_name" name="awarded_contractor_name" placeholder="Add awarded contractor" value='<?php if (!empty($this->awarded_sub_contracotr)) {
-																																						echo $this->awarded_sub_contracotr['customer_name'] . ' - ' . $this->awarded_sub_contracotr['company_id'];
-																																					} ?>' />
+																																								echo $this->awarded_sub_contracotr['customer_name'] . ' - ' . $this->awarded_sub_contracotr['company_id'];
+																																							} ?>' />
 								<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id' value="<?= $project['awarded_contractor_id'] ?>">
 							</div>
 						</div>
@@ -208,21 +227,20 @@ $projectRequiredDate = $project['require_date'];
 		</section>
 
 		<section aria-labelledby="quoted-items" id="section2" data-nav="Quoted Items">
-			<form method="post" class="form" id='project_log'>
-				<div class="widget-table">
-					<div class="widget-header">
-						<div class="widget-title">
-							<h2>Quoted Items</h2>
-						</div>
-						<div class="widget-button">
-							<?php if ($this->owner == 1) { ?>
-								<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="add_item">
-									<span class="button-wrap">
-										<span class="icon icon-add"></span>
-										Add Item
-									</span>
-								</button>
-								<!--<button type="submit" title="Save new items" class="button action has-icon small" id="save_item" disabled>
+			<div class="widget-table">
+				<div class="widget-header">
+					<div class="widget-title">
+						<h2>Quoted Items</h2>
+					</div>
+					<div class="widget-button">
+						<?php if ($this->owner == 1) { ?>
+							<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="add_item">
+								<span class="button-wrap">
+									<span class="icon icon-add"></span>
+									Add Item
+								</span>
+							</button>
+							<!--<button type="submit" title="Save new items" class="button action has-icon small" id="save_item" disabled>
 								<span class="button-wrap">
 									<span class="icon icon-save"></span>
 									Save
@@ -234,28 +252,28 @@ $projectRequiredDate = $project['require_date'];
 									Delete item
 								</span>
 							</button>-->
-							<?php } ?>
-						</div>
+						<?php } ?>
 					</div>
+				</div>
 
-					<div class="line"></div>
+				<div class="line"></div>
 
-					<div class="widget-section">
-						<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="items">
-							<thead>
-								<tr>
-									<th>Item</th>
-									<th>Quality</th>
-									<th>Unit Price</th>
-									<th>UOM</th>
-									<th>Total Price</th>
-									<th>Note</th>
-									<th>Options</th>
-								</tr>
-							</thead>
-						</table>
-					</div>
-			</form>
+				<div class="widget-section">
+					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="items">
+						<thead>
+							<tr>
+								<th>Item</th>
+								<th>Quality</th>
+								<th>Unit Price</th>
+								<th>UOM</th>
+								<th>Total Price</th>
+								<th>Note</th>
+								<th>Options</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
 		</section>
 
 		<section aria-labelledby="quote-by-project" id="section3" data-nav="Quote by this project">
@@ -364,7 +382,7 @@ $projectRequiredDate = $project['require_date'];
 				<div class="dialog-form">
 					<div class="oneTwo required-field">
 						<label for="item_id">Item ID</label>
-						<input type="hidden" name="item" id='item_input' />
+						<input type="hidden" name="item_desc" id='item_input' />
 						<input type="text" id="item_id" name='item_id' class="validate[required]" />
 					</div>
 
@@ -558,7 +576,9 @@ $projectRequiredDate = $project['require_date'];
 			topStart: null,
 			topEnd: null
 		},
-		order: [[7, 'desc']], // newest item on top, sort by item uid
+		order: [
+			[7, 'desc']
+		], // sort by item uid, newest item on top 
 		paging: false,
 		scrollX: true,
 		fixedColumns: {
@@ -727,7 +747,7 @@ $projectRequiredDate = $project['require_date'];
 
 		$('#items tbody').on('click', 'tr', function() {
 			currentRow = itemTable.row(this).data();
-			//console.log(currentRow['product_id'], currentRow['note'], currentRow['qty']);
+			console.log(currentRow['note']);
 		});
 
 		function getolddata(row) {
@@ -906,10 +926,6 @@ $projectRequiredDate = $project['require_date'];
 		$(".dialog #item_id").autocomplete({
 			source: '/item/index/',
 			minLength: 2,
-			focus: function(event, ui) {
-				//$("#item_input").val(ui.item.item_desc);
-				return false;
-			},
 			select: function(event, ui) {
 				$("#item_input").val(ui.item.item_desc);
 				$("#item_id").val(ui.item.item_id);
@@ -978,18 +994,10 @@ $projectRequiredDate = $project['require_date'];
 
 		function edititem(item_id, item_desc, uom, price, qty, note) {
 			var olddata = getolddata(current_edit_row);
-			var data = {
-				'item_id': item_id,
-				'uom': uom,
-				'price': price,
-				'qty': qty,
-				'note': note
-			};
-			console.log(data);
 			$.ajax({
 				url: '/project/edititem/uid/' + olddata['item_uid'],
 				type: "post",
-				data: data,
+				data: $("#item").serialize(),
 				success: function(data) {
 					itemTable.ajax.reload();
 				}
@@ -1106,7 +1114,7 @@ $projectRequiredDate = $project['require_date'];
 
 		function editnote() {
 			$.ajax({
-				url: '/note/edit/id/' + currentnoteRow['note_id'],
+				url: '/note/edit/id/' + currentnoteRow['project_note_id'],
 				type: "post",
 				data: $("#note").serialize(),
 				success: function(data) {

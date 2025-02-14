@@ -50,7 +50,7 @@ class ApproveController extends Zend_Controller_Action
 		$this->view->contactList = $contactList->fetchContactsByCustomer($customerDetail['customer_id']);
     	$this->view->quote = $quote_detail;
     	$this->view->arch = $sales->fetchallsales();
-    	$this->view->approval = $sales->getQuoteapproval();
+    	//$this->view->approval = $sales->getQuoteapproval();
     	$this->view->project = $project_detail;
     	$this->view->type = $quote->fetchquotetype();
     	//$this->view->items = $products->fetchallitemslive($quote_id); // legacy

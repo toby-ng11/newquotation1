@@ -285,7 +285,7 @@ class Customer extends DbTable\Customer
 
 		$db = $this->getAdapter();
 		$select = $db->select()
-			->from('view_contact_x_P21_Contact')
+			->from('P21_customers_x_address_x_contacts')
 			->where('customer_id = ?', $customer_id);
 		
 		return $db->fetchAll($select);
@@ -298,17 +298,18 @@ class Customer extends DbTable\Customer
 
 		$db = $this->getAdapter();
 		$select = $db->select()
-			->from('view_contact_x_P21_Contact')
-			->joinLeft('view_customer_x_P21_Customer', 'view_contact_x_P21_Contact.customer_id = view_customer_x_P21_Customer.customer_id', array(
-				'customer_name',
-				'salesrep_id',
-				'salesrep_full_name',
-				'company_id'
-			))
+			->from('P21_customers_x_address_x_contacts')
 			->where('company_id = ?', $company)
 			->where('contact_id = ?', $contact_id);
-			
-			return $db->fetchRow($select);
+		$contact = $db->fetchRow($select);
+		try {
+			$customer = $this->fetchCustomerById($contact['customer_id']);
+		} catch (Exception $e) {
+			error_log($e->getMessage());
+			return false;
+		}
+		//$customer = $this->fetchCustomerById($contact['customer_id']);
+		return $customer;
 	}
 
 	public function fetchContactByID($contact_id) {
@@ -317,37 +318,21 @@ class Customer extends DbTable\Customer
 		}
 
 		$db = $this->getAdapter();
-		$select = $db->select()->from('P21_Customer_X_Address_X_Contacts', array(
+		$select = $db->select()->from('P21_customers_x_address_x_contacts', array(
 			'contact_id',
-			'Contacts_Email',
+			'email_address',
 			'central_phone_number',
 			'first_name',
 			'last_name',
 			'phys_address1',
 			'phys_address2',
 			'phys_city',
-			'mail_state',
-			'mail_postal_code',
+			'phys_state',
+			'phys_postal_code',
 			'phys_country'
 		))
 			->where('contact_id = ?', $contact_id);
 
-		$select2 = $db->select()->from('contact', array(
-			'contact_id',
-			'Contacts_Email',
-			'central_phone_number',
-			'first_name',
-			'last_name',
-			'phys_address1',
-			'phys_address2',
-			'phys_city',
-			'mail_state',
-			'mail_postal_code',
-			'phys_country'
-		))
-			->where('contact_id = ?', $contact_id);
-		$result = $this->merge($db->fetchRow($select), $db->fetchRow($select2));
-
-		return $result;
+		return $db->fetchRow($select);
 	}
 }

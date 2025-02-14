@@ -7,6 +7,7 @@ use Centura\Model\{Customer, ProductProject, Project};
 use Zend_Registry;
 use Zend_Db_Select;
 use Zend_Json;
+use Zend_Db_Expr;
 
 use Exception;
 
@@ -33,28 +34,26 @@ class Quote extends DbTable\Quote
 		//add quote
 		$info['contact_id']                = $data['contact_id'];
 		$info['project_id']                 = $data['project_id'];
-		$info['quote_date']                 = date('Y-m-d H:i:s.v');
-		if ($data['expire_date'] == null) {
-			$data['expire_date'] = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 60, date("Y")));
-		} else {
-			$info['expire_date'] = DateTime::createFromFormat('Y-m-d', $data['expire_date'])->format('Y-m-d');
-		}
-		$info['quote_type_id']              = $data['quote_type_id'];
-		$info['quote_segment']              = $data['quote_segment'];
-		$info['sales_id']                   = $session->user['id'];
-		//		$info['quote_approval']             = $data['quote_approval'];
+		$info['quote_date']                 = new Zend_Db_Expr('GETDATE()');
+		$info['type_id']              = $data['type_id'];
+		$info['taker']                   = $session->user['id'];
 		$info['note']                       = $data['note'];
-		$info['status']                     = 1;
+		$info['status']                     = 5; // not submitted
 		$info['delete_flag']                = 'N';
+		if ($data['expire_date'] == null) {
+			$data['expire_date'] = new Zend_Db_Expr('DATEADD(month, 2, GETDATE())'); // add 2 months
+		} else {
+			$info['expire_date'] = $data['expire_date'];
+		}
 		if ($data['ship_required_date'] != null) {
-			$info['ship_required_date']         = DateTime::createFromFormat('Y-m-d', $data['ship_required_date'])->format('Y-m-d');
+			$info['ship_required_date']         = $data['ship_required_date'];
 		} else {
 			$info['ship_required_date'] = NULL;
 		}
 
-		if ($data['arch'] != null) {
-			$info['arch']                       = $data['arch'];
-		}
+		//if ($data['arch'] != null) {
+		//	$info['arch']                       = $data['arch'];
+		//}
 
 		try {
 
@@ -71,15 +70,15 @@ class Quote extends DbTable\Quote
 			$products = new ProductProject();
 			foreach ($itemList as $item) {
 				$products->add($item, $newQuoteID);
-				$item_id_list[] = $item["product_id"];
+				//$item_id_list[] = $item["item_id"];
 			}
 
 			$project = new Project();
-			$project->log($data['project_id'], 'Quote Add', $newQuoteID, implode(", ", $item_id_list), $data['note']);
+			//$project->log($data['project_id'], 'Quote Add', $newQuoteID, implode(", ", $item_id_list), $data['note']);
 
 			return $newQuoteID;
 		} catch (Exception $e) {
-			error_log(print_r($e));
+			error_log($e->getMessage());
 			return false;
 		}
 	}
@@ -134,7 +133,7 @@ class Quote extends DbTable\Quote
 			$project = new Project();
 			$project->log($data['project_id'], 'Quote Edit', $quote_id, null, $data['note']);
 		} catch (Exception $e) {
-			echo $e->getMessage();
+			error_log($e->getMessage());
 			return false;
 		}
 
@@ -154,7 +153,7 @@ class Quote extends DbTable\Quote
 		$db = $this->getAdapter();
 
 		$select = $db->select()
-			->from('quote')
+			->from('p2q_view_quote_x_project_x_oe')
 			->where('quote_id = ?', $quote_id);
 
 		return $db->fetchRow($select);
@@ -202,20 +201,21 @@ class Quote extends DbTable\Quote
 			return  false;
 		}
 		$quote = $this->fetchquotebyid($quote_id);
-		$project = new Project();
 
+		$project = new Project();
 		$project_info = $project->fetchbyid($quote['project_id']);
 		$total = $this->fetchTotalProjectQuotes($quote['project_id']);
 
-		$data['quote_no'] = $project_info['quote_no'] . '_' . sprintf('%05d', ($total + 1));
+		$data['quote_id_ext'] = $project_info['project_id_ext'] . '_' . sprintf('%05d', ($total + 1));
 		$data['job_name'] = substr($project_info['project_name'], 0, 40);
-		$data['po_number'] = substr($quote_id . ' - P2Q', 0, 40);
+		$data['po_no'] = substr('P2Q - ' . $quote_id, 0, 40);
 
 		$db = $this->getAdapter();
 
 		try {
 			$db->update('quote', $data, 'quote_id =' . $quote_id);
 		} catch (Exception $e) {
+			error_log($e->getMessage());
 			return false;
 		}
 	}
@@ -254,7 +254,10 @@ class Quote extends DbTable\Quote
 	public function fetchquotetype()
 	{
 		$db = $this->getAdapter();
-		$select = $db->select()->distinct()->from('quote_type')->where('DeleteFlag = ?', 'N')->order('type asc');
+		$select = $db->select()
+			->distinct()
+			->from('quote_type')
+			->where('delete_flag = ?', 'N');
 
 		return $db->fetchAll($select);
 	}
@@ -277,7 +280,7 @@ class Quote extends DbTable\Quote
 		return $db->fetchAll($select);
 	}
 
-	public function fetchrelated($owner, $status = 1)
+	public function fetchrelated($owner, $Json = false)
 	{
 		if ($owner == null) {
 			return  false;
@@ -288,7 +291,7 @@ class Quote extends DbTable\Quote
 			'quote_id_ext',
 			'project_id',
 			'project_name',
-			//'customer', #todo add contact and customer
+			'customer_name', #todo add contact and customer
 			'quote_date',
 			'expire_date',
 			'ship_required_date',
@@ -297,45 +300,18 @@ class Quote extends DbTable\Quote
 		);
 
 		$select = $db->select()
-			->from('p2q_view_quote_x_project', $selectedField)
+			->from('p2q_view_quote_x_project_x_oe', $selectedField)
 			//->where('sales_id = ?', $owner) //#TODO: add salesrep_id
 			->orWhere('owner_id = ?', $owner)
-			->orWhere('architect_id = ?', $owner)
+			->orWhere('architect_rep_id = ?', $owner)
 			->order('quote_id desc');
 
 		$result = $db->fetchAll($select);
-		return $result;
-	}
-
-	public function fetchrelatedJson($owner, $status = 1)
-	{
-		if ($owner == null) {
-			return  false;
+		if ($Json) {
+			return Zend_Json::encode($result);
+		} else {
+			return $result;
 		}
-		$db = $this->getAdapter();
-
-		$selectedField = array(
-			'quote_id',
-			'quote_id_ext',
-			'project_id',
-			'project_name',
-			//'customer', #todo add contact and customer
-			'quote_date',
-			'expire_date',
-			'ship_required_date',
-			'project_status',
-			'quote_status'
-		);
-
-		$select = $db->select()
-			->from('p2q_view_quote_x_project', $selectedField)
-			//->where('sales_id = ?', $owner) //#TODO: add salesrep_id
-			->orWhere('owner_id = ?', $owner)
-			->orWhere('architect_id = ?', $owner)
-			->order('quote_id desc');
-
-		$result = $db->fetchAll($select);
-		return Zend_Json::encode($result);
 	}
 
 	public function fetchtotal()
@@ -375,7 +351,7 @@ class Quote extends DbTable\Quote
 		$dbDetails = $this->getAdapter();
 
 		//DB table to use
-		$table = "p2q_view_quote_x_project";
+		$table = "p2q_view_quote_x_project_x_oe";
 
 		// Table's primary key
 		$primaryKey = 'quote_id';
@@ -437,10 +413,10 @@ class Quote extends DbTable\Quote
 	{
 		$db = $this->getAdapter();
 		$select = $db->select()
-			->from('p2q_view_quote_x_project')
+			->from('p2q_view_quote_x_project_x_oe')
 			->order('quote_id desc');
 
-		$select->where('quote_status = ?', $status); // not delete and waiting approve
+		$select->where('quote_status_id = ?', $status); // not delete and waiting approve
 
 		if ($is_admin == false) {
 			$select->where('centura_location_id = ?', $default_company);
@@ -492,8 +468,7 @@ class Quote extends DbTable\Quote
 		$db = $this->getAdapter();
 		$select = $db->select()
 			->from('lead_time')
-			->where('language_id = ?', $language_id)
-			->order('days asc');
+			->order('lead_time_desc asc');
 
 		return $db->fetchAll($select);
 	}
@@ -642,7 +617,7 @@ class Quote extends DbTable\Quote
 		$db = $this->getAdapter();
 
 		$select = $db->select()
-			->from('p2q_view_quote_x_project')
+			->from('p2q_view_quote_x_project_x_oe')
 			->where('project_id = ?', $project_id)
 			->order('quote_id desc');
 
@@ -659,7 +634,7 @@ class Quote extends DbTable\Quote
 		$db = $this->getAdapter();
 
 		$select = $db->select()
-			->from('view_quote_x_oe', 'order_no')
+			->from('p2q_view_quote_x_project_x_oe', 'order_no')
 			->where('quote_id = ?', $quote_id);
 	
 		$result = $db->fetchRow($select);

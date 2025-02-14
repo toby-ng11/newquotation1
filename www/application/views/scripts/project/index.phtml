@@ -125,6 +125,23 @@
                   <?php } ?>
                 </select>
               </div>
+
+              <div class="oneTwo required-field">
+                <label for="architect_rep_id">Architect Rep.</label>
+                <select id='architect_rep_id' name='architect_rep_id' class="validate[required]">
+									<?php if ($session->user['approve_id'] != null) { ?>
+										<?php foreach ($this->arch as $a) { ?>
+											<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $session->user['id']) echo 'selected'; ?>><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
+										<?php } ?>
+									<?php } else { ?>
+										<?php foreach ($this->arch as $a) { ?>
+											<?php if ($a['id'] == $quote['arch']) { ?>
+												<option value="<?= $a['id'] ?>" selected><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
+											<?php } ?>
+										<?php } ?>
+									<?php } ?>
+								</select>
+              </div>
             </div>
           </div>
 

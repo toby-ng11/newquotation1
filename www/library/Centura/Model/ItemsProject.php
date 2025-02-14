@@ -21,9 +21,7 @@ class ItemsProject extends DbTable\Products
 	    }
 	    
 	    $db = $this->getAdapter();
-	    $sort = 0;
 	    
-	  
 	    $i['project_id'] = $project_id;
 	    $i['item_id'] = $data['item_id'];
 	    $i['quantity'] = $data['qty'];
@@ -69,7 +67,7 @@ class ItemsProject extends DbTable\Products
 			$db->update('project_items', $i, 'item_uid = '.$item_uid);
 
 		} catch (Exception $e) {
-			error_log($e->getMessage(), 0);
+			error_log($e->getMessage());
 			return false;
 		}
 	
@@ -108,21 +106,7 @@ class ItemsProject extends DbTable\Products
 		return true;
 	}
 	
-	public function fetchallitems($project_id)
-	{
-		if($project_id == null)
-		{
-			return  false;
-		}
-		$db = $this->getAdapter();
-		
-		$select = $db->select()
-			->from('p2q_view_project_items')
-			->where('project_id =?',$project_id);
-		return $db->fetchAll($select);
-	}
-
-	public function fetchallitemsJson($project_id)
+	public function fetchallitems($project_id, $Json = false)
 	{
 		if($project_id == null)
 		{
@@ -134,7 +118,13 @@ class ItemsProject extends DbTable\Products
 			->from('p2q_view_project_items')
 			->where('location_id = ?',DEFAULT_COMPNAY_ID)
 			->where('project_id =?',$project_id);
-		return Zend_Json::encode($db->fetchAll($select));
+
+		if($Json)
+		{
+			return Zend_Json::encode($db->fetchAll($select));
+		} else {
+			return $db->fetchAll($select);
+		}
 	}
 }
 

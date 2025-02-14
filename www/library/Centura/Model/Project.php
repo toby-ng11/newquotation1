@@ -70,7 +70,7 @@ class Project extends DbTable\Project
 		if (empty($data['architect_id'])) // if specifier id is empty add new
 		{
 			$architect = new Specifier();
-			$info['architect_id'] = $architect->addspec($data['architect_name'], $data['architect_location'], $data['owner_id']);
+			$info['architect_id'] = $architect->addspec($data['architect_name'], $data['architect_location'], $data['owner_id'], $data['architect_rep_id']);
 		} else {
 			$info['architect_id'] = $data['architect_id'];
 		}
@@ -250,7 +250,7 @@ class Project extends DbTable\Project
 			array('db' => 'due_date',         	 'dt' => 'due_date'),
 			array('db' => 'specifier_name',   	 'dt' => 'specifier_name'),
 			array('db' => 'market_segment_desc', 'dt' => 'market_segment_desc'),
-			array('db' => 'status',           	 'dt' => 'status')
+			array('db' => 'status_desc',          'dt' => 'status_desc')
 		);
 
 		echo Zend_Json::encode(
@@ -265,7 +265,8 @@ class Project extends DbTable\Project
 		}
 
 		$db = $this->getAdapter();
-		$select = $db->select()->from('p2q_view_project')
+		$select = $db->select()
+			->from('p2q_view_project')
 			->where('project_id = ?', $project_id);
 		$result = $db->fetchRow($select);
 		return $result;

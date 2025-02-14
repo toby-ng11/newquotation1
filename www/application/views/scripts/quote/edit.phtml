@@ -1,20 +1,22 @@
 <?php
 $session =  Zend_Registry::get('session');
 $project = $this->project;
-$projectDueDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['due_date']);
+$projectDueDate = $project['due_date'];
 
 $quote = $this->quote;
 $quoteID = $quote['quote_id'];
-$quoteShipRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $quote['ship_required_date']);
-$quoteExpireDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $quote['expire_date']);
+$quoteShipRequiredDate = $quote['ship_required_date'];
+$quoteExpireDate = $quote['expire_date'];
+
+$architect_rep = $this->architect_rep;
 
 $contact = $this->contact;
 $customer = $this->customer;
 $contactList = $this->contactList;
 
-$approved = 10;
-$waitingApprove = 1;
-$disapproved = -1;
+$approved = 3;
+$waitingApprove = 2;
+$disapproved = 4;
 
 $oeID = $this->oe_id['order_no'] ?? "";
 
@@ -25,7 +27,8 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 	<main id="content" class="main-content">
 		<div class="main-page-content">
 			<header class="main-page-content-header">
-				<h1>This page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h1>
+				<h1>An error has occured :&#40;</h1>
+				<h2>Maybe this page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h2>
 			</header>
 		</div>
 	</main>
@@ -48,18 +51,18 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 							Add new quote</a>
 						<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
                     <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-						<a class="button quick-link" href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $quoteID . "?company=" . substr($quote['quote_no'], 0, 3) . "&name=Centura_Quote_" . $quoteID . '.pdf' ?>" title="Print this quote">
+						<a class="button quick-link" href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $quoteID . "?company=" . substr($quote['quote_id_ext'], 0, 3) . "&name=Centura_Quote_" . $quoteID . '.pdf' ?>" title="Print this quote">
 							<span class='icon icon-pdf'></span>
 							Print Quote</a>
 						<a class="button quick-link" target="_blank" href="/project/edit/id/<?= $project['project_id'] ?>" title="Go to project for this quote">
 							<span class='icon icon-external'></span>
 							Go to Project</a>
-						<?php if ($session->user['approve_id'] != null and $quote['status'] != 0 and $quote['approve_status'] != 0) { ?>
+						<?php if ($session->user['approve_id'] != null  and $quote['quote_status_id'] != 0) { ?>
 							<a class='button quick-link' target="_blank" href="/approve/index/id/<?= $quoteID ?>" title="Go to this quote approval">
 								<span class='icon icon-external'></span>
 								Go to Approval</a>
 							<?php }
-						switch ($quote['approve_status']) {
+						switch ($quote['quote_status_id']) {
 							case $approved: ?>
 								<a class="button quick-link" href="/mail/quote/id/<?= $quoteID ?>" title="mail">
 									<span class='icon icon-mail'></span>
@@ -76,14 +79,14 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 								<?php break;
 
 							default:
-								if ($quote['status'] != 0) { ?>
+								if ($quote['quote_status_id'] != 0) { ?>
 									<a href="/quote/ready/id/<?= $quoteID ?>" title="" class='button quick-link ready_quote'>
 										<span class='icon icon-approval'></span>
 										Submit Approval</a>
 							<?php }
 								break;
 						}
-						if ($quote['status'] != 0 and $quote['approve_status'] != $approved) { ?>
+						if ($quote['quote_status_id'] != $approved) { ?>
 							<a href="/quote/delete/id/<?= $quoteID ?>" title="" class='button quick-link delete_quote'>
 								<span class='icon icon-trash'></span>
 								Delete Quote</a>
@@ -99,11 +102,11 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 				<div class="widget-table dashboard">
 					<div class="project-information project-name">
 						<h2><?= $project['project_name'] ?? '' ?></h2>
-						<p><?= ($project['project_location_address'] == 'N/A') ? '' : $project['project_location_address'] ?></p>
+						<p><?= ($project['project_address'] == 'N/A') ? '' : $project['project_address'] ?></p>
 						</br>
-						<p>by <b><?= $project['owner'] ?? '' ?></b></p>
-						<?php if (($project['worksheet_assign']) != null) { ?>
-							<p>shared with <b><?= $project['worksheet_assign'] ?></b></p>
+						<p>by <b><?= $project['owner_id'] ?? '' ?></b></p>
+						<?php if (($project['shared_id']) != null) { ?>
+							<p>shared with <b><?= $project['shared_id'] ?></b></p>
 						<?php } ?>
 					</div>
 				</div>
@@ -136,8 +139,8 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 				</div>
 
 				<?php
-				if ($quote['status'] != 0 and strcmp($quote['delete_flag'], "N") == 0) {
-					switch ($quote['approve_status']) {
+				if ($quote['quote_status_id'] != 0 and strcmp($quote['delete_flag'], "N") == 0) {
+					switch ($quote['quote_status_id']) {
 						case $approved: ?>
 							<div class="widget-table dashboard quote-status status-approved">
 								<div class="project-information">
@@ -192,7 +195,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 							<h2>Quote details</h2>
 						</div>
 						<div class="widget-button">
-							<?php if ($quote['approve_status'] != $approved) { ?>
+							<?php if ($quote['quote_status_id'] != $approved) { ?>
 								<button type="button" class="button action has-icon new-customer small" id="add_new_mode">
 									<span class="button-wrap">
 										<span class="icon icon-add"></span>
@@ -215,8 +218,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 						<h3>Quote</h3>
 						<div class="formRow">
 							<input type="hidden" id='project_id' name='project_id' value="<?= $project['project_id'] ?>" />
-							<input type="hidden" id='lead_time' name='lead_time' value="<?= $quote['lead_time'] ?>" />
-							<input type="hidden" id='credit_term' name='credit_term' value="<?= $quote['term'] ?>" />
+							<input type="hidden" id='lead_time_id' name='lead_time_id' value="<?= $quote['lead_time_id'] ?>" />
 							<div class="oneTwo">
 								<label for='quote_id'>Quote ID</label>
 								<input id='quote_id' type="text" value='<?= $quoteID ?>' readonly />
@@ -226,20 +228,14 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 								<select name="quote_type_id" id='quote_type' class="validate[required]">
 									<option value="">Select Quote type</option>
 									<?php foreach ($this->type as $t) { ?>
-										<option value="<?= $t['uid'] ?>" <?php if ($t['uid'] == $quote['quote_type_id']) echo 'selected'; ?>><?= $t['type'] ?></option>
+										<option value="<?= $t['type_id'] ?>" <?php if ($t['type_id'] == $quote['type_id']) echo 'selected'; ?>><?= $t['type_desc'] ?></option>
 									<?php } ?>
 								</select>
 							</div>
 
-							<div class=" oneTwo required-field">
-								<label for='Segment'>Segment</label>
-
-								<select name="quote_segment" id='Segment' class="validate[required]">
-									<option value="">Choose Segment</option>
-									<?php foreach ($this->seg as $s) { ?>
-										<option value="<?= $s['uid'] ?>" <?php if ($s['uid'] == $quote['quote_segment']) echo 'selected' ?>><?= $s['Market_Segment'] ?></option>
-									<?php } ?>
-								</select>
+							<div class="oneTwo">
+								<label for='market_segment'>Project segment</label>
+								<input readonly id="market_segment" type="text" value='<?= $quote['market_segment_desc'] ?>' />
 							</div>
 
 							<div class="oneTwo">
@@ -253,21 +249,9 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 								<input id="expire_date" name="expire_date" type="text" class="datepicker" value='<?= $quoteExpireDate->format('Y-m-d') ?>' />
 							</div>
 
-							<div class="oneTwo required-field">
-								<label for='arch'>Architectural Representative</label>
-								<select id='arch' name='arch' class="validate[required]">
-									<?php if ($session->user['approve_id'] != null) { ?>
-										<?php foreach ($this->arch as $a) { ?>
-											<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $quote['arch']) echo 'selected'; ?>><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
-										<?php } ?>
-									<?php } else { ?>
-										<?php foreach ($this->arch as $a) { ?>
-											<?php if ($a['id'] == $quote['arch']) { ?>
-												<option value="<?= $a['id'] ?>" selected><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
-											<?php } ?>
-										<?php } ?>
-									<?php } ?>
-								</select>
+							<div class="oneTwo">
+								<label for='architect_rep_id'>Architectural Representative</label>
+								<input readonly id='architect_rep_id' name='architect_rep_id' type="text" value='<?= $architect_rep['name'] . ' - ' .  $architect_rep['default_company'] ?>' />
 							</div>
 						</div>
 					</div>
@@ -281,7 +265,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 							<input type="hidden" id="salesrep_id" name="salesrep_id" value="<?= $customer['salesrep_id'] ?? '' ?>" />
 							<div class="oneTwo required-field">
 								<label for="customer_name">Customer</label>
-								<input id='customer_name' name='customer_name' type="text" value="<?= $customer['name'] ?? '' ?>" />
+								<input id='customer_name' name='customer_name' type="text" value="<?= $customer['customer_name'] ?? '' ?>" />
 							</div>
 
 							<div class="oneTwo">
@@ -304,7 +288,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 							<input type="hidden" id="contact_id" name="contact_id" value="<?= $contact['contact_id'] ?? '' ?>" />
 							<div class="oneTwo required-field">
 								<label for="contact_name">Contact</label>
-								<select name='contact_name' id='contact_name' class="validate[required]">
+								<select id='contact_name' class="validate[required]">
 									<option value=''>-- Please search for a customer first --</option>
 									<?php
 									foreach ($contactList as $c) { ?>
@@ -340,13 +324,13 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 							</div>
 
 							<div class="oneTwo">
-								<label for="mail_state">Province</label>
-								<input readonly id='mail_state' name='mail_state' type="text" value="<?= $contact['mail_state'] ?? '' ?>">
+								<label for="phys_state">Province</label>
+								<input readonly id='phys_state' name='phys_state' type="text" value="<?= $contact['phys_state'] ?? '' ?>">
 							</div>
 
 							<div class="oneTwo">
-								<label for="mail_postal_code">Postal Code</label>
-								<input readonly id='mail_postal_code' name='mail_postal_code' type="text" value="<?= $contact['mail_postal_code'] ?? '' ?>">
+								<label for="phys_postal_code">Postal Code</label>
+								<input readonly id='phys_postal_code' name='phys_postal_code' type="text" value="<?= $contact['phys_postal_code'] ?? '' ?>">
 							</div>
 
 							<div class="oneTwo">
@@ -361,8 +345,8 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 
 
 							<div class="oneTwo required-field">
-								<label for="Contacts_Email">Email</label>
-								<input readonly type="text" value="<?= $contact['Contacts_Email'] ?? '' ?>" id='Contacts_Email' name='Contacts_Email'>
+								<label for="email_address">Email</label>
+								<input readonly type="text" value="<?= $contact['email_address'] ?? '' ?>" id='email_address' name='email_address'>
 							</div>
 
 						</div>
@@ -370,7 +354,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 
 					<div class="line"></div>
 
-					<?php if ($quote['approve_status'] == $approved) { ?>
+					<?php if ($quote['quote_status_id'] == $approved) { ?>
 						<div class="widget-section">
 							<h3>Approval</h3>
 							<div class="formRow">
@@ -378,7 +362,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 									<label for="quote_approval">Quote Approval</label>
 									<select id="quote_approval" name="quote_approval">
 										<?php foreach ($this->approval as $a) {
-											if ($a['uid'] == $quote['quote_approval']) { ?>
+											if ($a['uid'] == $quote['quote_status_id']) { ?>
 												<option value="<?= $a['uid'] ?>" selected><?= $a['Name'] . ' - ' . $a['Company_ID'] ?>
 												</option>
 										<?php }
@@ -389,7 +373,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 						</div>
 						<div class="line"></div>
 					<?php } else { ?>
-						<input type="hidden" id='quote_approval' name='quote_approval' value="<?= $quote['quote_approval'] ?>" />
+						<input type="hidden" id='quote_approval' name='quote_approval' value="<?= $quote['quote_status_id'] ?>" />
 					<?php } ?>
 
 					<div class="widget-section">
@@ -402,7 +386,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 						</div>
 					</div>
 
-					<?php if ($quote['approve_status'] != $approved) { ?>
+					<?php if ($quote['quote_status_id'] != $approved) { ?>
 
 						<div class="line"></div>
 
@@ -427,8 +411,8 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 							<h2>Items</h2>
 						</div>
 						<div class="widget-button">
-							<?php if ($quote['approve_status'] != $approved) { ?>
-								<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="opener">
+							<?php if ($quote['quote_status_id'] != $approved) { ?>
+								<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="add_item">
 									<span class="button-wrap">
 										<span class="icon icon-add"></span>
 										Add Item
@@ -459,7 +443,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 				</div>
 			</section>
 
-			<div id="dialog-message" title="Add Item">
+			<div id="dialog-item" title="Add Item">
 				<form action="" class="dialog" id='item'>
 					<div class="dialog-form">
 						<div class="oneTwo required-field">
@@ -513,13 +497,13 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 		},
 		processing: true,
 		columns: [{
-				data: "product_id",
+				data: "item_id",
 				render: function(data, type, row, meta) {
 					return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
 				}
 			},
 			{
-				data: "qty",
+				data: "quantity",
 				render: function(data) {
 					let qty = Number.parseFloat(data).toFixed(0);
 					return '<b>' + qty + '</b>';
@@ -551,16 +535,16 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 				}
 			},
 			{
-				data: "product_id",
+				data: "item_id",
 				render: function(data, type, row, meta) {
 					//var oldData = getolddata($(this).closest('tr'));
-					<?php if ($quote['approve_status'] != 10) { ?>
+					<?php if ($quote['quote_status_id'] != $approved) { ?>
 						return '<div class="row-button">' +
 							'<a title="Edit this item" class="edit" href="#">' +
 							'<span class="button-wrap">' +
 							'<span class="icon icon-edit"></span>' +
 							'</span></a>' +
-							'<a title="Delete this item" class="item_delete" href="/quote/deleteitem/id/' + row.quote_id + '/item/' + data + '/uom/' + row.uom + '/price/' + row.unit_price + '/qty/' + row.qty + '/sort/' + row.sort_id + '"' +
+							'<a title="Delete this item" class="item_delete" href="/quote/deleteitem/uid/' + row.item_uid + '"' +
 							'index="' + data + '">' +
 							'<span class="button-wrap">' +
 							'<span class="icon icon-delete"></span>' +
@@ -569,6 +553,10 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 						return null;
 					<?php } ?>
 				}
+			},
+			{
+				data: "item_uid",
+				visible: false
 			}
 		],
 		columnDefs: [{
@@ -582,9 +570,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 			topStart: null,
 			topEnd: null
 		},
-		order: {
-			data: "added"
-		},
+		order: [[7, 'desc']], // sort by item uid, newest item on top
 		paging: false,
 		scrollX: true,
 		fixedColumns: {
@@ -611,24 +597,24 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 		});
 
 		function getolddata(row) {
-			let item_id = currentRow['product_id'];
+			let item_uid = currentRow['item_uid'];
+			let item_id = currentRow['item_id'];
 			let note = currentRow['note'];
-			let qty = currentRow['qty'];
+			let qty = currentRow['quantity'];
 			let unit_price = currentRow['unit_price'];
 			let uom = currentRow['uom'];
-			let sort_id = currentRow['sort_id'];
-			let data = {
+			var data = {
+				'item_uid': item_uid,
 				'old_item_id': item_id,
 				'old_uom': uom,
 				'old_price': unit_price,
 				'old_qty': qty,
-				'old_note': note,
-				'sort_id': sort_id,
+				'old_note': note
 			};
 			return data;
 		}
 
-		$("#dialog-message").dialog({
+		$("#dialog-item").dialog({
 			autoOpen: false,
 			modal: true,
 			width: 800,
@@ -671,7 +657,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 			]
 		});
 
-		$('#opener').on("click", function() {
+		$('#add_item').on("click", function() {
 			resetForm($('#item'));
 			$("#dialog-item").dialog("open");
 			$('#is_edit').val(0);
@@ -679,7 +665,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 		});
 
 		$(document).on("click", "a.edit", function() {
-			$("#dialog-message").dialog("open");
+			$("#dialog-item").dialog("open");
 			current_edit_row = $(this).closest('tr');
 			set_edit(current_edit_row);
 			return false;
@@ -701,23 +687,17 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 		});
 
 		function set_edit(row) {
-			$("#dialog-message").dialog("option", "title", "Edit Item");
+			$("#dialog-item").dialog("option", "title", "Edit Item");
 			$('#is_edit').val(1);
 
-			let item_id = currentRow['product_id'];
-			let item_name = currentRow['item_desc']
-			let note = currentRow['note'];
-			let qty = currentRow['qty'];
-			let unit_price = currentRow['unit_price'];
-			let uom = currentRow['uom'];
+			let oldData = getolddata(current_edit_row);
 
-			$('#item #item_input').val(item_name);
-			$('#item #item_id').val(item_id);
-			$('#item #price').val(unit_price);
-			$('#item #qty').val(qty);
-			$('#item #note').val(note);
+			$('#item #item_id').val(oldData['old_item_id']);
+			$('#item #price').val(oldData['old_price']);
+			$('#item #qty').val(oldData['old_qty']);
+			$('#item #note').val(oldData['old_note']);
 
-			getoumedit(item_id, uom, unit_price);
+			getoumedit(oldData['old_item_id'], oldData['old_uom'], oldData['old_price']);
 		}
 
 		function getoumedit(item_id, unit_number, price) {
@@ -743,24 +723,10 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 
 		function edititem(item_id, item_desc, uom, price, qty, note) {
 			var olddata = getolddata(current_edit_row);
-			var data = {
-				'item_id': item_id,
-				'uom': uom,
-				'price': price,
-				'qty': qty,
-				'note': note,
-				'sort_id': olddata['sort_id'],
-				'old_item_id': olddata['old_item_id'],
-				'old_uom': olddata['old_uom'],
-				'old_price': olddata['old_price'],
-				'old_qty': olddata['old_qty'],
-				'old_note': olddata['old_note']
-			};
-			console.log(data);
 			$.ajax({
-				url: '/quote/edititem/id/' + $('#quote_id').val(),
+				url: '/quote/edititem/uid/' + olddata['item_uid'],
 				type: "post",
-				data: data,
+				data: $("#item").serialize(),
 				success: function(data) {
 					itemTable.ajax.reload();
 				}

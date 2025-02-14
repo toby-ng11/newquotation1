@@ -72,7 +72,7 @@ class ProjectController extends Zend_Controller_Action
 	public function itemAction() {
 		$project_id = $this->getRequest()->getParam('id');
 		$item = new ItemsProject();
-    	echo $item->fetchallitemsJson($project_id);
+    	echo $item->fetchallitems($project_id, true);
 		exit;
 	}
     
@@ -99,6 +99,7 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->seg = $project->fetchProjectSegment();
     	//$this->view->sepc = $quote->fetchsepc();
     	$sales = new User();
+        $this->view->arch = $sales->fetchallsales();
 
     	
     	$customer = new Customer();
@@ -283,7 +284,6 @@ class ProjectController extends Zend_Controller_Action
     		$data = $this->_request->getPost();
     		$item = new ItemsProject();
     		echo $item->edititem($data, $item_uid);
-    
     	}
     	else {
     		echo '0';

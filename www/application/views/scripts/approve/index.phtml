@@ -1,13 +1,13 @@
 <?php
 $session =  Zend_Registry::get('session');
 $project = $this->project;
-$projectDueDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $project['due_date']);
+$projectDueDate = $project['due_date'];
 
 $quote = $this->quote;
 $quoteID = $quote['quote_id'];
-$quoteDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $quote['quote_date']);
-$quoteShipRequiredDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $quote['ship_required_date']);
-$quoteExpireDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $quote['expire_date']);
+$quoteDate = $quote['quote_date'];
+$quoteShipRequiredDate = $quote['ship_required_date'];
+$quoteExpireDate = $quote['expire_date'];
 
 $contact = $this->contact;
 $customer = $this->customer;

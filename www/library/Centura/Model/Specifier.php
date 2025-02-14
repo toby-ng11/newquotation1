@@ -6,31 +6,46 @@ use Zend_Registry;
 use Zend_Json;
 use Exception;
 
-class Specifier extends DbTable\Specifier {
+class Specifier extends DbTable\Specifier
+{
 
-    public function addspec($name, $location, $owner_id) {
+	public function addspec($name, $location, $owner_id, $architect = NULL)
+	{
 		if ($name == null) {
 			return false;
 		}
 
 		$db = $this->getAdapter();
 
-		$info['specifier_name'] = $name;
-        $info['date_added']     = date('Y-m-d H:i:s');
-        $info['added_by']       = $owner_id;
-		$info['delete_flag']    = 'N';
-		$info['location_id']     = $location;
+		//check if specifier already exists
+		$select = $db->select()
+			->from('specifier')
+			->where('specifier_name = ?', $name)
+			->where('location_id = ?', $location)
+			->where('delete_flag = ?', 'N');
+		$specifier = $db->fetchRow($select);
 
-		try {
-			$db->insert('specifier', $info);
-		} catch (Exception $e) {
-			error_log(print_r($e));
-			return false;
+		if ($specifier) {
+			return $specifier['specifier_id'];
+		} else {
+			$info['specifier_name'] = $name;
+			$info['date_added']     = date('Y-m-d H:i:s');
+			$info['added_by']       = $owner_id;
+			$info['delete_flag']    = 'N';
+			$info['location_id']     = $location;
+			$info['architect_rep_id'] = $architect;
+
+			try {
+				$db->insert('specifier', $info);
+			} catch (Exception $e) {
+				error_log($e->getMessage());
+				return false;
+			}
+
+			$newSpecifierID = $db->lastInsertId('specifier', 'specifier_id');
+
+			return $newSpecifierID;
 		}
-
-		$newSpecifierID = $db->lastInsertId('specifier', 'specifier_id');
-
-		return $newSpecifierID; //return the new specifier id to add in project
 	}
 
 	public function fetchspecbyid($uid)
