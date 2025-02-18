@@ -34,7 +34,7 @@ class ApproveController extends Zend_Controller_Action
     	$customer = new Customer();
 		$contact = new Customer();
 		$contactList = new Customer();
-    	$sales = new User();
+    	$user = new User();
     	$project = new Project();
     	$quote = new Quote();
     	$products = new ProductProject();
@@ -49,20 +49,12 @@ class ApproveController extends Zend_Controller_Action
 		$this->view->customer = $customerDetail;
 		$this->view->contactList = $contactList->fetchContactsByCustomer($customerDetail['customer_id']);
     	$this->view->quote = $quote_detail;
-    	$this->view->arch = $sales->fetchallsales();
-    	//$this->view->approval = $sales->getQuoteapproval();
+		$this->view->architect_rep = $user->fetchsalebyid($quote_detail['architect_rep_id']);
     	$this->view->project = $project_detail;
     	$this->view->type = $quote->fetchquotetype();
-    	//$this->view->items = $products->fetchallitemslive($quote_id); // legacy
-    	
-    	$this->view->terms = $quote->fetchallterms();
-
-    	
-    	$this->view->userterm = $quote->fetchuserterm($quote_detail['customer_id']);
     	$this->view->leadtime = $quote->fetchleadtimes();
-    	
+		$this->view->approval = $user->fetchallsales();
 		$this->view->seg = $project->fetchProjectSegment();
-
 		$this->view->oe_id = $quote->fetchP21OrderNumber($quote_id);
 
 		if ($this->_request->isPost()) {

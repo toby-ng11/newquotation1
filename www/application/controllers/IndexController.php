@@ -38,7 +38,7 @@ class IndexController extends Zend_Controller_Action
 
 		$this->view->ownproject = $project->fetchbyowner($this->sale_id);
 		$this->view->assignedproject = $project->fetchbyassign($this->sale_id);
-		$this->view->ownquotes = $quote->fetchrelated($this->sale_id);
+		$this->view->ownquotes = $quote->fetchUserQuotes($this->sale_id);
 
 		$this->view->memo = $memo->fetchmemobyowner($this->sale_id, false);
 
@@ -80,9 +80,9 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		$this->view->waiting = $quote->fetchwaiting(1, $is_admin);
-		$this->view->approved = $quote->fetchwaiting(10, $is_admin);
-		$this->view->disapproved = $quote->fetchwaiting(-1, $is_admin);
+		$this->view->waiting = $quote->fetchQuoteApproval(2, $is_admin);
+		$this->view->approved = $quote->fetchQuoteApproval(3, $is_admin);
+		$this->view->disapproved = $quote->fetchQuoteApproval(4, $is_admin);
 	}
 
 	public function projectsalesrepAction() // ajax
@@ -109,7 +109,7 @@ class IndexController extends Zend_Controller_Action
 	public function quotesalesrepAction() // ajax
 	{
 		$quote = new Quote();
-		echo $quote->fetchrelated($this->sale_id, true);
+		echo $quote->fetchUserQuotes($this->sale_id, true);
 		exit;
 	}
 
@@ -142,7 +142,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaiting(2, $is_admin, true);
+		echo $quote->fetchQuoteApproval(2, $is_admin, true);
 		exit;
 	}
 
@@ -154,7 +154,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaiting(3, $is_admin, true);
+		echo $quote->fetchQuoteApproval(3, $is_admin, true);
 		exit;
 	}
 
@@ -166,7 +166,7 @@ class IndexController extends Zend_Controller_Action
 		} else {
 			$is_admin = false;
 		}
-		echo $quote->fetchwaiting(4, $is_admin, true);
+		echo $quote->fetchQuoteApproval(4, $is_admin, true);
 		exit;
 	}
 

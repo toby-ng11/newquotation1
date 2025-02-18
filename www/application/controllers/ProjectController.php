@@ -125,9 +125,6 @@ class ProjectController extends Zend_Controller_Action
     	$this->view->memo = $mono->fetchProjectNote($project_id);
     	//$this->view->memo_type = $mono->fetchalltypes();
     	
-    	$item = new ItemsProject();
-    	//$this->view->items = $item->fetchallitems($project_id);
-    	
     	if($this->session->user['id'] != $project_detail['shared_id'] and $this->session->user['id'] != $project_detail['owner_id'] && APPLICATION_ENV == 'production' && $this->session->user['sale_role'] != 'admin' && $this->session->user['approve_id'] == null)
     	{
     		$this->view->owner = 0;

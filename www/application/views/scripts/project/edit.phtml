@@ -836,9 +836,9 @@ $architect = $this->architect;
 					click: function() {
 						if ($("#item").validationEngine('validate') == true) {
 							if ($('#is_edit').val() == 1) {
-								edititem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val());
+								edititem();
 							} else {
-								additem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val());
+								additem();
 							}
 							$(this).dialog("close");
 							resetForm($('#item'));
@@ -979,7 +979,7 @@ $architect = $this->architect;
 
 		};
 
-		function additem(item_id, item_desc, uom, price, qty, note) {
+		function additem() {
 			$('.loading').show();
 			$.ajax({
 				url: '/project/additem/pro/' + $('#project_id').val(),
@@ -992,7 +992,7 @@ $architect = $this->architect;
 			});
 		};
 
-		function edititem(item_id, item_desc, uom, price, qty, note) {
+		function edititem() {
 			var olddata = getolddata(current_edit_row);
 			$.ajax({
 				url: '/project/edititem/uid/' + olddata['item_uid'],

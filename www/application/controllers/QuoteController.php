@@ -208,32 +208,21 @@ class QuoteController extends Zend_Controller_Action
 		if ($quote_id == null) {
 			return false;
 		}
+		$data = $this->_request->getPost();
 		$quote = new Quote();
-		if ($this->_request->isPost()) {
-			$data = $this->_request->getPost();
 
-			try {
-				$result = $quote->edit($data, $quote_id);
-			} catch (Exception $e) {
-				var_dump($e);
-				exit;
-			}
+		$quote->edit($data, $quote_id);
+		$info['status'] = 3; // approved
+		$info['approve_date'] = date('Y-m-d H:i:s'); //approve date
+		$info['lead_time_id'] = $data['lead_time_id'];
+		$info['price_approve_id'] = $data['price_approve_id'];
+
+		try {
+			$quote->update($info, 'quote_id = ' . $quote_id);
+		} catch (Exception $e) {
+			error_log($e->getMessage());
+			exit;
 		}
-		if (($data['quote_approval'] != null || $data['quote_approval'] < 0) && $this->session->user['approve_id'] != null) {
-			$approver_id  = $data['quote_approval'];
-			$data = null;
-			//$data['quote_approval'] = $approver_id;
-			$data['status'] = 3; // approved
-			$data['approve_date'] = date('Y-m-d H:i:s'); //approve date
-		} else {
-			$data = null;
-			if ($this->session->user['approve_id'] != null) {
-				//$data['quote_approval'] = $this->session->user['approve_id']; // approved user
-				$data['status'] = 3; // approved
-				$data['approve_date'] = date('Y-m-d H:i:s'); //approve date
-			}
-		}
-		$quote->update($data, 'quote_id = ' . $quote_id);
 
 		exit;
 	}

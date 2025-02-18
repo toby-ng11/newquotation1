@@ -486,9 +486,9 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 					click: function() {
 						if ($("#item").validationEngine('validate') == true) {
 							if ($('#is_edit').val() == 1) {
-								edititem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val());
+								edititem();
 							} else {
-								additem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val());
+								additem();
 							}
 							$(this).dialog("close");
 							resetForm($('#item'));
@@ -569,7 +569,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 
 		}
 
-		function edititem(item_id, item_desc, uom, price, qty, note) {
+		function edititem() {
 			var olddata = getolddata(current_edit_row);
 			$.ajax({
 				url: '/project/edititem/uid/' + olddata['item_uid'],
@@ -631,7 +631,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 			});
 		}
 
-		function additem(item_id, item_desc, uom, price, qty) {
+		function additem() {
 			$.ajax({
 				url: '/project/additem/pro/' + $('#project_id').val(),
 				type: "post",

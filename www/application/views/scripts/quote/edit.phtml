@@ -18,7 +18,7 @@ $approved = 3;
 $waitingApprove = 2;
 $disapproved = 4;
 
-$oeID = $this->oe_id['order_no'] ?? "";
+$oeID = $this->oe_id['order_no'];
 
 $maintainenceMode = 0;
 
@@ -101,10 +101,10 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 			<div class="widget-information">
 				<div class="widget-table dashboard">
 					<div class="project-information project-name">
-						<h2><?= $project['project_name'] ?? '' ?></h2>
-						<p><?= ($project['project_address'] == 'N/A') ? '' : $project['project_address'] ?></p>
+						<h2><?= $project['project_name'] ?></h2>
+						<p><?= $project['project_address'] ?></p>
 						</br>
-						<p>by <b><?= $project['owner_id'] ?? '' ?></b></p>
+						<p>by <b><?= $project['owner_id'] ?></b></p>
 						<?php if (($project['shared_id']) != null) { ?>
 							<p>shared with <b><?= $project['shared_id'] ?></b></p>
 						<?php } ?>
@@ -125,7 +125,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 				<div class="widget-table dashboard">
 					<div class="project-information">
 						<p>Project status</p>
-						<h2><?= $project['status_name'] ?? '' ?></h2>
+						<h2><?= $project['status_desc'] ?></h2>
 					</div>
 				</div>
 
@@ -235,7 +235,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 
 							<div class="oneTwo">
 								<label for='market_segment'>Project segment</label>
-								<input readonly id="market_segment" type="text" value='<?= $quote['market_segment_desc'] ?>' />
+								<input readonly id="market_segment" type="text" value='<?= $project['market_segment_desc'] ?>' />
 							</div>
 
 							<div class="oneTwo">
@@ -261,21 +261,26 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 					<div class="widget-section">
 						<h3>Customer</h3>
 						<div class="formRow">
-							<input type="hidden" id="customer_id" name="customer_id" value="<?= $customer['customer_id'] ?? '' ?>" />
-							<input type="hidden" id="salesrep_id" name="salesrep_id" value="<?= $customer['salesrep_id'] ?? '' ?>" />
+							<input type="hidden" id="customer_id" name="customer_id" value="<?= $customer['customer_id']  ?>" />
+							<input type="hidden" id="salesrep_id" name="salesrep_id" value="<?= $customer['salesrep_id'] ?>" />
 							<div class="oneTwo required-field">
 								<label for="customer_name">Customer</label>
-								<input id='customer_name' name='customer_name' type="text" value="<?= $customer['customer_name'] ?? '' ?>" />
+								<input id='customer_name' name='customer_name' type="text" value="<?= $customer['customer_name'] ?>" />
 							</div>
 
 							<div class="oneTwo">
 								<label for="company_id">Company ID</label>
-								<input type="text" name='company_id' id='company_id' value="<?= $customer['company_id'] ?? '' ?>" readonly />
+								<input type="text" name='company_id' id='company_id' value="<?= $customer['company_id'] ?>" readonly />
 							</div>
 
 							<div class="oneTwo">
 								<label for='salesrep_full_name'>Sales Representative</label>
-								<input id='salesrep_full_name' name='salesrep_full_name' type="text" value="<?= $customer['salesrep_full_name'] ?? '' ?>" readonly />
+								<input id='salesrep_full_name' name='salesrep_full_name' type="text" value="<?= $customer['salesrep_full_name'] ?>" readonly />
+							</div>
+
+							<div class="oneTwo">
+								<label for="credit_term">Credit Terms</label>
+								<input id="credit_term" type="text" value="<?= $customer['terms_desc'] ?>" readonly />
 							</div>
 						</div>
 					</div>
@@ -285,7 +290,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 					<div class="widget-section">
 						<h3>Contact</h3>
 						<div class="formRow">
-							<input type="hidden" id="contact_id" name="contact_id" value="<?= $contact['contact_id'] ?? '' ?>" />
+							<input type="hidden" id="contact_id" name="contact_id" value="<?= $contact['contact_id'] ?>" />
 							<div class="oneTwo required-field">
 								<label for="contact_name">Contact</label>
 								<select id='contact_name' class="validate[required]">
@@ -300,53 +305,53 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 
 							<div class="oneTwo">
 								<label for="first_name">First Name</label>
-								<input readonly id='first_name' name='first_name' type="text" value="<?= $contact['first_name'] ?? '' ?>">
+								<input readonly id='first_name' name='first_name' type="text" value="<?= $contact['first_name'] ?>">
 							</div>
 
 							<div class="oneTwo">
 								<label for="last_name">Last Name</label>
-								<input readonly id='last_name' name='last_name' type="text" value="<?= $contact['last_name'] ?? '' ?>">
+								<input readonly id='last_name' name='last_name' type="text" value="<?= $contact['last_name'] ?>">
 							</div>
 
 							<div class="oneTwo">
 								<label for="phys_address1">Address 1</label>
-								<input readonly id='phys_address1' name='phys_address1' type="text" value="<?= $contact['phys_address1'] ?? '' ?>" />
+								<input readonly id='phys_address1' name='phys_address1' type="text" value="<?= $contact['phys_address1'] ?>" />
 							</div>
 
 							<div class="oneTwo">
 								<label for="phys_address2">Address 2</label>
-								<input readonly id='phys_address2' name='phys_address2' type="text" value="<?= $contact['phys_address2'] ?? '' ?>">
+								<input readonly id='phys_address2' name='phys_address2' type="text" value="<?= $contact['phys_address2']  ?>">
 							</div>
 
 							<div class="oneTwo">
 								<label for="phys_city">City</label>
-								<input readonly id='phys_city' name='phys_city' type="text" value="<?= $contact['phys_city'] ?? '' ?>">
+								<input readonly id='phys_city' name='phys_city' type="text" value="<?= $contact['phys_city'] ?>">
 							</div>
 
 							<div class="oneTwo">
 								<label for="phys_state">Province</label>
-								<input readonly id='phys_state' name='phys_state' type="text" value="<?= $contact['phys_state'] ?? '' ?>">
+								<input readonly id='phys_state' name='phys_state' type="text" value="<?= $contact['phys_state'] ?>">
 							</div>
 
 							<div class="oneTwo">
 								<label for="phys_postal_code">Postal Code</label>
-								<input readonly id='phys_postal_code' name='phys_postal_code' type="text" value="<?= $contact['phys_postal_code'] ?? '' ?>">
+								<input readonly id='phys_postal_code' name='phys_postal_code' type="text" value="<?= $contact['phys_postal_code'] ?>">
 							</div>
 
 							<div class="oneTwo">
 								<label for="phys_country">Country</label>
-								<input readonly id='phys_country' name='phys_country' type="text" value="<?= $contact['phys_country'] ?? '' ?>">
+								<input readonly id='phys_country' name='phys_country' type="text" value="<?= $contact['phys_country'] ?>">
 							</div>
 
 							<div class="oneTwo">
 								<label for="central_phone_number">Phone Number</label>
-								<input readonly id='central_phone_number' name='central_phone_number' type="text" class="maskPhoneExt" value="<?= $contact['central_phone_number'] ?? '' ?>" />
+								<input readonly id='central_phone_number' name='central_phone_number' type="text" class="maskPhoneExt" value="<?= $contact['central_phone_number'] ?>" />
 							</div>
 
 
 							<div class="oneTwo required-field">
 								<label for="email_address">Email</label>
-								<input readonly type="text" value="<?= $contact['email_address'] ?? '' ?>" id='email_address' name='email_address'>
+								<input readonly type="text" value="<?= $contact['email_address'] ?>" id='email_address' name='email_address'>
 							</div>
 
 						</div>
@@ -359,8 +364,8 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 							<h3>Approval</h3>
 							<div class="formRow">
 								<div class="oneTwo">
-									<label for="quote_approval">Quote Approval</label>
-									<select id="quote_approval" name="quote_approval">
+									<label for="price_approve_id">Quote Approval</label>
+									<select id="price_approve_id" name="price_approve_id">
 										<?php foreach ($this->approval as $a) {
 											if ($a['uid'] == $quote['quote_status_id']) { ?>
 												<option value="<?= $a['uid'] ?>" selected><?= $a['Name'] . ' - ' . $a['Company_ID'] ?>
@@ -373,7 +378,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 						</div>
 						<div class="line"></div>
 					<?php } else { ?>
-						<input type="hidden" id='quote_approval' name='quote_approval' value="<?= $quote['quote_status_id'] ?>" />
+						<input type="hidden" id='price_approve_id' name='price_approve_id' value="<?= $quote['quote_status_id'] ?>" />
 					<?php } ?>
 
 					<div class="widget-section">
@@ -638,9 +643,9 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 					click: function() {
 						if ($("#item").validationEngine('validate') == true) {
 							if ($('#is_edit').val() == 1) {
-								edititem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val());
+								edititem();
 							} else {
-								additem($('#item_id').val(), $('#item_input').val(), $('#uom').val(), $('#price').val(), $('#qty').val(), $('#note').val());
+								additem();
 							}
 							$(this).dialog("close");
 							resetForm($('#item'));
@@ -721,7 +726,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 
 		}
 
-		function edititem(item_id, item_desc, uom, price, qty, note) {
+		function edititem() {
 			var olddata = getolddata(current_edit_row);
 			$.ajax({
 				url: '/quote/edititem/uid/' + olddata['item_uid'],
@@ -733,7 +738,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 			});
 		}
 
-		function additem(item_id, item_desc, uom, price, qty, note) {
+		function additem() {
 			$('.loading').show();
 			$.ajax({
 				url: '/quote/additem/id/' + $('#quote_id').val(),
@@ -815,6 +820,7 @@ if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
 						$('#company_id').val(result.company_id);
 						$('#salesrep_id').val(result.salesrep_id);
 						$('#salesrep_full_name').val(result.salesrep_full_name);
+						$('#credit_term').val(result.terms_desc);
 					} else {
 						alert('Can\'t find customer');
 						$('#customer_info input').val('');

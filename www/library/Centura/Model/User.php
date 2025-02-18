@@ -16,6 +16,8 @@ class User extends DbTable\User
 		$select = $db->select()
 			->from("P21_Users", array(
 				'id',
+				'first_name',
+				'last_name',
 				'name',
 				'company' => 'default_company',
 				'default_branch',
@@ -83,29 +85,17 @@ class User extends DbTable\User
 		}
 	}
 
-	public function fetchallusers($company = DEFAULT_COMPNAY_ID)
-	{
-		$db = $this->getAdapter();
-		$select = $db->select()
-			->from("P21_Users", array('id', 'name', 'default_company', 'role_uid', 'email' => 'email_address'))
-			->where('P21_Users.delete_flag = ?', 'N')
-			->join('P21_Roles', 'P21_Roles.role_uid = P21_Users.role_uid', array('role'))
-			->join('P21_Location_x_Branch', 'P21_Location_x_Branch.company_id = P21_Users.default_company', 'location_id');
-		if ($company != null) {
-			$select->where('P21_Location_x_Branch.location_id = ?', $company);
-		}
-		return $db->fetchAll($select);
-	}
 
-	public function fetchallsales($company = DEFAULT_COMPNAY_ID)
+	public function fetchallsales($company = DEFAULT_COMPNAY)
 	{
 		$db = $this->getAdapter();
 		$select = $db->select()
 			->distinct()
 			->from("P21_Users", array('id', 'name', 'default_company'))
-			->where('role LIKE ? ', '%Sales%')
-			->orWhere('role LIKE ?', '%Operation Manager%')
-			->orWhere('role LIKE ?', '%Accounts Receivable%');
+			->where('default_company = ?', $company)
+			->where("role LIKE '%Sales%' OR role LIKE '%Manager%' OR role LIKE '%Accounts Receivable%'")
+			;
+			
 
 		//if ($company != null) {
 		//	$select->where('P21_Location_x_Branch.location_id = ?', $company);

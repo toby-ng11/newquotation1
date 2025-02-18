@@ -110,36 +110,28 @@ class Quote extends DbTable\Quote
 		} else {
 			$info['expire_date']                = DateTime::createFromFormat('Y-m-d', $data['expire_date'])->format('Y-m-d');
 		}
-		$info['quote_type_id']              = $data['quote_type_id'];
-		$info['quote_segment']              = $data['quote_segment'];
+		$info['type_id']              = $data['type_id'];
+		//$info['quote_segment']              = $data['quote_segment'];
 		//$info['sales_id']                   = $session->user['id'];
-		$info['quote_approval']             = $data['quote_approval'];
+		//$info['quote_approval']             = $data['quote_approval'];
 		$info['note']                       = $data['note'];
 		//$info['status']                     = 1;
-		$info['term']                       = $data['credit_term'];
-		$info['lead_time']                  = $data['lead_time'];
+		//$info['term']                       = $data['credit_term'];
+		
 		if ($data['ship_required_date'] != null) {
 			$info['ship_required_date']         = DateTime::createFromFormat('Y-m-d', $data['ship_required_date'])->format('Y-m-d');
 		} else {
 			$info['ship_required_date'] = NULL;
 		}
 
-		if ($data['arch'] != null) {
-			$info['arch']                       = $data['arch'];
-		}
-
 		try {
 			$db->update('quote', $info, 'quote_id =' . $quote_id);
-			$project = new Project();
-			$project->log($data['project_id'], 'Quote Edit', $quote_id, null, $data['note']);
+			//$project = new Project();
+			//$project->log($data['project_id'], 'Quote Edit', $quote_id, null, $data['note']);
 		} catch (Exception $e) {
 			error_log($e->getMessage());
 			return false;
 		}
-
-		//edit products //legacy
-		//$products = new ProductProject();
-		//$products->edit($data['item'], $quote_id);
 
 		return $quote_id;
 	}
@@ -280,7 +272,7 @@ class Quote extends DbTable\Quote
 		return $db->fetchAll($select);
 	}
 
-	public function fetchrelated($owner, $Json = false)
+	public function fetchUserQuotes($owner, $Json = false)
 	{
 		if ($owner == null) {
 			return  false;
@@ -312,20 +304,6 @@ class Quote extends DbTable\Quote
 		} else {
 			return $result;
 		}
-	}
-
-	public function fetchtotal()
-	{
-		$db = $this->getAdapter();
-		$select = $db->select()
-			->from('quote')
-			->order('quote_id desc')
-			->join('project', 'project.project_id = quote.project_id', 'project_name')
-			->join('quote_status', 'quote_status.uid=project.status', array('status_name' => 'Status'))
-			->where('quote.status =?', 1)
-			->where('project.delete_flag =?', 'N');
-
-		return $db->fetchAll($select);
 	}
 
 	public function fetchQuoteJson()
@@ -372,51 +350,14 @@ class Quote extends DbTable\Quote
 		);
 	}
 
-	public function fetchlogbyid($quote_id)
-	{
-		if ($quote_id == null) {
-			return false;
-		}
-		$db = $this->getAdapter();
-
-		$select = $db->select()
-			->from('project_log')
-			->join('project', 'project.project_id = project_log.project_id', array(
-				'address' => 'project_location_address',
-				'project_name'
-			))
-			->where('project_log.quote_id = ?', $quote_id)->order('added desc');
-
-		return $db->fetchAll($select);
-	}
-	public function fetchlogbyowner($owner)
-	{
-		if ($owner == null) {
-			return false;
-		}
-		$db = $this->getAdapter();
-
-		$select = $db->select()
-			->from('project_log')
-			->join('project', 'project.project_id = project_log.project_id', array(
-				'address' => 'project_location_address',
-				'project_name'
-			))
-			->join('quote', 'quote.project_id = project.project_id')
-			->where('quote.sales_id = ?', $owner)
-			->order('project_log.added desc');
-
-		return $db->fetchAll($select);
-	}
-
-	public function fetchwaiting($status = 1, $is_admin = false, $Json = false, $default_company = DEFAULT_COMPNAY)
+	public function fetchQuoteApproval($status = 1, $is_admin = false, $Json = false, $default_company = DEFAULT_COMPNAY)
 	{
 		$db = $this->getAdapter();
 		$select = $db->select()
 			->from('p2q_view_quote_x_project_x_oe')
 			->order('quote_id desc');
 
-		$select->where('quote_status_id = ?', $status); // not delete and waiting approve
+		$select->where('quote_status_id = ?', $status);
 
 		if ($is_admin == false) {
 			$select->where('centura_location_id = ?', $default_company);
@@ -462,49 +403,15 @@ class Quote extends DbTable\Quote
 		);
 	}
 
-
-	public function fetchleadtimes($language_id = 0)
+	public function fetchleadtimes()
 	{
 		$db = $this->getAdapter();
 		$select = $db->select()
 			->from('lead_time')
+			->where('delete_flag = ?', 'N')
 			->order('lead_time_desc asc');
 
 		return $db->fetchAll($select);
-	}
-
-	public function fetchuserterm($customer_id)
-	{
-		if ($customer_id == null || $customer_id > 90000) // not user defined 
-		{
-			return null;
-		}
-
-		$db = $this->getAdapter();
-		$select = $db->select()
-			->from('P21_Customer', null)
-			->join('P21_Terms', 'P21_Terms.terms_id = P21_Customer.terms_id', 'terms_desc');
-
-		$result =  $db->fetchRow($select);
-
-		if ($result['terms_desc'] != 'Net 30' && $result['terms_desc'] != 'COD') {
-			$result['terms_desc'] = 'Net 30';
-		}
-
-		return $result['terms_desc'];
-	}
-
-	public function fetchallterms()
-	{
-		//$array[0] = array('terms_desc'=>'COD 30');
-		//$array[1] = array('terms_desc'=>'COD');
-		$db = $this->getAdapter();
-		$select = $db->select()
-			->from('P21_Terms', 'terms_desc')
-			->order('terms_desc asc')
-			->where("P21_Terms.terms_desc IN ('COD','Net 30')");
-
-		return $db->fetchAll($select);;
 	}
 
 	public function fetcsv($company = null, $day = 1)
