@@ -2,13 +2,12 @@
 
 declare(strict_types = 1);
 
-use Zend\Mvc\Application;
-
 chdir(dirname(__DIR__));
 
-//include 'C:/inetpub/wwwroot/newquotation/vendor/autoload.php';
+use Zend\Loader\StandardAutoloader;
+use Zend\Mvc\Application;
 
-//define('ZF2_PATH', __DIR__.'/../vendor/zendframework');
+require 'vendor/autoload.php';
 
 error_reporting(E_ALL);
 //ini_set('display_errors', '1');
@@ -37,6 +36,15 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
+define('ZF2_PATH', realpath(__DIR__ . '/../vendor/zendframework'));
+require_once ZF2_PATH . '/zend-loader/src/StandardAutoloader.php';
+$loader = new StandardAutoloader(array(
+    'autoregister_zf' => true
+));
+$loader->register();
+
+Application::init(require 'config/application.config.php')->run();
+
 /** Zend_Application */
 require_once 'Zend/Application.php';
 
@@ -48,3 +56,4 @@ $application = new Zend_Application(
 
 $application->bootstrap()
             ->run();
+

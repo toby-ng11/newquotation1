@@ -1,9 +1,26 @@
 {
+    "name": "zendframework/zendframework1",
+    "autoload": {
+        "psr-4": {
+            "Zendframework\\Zendframework1\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "tnguyen-tech",
+            "email": "tnguyen@centura.ca"
+        }
+    ],
+    "require-dev": {
+        "laminas/laminas-migration": "^1.5"
+    },
     "require": {
+        "laminas/laminas-dependency-plugin": "^2.1",
         "zendframework/zendframework": "^2.5"
     },
-
-    "autoload": {
-        "psr-0": {"StandardAutoloader\\":"zend-loader/src"}
+    "config": {
+        "allow-plugins": {
+            "laminas/laminas-dependency-plugin": true
+        }
     }
 }
