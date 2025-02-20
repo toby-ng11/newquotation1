@@ -11,6 +11,22 @@
  * file.
  */
 
-return array(
-    // ...
-);
+return [
+    'phpSettings' => [
+        'display_startup_errors' => 0,
+        'display_errors' => 0,
+        'date.timezone' => 'America/New_York'
+    ],
+    'db' => [
+        'driver' => 'Pdo_Sqlsrv',
+        'dsn' => 'sqlsrv:Server=tor-cloud-sql;Database=QUOTATION',
+        'username' => '',
+        'password' => '',
+        'driver_options' => [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::SQLSRV_ATTR_ENCODING => PDO::SQLSRV_ENCODING_UTF8,
+            PDO::SQLSRV_ATTR_FETCHES_DATETIME_TYPE => true,
+        ],
+    ],
+    'site_url' => 'devquotation.centura.local',
+];
