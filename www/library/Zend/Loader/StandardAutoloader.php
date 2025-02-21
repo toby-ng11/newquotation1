@@ -7,7 +7,7 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace Zend\Loader;
+namespace Laminas\Loader;
 
 // Grab SplAutoloader interface
 require_once __DIR__ . '/SplAutoloader.php';
@@ -89,7 +89,7 @@ class StandardAutoloader implements SplAutoloader
                 case self::AUTOREGISTER_ZF:
                     if ($pairs) {
                         $this->registerNamespace('Zend', dirname(__DIR__));
-                        $this->registerNamespace('ZendXml', dirname(dirname((__DIR__))) . DIRECTORY_SEPARATOR .  'ZendXml');
+                        $this->registerNamespace('Laminas\Xml', dirname(dirname((__DIR__))) . DIRECTORY_SEPARATOR .  'Laminas\Xml');
                     }
                     break;
                 case self::LOAD_NS:

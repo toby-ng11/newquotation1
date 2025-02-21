@@ -1,11 +1,13 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 chdir(dirname(__DIR__));
+error_reporting(E_ALL);
 
-use Zend\Loader\StandardAutoloader;
-use Zend\Mvc\Application;
+/*
+use Laminas\Loader\StandardAutoloader;
+use Laminas\Mvc\Application;
 
 require 'vendor/autoload.php';
 
@@ -20,7 +22,7 @@ if (! class_exists(Application::class)) {
         . "- Type `composer install` if you are developing locally.\n"
         . "- Type `docker-compose run laminas composer install` if you are using Docker.\n"
     );
-}*/
+}
 
 
 // Define path to application directory
@@ -37,8 +39,8 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
-define('ZF2_PATH', realpath(__DIR__ . '/../vendor/zendframework'));
-require_once ZF2_PATH . '/zend-loader/src/StandardAutoloader.php';
+define('ZF2_PATH', realpath(__DIR__ . '/../vendor/laminas'));
+require_once ZF2_PATH . '/laminas-loader/src/StandardAutoloader.php';
 $loader = new StandardAutoloader(array(
     'autoregister_zf' => true
 ));
@@ -46,7 +48,7 @@ $loader->register();
 
 Application::init(require 'config/application.config.php')->run();
 
-/** Zend_Application */
+// Zend_Application 
 require_once 'Zend/Application.php';
 
 // Create application, bootstrap, and run
@@ -56,5 +58,39 @@ $application = new Zend_Application(
 );
 
 $application->bootstrap()
-            ->run();
+    ->run();
+*/
 
+use Laminas\Mvc\Application;
+
+/**
+ * This makes our life easier when dealing with paths. Everything is relative
+ * to the application root now.
+ */
+chdir(dirname(__DIR__));
+
+// Decline static file requests back to the PHP built-in webserver
+if (php_sapi_name() === 'cli-server') {
+    $path = realpath(__DIR__ . parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH));
+    if (is_string($path) && __FILE__ !== $path && is_file($path)) {
+        return false;
+    }
+    unset($path);
+}
+
+// Composer autoloading
+include __DIR__ . '/../vendor/autoload.php';
+
+if (! class_exists(Application::class)) {
+    throw new RuntimeException(
+        "Unable to load application.\n"
+        . "- Type `composer install` if you are developing locally.\n"
+        . "- Type `docker-compose run laminas composer install` if you are using Docker.\n"
+    );
+}
+
+$container = require __DIR__ . '/../config/container.php';
+// Run the application!
+/** @var Application $app */
+$app = $container->get('Application');
+$app->run();

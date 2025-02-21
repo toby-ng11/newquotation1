@@ -1,0 +1,14 @@
+{
+    "require": {
+        "laminas/laminas-component-installer": "^3.5",
+        "laminas/laminas-mvc": "^3.8",
+        "laminas/laminas-mvc-i18n": "^1.9",
+        "laminas/laminas-db": "^2.20",
+        "laminas/laminas-mvc-form": "^2.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "laminas/laminas-component-installer": true
+        }
+    }
+}
