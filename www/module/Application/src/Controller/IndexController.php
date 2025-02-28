@@ -33,7 +33,7 @@ class IndexController extends AbstractActionController
     public function adminAction()
     {
         $user = $this->userService->getCurrentUser();
-
+        
         return new ViewModel([
             'user' => $user
         ]);
