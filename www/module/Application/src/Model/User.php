@@ -2,32 +2,42 @@
 
 namespace Application\Model;
 
-use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\TableGateway\TableGatewayInterface;
+use Laminas\Db\Sql\Sql;
 
 class User
 {
-    public $id;
-    public $first_name;
-    public $last_name;
-    public $name;
-    public $default_company;
-    public $default_location_id;
-    public $default_branch;
-    public $branch_description;
-    public $role_uid;
-    public $email_address;
-    public $role;
+    protected $P21_Users;
+    protected $adapter;
 
-    protected $tableGateway;
-
-    public function __construct(TableGateway $tableGateway)
-    {
-        $this->tableGateway = $tableGateway;
+    public function __construct(
+        Adapter $adapter, // can you either one, i just use Adapter for debugging and clearer query
+        TableGatewayInterface $P21_Users
+    ) {
+        $this->adapter = $adapter;
+        $this->P21_Users = $P21_Users;
     }
 
     public function fetchsalebyid($username)
     {
-        $rowset = $this->tableGateway->select(['id' => $username]);
-        return $rowset->current();
+        return $this->P21_Users->select(['id' => $username])->current();
+    }
+
+    public function fetchUserIdByPattern($pattern, $limit = 10)
+    {
+        $sql = new Sql($this->adapter, 'P21_Users');
+        $select = $sql->select()
+            ->columns(['id', 'name'])
+            ->where(function($where) use ($pattern) {
+                $where->like('id', $pattern . '%')
+                      ->or
+                      ->like('name', $pattern . '%');
+            })
+            ->limit($limit);
+
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result;
     }
 }

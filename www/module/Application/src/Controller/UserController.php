@@ -4,14 +4,19 @@ namespace Application\Controller;
 
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
+
+use Application\Model\User;
 
 class UserController extends AbstractActionController
 {
     private $dbAdapter;
+    protected $user;
 
-    public function __construct(AdapterInterface $dbAdapter)
+    public function __construct(AdapterInterface $dbAdapter, User $user)
     {
         $this->dbAdapter = $dbAdapter;
+        $this->user = $user;
     }
 
     public function indexAction()
@@ -26,5 +31,17 @@ class UserController extends AbstractActionController
         }
 
         return [];
+    }
+
+    public function fetchbypatternAction() {
+        $pattern = $this->params()->fromQuery('pattern', '');
+        $limit = (int) $this->params()->fromQuery('limit', 10);
+
+        if (empty($pattern)) {
+            return new JsonModel(['error' => 'Pattern is required']);
+        }
+
+        $users = $this->user->fetchUserIdByPattern($pattern, $limit);
+        return new JsonModel($users);
     }
 }

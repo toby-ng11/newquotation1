@@ -1,8 +1,8 @@
 
 <?php
 
-$this->headTitle('Admin')->setSeparator(' - ')->setAutoEscape(false);
-
+$this->headTitle('Admin portal')->setSeparator(' - ')->setAutoEscape(false);
+$user = $this->user;
 ?>
 
 <!-- Title area -->
@@ -17,13 +17,13 @@ $this->headTitle('Admin')->setSeparator(' - ')->setAutoEscape(false);
 
                 <!-- Right panel -->
                 <div class="sidebar-container" id="options-menu-items">
-                    <a href="/project/" target="_blank" class='button quick-link add-project' title="Add new project">
+                    <a href="/project" target="_blank" class='button quick-link add-project' title="Add new project">
                         <span class='icon icon-add'></span>
                         Add Project</a>
                 </div>
             </div>
 
-            <h1>Welcome Back, <span style="font-weight: 300;"><?php echo $this->user['name'] ?></span></h1>
+            <h1>Welcome Back, <span style="font-weight: 300;"><?php echo $user['name'] ?></span></h1>
             <p>Here's all projects and quotes</p>
         </header>
 
@@ -38,7 +38,7 @@ $this->headTitle('Admin')->setSeparator(' - ')->setAutoEscape(false);
                             <th>Shared</th>
                             <th>Create Date</th>
                             <th>Due Date</th>
-                            <th>Specifier</th>
+                            <th>Architect</th>
                             <th>Market Segment</th>
                             <th>Status</th>
                             <th>Make Quote</th>
@@ -192,7 +192,7 @@ $this->headTitle('Admin')->setSeparator(' - ')->setAutoEscape(false);
                 }
             },
             {
-                data: "specifier_name"
+                data: "architect_name"
             },
             {
                 data: "market_segment_desc"

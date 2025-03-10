@@ -26,6 +26,58 @@ return [
                     ],
                 ],
             ],
+            'project' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/project[/:action][/id/:id]',
+                    'defaults' => [
+                        'controller' => Controller\ProjectController::class,
+                        'action'     => 'index',
+                    ],
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ]
+                ],
+            ],
+            'user' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/user[/:action]',
+                    'defaults' => [
+                        'controller' => Controller\UserController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
+            'customer' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/customer[/:action][/id/:id]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\CustomerController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
+            'architect' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/architect[/:action][/id/:id]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\ArchitectController::class,
+                        'action'     => 'index',
+                    ],
+                ]
+            ]
         ],
     ],
     'controllers' => [
@@ -35,6 +87,30 @@ return [
                     $container->get(Service\UserService::class),
                     $container->get(Model\Project::class),
                     $container->get(Model\Quote::class)
+                );
+            },
+            Controller\ProjectController::class => function ($container) {
+                return new Controller\ProjectController(
+                    $container->get(Service\UserService::class),
+                    $container->get(Model\Project::class),
+                    $container->get(Model\Location::class)
+                );
+            },
+            Controller\UserController::class => function ($container) {
+                return new Controller\UserController(
+                    $container->get('Laminas\Db\Adapter\Adapter'),
+                    $container->get(Model\User::class)
+                );
+            },
+            Controller\CustomerController::class => function ($container) {
+                return new Controller\CustomerController(
+                    $container->get(Model\Customer::class)
+                );
+            },
+            Controller\ArchitectController::class => function
+            ($container) {
+                return new Controller\ArchitectController(
+                    $container->get(Model\Architect::class)
                 );
             },
         ],
@@ -57,7 +133,7 @@ return [
             __DIR__ . '/../view',
         ],
         'strategies' => [
-            'ViewJsonStrategy',
+            'ViewJsonStrategy', // be sure to add this strategy for JSON responses
         ],
     ],
     'view_helpers' => [
@@ -77,14 +153,56 @@ return [
             },
             Model\User::class => function ($container) {
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
-                $tableGateway = new TableGateway('P21_Users', $dbAdapter);
-                return new Model\User($tableGateway);
+                return new Model\User(
+                    $dbAdapter,
+                    new TableGateway('P21_Users', $dbAdapter)
+                );
+            },
+            Model\Location::class => function ($container) {
+                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+                return new Model\Location(
+                    new TableGateway('P21_Location_x_Branch', $dbAdapter)
+                );
+            },
+            Model\Architect::class => function ($container) {
+                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+                return new Model\Architect(
+                    $dbAdapter,
+                    new TableGateway('architect', $dbAdapter),
+                    $container->get(Model\Address::class)
+                );
+            },
+            Model\Specifier::class =>function ($container) {
+                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+                return new Model\Specifier(
+                    $dbAdapter,
+                    new TableGateway('specifier', $dbAdapter),
+                    $container->get(Model\Address::class)
+                );
+            },
+            Model\Address::class => function ($container) {
+                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+                return new Model\Address(
+                    $dbAdapter,
+                    new TableGateway('address', $dbAdapter)
+                );
+            },
+            Model\Customer::class => function ($container) {
+                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+                return new Model\Customer(
+                    $dbAdapter,
+                    new TableGateway('P21_customers_x_address', $dbAdapter),
+                    new TableGateway('P21_customers_x_address_x_contacts', $dbAdapter)
+                );
             },
             Model\Project::class => function ($container) {
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
                 return new Model\Project(
+                    $dbAdapter,
                     new TableGateway('project', $dbAdapter),
                     new TableGateway('p2q_view_project', $dbAdapter),
+                    $container->get(Model\Architect::class),
+                    $container->get(Model\Specifier::class)
                 );
             },
             Model\Quote::class => function ($container) {

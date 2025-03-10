@@ -7,7 +7,7 @@ form {
 		color: var(--text-secondary);
 	}
 
-	input[type=text], input[type=password], textarea, select {
+	input[type=text], input[type=password], input[type=url], input[type=tel], textarea, select {
 		font-size: inherit;
 		font-family: inherit;
 		font-weight: 600;

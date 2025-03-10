@@ -2154,7 +2154,7 @@ textarea {
   overflow: auto;
 }
 
-textarea, input[type=text], input[type=password], select {
+textarea, input[type=text], input[type=password], input[type=url], select {
   font-family: "Noto Sans", sans-serif;
   font-size: 12px;
 }
@@ -5784,7 +5784,7 @@ form label {
   font-size: calc(100% + 1px);
   color: var(--text-secondary);
 }
-form input[type=text], form input[type=password], form textarea, form select {
+form input[type=text], form input[type=password], form input[type=url], form input[type=tel], form textarea, form select {
   font-size: inherit;
   font-family: inherit;
   font-weight: 600;
@@ -5798,11 +5798,11 @@ form input[type=text], form input[type=password], form textarea, form select {
   height: 3rem;
   transition: all 0.2s ease-in-out;
 }
-form input[type=text]:hover, form input[type=password]:hover, form textarea:hover, form select:hover {
+form input[type=text]:hover, form input[type=password]:hover, form input[type=url]:hover, form input[type=tel]:hover, form textarea:hover, form select:hover {
   border-color: var(--border-primary);
   background: var(--form-input-background-hover);
 }
-form input[type=text]:focus, form input[type=password]:focus, form textarea:focus, form select:focus {
+form input[type=text]:focus, form input[type=password]:focus, form input[type=url]:focus, form input[type=tel]:focus, form textarea:focus, form select:focus {
   border-color: var(--field-focus-border);
   background: var(--form-input-background-hover);
   border: 1px solid var(--border-primary);
@@ -6015,6 +6015,17 @@ input[readonly], input[disabled] {
   height: 10rem;
   width: 10rem;
   opacity: 0.3;
+}
+.widget-table details {
+  padding: 1rem;
+}
+.widget-table details > summary {
+  font: var(--type-heading-h4);
+  font-weight: 600;
+  cursor: pointer;
+}
+.widget-table details > summary::-webkit-details-marker {
+  display: none;
 }
 .widget-table .widget-footer {
   margin-top: 1.5rem;
@@ -8803,11 +8814,11 @@ tr.el-finder-droppable td.icon p {
   --font-content-line-height: 1.75;
   --font-body-strong-weight: 600;
   /* based on the following type-scale https://type-scale.com/?size=16&scale=1.200&text=MDN%20Web%20Docs&font=Inter&fontweight=400&bodyfont=body_font_default&bodyfontweight=400&lineheight=1.75&backgroundcolor=%23ffffff&fontcolor=%23000000&preview=false */
-  --type-heading-h1-font-size: 2.488rem;
-  --type-heading-h2-font-size: 2rem;
-  --type-heading-h3-font-size: 1.5rem;
-  --type-heading-h4-font-size: 1.44rem;
-  --type-heading-h5-font-size: 1.2rem;
+  --type-heading-h1-font-size: 2.986rem;
+  --type-heading-h2-font-size: 2.488rem;
+  --type-heading-h3-font-size: 2.074rem;
+  --type-heading-h4-font-size: 1.728rem;
+  --type-heading-h5-font-size: 1.44rem;
   --type-base-font-size-rem: 1rem;
   --type-smaller-font-size: 0.833rem;
   --type-tiny-font-size: 0.694rem;
@@ -8884,6 +8895,7 @@ tr.el-finder-droppable td.icon p {
   --sticky-header-without-actions-height) +
        var(--article-actions-container-height) + 1px
    );
+  font-size: 15.5px;
 }
 
 @media screen and (min-width: 769px) {

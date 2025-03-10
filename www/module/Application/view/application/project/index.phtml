@@ -1,0 +1,460 @@
+<?php
+$this->headTitle('Create project')->setSeparator(' - ')->setAutoEscape(false);
+$user = $this->user;
+?>
+<!-- Title area -->
+<main id="content" class="main-content">
+  <div class="main-page-content">
+    <header class="main-page-content-header">
+      <div class="options-menu">
+        <button class="quick-link options-button" id="options-button" type="button">
+          <span class='icon icon-menu'></span>
+          Options
+        </button>
+
+        <!-- Right panel -->
+        <div class="sidebar-container" id="options-menu-items">
+          <a href="/project" target="_blank" class='button quick-link add-project' title="Add new project">
+            <span class='icon icon-add'></span>
+            Add Project</a>
+        </div>
+      </div>
+
+      <h1>Add Project</h1>
+    </header>
+    <!-- Main content wrapper -->
+    <section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
+      <form action="/project/create" method="post" class="form" id='project_content'>
+        <div class="widget-table">
+          <div class="widget-header">
+            <div class="widget-title">
+              <h2>Project Information</h2>
+            </div>
+          </div>
+
+          <div class="line"></div>
+          <div class="widget-section">
+            <h3>Project</h3>
+            <div class="formRow">
+              <input type="hidden" id='project_id_ext' name='project_id_ext' />
+              <input type="hidden" name='create_date' value='' />
+
+              <div class="oneTwo required-field">
+                <label for="project_name">Project Name</label>
+                <input type="text" id='project_name' name='project_name' class="validate[required]" />
+              </div>
+
+              <div class="oneTwo required-field">
+                <label for='project_address'>Project Location</label>
+                <input id='project_address' name='project_address' type="text" class="validate[required] tipN" original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" />
+              </div>
+
+              <div class="oneTwo">
+                <label for="location_id">Centura Location</label>
+                <select name="location_id" id="location_id">
+                  <?php foreach ($this->locations as $l) { ?>
+                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPANY_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="oneTwo required-field">
+                <label for="status">Project Stage</label>
+                <select name="status" id='status' class="validate[required]">
+                  <option value="">-- Select stage --</option>
+                  <?php foreach ($this->status as $s) { ?>
+                    <option value="<?= $s['status_id'] ?>"><?= $s['status_desc'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="oneTwo required-field">
+                <label for="market_segment_id">Project Category</label>
+                <select name="market_segment_id" id='market_segment_id' class="validate[required]">
+                  <option value="">-- Choose category --</option>
+                  <?php foreach ($this->seg as $s) { ?>
+                    <option value="<?= $s['market_segment_id'] ?>"><?= $s['market_segment_desc'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+
+              <div class="oneTwo">
+                <label for="owner_id">Worksheet Owner</label>
+                <input type="text" id="owner_id" name="owner_id" value='<?= $user['id'] ?>' readonly />
+              </div>
+
+              <div class="oneTwo required-field">
+                <label for="reed">REED ID</label>
+                <input type="text" name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" />
+              </div>
+
+              <div class="oneTwo">
+                <label for="due_date">Tender Due Date</label>
+                <input type="text" id="due_date" name='due_date' class="datepicker" />
+              </div>
+
+              <div class="oneTwo">
+                <label for="require_date">Required Date</label>
+                <input type="text" id="require_date" name='require_date' placeholder="Required date" class="datepicker" />
+              </div>
+
+              <?php if ($user['approve_id'] != null) { ?>
+                <div class="oneTwo">
+                  <label for="shared_id">Share Worksheet</label>
+                  <input type="text" id="shared_id" name="shared_id" placeholder="Share this project with other salesrep" />
+                </div>
+              <?php } else { ?>
+                <input type="hidden" id="shared_id" name="shared_id" />
+              <?php } ?>
+            </div>
+          </div>
+
+          <div class="line"></div>
+
+          <details>
+            <summary>Architect & Specifier</summary>
+            <div class="widget-section">
+              <h4>Architect</h4>
+              <div class="formRow">
+                <div class="oneTwo">
+                  <label for="architect_name">Architect Name</label>
+                  <input type='text' name="architect_name" id='architect_name' class="tipN" original-title="If you want to edit the architect, please edit it in Architect Portal" />
+                  <input type="hidden" name='architect_id' id='architect_id' />
+                </div>
+
+                <div class="oneTwo">
+                  <label for="architect_company_id">Company</label>
+                  <select id="architect_company_id" name="architect_company_id">
+                    <?php foreach ($this->company as $l) { ?>
+                      <option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] == DEFAULT_COMPANY) echo 'selected' ?>><?= $l['company_name'] ?></option>
+                    <?php } ?>
+                  </select>
+                </div>
+
+                <div class="oneTwo">
+                  <label for="architect_rep_id">Architect Representative</label>
+                  <input type="text" id="architect_rep_id" name="architect_rep_id" value='<?= $user['id'] ?>' readonly />
+                </div>
+
+                <input type="hidden" name='address_id' id='address_id' />
+                <div class="oneTwo">
+                  <label for="phys_address1">Address 1</label>
+                  <input type='text' name="phys_address1" id='phys_address1' />
+                </div>
+
+                <div class="oneTwo">
+                  <label for="phys_address2">Address 2</label>
+                  <input type='text' name="phys_address2" id='phys_address2' placeholder="Optional" />
+                </div>
+
+                <div class="oneTwo">
+                  <label for="phys_city">City 2</label>
+                  <input type='text' name="phys_city" id='phys_city' placeholder="Optional" />
+                </div>
+
+                <div class="oneTwo">
+                  <label for="phys_state">Province</label>
+                  <input type='text' name="phys_state" id='phys_state' placeholder="Optional" />
+                </div>
+
+                <div class="oneTwo">
+                  <label for="phys_postal_code">Postal Code</label>
+                  <input type='text' name="phys_postal_code" id='phys_postal_code' placeholder="Optional" />
+                </div>
+
+                <div class="oneTwo">
+                  <label for="phys_country">Country</label>
+                  <input type='text' name="phys_country" id='phys_country' placeholder="Optional" />
+                </div>
+
+                <div class="oneTwo">
+                  <label for="central_phone_number">Company Phone Number</label>
+                  <input id='central_phone_number' name='central_phone_number' type="tel" placeholder="123-456-7890" />
+                </div>
+
+                <div class="oneTwo">
+                  <label for="email_address">Email</label>
+                  <input type="text" value="" id='email_address' name='email_address' placeholder="Optional">
+                </div>
+
+                <div class="oneTwo">
+                  <label for="url">URL</label>
+                  <input type="url" value="" id='url' name='url' placeholder="Optional">
+                </div>
+              </div>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="widget-section">
+              <h4>Specifier</h4>
+              <div class="formRow">
+                <input type="hidden" id='specifier_id' name="specifier_id" />
+                <input type="hidden" id='specifier_address_id' name="specifier_address_id" />
+                <div class="oneTwo ">
+                  <label for="specifier_name">Specifier</label>
+                  <select name='specifier_name' id='specifier_name'>
+                    <option value=''>-- Please search for a architect first --</option>
+                  </select>
+                </div>
+
+                <div class="oneTwo ">
+                  <label for="specifier_first_name">First Name</label>
+                  <input type='text' id='specifier_first_name' name="specifier_first_name" class="tipN" />
+                </div>
+
+                <div class="oneTwo ">
+                  <label for="specifier_last_name">Last Name</label>
+                  <input type='text' id='specifier_last_name' name="specifier_last_name" placeholder="Optional" />
+                </div>
+
+                <div class="oneTwo ">
+                  <label for="specifier_job_title">Job Title</label>
+                  <input type='text' id='specifier_job_title' name="specifier_job_title" class="tipN" placeholder="Optional" />
+                </div>
+
+                <div class="oneTwo ">
+                  <label for="specifier_phone_number">Phone Number</label>
+                  <input type='tel' id='specifier_phone_number' name="specifier_phone_number" placeholder="123-456-7890" />
+                </div>
+
+                <div class="oneTwo ">
+                  <label for="specifier_email">Email</label>
+                  <input type='text' id='specifier_email' name="specifier_email" class="tipN" placeholder="Optional" />
+                </div>
+              </div>
+          </details>
+
+          <div class="line"></div>
+
+          <details>
+            <summary>Contractor</summary>
+            <div class="widget-section">
+              <div class="formRow">
+                <div class="oneTwo">
+                  <label for="general_contractor_name">General Contractor</label>
+                  <input type="text" id="general_contractor_name" name="general_contractor_name" class='tipN' placeholder="Add general contractor" original-title="Type Company Name" />
+                  <input type="hidden" id="general_contractor_id" name="general_contractor_id" />
+                </div>
+
+                <div class="oneTwo">
+                  <label for="awarded_contractor_name">Awarded Contractor</label>
+                  <input id="awarded_contractor_name" name="awarded_contractor_name" type="text" class='tipN' placeholder="Add awarded contractor" original-title="Type Company Name" />
+                  <input id="awarded_contractor_id" name="awarded_contractor_id" type="hidden" />
+                </div>
+              </div>
+            </div>
+          </details>
+          <div class="line"></div>
+
+          <div class="widget-footer">
+            <div class="widget-footer-button">
+              <button disabled id="save_pro" type="button" title="Create project" class="button action create-project-button small">
+                <span class="button-wrap">
+                  Create Project
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+</main>
+
+<script>
+  $(function() {
+    if ($("#shared_id").length) {
+      $('#shared_id').autocomplete({
+        source: function(request, response) {
+          $.ajax({
+            url: '/user/fetchbypattern',
+            dataType: 'json',
+            data: {
+              pattern: request.term,
+              limit: 10
+            },
+            success: function(data) {
+              response(data);
+            },
+            error: function() {
+              response([]); // Handle errors gracefully
+            }
+          });
+        },
+        minLength: 1,
+        select: function(event, ui) {
+          $('#shared_id').val(ui.item.id);
+          return false;
+        }
+      }).autocomplete("instance")._renderItem = function(ul, item) {
+        return $("<li>")
+          .append("<div><strong>" + item.id + "</strong><br>" + item.name + "</div>")
+          .appendTo(ul);
+      };
+    }
+
+    function getContractor(id, targetPrefix) {
+      $.ajax({
+        url: '/customer/fetchbyid/id/' + id,
+        dataType: 'json',
+        type: "get",
+        success: function(result) {
+          if (result) {
+            $('#' + targetPrefix + '_id').val(result.customer_id);
+            $('#' + targetPrefix + '_name').val(result.customer_name);
+          }
+        }
+      });
+    }
+
+    function getArchitectById(id) {
+      $.ajax({
+          url: '/architect/fetchfull/id/' + id,
+          dataType: 'json',
+          type: "get"
+        }).done(function(architect) {
+          if (architect) {
+            $('#architect_name').val(architect.architect_name);
+            $('#architect_id').val(architect.architect_id);
+            $('#architect_company_id').val(architect.company_id);
+            $('#architect_rep_id').val(architect.architect_rep_id);
+            $('#address_id').val(architect.address_id);
+            $('#phys_address1').val(architect.phys_address1);
+            $('#phys_address2').val(architect.phys_address2);
+            $('#phys_city').val(architect.phys_city);
+            $('#phys_state').val(architect.phys_state);
+            $('#phys_postal_code').val(architect.phys_postal_code);
+            $('#phys_country').val(architect.phys_country);
+            $('#central_phone_number').val(architect.central_phone_number);
+            $('#email_address').val(architect.email_address);
+            $('#url').val(architect.url);
+          }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+          console.error("Error fetching architect details:", textStatus, errorThrown);
+        });
+    }
+
+    function getSpecifier(id) {
+      $.ajax({
+          url: '/architect/fetchspecs/id/' + id,
+          dataType: 'json',
+          type: "get"
+        }).done(function(specifiers) {
+          if (!specifiers || specifiers.length === 0) {
+            $('#specifier_name').html('<option value="">No specifiers found, please add.</option>');
+            $('#specifier_first_name, #specifier_last_name, #specifier_job_title, #specifier_phone_number, #specifier_email').val('');
+            return;
+        }
+          let list = '';
+          $.each(specifiers, function(i, item) {
+            list += '<option value="' + item.specifier_id + '">' + item.first_name + ' ' + item.last_name + '</option>';
+          });
+          $('#specifier_name').html(list);
+          $('#specifier_name option:first').prop('selected', true);
+          getSpecifierInfo();
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+          console.error("Error fetching specifier:", textStatus, errorThrown);
+        });
+    }
+
+    function getSpecifierInfo() {
+      let specifierId = $('#specifier_name').val();
+      if (!specifierId) return;
+      $.ajax({
+          url: '/architect/specinfo/id/' + specifierId,
+          dataType: 'json',
+          type: "get"
+        }).done(function(specifier) {
+          if (specifier) {
+            $('#specifier_id').val(specifier.specifier_id);
+            $('#specifier_address_id').val(specifier.specifier_address_id);
+            $('#specifier_first_name').val(specifier.first_name);
+            $('#specifier_last_name').val(specifier.last_name);
+            $('#specifier_job_title').val(specifier.job_title);
+            $('#specifier_phone_number').val(specifier.central_phone_number);
+            $('#specifier_email').val(specifier.email_address);
+          }
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+          console.error("Error fetching specifier details:", textStatus, errorThrown);
+        });
+    }
+
+    $("#specifier_name, #uniform-specifier_name").on("change", function() {
+      getSpecifierInfo();
+    });
+
+    function setupAutocomplete(selector, sourceUrl, selectCallback) {
+      $(selector).autocomplete({
+        source: sourceUrl,
+        minLength: 2,
+        select: function(event, ui) {
+          selectCallback(ui.item);
+        }
+      }).data("ui-autocomplete")._renderItem = function(ul, item) {
+        return $("<li>")
+          .data("item.autocomplete", item)
+          .append("<a>" +
+            (item.customer_id + " - " + item.company_id + "<br>" + item.customer_name) +
+            "</a>")
+          .appendTo(ul);
+      };
+    }
+
+    setupAutocomplete("#general_contractor_name", "/customer/fetch", function(item) {
+      getContractor(item.customer_id, 'general_contractor');
+    });
+
+    setupAutocomplete("#awarded_contractor_name", "/customer/fetch", function(item) {
+      getContractor(item.customer_id, 'awarded_contractor');
+    });
+
+    $('#architect_name').autocomplete({
+      source: function(request, response) {
+        $.ajax({
+            url: '/architect/fetch',
+            dataType: 'json',
+            data: {
+              term: request.term,
+              limit: 10
+            }
+          })
+          .done(function(data) {
+            response(data);
+          })
+          .fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("AJAX Error: ", textStatus, errorThrown, jqXHR.responseText);
+            response([]); // Handle failure gracefully
+          });
+      },
+      minLength: 1,
+      select: function(event, ui) {
+        getArchitectById(ui.item.architect_id);
+        getSpecifier(ui.item.architect_id);
+        return false;
+      }
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+      return $("<li>")
+        .append("<div><strong>" + item.architect_name + "</strong><br>" + item.architect_rep_id + " - " + item.company_id + "</div>")
+        .appendTo(ul);
+    };
+
+    let unsave = false;
+
+    $('#project_content').on("change", function() {
+      $('#save_pro').prop("disabled", false);
+      unsave = true;
+    });
+
+    $('#save_pro').on("click", function(e) {
+      e.preventDefault();
+      if ($("#project_content").validationEngine('validate') == true) {
+        $('#project_content').trigger("submit");
+      }
+
+    });
+  })
+</script>

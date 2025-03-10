@@ -184,6 +184,18 @@
 		//color: rgba(0, 0, 0, 0.2);
 	}
 
+	details {
+		padding: 1rem;
+		&>summary {
+			font: var(--type-heading-h4);
+			font-weight: 600;
+			cursor: pointer;
+			&::-webkit-details-marker {
+				display: none;
+			}
+		}
+	}
+
 	.widget-footer {
 		margin-top: 1.5rem;
 		
