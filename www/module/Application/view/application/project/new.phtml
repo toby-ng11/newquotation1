@@ -53,7 +53,7 @@ $user = $this->user;
                 <label for="location_id">Centura Location</label>
                 <select name="location_id" id="location_id">
                   <?php foreach ($this->locations as $l) { ?>
-                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_COMPANY_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
+                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_LOCATION_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -69,9 +69,9 @@ $user = $this->user;
               </div>
 
               <div class="oneTwo required-field">
-                <label for="market_segment_id">Project Category</label>
+                <label for="market_segment_id">Project Segment</label>
                 <select name="market_segment_id" id='market_segment_id' class="validate[required]">
-                  <option value="">-- Choose category --</option>
+                  <option value="">-- Choose market segment --</option>
                   <?php foreach ($this->seg as $s) { ?>
                     <option value="<?= $s['market_segment_id'] ?>"><?= $s['market_segment_desc'] ?></option>
                   <?php } ?>
@@ -115,10 +115,11 @@ $user = $this->user;
             <summary>Architect & Specifier</summary>
             <div class="widget-section">
               <h4>Architect</h4>
+              <p>*If you want to edit the architect, please edit it in Architect Portal.</p>
               <div class="formRow">
                 <div class="oneTwo">
                   <label for="architect_name">Architect Name</label>
-                  <input type='text' name="architect_name" id='architect_name' class="tipN" original-title="If you want to edit the architect, please edit it in Architect Portal" />
+                  <input type='text' name="architect_name" id='architect_name' class="tipN" original-title="Search by ID or Name" />
                   <input type="hidden" name='architect_id' id='architect_id' />
                 </div>
 
@@ -169,7 +170,7 @@ $user = $this->user;
 
                 <div class="oneTwo">
                   <label for="central_phone_number">Company Phone Number</label>
-                  <input id='central_phone_number' name='central_phone_number' type="tel" placeholder="123-456-7890" />
+                  <input id='central_phone_number' name='central_phone_number' type="tel" class="maskPhone" placeholder="(123) 456-7890" />
                 </div>
 
                 <div class="oneTwo">
@@ -188,6 +189,7 @@ $user = $this->user;
 
             <div class="widget-section">
               <h4>Specifier</h4>
+              <p>*If you want to edit the specifier, please edit it in Architect Portal.</p>
               <div class="formRow">
                 <input type="hidden" id='specifier_id' name="specifier_id" />
                 <input type="hidden" id='specifier_address_id' name="specifier_address_id" />
@@ -215,7 +217,7 @@ $user = $this->user;
 
                 <div class="oneTwo ">
                   <label for="specifier_phone_number">Phone Number</label>
-                  <input type='tel' id='specifier_phone_number' name="specifier_phone_number" placeholder="123-456-7890" />
+                  <input type='tel' id='specifier_phone_number' name="specifier_phone_number" class="maskPhone" placeholder="(123) 456-7890" />
                 </div>
 
                 <div class="oneTwo ">
@@ -264,184 +266,6 @@ $user = $this->user;
 
 <script>
   $(function() {
-    if ($("#shared_id").length) {
-      $('#shared_id').autocomplete({
-        source: function(request, response) {
-          $.ajax({
-            url: '/user/fetchbypattern',
-            dataType: 'json',
-            data: {
-              pattern: request.term,
-              limit: 10
-            },
-            success: function(data) {
-              response(data);
-            },
-            error: function() {
-              response([]); // Handle errors gracefully
-            }
-          });
-        },
-        minLength: 1,
-        select: function(event, ui) {
-          $('#shared_id').val(ui.item.id);
-          return false;
-        }
-      }).autocomplete("instance")._renderItem = function(ul, item) {
-        return $("<li>")
-          .append("<div><strong>" + item.id + "</strong><br>" + item.name + "</div>")
-          .appendTo(ul);
-      };
-    }
-
-    function getContractor(id, targetPrefix) {
-      $.ajax({
-        url: '/customer/fetchbyid/id/' + id,
-        dataType: 'json',
-        type: "get",
-        success: function(result) {
-          if (result) {
-            $('#' + targetPrefix + '_id').val(result.customer_id);
-            $('#' + targetPrefix + '_name').val(result.customer_name);
-          }
-        }
-      });
-    }
-
-    function getArchitectById(id) {
-      $.ajax({
-          url: '/architect/fetchfull/id/' + id,
-          dataType: 'json',
-          type: "get"
-        }).done(function(architect) {
-          if (architect) {
-            $('#architect_name').val(architect.architect_name);
-            $('#architect_id').val(architect.architect_id);
-            $('#architect_company_id').val(architect.company_id);
-            $('#architect_rep_id').val(architect.architect_rep_id);
-            $('#address_id').val(architect.address_id);
-            $('#phys_address1').val(architect.phys_address1);
-            $('#phys_address2').val(architect.phys_address2);
-            $('#phys_city').val(architect.phys_city);
-            $('#phys_state').val(architect.phys_state);
-            $('#phys_postal_code').val(architect.phys_postal_code);
-            $('#phys_country').val(architect.phys_country);
-            $('#central_phone_number').val(architect.central_phone_number);
-            $('#email_address').val(architect.email_address);
-            $('#url').val(architect.url);
-          }
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-          console.error("Error fetching architect details:", textStatus, errorThrown);
-        });
-    }
-
-    function getSpecifier(id) {
-      $.ajax({
-          url: '/architect/fetchspecs/id/' + id,
-          dataType: 'json',
-          type: "get"
-        }).done(function(specifiers) {
-          if (!specifiers || specifiers.length === 0) {
-            $('#specifier_name').html('<option value="">No specifiers found, please add.</option>');
-            $('#specifier_first_name, #specifier_last_name, #specifier_job_title, #specifier_phone_number, #specifier_email').val('');
-            return;
-        }
-          let list = '';
-          $.each(specifiers, function(i, item) {
-            list += '<option value="' + item.specifier_id + '">' + item.first_name + ' ' + item.last_name + '</option>';
-          });
-          $('#specifier_name').html(list);
-          $('#specifier_name option:first').prop('selected', true);
-          getSpecifierInfo();
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-          console.error("Error fetching specifier:", textStatus, errorThrown);
-        });
-    }
-
-    function getSpecifierInfo() {
-      let specifierId = $('#specifier_name').val();
-      if (!specifierId) return;
-      $.ajax({
-          url: '/architect/specinfo/id/' + specifierId,
-          dataType: 'json',
-          type: "get"
-        }).done(function(specifier) {
-          if (specifier) {
-            $('#specifier_id').val(specifier.specifier_id);
-            $('#specifier_address_id').val(specifier.specifier_address_id);
-            $('#specifier_first_name').val(specifier.first_name);
-            $('#specifier_last_name').val(specifier.last_name);
-            $('#specifier_job_title').val(specifier.job_title);
-            $('#specifier_phone_number').val(specifier.central_phone_number);
-            $('#specifier_email').val(specifier.email_address);
-          }
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-          console.error("Error fetching specifier details:", textStatus, errorThrown);
-        });
-    }
-
-    $("#specifier_name, #uniform-specifier_name").on("change", function() {
-      getSpecifierInfo();
-    });
-
-    function setupAutocomplete(selector, sourceUrl, selectCallback) {
-      $(selector).autocomplete({
-        source: sourceUrl,
-        minLength: 2,
-        select: function(event, ui) {
-          selectCallback(ui.item);
-        }
-      }).data("ui-autocomplete")._renderItem = function(ul, item) {
-        return $("<li>")
-          .data("item.autocomplete", item)
-          .append("<a>" +
-            (item.customer_id + " - " + item.company_id + "<br>" + item.customer_name) +
-            "</a>")
-          .appendTo(ul);
-      };
-    }
-
-    setupAutocomplete("#general_contractor_name", "/customer/fetch", function(item) {
-      getContractor(item.customer_id, 'general_contractor');
-    });
-
-    setupAutocomplete("#awarded_contractor_name", "/customer/fetch", function(item) {
-      getContractor(item.customer_id, 'awarded_contractor');
-    });
-
-    $('#architect_name').autocomplete({
-      source: function(request, response) {
-        $.ajax({
-            url: '/architect/fetch',
-            dataType: 'json',
-            data: {
-              term: request.term,
-              limit: 10
-            }
-          })
-          .done(function(data) {
-            response(data);
-          })
-          .fail(function(jqXHR, textStatus, errorThrown) {
-            console.error("AJAX Error: ", textStatus, errorThrown, jqXHR.responseText);
-            response([]); // Handle failure gracefully
-          });
-      },
-      minLength: 1,
-      select: function(event, ui) {
-        getArchitectById(ui.item.architect_id);
-        getSpecifier(ui.item.architect_id);
-        return false;
-      }
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-      return $("<li>")
-        .append("<div><strong>" + item.architect_name + "</strong><br>" + item.architect_rep_id + " - " + item.company_id + "</div>")
-        .appendTo(ul);
-    };
-
     let unsave = false;
 
     $('#project_content').on("change", function() {

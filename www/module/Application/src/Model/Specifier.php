@@ -52,4 +52,30 @@ class Specifier {
             return false;
         }
     }
+
+    public function fetchSpecifiersByArchitect($architect_id) {
+        if ($architect_id === null) {
+            return false;
+        }
+
+        $sql = new Sql($this->adapter);
+        $select = $sql->select('p2q_view_specifier_x_address')
+            ->columns(['specifier_id', 'first_name', 'last_name'])
+            ->where(['architect_id' => $architect_id]);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+        return $result;
+    }
+
+    public function fetchSpecifierById($id) {
+        $sql = new Sql($this->adapter);
+
+        $select = $sql->select('p2q_view_specifier_x_address')
+            ->where(['specifier_id' => $id]);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+        return $result->current();
+    }
 }

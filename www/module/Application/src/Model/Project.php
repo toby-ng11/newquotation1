@@ -33,10 +33,11 @@ class Project
         $this->specifier = $specifier;
     }
 
-    public function save($data) {
-        if ($data == null) {
-			return  false;
-		}
+    public function save($data)
+    {
+        if (!$data) {
+            return  false;
+        }
 
         $info = [
             'delete_flag'           => 'N',
@@ -56,18 +57,16 @@ class Project
             'due_date'              => !empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()')
         ];
 
-        if (empty($data['architect_id']))
-		{
-			$info['architect_id'] = $this->architect->add($data);
-		} else {
-			$info['architect_id'] = $data['architect_id'];
+        if (empty($data['architect_id'])) {
+            $info['architect_id'] = $this->architect->add($data);
+        } else {
+            $info['architect_id'] = $data['architect_id'];
         }
 
-        if (empty($data['specifier_id']))
-		{
-			$info['specifier_id'] = $this->specifier->add($data, $info['architect_id']);
-		} else {
-			$info['specifier_id'] = $data['specifier_id'];
+        if (empty($data['specifier_id'])) {
+            $info['specifier_id'] = $this->specifier->add($data, $info['architect_id']);
+        } else {
+            $info['specifier_id'] = $data['specifier_id'];
         }
 
         try {
@@ -84,6 +83,51 @@ class Project
             return $newProjectId;
         } catch (Exception $e) {
             error_log("Project\save:Database Insert Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function edit($data, $project_id)
+    {
+        if (!$data || !$project_id) {
+            return  false;
+        }
+
+        $info = [
+            //'delete_flag'           => 'N',
+            'project_name'          => !empty($data['project_name']) ? trim($data['project_name']) : null,
+            'project_address'       => !empty($data['project_address']) ? trim($data['project_address']) : null,
+            'centura_location_id'   => $data['location_id'],
+            'market_segment_id'     => $data['market_segment_id'],
+            //'owner_id'              => $data['owner_id'],
+            'last_maintained_by'    => $data['user_session_id'],
+            'shared_id'             => $data['shared_id'],
+            'reed'                  => $data['reed'],
+            'status'                => $data['status'],
+            'general_contractor_id' => !empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
+            'awarded_contractor_id' => !empty($data['awarded_contractor_id']) ? $data['awarded_contractor_id'] : null,
+            //'create_date'           => new Expression('GETDATE()'),
+            'require_date'          => !empty($data['require_date']) ? $data['require_date'] : new Expression('GETDATE()'),
+            'due_date'              => !empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()')
+        ];
+
+        if (empty($data['architect_id'])) {
+            $info['architect_id'] = $this->architect->add($data);
+        } else {
+            $info['architect_id'] = $data['architect_id'];
+        }
+
+        if (empty($data['specifier_id'])) {
+            $info['specifier_id'] = $this->specifier->add($data, $info['architect_id']);
+        } else {
+            $info['specifier_id'] = $data['specifier_id'];
+        }
+
+        try {
+            $this->project->update($info, ['project_id' => $project_id]);
+            return true;
+        } catch (Exception $e) {
+            error_log("Project/edit:Database Update Error: " . $e->getMessage());
             return false;
         }
     }
@@ -108,11 +152,11 @@ class Project
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('status')
-        ->where([
-            'delete_flag' => 'N',
-            'project_flag' => 'Y'
-        ])
-        ->order('status_desc ASC');
+            ->where([
+                'delete_flag' => 'N',
+                'project_flag' => 'Y'
+            ])
+            ->order('status_desc ASC');
 
         $selectString = $sql->buildSqlString($select);
         $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
@@ -124,10 +168,28 @@ class Project
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('market_segment')
-        ->where ([
-            'delete_flag' => 'N'
-        ])
-        ->order('market_segment_desc ASC');
+            ->where([
+                'delete_flag' => 'N'
+            ])
+            ->order('market_segment_desc ASC');
+
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result;
+    }
+
+    public function fetchQuoteByProject($project_id)
+    {
+        if (!$project_id) {
+            return false;
+        }
+
+        $sql = new Sql($this->adapter);
+        $select = $sql->select('p2q_view_quote_x_project_x_oe')
+            ->where([
+                'project_id' => $project_id
+            ])
+            ->order('quote_id DESC');
 
         $selectString = $sql->buildSqlString($select);
         $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);

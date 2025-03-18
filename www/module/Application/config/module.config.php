@@ -13,16 +13,27 @@ use Laminas\Db\TableGateway\TableGateway;
 return [
     'router' => [
         'routes' => [
-            'admin' => [
+            'home' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
+            'dashboard' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route'    => '/index/admin[/:action]',
+                    'route'    => '/index[/:action][/:table]',
                     'constraints' => [
-                        'action' => 'project|quote',
+                        'action' => 'project|approval|admin|architect',
+                        'table' => 'project|quote',
                     ],
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
-                        'action'     => 'admin',
+                        'action'     => 'index',
                     ],
                 ],
             ],
@@ -32,7 +43,7 @@ return [
                     'route'    => '/project[/:action][/id/:id]',
                     'defaults' => [
                         'controller' => Controller\ProjectController::class,
-                        'action'     => 'index',
+                        'action'     => 'new',
                     ],
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
@@ -76,7 +87,33 @@ return [
                         'controller' => Controller\ArchitectController::class,
                         'action'     => 'index',
                     ],
-                ]
+                ],
+            ],
+            'item' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/item[/:action]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\ItemController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
+            'note' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/note[/:action]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\NoteController::class,
+                        'action'     => 'index',
+                    ],
+                ],
             ]
         ],
     ],
@@ -93,7 +130,11 @@ return [
                 return new Controller\ProjectController(
                     $container->get(Service\UserService::class),
                     $container->get(Model\Project::class),
-                    $container->get(Model\Location::class)
+                    $container->get(Model\Location::class),
+                    $container->get(Model\Item::class),
+                    $container->get(Model\Note::class),
+                    $container->get(Model\Architect::class),
+                    $container->get(Model\Specifier::class)
                 );
             },
             Controller\UserController::class => function ($container) {
@@ -110,9 +151,20 @@ return [
             Controller\ArchitectController::class => function
             ($container) {
                 return new Controller\ArchitectController(
-                    $container->get(Model\Architect::class)
+                    $container->get(Model\Architect::class),
+                    $container->get(Model\Specifier::class)
                 );
             },
+            Controller\ItemController::class => function ($container) {
+                return new Controller\ItemController(
+                    $container->get(Model\Item::class)
+                );
+            },
+            Controller\NoteController::class => function ($container) {
+                return new Controller\NoteController(
+                    $container->get(Model\Note::class)
+                );
+            }
         ],
     ],
     'view_manager' => [
@@ -124,8 +176,7 @@ return [
         'exception_template'       => 'error/index',
         'template_map' => [
             'layout/layout'           => __DIR__ . '/../view/layout/default.phtml',
-            'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
-            'application/index/admin' => __DIR__ . '/../view/application/index/admin.phtml',
+            //'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ],
@@ -212,6 +263,23 @@ return [
                     new TableGateway('p2q_view_quote_x_project_x_oe', $dbAdapter),
                 );
             },
+            Model\Item::class => function ($container) {
+                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+                return new Model\Item(
+                    $dbAdapter,
+                    $container->get(Service\UserService::class),
+                    new TableGateway('project_items', $dbAdapter),
+                    new TableGateway('quote_items', $dbAdapter),
+                );
+            },
+            Model\Note::class => function ($container) {
+                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+                return new Model\Note(
+                    $dbAdapter,
+                    $container->get(Service\UserService::class),
+                    new TableGateway('project_note', $dbAdapter)
+                );
+            }
         ],
     ],
 ];

@@ -5,15 +5,17 @@ namespace Application\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 
-use Application\Model\Architect;
+use Application\Model\{Architect, Specifier};
 
 class ArchitectController extends AbstractActionController
 {
     protected $architect;
+    protected $specifier;
 
-    public function __construct(Architect $architect)
+    public function __construct(Architect $architect, Specifier $specifier)
     {
         $this->architect = $architect;
+        $this->specifier = $specifier;
     }
 
     public function fetchAction()
@@ -48,7 +50,7 @@ class ArchitectController extends AbstractActionController
             return new JsonModel(['error' => 'ID is required']);
         }
 
-        $architect = $this->architect->fetchSpecifiersByArchitect($id);
+        $architect = $this->specifier->fetchSpecifiersByArchitect($id);
 
         return new JsonModel($architect);
     }
@@ -60,7 +62,7 @@ class ArchitectController extends AbstractActionController
             return new JsonModel(['error' => 'ID is required']);
         }
 
-        $architect = $this->architect->fetchSpecifierById($id);
+        $architect = $this->specifier->fetchSpecifierById($id);
 
         return new JsonModel($architect);
     }

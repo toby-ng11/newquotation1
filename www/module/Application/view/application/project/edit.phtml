@@ -1,13 +1,14 @@
 <?php
+$owner = $this->owner;
 $project = $this->project;
 $user = $this->user;
+$architect = $this->architect;
+$specifier = $this->specifier;
 $projectID = $project['project_id'];
 $this->headTitle('Edit Project: ' . $projectID)->setSeparator(' - ')->setAutoEscape(false);
 $projectCreateDate = $project['create_date'];
 $projectDueDate = $project['due_date'];
 $projectRequiredDate = $project['require_date'];
-
-$architect = $this->architect;
 ?>
 
 <!-- Right panel -->
@@ -62,56 +63,33 @@ $architect = $this->architect;
 						</div>
 					</div>
 					<div class="line"></div>
-
 					<div class="widget-section">
-						<h3>Project</h3>
 						<div class="formRow">
 							<input type="hidden" id='project_id' value='<?= $projectID ?>'>
-							<input type="hidden" id="owner_id" name='owner_id' value='<?= $project['owner_id'] ?>'>
+							<input type="hidden" id="user_session_id" name='user_session_id' value='<?= $user['id'] ?>'>
 							<input type="hidden" id='create_date' name='create_date' value='<?= $projectCreateDate?->format('Y-m-d') ?? '' ?>' />
-							<input type="hidden" id='architect_id' name='architect_id' value="<?= $project['architect_id'] ?>">
-							<input type="hidden" id='specifier_id' name="specifier_id" value="<?= $project['specifier_id'] ?>">
 
 							<div class="oneTwo required-field">
 								<label for="project_name">Project Name</label>
 								<input type="text" id='project_name' class="validate[required]" placeholder="Project Name" name='project_name' value="<?= $project['project_name'] ?>" />
 							</div>
 
+							<div class="oneTwo required-field">
+								<label for="project_address">Project Location</label>
+								<input type="text" name='project_address' id="project_address" class="validate[required]" value='<?= $project['centura_location_id'] ?>' />
+							</div>
+
 							<div class="oneTwo">
-								<label for="location">Centura Location</label>
-								<select name="location" id="location">
+								<label for="location_id">Centura Location</label>
+								<select name="location_id" id="location_id">
 									<?php foreach ($this->location as $l) { ?>
 										<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $project['centura_location_id']) echo 'selected' ?>><?= $l['branch_description'] ?></option>
 									<?php } ?>
 								</select>
 							</div>
 
-							<div class="oneTwo form-worksheet-owner">
-								<label for="owner_name">Worksheet Owner</label>
-								<input id="owner_name" name="owner_name" type="text" value='<?= $project['owner_name'] ?>' readonly />
-							</div>
-
-							<?php if ($user['approve_id'] != null) { ?>
-								<div class="oneTwo form-worksheet-owner">
-									<label for="shared_id">Share Worksheet</label>
-									<input id="shared_id" name="shared_id" type="text" value='<?= $project['shared_id'] ?>' />
-								</div>
-							<?php } else { ?>
-								<input type="hidden" id="shared_id" name="shared_id" />
-							<?php } ?>
-
-							<div class="oneTwo">
-								<label for="project_id_ext">Project ID</label>
-								<input id="project_id_ext" type="text" placeholder="123456" name='project_id_ext' value="<?= $project['project_id_ext'] ?>" readonly />
-							</div>
-
 							<div class="oneTwo required-field">
-								<label for="centura_location_id">Project Location</label>
-								<input type="text" name='centura_location_id' id="centura_location_id" class="validate[required]" value='<?= $project['centura_location_id'] ?>' />
-							</div>
-
-							<div class="oneTwo required-field">
-								<label for="status">Status</label>
+								<label for="status">Project Stage</label>
 								<select name="status" id="status" class="validate[required]">
 									<option value="">-- Select Status --</option>
 									<?php foreach ($this->status as $s) { ?>
@@ -121,18 +99,23 @@ $architect = $this->architect;
 							</div>
 
 							<div class="oneTwo required-field">
-								<label for="reed">REED ID</label>
-								<input type="text" name="reed" id="reed" value="<?= $project['reed'] ?>" class="validate[required]" />
-							</div>
-
-							<div class="oneTwo required-field">
-								<label for='market_segment'>Market Segment</label>
-								<select name="market_segment" id='market_segment' class="validate[required]">
+								<label for='market_segment_id'>Project Segment</label>
+								<select name="market_segment_id" id='market_segment_id' class="validate[required]">
 									<option value="">-- Choose Segment --</option>
 									<?php foreach ($this->seg as $s) { ?>
 										<option value="<?= $s['market_segment_id'] ?>" <?php if ($s['market_segment_id'] == $project['market_segment_id']) echo 'selected' ?>><?= $s['market_segment_desc'] ?></option>
 									<?php } ?>
 								</select>
+							</div>
+
+							<div class="oneTwo form-worksheet-owner">
+								<label for="owner_id">Worksheet Owner</label>
+								<input id="owner_id" name="owner_id" type="text" value='<?= $project['owner_id'] ?>' readonly />
+							</div>
+
+							<div class="oneTwo required-field">
+								<label for="reed">REED ID</label>
+								<input type="text" name="reed" id="reed" value="<?= $project['reed'] ?>" class="validate[required]" />
 							</div>
 
 							<div class="oneTwo">
@@ -141,75 +124,190 @@ $architect = $this->architect;
 							</div>
 
 							<div class="oneTwo">
-								<label for='required_date'>Material Required Date</label>
+								<label for='required_date'>Required Date</label>
 								<input id='required_date' type="text" name='required_date' class="datepicker" value='<?= $projectRequiredDate?->format('Y-m-d') ?>' />
 							</div>
 
-							<div class="oneTwo required-field">
-								<label for='architect_name'>Project Architect / Owner</label>
-								<input type='text' name="architect_name" id='architect_name' class="validate[required] tipN" original-title="Type 2 letter to start or add your own" value='<?= $architect['specifier_name'] ?>' />
-							</div>
+							<?php if ($user['approve_id'] != null) { ?>
+								<div class="oneTwo form-worksheet-owner">
+									<label for="shared_id">Share Worksheet</label>
+									<input id="shared_id" name="shared_id" type="text" value='<?= $project['shared_id'] ?>' />
+								</div>
+							<?php } else { ?>
+								<input type="hidden" id="shared_id" name="shared_id" value='<?= $project['shared_id'] ?>' />
+							<?php } ?>
 
 							<div class="oneTwo">
-								<label for="architect_location">Architect Location</label>
-								<select id="architect_location" name="architect_location">
-									<?php foreach ($this->location as $l) { ?>
-										<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $architect['location_id']) echo 'selected' ?>><?= $l['branch_description'] ?></option>
-									<?php } ?>
-								</select>
-							</div>
-
-							<div class="oneTwo required-field">
-								<label for="architect_rep_id">Architect Rep.</label>
-								<select id='architect_rep_id' name='architect_rep_id' class="validate[required]">
-									<?php if ($user['approve_id'] != null) { ?>
-										<?php foreach ($this->arch as $a) { ?>
-											<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $architect['architect_rep_id']) echo 'selected'; ?>><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
-										<?php } ?>
-									<?php } else { ?>
-										<?php foreach ($this->arch as $a) { ?>
-											<?php if ($a['id'] == $quote['arch']) { ?>
-												<option value="<?= $a['id'] ?>" selected><?= $a['name'] . ' - ' . $a['default_company'] ?></option>
-											<?php } ?>
-										<?php } ?>
-									<?php } ?>
-								</select>
-							</div>
-
-							<div class="oneTwo required-field">
-								<label for='specifier_name'>Specifier</label>
-								<input type='text' id='specifier_name' name="specifier_name" value='<?= $this->specifier['specifier_name'] ?>' class="validate[required] tipN" original-title="Type 2 letter to start or add your own">
-							</div>
-
-							<div class="oneTwo">
-								<label for="specifier_location">Specifier Location</label>
-								<select id="specifier_location" name="specifier_location">
-									<?php foreach ($this->location as $l) { ?>
-										<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $this->specifier['location_id']) echo 'selected' ?>><?= $l['branch_description'] ?></option>
-									<?php } ?>
-								</select>
-							</div>
-
-
-							<div class="oneTwo">
-								<label for="general_contractor_name">General Contractor</label>
-								<input type="text" id="general_contractor_name" name="general_contractor_name" placeholder="Add general contractor" value='<?php if (!empty($this->gerneral_contractor)) {
-																																								echo $this->gerneral_contractor['customer_name'] . ' - ' . $this->gerneral_contractor['company_id'];
-																																							} ?>' />
-								<input type="hidden" id="general_contractor_id" name="general_contractor_id" value="<?= $project['general_contractor_id'] ?>" />
-							</div>
-
-							<div class="oneTwo">
-								<label for="awarded_contractor_name">Awarded Sub Contractor</label>
-								<input type="text" id="awarded_contractor_name" name="awarded_contractor_name" placeholder="Add awarded contractor" value='<?php if (!empty($this->awarded_sub_contracotr)) {
-																																								echo $this->awarded_sub_contracotr['customer_name'] . ' - ' . $this->awarded_sub_contracotr['company_id'];
-																																							} ?>' />
-								<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id' value="<?= $project['awarded_contractor_id'] ?>">
+								<label for="project_id_ext">Project ID</label>
+								<input id="project_id_ext" type="text" name='project_id_ext' value="<?= $project['project_id_ext'] ?>" readonly />
 							</div>
 						</div>
 					</div>
 
-					<?php if ($this->owner == 1) { ?>
+					<div class="line"></div>
+
+					<details>
+						<summary>Architect & Specifier</summary>
+						<div class="widget-section">
+							<div class="widget-header">
+								<div class="widget-title">
+									<h4>Architect</h4>
+								</div>
+								<div class="widget-button">
+									<button type="button" title="Add new architect" class="button action has-icon add-item-button small" id="add_architect">
+										<span class="button-wrap">
+											<span class="icon icon-add"></span>
+											New Architect
+										</span>
+									</button>
+								</div>
+							</div>
+							<p>*If you want to edit the architect, please edit it in Architect Portal.</p>
+							<div class="formRow">
+								<div class="oneTwo">
+									<label for="architect_name">Architect Name</label>
+									<input readonly type='text' name="architect_name" id='architect_name' class="tipN" original-title="Search by ID or Name" value='<?= $architect['architect_name'] ?? '' ?>' />
+									<input type="hidden" name='architect_id' id='architect_id' value='<?= $architect['architect_id'] ?? '' ?>' />
+								</div>
+
+								<div class="oneTwo">
+									<label for="architect_company_id">Company</label>
+									<select id="architect_company_id" name="architect_company_id">
+										<?php foreach ($this->company as $l) { ?>
+											<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] === ($architect['company_id'] ?? '')) echo 'selected' ?>><?= $l['company_name'] ?></option>
+										<?php } ?>
+									</select>
+								</div>
+
+								<div class="oneTwo">
+									<label for="architect_rep_id">Architect Representative</label>
+									<input readonly type="text" id="architect_rep_id" name="architect_rep_id" value='<?= $architect['architect_rep_id'] ?? '' ?>' readonly />
+								</div>
+
+								<input type="hidden" name='address_id' id='address_id' />
+								<div class="oneTwo">
+									<label for="phys_address1">Address 1</label>
+									<input readonly type='text' name="phys_address1" id='phys_address1' value='<?= $architect['phys_address1'] ?? '' ?>' />
+								</div>
+
+								<div class="oneTwo">
+									<label for="phys_address2">Address 2</label>
+									<input readonly type='text' name="phys_address2" id='phys_address2' value='<?= $architect['phys_address2'] ?? '' ?>' placeholder="Optional" />
+								</div>
+
+								<div class="oneTwo">
+									<label for="phys_city">City 2</label>
+									<input readonly type='text' name="phys_city" id='phys_city' value='<?= $architect['phys_city'] ?? '' ?>' placeholder="Optional" />
+								</div>
+
+								<div class="oneTwo">
+									<label for="phys_state">Province</label>
+									<input readonly type='text' name="phys_state" id='phys_state' value='<?= $architect['phys_state'] ?? '' ?>' placeholder="Optional" />
+								</div>
+
+								<div class="oneTwo">
+									<label for="phys_postal_code">Postal Code</label>
+									<input readonly type='text' name="phys_postal_code" id='phys_postal_code' value='<?= $architect['phys_postal_code'] ?? '' ?>' placeholder="Optional" />
+								</div>
+
+								<div class="oneTwo">
+									<label for="phys_country">Country</label>
+									<input readonly type='text' name="phys_country" id='phys_country' value='<?= $architect['phys_country'] ?? '' ?>' placeholder="Optional" />
+								</div>
+
+								<div class="oneTwo">
+									<label for="central_phone_number">Company Phone Number</label>
+									<input readonly id='central_phone_number' name='central_phone_number' type="tel" class="maskPhone" value='<?= $architect['central_phone_number'] ?? '' ?>' placeholder="(123) 456-7890" />
+								</div>
+
+								<div class="oneTwo">
+									<label for="email_address">Email</label>
+									<input readonly type="text" value="" id='email_address' name='email_address' value='<?= $architect['email_address'] ?? '' ?>' placeholder="Optional">
+								</div>
+
+								<div class="oneTwo">
+									<label for="url">URL</label>
+									<input readonly type="url" value="" id='url' name='url' value='<?= $architect['url'] ?? '' ?>' placeholder="Optional">
+								</div>
+							</div>
+						</div>
+
+						<div class="line"></div>
+
+						<div class="widget-section">
+							<h4>Specifier</h4>
+							<p>*If you want to edit the specifier, please edit it in Architect Portal.</p>
+							<div class="formRow">
+								<input type="hidden" id='specifier_id' name="specifier_id" value='<?= $project['specifier_id'] ?>' />
+								<input type="hidden" id='specifier_address_id' name="specifier_address_id" value='<?= $specifier['address_id'] ?>' />
+								<div class="oneTwo ">
+									<label for="specifier_name">Specifier</label>
+									<select name='specifier_name' id='specifier_name'>
+										<?php
+										if (!empty($specifierList)):
+											foreach ($specifierList as $spec): ?>
+												<option value="<?= $spec['specifier_id'] ?>" <?php if ($spec['specifier_id'] === $project['specifier_id']) echo 'selected' ?>><?= $spec['first_name'] . ' ' . $spec['last_name'] ?></option>
+										<?php endforeach;
+										endif;
+										?>
+										<option value="new">+ Add New Specifier</option>
+									</select>
+								</div>
+
+								<div class="oneTwo ">
+									<label for="specifier_first_name">First Name</label>
+									<input readonly type='text' id='specifier_first_name' name="specifier_first_name" class="tipN" value='<?= $specifier['first_name'] ?>' />
+								</div>
+
+								<div class="oneTwo ">
+									<label for="specifier_last_name">Last Name</label>
+									<input readonly type='text' id='specifier_last_name' name="specifier_last_name" placeholder="Optional" value='<?= $specifier['last_name'] ?>' />
+								</div>
+
+								<div class="oneTwo ">
+									<label for="specifier_job_title">Job Title</label>
+									<input readonly type='text' id='specifier_job_title' name="specifier_job_title" class="tipN" placeholder="Optional" value='<?= $specifier['job_title'] ?>' />
+								</div>
+
+								<div class="oneTwo ">
+									<label for="specifier_phone_number">Phone Number</label>
+									<input readonly type='tel' id='specifier_phone_number' name="specifier_phone_number" class="maskPhone" placeholder="(123) 456-7890" value='<?= $specifier['central_phone_number'] ?>' />
+								</div>
+
+								<div class="oneTwo ">
+									<label for="specifier_email">Email</label>
+									<input readonly type='text' id='specifier_email' name="specifier_email" class="tipN" placeholder="Optional" value='<?= $specifier['email_address'] ?>' />
+								</div>
+							</div>
+						</div>
+					</details>
+
+					<div class="line"></div>
+
+					<details>
+						<summary>Contractor</summary>
+						<div class="widget-section">
+							<div class="formRow">
+								<div class="oneTwo">
+									<label for="general_contractor_name">General Contractor</label>
+									<input type="text" id="general_contractor_name" name="general_contractor_name" placeholder="Add general contractor" value='<?php if (!empty($this->gerneral_contractor)) {
+																																									echo $this->gerneral_contractor['customer_name'] . ' - ' . $this->gerneral_contractor['company_id'];
+																																								} ?>' />
+									<input type="hidden" id="general_contractor_id" name="general_contractor_id" value="<?= $project['general_contractor_id'] ?>" />
+								</div>
+
+								<div class="oneTwo">
+									<label for="awarded_contractor_name">Awarded Sub Contractor</label>
+									<input type="text" id="awarded_contractor_name" name="awarded_contractor_name" placeholder="Add awarded contractor" value='<?php if (!empty($this->awarded_sub_contracotr)) {
+																																									echo $this->awarded_sub_contracotr['customer_name'] . ' - ' . $this->awarded_sub_contracotr['company_id'];
+																																								} ?>' />
+									<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id' value="<?= $project['awarded_contractor_id'] ?>">
+								</div>
+							</div>
+						</div>
+					</details>
+
+					<?php if ($owner) { ?>
 
 						<div class="line"></div>
 
@@ -235,7 +333,7 @@ $architect = $this->architect;
 						<h2>Quoted Items</h2>
 					</div>
 					<div class="widget-button">
-						<?php if ($this->owner == 1) { ?>
+						<?php if ($owner) { ?>
 							<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="add_item">
 								<span class="button-wrap">
 									<span class="icon icon-add"></span>
@@ -285,7 +383,7 @@ $architect = $this->architect;
 						<h2>Project Quotes</h2>
 					</div>
 					<div class="widget-button">
-						<?php if ($this->owner == 1) { ?>
+						<?php if ($owner) { ?>
 							<button onclick="location.href='/quote/index/project/<?= $projectID ?>'" type="button" title="Add new quote" class="button action has-icon add-quote-button small" id="add-quote">
 								<span class="button-wrap">
 									<span class="icon icon-add"></span>
@@ -323,7 +421,7 @@ $architect = $this->architect;
 						<h2>Project Log</h2>
 					</div>
 					<div class="widget-button">
-						<?php if ($this->owner == 1) { ?>
+						<?php if ($owner) { ?>
 							<button type="button" title="Add new log" class="button action has-icon add-log-button small" id="opener">
 								<span class="button-wrap">
 									<span class="icon icon-add"></span>
@@ -343,6 +441,7 @@ $architect = $this->architect;
 								<th>Log Time</th>
 								<th>Log</th>
 								<th>Next Action</th>
+								<th>Follow Up Date</th>
 								<th>Author</th>
 								<th class="action">Options</th>
 							</tr>
@@ -352,46 +451,19 @@ $architect = $this->architect;
 			</div>
 		</section>
 
-		<div id="dialog-message" title="Add Log">
-			<form action="" class="dialog" id='note'>
-				<div class="dialog-form">
-					<input type="hidden" name="owner_id" id="owner_id" value="<?= $user['id'] ?>">
-					<div class="oneTwo dialog-note">
-						<label for="note_title">Title</label>
-						<textarea rows="2" name='note_title' id='note_title' placeholder="Title"></textarea>
-					</div>
-
-					<div class="oneTwo required-field dialog-note">
-						<label for="project_note">Content</label>
-						<textarea rows="8" name='project_note' id='project_note' class="validate[required]" placeholder="Log content"></textarea>
-					</div>
-
-					<div class="oneTwo dialog-note">
-						<label for="next_action">Next Action</label>
-						<textarea rows="3" name="next_action" id='next_action' placeholder="Can be left empty"></textarea>
-					</div>
-
-					<div class="oneTwo dialog-note">
-						<label for='date_added'>Follow Up Date</label>
-						<input type="text" name='date_added' id='date_added' class="datepicker" value='<?= date('Y-m-d') ?>' />
-					</div>
-				</div>
-			</form>
-		</div>
-
 		<div id="dialog-item" title="Add Item">
 			<form action="" class="dialog" id='item'>
 				<div class="dialog-form">
 					<div class="oneTwo required-field">
 						<label for="item_id">Item ID</label>
 						<input type="hidden" name="item_desc" id='item_input' />
-						<input type="text" id="item_id" name='item_id' class="validate[required]" />
+						<input type="text" id="item_id" name='item_id' class="validate[required]" placeholder="Search by ID or name" />
 					</div>
 
 					<div class="oneTwo required-field">
 						<label for='uom'>Unit Of Measure</label>
 						<select name="uom" id='uom' class="validate[required]">
-							<option value=''>-- Select UOM --</option>
+							<option value=''>-- Search for item first --</option>
 						</select>
 					</div>
 
@@ -413,736 +485,36 @@ $architect = $this->architect;
 				</div>
 			</form>
 		</div>
+
+		<div id="dialog-message" title="Add Log">
+			<form action="" class="dialog" id='note'>
+				<div class="dialog-form">
+					<div class="oneTwo dialog-note">
+						<label for="note_title">Title</label>
+						<textarea rows="2" name='note_title' id='note_title' placeholder="Title"></textarea>
+					</div>
+
+					<div class="oneTwo required-field dialog-note">
+						<label for="project_note">Content</label>
+						<textarea rows="8" name='project_note' id='project_note' class="validate[required]" placeholder="Log content"></textarea>
+					</div>
+
+					<div class="oneTwo dialog-note">
+						<label for="next_action">Next Action</label>
+						<textarea rows="3" name="next_action" id='next_action' placeholder="Can be left empty"></textarea>
+					</div>
+
+					<div class="oneTwo dialog-note">
+						<label for='follow_up_date'>Follow Up Date</label>
+						<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker" value='<?= date('Y-m-d') ?>' />
+					</div>
+				</div>
+			</form>
+		</div>
 	</div>
 </main>
 
 
 <script type="text/javascript">
-	let noteTable = $('#project_note').DataTable({
-		ajax: {
-			url: "/project/note/id/" + $('#project_id').val(),
-			dataSrc: ''
-		},
-		processing: true,
-		columns: [{
-				data: "date_added.date",
-				render: function(data) {
-					let date = new Date(data);
-					return '<p><b>' + date.toLocaleString('en-CA') + '</b></p>';
-				}
-			},
-			{
-				data: "note_title",
-				render: function(data, type, row, meta) {
-					if (data == '') {
-						let formattedText = (row.project_note).replace(/(?:\r\n|\r|\n)/g, '<br>');
-						return '<p>' + formattedText + '</p>';
-					} else if (row.project_note == null) { // this is for old quote system rendering
-						return '<p>' + data + '</p>';
-					} else {
-						let formattedText = (row.project_note).replace(/(?:\r\n|\r|\n)/g, '<br>');
-						return '<p><b>' + data + '</b></br>' + formattedText + '</p>';
-					}
-				}
-			},
-			{
-				data: "next_action",
-				render: function(data) {
-					let formattedText = data.replace(/(?:\r\n|\r|\n)/g, '<br>');
-					return '<p>' + formattedText + '</p>';
-				}
-			},
-			//{
-			//	data: "follow_up_date",
-			//	render: function(data) {
-			//		let date = new Date(data);
-			//		return '<p><b>' + date.toLocaleDateString() + '</b></p>';
-			//	}
-			//},
-			{
-				data: "owner_id",
-				render: function(data) {
-					if (data != null) {
-						return '<p><b>' + data + '</b></p>';
-					} else {
-						return data;
-					}
-				}
-			},
-			{
-				data: "project_note_id",
-				render: function(data) {
-					<?php if ($this->owner == 1) { ?>
-						return '<div class="row-button">' +
-							'<a title="Edit this note" class="note-edit" href="#">' +
-							'<span class="button-wrap">' +
-							'<span class="icon icon-edit"></span>' +
-							'</span></a>' +
-							'<a title="Delete this note" class="note_delete" target="_blank" href="/note/delete/id/' + data +
-							'"><span class="button-wrap"><span class="icon icon-delete"></span></span></a></div>';
-					<?php } else { ?>
-						return null;
-					<?php } ?>
-				}
-			},
-		],
-		columnDefs: [{
-			targets: '_all',
-			className: 'dt-head-center'
-		}, {
-			targets: [0, 3, 4],
-			className: 'dt-body-center'
-		}],
-		order: [
-			[0, "desc"]
-		],
-		scrollX: true,
-		fixedColumns: {
-			end: 1
-		},
-	});
-
-	let itemTable = $("#items").DataTable({
-		ajax: {
-			url: "/project/item/id/" + $('#project_id').val(),
-			dataSrc: ''
-		},
-		processing: true,
-		columns: [{
-				data: "item_id",
-				render: function(data, type, row, meta) {
-					return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
-				}
-			},
-			{
-				data: "quantity",
-				render: function(data) {
-					let qty = Number.parseFloat(data).toFixed(0);
-					return '<b>' + qty + '</b>';
-				}
-			},
-			{
-				data: "unit_price",
-				render: function(data) {
-					return '<b>' + data + '</b>';
-				}
-			},
-			{
-				data: "uom",
-				render: function(data) {
-					return '<b>' + data + '</b>';
-				}
-			},
-			{
-				data: "subtotal",
-				render: function(data) {
-					return '<b>' + data + '</b>';
-				}
-			},
-			{
-				data: "note",
-				render: function(data) {
-					let formattedText = data.replace(/(?:\r\n|\r|\n)/g, '<br>');
-					return '<p>' + formattedText + '</p>';
-				}
-			},
-			{
-				data: "item_id",
-				render: function(data, type, row, meta) {
-					//var oldData = getolddata($(this).closest('tr'));
-					return '<div class="row-button">' +
-						'<a title="Edit this item" class="edit" href="#">' +
-						'<span class="button-wrap">' +
-						'<span class="icon icon-edit"></span>' +
-						'</span></a>' +
-						'<a title="Delete this item" class="item_delete" href="/project/deleteitem/uid/' + row.item_uid + '"' +
-						'index="' + data + '">' +
-						'<span class="button-wrap">' +
-						'<span class="icon icon-delete"></span>' +
-						'</span></a></div>';
-				}
-			},
-			{
-				data: "item_uid",
-				visible: false
-			}
-		],
-		columnDefs: [{
-			targets: '_all',
-			className: 'dt-head-center'
-		}, {
-			targets: [0, 1, 2, 3, 4],
-			className: 'dt-body-center'
-		}],
-		layout: {
-			topStart: null,
-			topEnd: null
-		},
-		order: [
-			[7, 'desc']
-		], // sort by item uid, newest item on top 
-		paging: false,
-		scrollX: true,
-		fixedColumns: {
-			start: 1,
-			end: 1
-		},
-		//rowReorder: true
-	});
-
-	let projectQuoteTable = $('#project-quote-table').DataTable({
-		ajax: {
-			url: "/project/quote/id/" + $('#project_id').val(),
-			dataSrc: ''
-		},
-		processing: true,
-		columns: [{
-				data: "quote_id",
-				render: function(data, type, row, meta) {
-					return "<a target='_blank' href='/quote/edit/id/" + data + "'>" + data + "</a>";
-				}
-			},
-			{
-				data: 'project_name'
-			},
-			{
-				data: "quote_date",
-				render: function(data) {
-					let date = new Date(data);
-					return date.toLocaleDateString();
-				}
-			},
-			{
-				data: "expire_date.date",
-				render: function(data) {
-					let date = new Date(data);
-					let today = new Date();
-					if (date <= today) {
-						return '<span class="red">' + date.toLocaleDateString() + '</span>';
-					} else {
-						return date.toLocaleDateString();
-					}
-				}
-			},
-			{
-				data: "ship_required_date.date",
-				render: function(data) {
-					let date = new Date(data);
-					return date.toLocaleDateString();
-				}
-			},
-			{
-				data: "quote_status",
-				render: function(data) {
-					if (data == -1) {
-						return '<span class="disapproved red">Disapproved</span>';
-					} else if (data == 10) {
-						return '<span class="approved green">Approved</span>';
-					} else if (data == 1) {
-						return '<span class="waiting orange">Waiting</span>';
-					} else {
-						return 'Not submitted';
-					}
-				}
-			},
-			{
-				data: "order_no"
-			}
-		],
-		columnDefs: [{
-			targets: '_all',
-			className: 'dt-head-center'
-		}, {
-			targets: [0, 2, 3, 4, 5, 6],
-			className: 'dt-body-center'
-		}],
-		order: [
-			[0, "desc"]
-		],
-		scrollX: true,
-		layout: {
-			topStart: null,
-			topEnd: null
-		}
-	});
-
-
-	function resetForm($form) {
-		$form.find('input:text, input:password, input:file, select, textarea').val('');
-		$form.find('input:radio, input:checkbox')
-			.prop('checked', false)
-			.prop('selected', false);
-	}
-
-	var current_edit_row = '';
-
-	$(function() {
-
-		function getContractor(id, targetPrefix) {
-			$.ajax({
-				url: '/customer/fetchbyid/id/' + id,
-				type: "get",
-				success: function(data) {
-					var result = data ? JSON.parse(data) : null;
-					if (result) {
-						$('#' + targetPrefix + '_id').val(result.customer_id);
-						$('#' + targetPrefix + '_name').val(result.customer_name);
-					}
-				}
-			});
-		}
-
-		function getSpecifierOrArchitect(id, type) {
-			$.ajax({
-				url: '/specifier/fetchspecbyid/id/' + id,
-				type: "get",
-				success: function(data) {
-					var result = data ? JSON.parse(data) : null;
-					if (result) {
-						$('#' + type + '_name').val(result.specifier_name);
-						$('#' + type + '_id').val(result.specifier_id);
-						$('#' + type + '_location').val(result.location_id);
-					}
-				}
-			});
-		}
-
-		function setupAutocomplete(selector, sourceUrl, selectCallback, isContractor = false) {
-			$(selector).autocomplete({
-				source: sourceUrl,
-				minLength: 2,
-				select: function(event, ui) {
-					selectCallback(ui.item);
-				}
-			}).data("ui-autocomplete")._renderItem = function(ul, item) {
-				return $("<li>")
-					.data("item.autocomplete", item)
-					.append("<a>" +
-						(isContractor ? (item.customer_id + " - " + item.company_id + "<br>" + item.customer_name) :
-							(item.specifier_name + " - " + item.location_id + "<br>" + item.branch_description)) +
-						"</a>")
-					.appendTo(ul);
-			};
-		}
-
-		setupAutocomplete("#architect_name", "/specifier/fetchspecbyname/", function(item) {
-			getSpecifierOrArchitect(item.specifier_id, 'architect');
-		});
-
-		setupAutocomplete("#specifier_name", "/specifier/fetchspecbyname/", function(item) {
-			getSpecifierOrArchitect(item.specifier_id, 'specifier');
-		});
-
-		setupAutocomplete("#general_contractor_name", "/customer/quote/", function(item) {
-			getContractor(item.customer_id, 'general_contractor');
-		}, true);
-
-		setupAutocomplete("#awarded_contractor_name", "/customer/quote/", function(item) {
-			getContractor(item.customer_id, 'awarded_contractor');
-		}, true);
-
-		$('#architect_location, #specifier_location').on('change', function() {
-			$('#' + $(this).attr('id').replace('_location', '_id')).val('');
-		});
-
-		let currentRow = '';
-
-		$('#items tbody').on('click', 'tr', function() {
-			currentRow = itemTable.row(this).data();
-			console.log(currentRow['note']);
-		});
-
-		function getolddata(row) {
-			let item_uid = currentRow['item_uid'];
-			let item_id = currentRow['item_id'];
-			let note = currentRow['note'];
-			let qty = currentRow['quantity'];
-			let unit_price = currentRow['unit_price'];
-			let uom = currentRow['uom'];
-			var data = {
-				'item_uid': item_uid,
-				'old_item_id': item_id,
-				'old_uom': uom,
-				'old_price': unit_price,
-				'old_qty': qty,
-				'old_note': note
-			};
-			return data;
-		}
-
-		$("#dialog-message").dialog({
-			autoOpen: false,
-			modal: true,
-			minWidth: 800,
-			width: 1000,
-			//minHeight: 600,
-			open: function() { // fade in background
-				$('.ui-widget-overlay').hide().fadeIn();
-			},
-			beforeClose: function() { //fade out background
-				$('.ui-widget-overlay:first')
-					.clone()
-					.appendTo('body')
-					.show()
-					.fadeOut(400, function() {
-						$(this).remove();
-					});
-			},
-			dialogClass: 'add-item-dialog',
-			buttons: [{
-					id: "btn-add",
-					text: "Add Log",
-					click: function() {
-						if ($("#note").validationEngine('validate') == true) {
-							if (isEditnote == false) {
-								addnote();
-							} else {
-								editnote();
-							}
-							$(this).dialog("close");
-						}
-					}
-				},
-				{
-					id: "btn-cancel",
-					text: "Cancel",
-					click: function() {
-						$(this).dialog("close");
-					}
-				}
-			]
-		});
-
-		$("#dialog-item").dialog({
-			autoOpen: false,
-			modal: true,
-			minWidth: 800,
-			width: 800,
-			//minHeight: 600,
-			open: function() { // fade in background
-				$('.ui-widget-overlay').hide().fadeIn();
-			},
-			beforeClose: function() { //fade out background
-				$('.ui-widget-overlay:first')
-					.clone()
-					.appendTo('body')
-					.show()
-					.fadeOut(400, function() {
-						$(this).remove();
-					});
-			},
-			dialogClass: 'add-item-dialog',
-			buttons: [{
-					id: "btn-add",
-					text: "Add",
-					click: function() {
-						if ($("#item").validationEngine('validate') == true) {
-							if ($('#is_edit').val() == 1) {
-								edititem();
-							} else {
-								additem();
-							}
-							$(this).dialog("close");
-							resetForm($('#item'));
-						}
-					}
-				},
-				{
-					id: "btn-cancel",
-					text: "Cancel",
-					click: function() {
-						$(this).dialog("close");
-					}
-				}
-			]
-		});
-
-		$('#add_item').on("click", function() {
-			resetForm($('#item'));
-			$('#is_edit').val(0);
-			$("#dialog-item").dialog("open");
-			return false;
-		});
-
-		$(document).on("click", "a.edit", function() {
-			$("#dialog-item").dialog("open");
-			current_edit_row = $(this).closest('tr');
-			set_edit(current_edit_row);
-			//console.log(current_edit_row);
-			return false;
-		});
-
-		function set_edit(row) {
-			$("#dialog-item").dialog("option", "title", "Edit Item");
-			$('#is_edit').val(1);
-
-			let oldData = getolddata(current_edit_row);
-
-			$('#item #item_id').val(oldData['old_item_id']);
-			$('#item #price').val(oldData['old_price']);
-			$('#item #qty').val(oldData['old_qty']);
-			$('#item #note').val(oldData['old_note']);
-
-			getoumedit(oldData['old_item_id'], oldData['old_uom'], oldData['old_price']);
-		}
-
-		function getoumedit(item_id, unit_number, price) {
-			$('.loading').show();
-			$.ajax({
-				url: '/item/uom/id/' + $("#item_id ").val(),
-				type: "get",
-				success: function(data) {
-					var uom = JSON.parse(data);
-					var list = '';
-					$.each(uom, function(i, item) {
-						list = list + '<option value="' + item.uom + '">' + item.uom + '</option>';
-					});
-					$('#uom').html(list);
-					$('#uom option[value=' + unit_number + ']').attr('selected', 'selected');
-					$('#uniform-uom span').html(unit_number);
-					$('#price').val(price);
-					$('.loading').hide();
-				}
-			});
-
-		}
-
-		$(document).on('click', ".item_delete", function(e) {
-			e.preventDefault();
-			//var data = getolddata($(this).closest('tr'));
-			if (confirm("Are you sure you want to delete this item?") == true) {
-				//$(this).parent().parent().remove();
-				$('.loading').show();
-				$.ajax({
-					url: $(this).attr('href'),
-					//url: '/project/deleteitem/pro/' + $('#project_id').val() + '/item/' + $(this).attr('index') + '/uom/' + data['old_uom'] + '/price/' + data['old_price'] + '/qty/' + data['old_qty'],
-					type: "get",
-					success: function(data) {
-						itemTable.ajax.reload();
-						$('.loading').hide();
-					}
-				});
-			}
-		});
-
-		$(".dialog #item_id").autocomplete({
-			source: '/item/index/',
-			minLength: 2,
-			select: function(event, ui) {
-				$("#item_input").val(ui.item.item_desc);
-				$("#item_id").val(ui.item.item_id);
-				getoum(ui.item.item_id);
-				$('#uom').prop('disabled', false);
-				$('#uniform-uom').removeClass('disabled');
-				return false;
-			}
-		}).data("ui-autocomplete")._renderItem = function(ul, item) {
-			return $("<li></li>")
-				.data("item.autocomplete", item)
-				.append("<a><b>" + item.item_id + " - " + item.item_desc + "</b></a>")
-				.appendTo(ul);
-		};
-
-		$(".dialog #item_id").on('paste', function(e) {
-			alert('paste');
-			$(".dialog #item_id").select();
-		});
-
-		function getoum(item_id) {
-			$('.loading').show();
-			$.ajax({
-				url: '/item/uom/id/' + $("#item_id ").val(),
-				type: "get",
-				success: function(data) {
-					var uom = JSON.parse(data);
-					var list = '';
-					$.each(uom, function(i, item) {
-						list = list + '<option value="' + item.uom + '">' + item.uom + '</option>';
-					});
-					$('#uom').html(list);
-					$('#uom option').eq(0).attr("selected", "selected");
-					$('#uniform-uom span').html(uom[0].uom);
-					getprice();
-					$('.loading').hide();
-				}
-			});
-
-		};
-
-		function getprice() {
-			$.ajax({
-				url: '/item/price/id/' + $("#item_id ").val() + '/uom/' + $("#uom ").val(),
-				type: "get",
-				success: function(data) {
-					var price = JSON.parse(data);
-					$('#price').val(price.price);
-				}
-			});
-
-		};
-
-		function additem() {
-			$('.loading').show();
-			$.ajax({
-				url: '/project/additem/pro/' + $('#project_id').val(),
-				type: "post",
-				data: $("#item").serialize(),
-				success: function(data) {
-					$('.loading').hide();
-					itemTable.ajax.reload();
-				}
-			});
-		};
-
-		function edititem() {
-			var olddata = getolddata(current_edit_row);
-			$.ajax({
-				url: '/project/edititem/uid/' + olddata['item_uid'],
-				type: "post",
-				data: $("#item").serialize(),
-				success: function(data) {
-					itemTable.ajax.reload();
-				}
-			});
-		}
-
-		$("#uom, #uniform-uom").on("change", function() {
-			getprice();
-			return false;
-		});
-
-		let unsave = false;
-
-		$('#project_content').on("change", function() {
-			$('#save-project').prop("disabled", false);
-			unsave = true;
-		});
-
-		$('#save-project').on("click", function(e) {
-			e.preventDefault();
-			if ($("#project_content").validationEngine('validate') == true) {
-				if ($('#status').val() != 13) {
-					if ($('#gerneral_contractor').val() == '') {
-						$('#gerneral_contractor_id').val('')
-					}; // delete contractor
-					if ($('#awarded_contractor').val() == '') {
-						$('#awarded_contractor_id').val('')
-					};
-					$('#project_content').trigger("submit");
-					unsave = false;
-				}
-			}
-		});
-
-		window.onbeforeunload = function() {
-			if (unsave) {
-				$('#save-project').trigger("focus");
-				return "You have unsaved changes project information. Do you want to leave this page and discard your changes or stay on this page?";
-			}
-		}
-
-		$('.delete_pro').on("click", function() {
-			if (confirm("Are you sure you want to delete this project?") == true) {
-				$('.loading').show();
-				$.ajax({
-					url: '/project/delete/id/' + $('#project_id').val(),
-					type: "get",
-					success: function(data) {
-						$('.loading').hide();
-
-						window.location = '/';
-					}
-				});
-			}
-		});
-
-		$('#shared_id').autocomplete({
-			source: '/user/id',
-			minLength: 1,
-			select: function(event, ui) {
-				$('#shared_id').val(ui.item.id);
-				return false;
-			}
-		}).data("ui-autocomplete")._renderItem = function(ul, item) {
-			return $("<li></li>")
-				.data("item.autocomplete", item)
-				.append("<a>" + item.id + "</br>" + item.name + "</a>")
-				.appendTo(ul);
-		}
-
-		let currentnoteRow = '';
-		let isEditnote = false;
-
-		$('#project_note tbody').on('click', 'tr', function() {
-			currentnoteRow = noteTable.row(this).data();
-		});
-
-		$(document).on("click", ".note-edit", function(e) {
-			e.preventDefault();
-
-			isEditnote = true;
-
-			$("#dialog-message").dialog("option", "title", "Edit Log");
-			$("#dialog-message").dialog("open");
-
-			$('#note #note_title').val(currentnoteRow['note_title']);
-			$('#note #project_note').val(currentnoteRow['project_note']);
-			$('#note #next_action').val(currentnoteRow['next_action']);
-			let followUpDate = new Date(currentnoteRow['date_added']['date']);
-			$('#note #date_added').val(followUpDate.toLocaleDateString());
-		})
-
-		$('#opener').on("click", function() {
-			isEditnote = false;
-			document.getElementById("note").reset();
-			$("#dialog-message").dialog("option", "title", "Add Log");
-			$("#dialog-message").dialog("open");
-		});
-
-		function addnote() {
-			$.ajax({
-				url: '/note/add/pro/' + $('#project_id').val(),
-				type: "post",
-				data: $("#note").serialize(),
-				success: function(data) {
-					$('.loading').hide();
-					if (data > 0) {
-						noteTable.ajax.reload();
-					}
-					resetForm($('#note'));
-				}
-			});
-		};
-
-		function editnote() {
-			$.ajax({
-				url: '/note/edit/id/' + currentnoteRow['project_note_id'],
-				type: "post",
-				data: $("#note").serialize(),
-				success: function(data) {
-					noteTable.ajax.reload();
-					resetForm($('#note'));
-				}
-			});
-		};
-
-		$(document).on('click', '.note_delete', function(e) {
-			e.preventDefault();
-			var obj = $(this);
-			if (confirm("Are you sure you want to delete this log?") == true) {
-				$('.loading').show();
-				$.ajax({
-					url: $(this).attr('href'),
-					type: "get",
-					success: function(data) {
-						//var index = $('#project_note tbody tr').index(obj.parent().parent());
-						//if (index != -1) {
-						noteTable.ajax.reload();
-						//}
-						$('.loading').hide();
-					}
-				});
-			}
-		});
-	});
+	let isOwner = <?= $this->owner ? 'true' : 'false' ?>;
 </script>

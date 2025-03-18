@@ -44,7 +44,7 @@ $user = $this->userHelper();
 
             <?php if (($this->escapeHtml($user['approve_id']) ?? null) != null || ($this->escapeHtml($user['sale_role']) ?? '') == 'admin') { ?>
               <li class="top-level-entry-container">
-                <a href="/index/index/normal/1/" class="top-level-entry">Project Portal</a>
+                <a href="/index/project" class="top-level-entry">Project Portal</a>
               </li>
             <?php } else { ?>
               <li class="top-level-entry-container">
@@ -62,7 +62,7 @@ $user = $this->userHelper();
             <?php } ?>
 
             <li class="top-level-entry-container">
-                <a href="/architect" class="top-level-entry">Architect Portal</a>
+                <a href="/index/architect" class="top-level-entry">Architect Portal</a>
               </li>
           </ul>
         </nav>

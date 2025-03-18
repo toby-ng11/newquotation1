@@ -36,7 +36,7 @@ class Module implements ConfigProviderInterface
 
         $default_company = $_GET['company'] ?? $user['default_company'];
         $company = $locationModel->fetchLocationIdFromCompany($default_company);
-        $company_id = $company['location_id'] ?? $user['default_location_id'];
+        $location_id = $company['location_id'] ?? $user['default_location_id'];
 
         // Define SITEURL
         if (!defined('SITEURL')) {
@@ -44,7 +44,7 @@ class Module implements ConfigProviderInterface
         }
 
         define("DEFAULT_COMPANY", $default_company);
-        define("DEFAULT_COMPANY_ID", $company_id);
+        define("DEFAULT_LOCATION_ID", $location_id);
     }
 
     public function getServiceConfig()

@@ -62,9 +62,9 @@
  
 .ui-autocomplete {
     position: absolute;
-    display: none;
+    //display: none;
     padding: 0;
-    z-index: 100;
+    z-index: 2001;
     border: none;
     height: 402px;
     overflow-y: auto;

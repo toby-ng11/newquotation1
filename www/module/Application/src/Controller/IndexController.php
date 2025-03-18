@@ -27,13 +27,33 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
-        return new ViewModel();
+        $user = $this->userService->getCurrentUser();
+        return new ViewModel([
+            'user' => $user
+        ]);
     }
 
     public function adminAction()
     {
         $user = $this->userService->getCurrentUser();
-        
+
+        $table = $this->params()->fromRoute('table', 'project');
+
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            switch ($table) {
+                case 'project':
+                    $useView = $this->params()->fromQuery('view', false);
+                    $projects = $useView ? $this->project->fetchAllViews() : $this->project->fetchAll();
+                    $view = new JsonModel($projects);
+                    return $view;
+                case 'quote':
+                    $useView = $this->params()->fromQuery('view', false);
+                    $quotes = $useView ? $this->quote->fetchAllViews() : $this->quote->fetchAll();
+                    $view = new JsonModel($quotes);
+                    return $view;
+            }
+        }
+
         return new ViewModel([
             'user' => $user
         ]);
@@ -41,31 +61,10 @@ class IndexController extends AbstractActionController
 
     public function projectAction()
     {
-        $request = $this->getRequest();
-        if ($request->isXmlHttpRequest()) {
-            $useView = $this->params()->fromQuery('view', false);
-            $projects = $useView ? $this->project->fetchAllViews() : $this->project->fetchAll();
-            $view = new JsonModel($projects);
-            $view->setTerminal(true);
-            //error_log(print_r($view, true));
-            return $view;
-        }
+        $user = $this->userService->getCurrentUser();
 
-        return $this->getResponse()->setStatusCode(404);
-    }
-
-    public function quoteAction()
-    {
-        $request = $this->getRequest();
-        if ($request->isXmlHttpRequest()) {
-            $useView = $this->params()->fromQuery('view', false);
-            $quotes = $useView ? $this->quote->fetchAllViews() : $this->quote->fetchAll();
-            $view = new JsonModel($quotes);
-            $view->setTerminal(true);
-            //error_log(print_r($view, true));
-            return $view;
-        }
-
-        return $this->getResponse()->setStatusCode(404);
+        return new ViewModel([
+            'user' => $user
+        ]);
     }
 }
