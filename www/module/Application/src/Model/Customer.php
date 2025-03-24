@@ -39,12 +39,15 @@ class Customer
     {
         $sql = new Sql($this->adapter);
         $select = $sql->select('P21_customers_x_address')
-            ->where(function ($where) use ($pattern) {
-                $where->like('customer_id', $pattern . '%')
-                    ->or
-                    ->like('customer_name', $pattern . '%');
-            })
+            ->columns(['customer_id', 'customer_name', 'company_id', 'salesrep_full_name'])
             ->where(['company_id' => $company])
+            ->where(function ($where) use ($pattern) {
+                $where->nest()->like('customer_id', $pattern . '%')
+                    ->or
+                    ->like('customer_name', $pattern . '%')
+                    ->unnest();
+            })
+            ->order('customer_id ASC')
             ->limit($limit);
 
         $selectString = $sql->buildSqlString($select);

@@ -8,7 +8,7 @@ use Laminas\Mvc\Plugin\FlashMessenger;
 use Laminas\View\Model\{ViewModel, JsonModel};
 
 use Application\Service\UserService;
-use Application\Model\{Project, Quote, Location, Item, Note, Architect, Specifier};
+use Application\Model\{Project, Quote, Location, Item, Note, Architect, Specifier, Customer};
 
 class ProjectController extends AbstractActionController
 {
@@ -19,6 +19,7 @@ class ProjectController extends AbstractActionController
     protected $note;
     protected $architect;
     protected $specifier;
+    protected $customer;
 
     public function __construct(
         UserService $userService,
@@ -27,7 +28,8 @@ class ProjectController extends AbstractActionController
         Item $item,
         Note $note,
         Architect $architect,
-        Specifier $specifier
+        Specifier $specifier,
+        Customer $customer
         )
     {
         $this->userService = $userService;
@@ -37,6 +39,7 @@ class ProjectController extends AbstractActionController
         $this->note = $note;
         $this->architect = $architect;
         $this->specifier = $specifier;
+        $this->customer = $customer;
     }
 
     public function newAction()
@@ -73,6 +76,8 @@ class ProjectController extends AbstractActionController
         $architect = $this->architect->fetchArchitectById($project['architect_id']);
         $specifierList = $this->specifier->fetchSpecifiersByArchitect($project['architect_id']);
         $specifier = $this->specifier->fetchSpecifierById($project['specifier_id']);
+        $generalContractor = $this->customer->fetchCustomerById($project['general_contractor_id']);
+        $awardedContractor = $this->customer->fetchCustomerById($project['awarded_contractor_id']);
 
         $owner = false;
 
@@ -106,11 +111,13 @@ class ProjectController extends AbstractActionController
             'company' => $company,
             'location' => $location,
             'status' => $status,
-            'seg' => $marketSegment,
+            'marketSegment' => $marketSegment,
             'owner' => $owner,
             'architect' => $architect,
             'specifierList' => $specifierList,
-            'specifier' => $specifier
+            'specifier' => $specifier,
+            'generalContractor' => $generalContractor,
+            'awardedContractor' => $awardedContractor
         ]);
     }
 
@@ -130,6 +137,27 @@ class ProjectController extends AbstractActionController
             } else {
                 return $this->redirect()->toRoute('project', ['action' => 'index']);
             }
+        }
+    }
+
+    public function deleteAction() {
+        $project_id = (int) $this->params()->fromRoute('id');
+
+        if (!$project_id) {
+            return new JsonModel(['success' => false, 'message' => 'Invalid project ID']);
+        }
+
+        $result = $this->project->delete($project_id);
+
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            return new JsonModel(['success' => $result]);
+        }
+    
+        // Fallback if accessed normally (non-AJAX)
+        if ($result) {
+            return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
+        } else {
+            return $this->redirect()->toRoute('project', ['action' => 'edit', 'id' => $project_id]);
         }
     }
 

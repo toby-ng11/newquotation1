@@ -73,7 +73,7 @@ class ItemController extends AbstractActionController
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-            $item_uid = $this->params()->fromPost('uid', null);
+            $item_uid = $this->params()->fromPost('item_uid', null);
             $sheetType = $this->params()->fromPost('type', null);
             $data = $this->params()->fromPost();
 
@@ -104,6 +104,33 @@ class ItemController extends AbstractActionController
         return new JsonModel([
             'success' => false,
             'message' => 'Invalid request method.'
+        ]);
+    }
+
+    public function fetchAction() // fetch for edit
+    {
+        $item_uid = $this->params()->fromQuery('uid', null);
+        $sheetType = $this->params()->fromQuery('type', null);
+
+        if (!$item_uid) {
+            return new JsonModel([
+                'success' => false,
+                'message' => 'Missing item UID.'
+            ]);
+        }
+
+        $item = $this->item->fetchItemByUID($item_uid, $sheetType);
+
+        if (!$item) {
+            return new JsonModel([
+                'success' => false,
+                'message' => 'Item not found.'
+            ]);
+        }
+    
+        return new JsonModel([
+            'success' => true,
+            'data' => $item
         ]);
     }
 

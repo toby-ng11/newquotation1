@@ -132,6 +132,21 @@ class Project
         }
     }
 
+    public function delete($project_id)
+    {
+        if (!$project_id) {
+            return false;
+        }
+
+        try {
+            $this->project->update(['delete_flag' => 'Y'], ['project_id' => $project_id]);
+            return true;
+        } catch (Exception $e) {
+            error_log("Project/delete:Database Delete Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function fetchAll()
     {
         return $this->project->select()->toArray();

@@ -19,12 +19,13 @@ class CustomerController extends AbstractActionController
     public function fetchAction()
     {
         $pattern = $this->params()->fromQuery('term', null);
+        $limit = $this->params()->fromQuery('limit', 10);
 
         if (empty($pattern)) {
             return new JsonModel(['error' => 'Pattern is required']);
         }
 
-        $customer = $this->customer->fetchCustomerByPattern($pattern);
+        $customer = $this->customer->fetchCustomerByPattern($pattern, $limit);
 
         return new JsonModel($customer);
     }
@@ -40,5 +41,31 @@ class CustomerController extends AbstractActionController
         $customer = $this->customer->fetchCustomerById($id);
 
         return new JsonModel($customer);
+    }
+
+    public function contactsAction() // fetch customer contacts
+    {
+        $customer_id = $this->params()->fromQuery('customer_id', null);
+
+        if (empty($customer_id)) {
+            return new JsonModel(['error' => 'Customer ID is required']);
+        }
+
+        $contacts = $this->customer->fetchContactsByCustomer($customer_id);
+
+        return new JsonModel($contacts);
+    }
+
+    public function contactinfoAction() // fetch contact info
+    {
+        $contact_id = $this->params()->fromQuery('contact_id', null);
+
+        if (empty($contact_id)) {
+            return new JsonModel(['error' => 'Contact ID is required']);
+        }
+
+        $contact = $this->customer->fetchContactByID($contact_id);
+
+        return new JsonModel($contact);
     }
 }

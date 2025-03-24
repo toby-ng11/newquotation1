@@ -122,4 +122,30 @@ class NoteController extends AbstractActionController
             ]);
         }
     }
+
+    public function fetchAction() // fetch for edit
+    {
+        $note_id = $this->params()->fromQuery('id', null);
+
+        if (!$note_id) {
+            return new JsonModel([
+                'success' => false,
+                'message' => 'Missing note ID.'
+            ]);
+        }
+
+        $note = $this->note->fetchNote($note_id);
+
+        if (!$note) {
+            return new JsonModel([
+                'success' => false,
+                'message' => 'Note not found.'
+            ]);
+        }
+    
+        return new JsonModel([
+            'success' => true,
+            'data' => $note
+        ]);
+    }
 }

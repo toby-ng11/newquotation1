@@ -18,6 +18,10 @@
     }
 }
 
+.ui-widget-content {
+    color: var(--text-primary);
+}
+
 .ui-button {
     background: var(--widget-background-primary);
     color: var(--text-secondary);
@@ -66,8 +70,9 @@
     padding: 0;
     z-index: 2001;
     border: none;
-    height: 402px;
+    height: auto;
     overflow-y: auto;
+    overflow-x: hidden;
 
     .ui-state-hover {
         background: none;
@@ -76,20 +81,32 @@
 }
 
 .ui-dialog {
+
     background-color: var(--widget-background-primary);
     backdrop-filter: blur(10px);
     border-radius: 15px;
     border: 0px;
     box-shadow: var(--widget-box-shadow);
 
+    .line {
+		height: 1px;
+		background: rgba(135, 135, 135, 0.278);
+        margin: 1rem;
+	}
+    
+    .dialog {
+        padding: 0;
+    }
+
     .ui-dialog-titlebar {
         font: var(--type-heading-h2);
         letter-spacing: 0.05rem;
         border-radius: 15px;
         background-color: rgba(0, 0, 0, 0);
-        border: 0px;
+        border-width: 0 0 1px;
+        border-color: rgba(135, 135, 135, 0.278);
         color: var(--text-primary);
-        padding: 1.5rem;
+        padding: 1rem 1.5rem;
     }
 
     .ui-dialog-titlebar-close {
@@ -105,8 +122,12 @@
         border-radius: 10px;
     }
 
+    .ui-dialog-content {
+        padding: 1.5rem;
+        overflow-y: auto;
+    }
+
     .dialog-form {
-        padding: 1rem;
         display: grid;
         gap: 1rem 2rem;
         grid-template-columns: repeat(2, 1fr);
@@ -134,7 +155,9 @@
     .ui-dialog-buttonpane {
         border-radius: 15px;
         background-color: rgba(0, 0, 0, 0);
-        border: 0px;
+        border-width: 1px 0 0;
+        border-color: rgba(135, 135, 135, 0.278);
+        padding: 1rem;
         color: var(--text-primary);
         margin: 0;
 
@@ -146,7 +169,7 @@
         }
 
         button {
-            margin-bottom: 1rem;
+            margin: 1rem 0;
             border-radius: 10px;
             border: 0;
         }

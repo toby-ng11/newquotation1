@@ -28,6 +28,7 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         $user = $this->userService->getCurrentUser();
+        $this->layout()->setTemplate('layout/nonheader');
         return new ViewModel([
             'user' => $user
         ]);
@@ -37,7 +38,7 @@ class IndexController extends AbstractActionController
     {
         $user = $this->userService->getCurrentUser();
 
-        $table = $this->params()->fromRoute('table', 'project');
+        $table = $this->params()->fromRoute('table', 'project'); // default to project
 
         if ($this->getRequest()->isXmlHttpRequest()) {
             switch ($table) {
@@ -60,6 +61,24 @@ class IndexController extends AbstractActionController
     }
 
     public function projectAction()
+    {
+        $user = $this->userService->getCurrentUser();
+
+        return new ViewModel([
+            'user' => $user
+        ]);
+    }
+
+    public function approvalAction()
+    {
+        $user = $this->userService->getCurrentUser();
+
+        return new ViewModel([
+            'user' => $user
+        ]);
+    }
+
+    public function architectAction()
     {
         $user = $this->userService->getCurrentUser();
 

@@ -1,10 +1,202 @@
 $(function () {
   /* --------------------------  GLOBAL VARIABLES ---------------------------- */
 
-  const $projectId = $("#project_id").val();
+  const $projectId = window.location.pathname.split("/")[2];
+  const $projectForm = $("#project_content");
 
   /* --------------------------  TABLES ---------------------------- */
-  let noteTable = $("#project_note").DataTable({
+
+  let adminProjectTable = $("#admin-project-table").DataTable({
+    ajax: {
+      url: "/index/admin/project?view=true",
+      dataSrc: "",
+    },
+    processing: true,
+    //serverSide: true, // experimetal: server-side processing
+    columns: [
+      {
+        data: "project_id_ext",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/project/" +
+            row.project_id +
+            "/edit'>" +
+            data +
+            "</a>"
+          );
+        },
+      },
+      {
+        data: "project_name",
+      },
+      {
+        data: "owner_id",
+      },
+      {
+        data: "shared_id",
+      },
+      {
+        data: "create_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "due_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          let today = new Date();
+          if (date <= today) {
+            return '<span class="red">' + date.toLocaleDateString() + "</span>";
+          } else {
+            return date.toLocaleDateString();
+          }
+        },
+      },
+      {
+        data: "architect_name",
+      },
+      {
+        data: "market_segment_desc",
+      },
+      {
+        data: "status_desc",
+      },
+      {
+        data: "project_id",
+        render: function (data, type, row, meta) {
+          return (
+            '<a class="make-quote-button" title="Make Quote">' +
+            '<span class="button-wrap"><span class="icon icon-money"></span></span></a>'
+          );
+        },
+      },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        className: "dt-head-center",
+      },
+      {
+        targets: [0, 2, 3, 4, 5, 7, 8],
+        className: "dt-body-center",
+      },
+    ],
+    //"responsive": true,
+    order: [[0, "desc"]],
+    fixedColumns: {
+      start: 1,
+      end: 1,
+    },
+    scrollX: true,
+    layout: {
+      topStart: function () {
+        let info = document.createElement("div");
+        info.innerHTML = "<h2>All projects</h2>";
+        return info;
+      },
+      bottomStart: "pageLength",
+    },
+  });
+
+  let adminQuoteTable = $("#admin-quote-table").DataTable({
+    ajax: {
+      url: "/index/admin/quote?view=true",
+      dataSrc: "",
+    },
+    processing: true,
+    //serverSide: true, // to-do: server-side processing with laminas
+    columns: [
+      {
+        data: "quote_id",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/quote/" +
+            data +
+            "/edit'>" +
+            data +
+            "</a>"
+          );
+        },
+      },
+      {
+        data: "project_name",
+      },
+      {
+        data: "market_segment_desc",
+      },
+      {
+        data: "quote_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "expire_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          let today = new Date();
+          if (date <= today) {
+            return '<span class="red">' + date.toLocaleDateString() + "</span>";
+          } else {
+            return date.toLocaleDateString();
+          }
+        },
+      },
+      {
+        data: "ship_required_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "project_status",
+      },
+      {
+        data: "quote_status",
+        render: function (data) {
+          if (data == -1) {
+            return '<span class="disapproved red">Disapproved</span>';
+          } else if (data == 10) {
+            return '<span class="approved green">Approved</span>';
+          } else if (data == 1) {
+            return '<span class="waiting orange">Waiting</span>';
+          } else {
+            return "Not submitted";
+          }
+        },
+      },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        className: "dt-head-center",
+      },
+      {
+        targets: [0, 2, 3, 4, 5, 6, 7],
+        className: "dt-body-center",
+      },
+    ],
+    order: [[0, "desc"]],
+    fixedColumns: {
+      start: 1,
+      end: 1,
+    },
+    scrollX: true,
+    layout: {
+      topStart: function () {
+        let info = document.createElement("div");
+        info.innerHTML = "<h2>All quotes</h2>";
+        return info;
+      },
+      bottomStart: "pageLength",
+    },
+  });
+
+  let projectNoteTable = $("#project_note").DataTable({
     ajax: {
       url: "/note/table",
       data: {
@@ -50,14 +242,14 @@ $(function () {
         },
       },
       {
-      	data: "follow_up_date.date",
-      	render: function(data) {
+        data: "follow_up_date.date",
+        render: function (data) {
           if (!data) {
-            return '<p><b>--</b></p>';
+            return "<p><b>--</b></p>";
           }
-      		let date = new Date(data);
-      		return '<p><b>' + date.toLocaleDateString("en-CA") + '</b></p>';
-      	}
+          let date = new Date(data);
+          return "<p><b>" + date.toLocaleDateString("en-CA") + "</b></p>";
+        },
       },
       {
         data: "owner_id",
@@ -75,7 +267,9 @@ $(function () {
           if (isOwner) {
             return (
               '<div class="row-button">' +
-              '<a title="Edit this note" class="note-edit" href="#">' +
+              '<a title="Edit this note" class="note-edit" href="/note/fetch?id=' +
+              data +
+              '">' +
               '<span class="button-wrap">' +
               '<span class="icon icon-edit"></span>' +
               "</span></a>" +
@@ -106,7 +300,7 @@ $(function () {
     },
   });
 
-  let itemTable = $("#items").DataTable({
+  let projectItemTable = $("#project-item-table").DataTable({
     ajax: {
       url: "/item/table",
       data: {
@@ -158,30 +352,25 @@ $(function () {
         },
       },
       {
-        data: "item_id",
-        render: function (data, type, row, meta) {
+        data: "item_uid",
+        render: function (data) {
           //var oldData = getolddata($(this).closest('tr'));
           return (
             '<div class="row-button">' +
-            '<a title="Edit this item" class="edit" href="#">' +
+            '<a title="Edit this item" class="item-edit" href="/item/fetch?uid=' +
+            data +
+            '&type=project">' +
             '<span class="button-wrap">' +
             '<span class="icon icon-edit"></span>' +
             "</span></a>" +
             '<a title="Delete this item" class="item_delete" href="/item/delete?uid=' +
-            row.item_uid + '&type=project' +
-            '"' +
-            'index="' +
             data +
-            '">' +
+            '&type=project">' +
             '<span class="button-wrap">' +
             '<span class="icon icon-delete"></span>' +
             "</span></a></div>"
           );
         },
-      },
-      {
-        data: "item_uid",
-        visible: false,
       },
     ],
     columnDefs: [
@@ -210,7 +399,7 @@ $(function () {
 
   let projectQuoteTable = $("#project-quote-table").DataTable({
     ajax: {
-      url: "/project/quotetable/id/" + $projectId,
+      url: `/project/${$projectId}/quotetable`,
       dataSrc: "",
     },
     processing: true,
@@ -219,9 +408,9 @@ $(function () {
         data: "quote_id",
         render: function (data, type, row, meta) {
           return (
-            "<a target='_blank' href='/quote/edit/id/" +
+            "<a target='_blank' href='/quote/" +
             data +
-            "'>" +
+            "/edit'>" +
             data +
             "</a>"
           );
@@ -292,7 +481,7 @@ $(function () {
     },
   });
 
-  /* -------------------------- FORM FUNCTIONS ---------------------------- */
+  /* -------------------------- GLOBAL FUNCTIONS ---------------------------- */
   function resetForm($form) {
     $form
       .find(
@@ -315,40 +504,61 @@ $(function () {
     $form.find("input, select, textarea").prop("disabled", false);
   }
 
+  // Utility function to enable/disable buttons
+  function disableButton($button, state) {
+    $button.prop("disabled", state);
+  }
+
   /* --------------------------  ITEM FUNCTION ---------------------------- */
 
-  let currentRow = "";
   let isEditItem = false;
 
   const $dialogItem = $("#dialog-item");
-  const $itemForm = $("#item");
-  const $btnAdd = $("#btn-add");
+  const $itemForm = $("#dialog-item-form");
+  const $dialogBtnAddItem = $("#item-form-btn-add");
   const $uomDropdown = $("#uom");
 
   $uomDropdown.data("default-options", $uomDropdown.html());
 
-  // Get selected row data
-  $("#items tbody").on("click", "tr", function () {
-    currentRow = itemTable.row(this).data();
-    console.log(currentRow);
-  });
-
   // Open Edit Dialog
-  $(document).on("click", "a.edit", function (e) {
+  $(document).on("click", "a.item-edit", function (e) {
     e.preventDefault();
 
     isEditItem = true;
 
     $dialogItem.dialog("option", "title", "Edit Item");
     $dialogItem.dialog("open");
+    $dialogBtnAddItem.text("Save Changes");
 
-    $("#item #item_id").val(currentRow["item_id"] || "");
-    $("#item #price").val(currentRow["unit_price"] || "");
-    $("#item #qty").val(currentRow["quantity"] || "");
-    $("#item #note").val(currentRow["note"] || "");
-    $("#item #uom").val(currentRow["uom"] || "");
+    $.ajax({
+      url: $(this).attr("href"),
+      type: "GET",
+      dataType: "json",
+    })
+      .done((response) => {
+        if (response.success && response.data) {
+          const data = response.data;
 
-    getoum(currentRow["item_id"], currentRow["uom"], currentRow["price"]);
+          $("#dialog-item-form #item_uid").val(data["item_uid"] || "");
+          $("#dialog-item-form #item_id").val(data["item_id"] || "");
+          $("#dialog-item-form #price").val(data["unit_price"] || "");
+          $("#dialog-item-form #qty").val(data["quantity"] || "");
+          $("#dialog-item-form #note").val(data["note"] || "");
+          $("#dialog-item-form #uom").val(data["uom"] || "");
+
+          getoum(data["item_id"], data["uom"], data["price"]);
+        } else {
+          alert(response.message || "Failed to fetch item data.");
+        }
+      })
+      .fail((jqXHR, textStatus, errorThrown) => {
+        console.error(
+          "Error deleting item:",
+          textStatus,
+          errorThrown,
+          jqXHR.responseText
+        );
+      });
   });
 
   // Fetch price when UOM changes
@@ -357,10 +567,11 @@ $(function () {
   });
 
   // Open Add Item Dialog
-  $("#add_item").on("click", function () {
+  $("#widget-btn-add-item").on("click", function () {
     isEditItem = false;
     $dialogItem.dialog("option", "title", "Add Item");
     $dialogItem.dialog("open");
+    $dialogBtnAddItem.text("Add Item");
   });
 
   // Item Dialog Setup
@@ -385,11 +596,10 @@ $(function () {
     dialogClass: "add-item-dialog",
     buttons: [
       {
-        id: "btn-add",
-        text: "Add",
+        id: "item-form-btn-add",
         click: function () {
           if ($itemForm.validationEngine("validate")) {
-            disableButton($btnAdd, true);
+            disableButton($dialogBtnAddItem, true);
             if (!isEditItem) {
               additem();
             } else {
@@ -397,13 +607,13 @@ $(function () {
             }
             $(this).dialog("close");
             //resetForm($itemForm);
-            setTimeout(() => disableButton($btnAdd, false), 1000);
+            setTimeout(() => disableButton($dialogBtnAddItem, false), 1000);
           }
         },
         "aria-label": "Add Item",
       },
       {
-        id: "btn-cancel",
+        id: "item-form-btn-cancel",
         text: "Cancel",
         click: function () {
           $(this).dialog("close");
@@ -417,7 +627,7 @@ $(function () {
   if ($(".dialog #item_id").length) {
     $(".dialog #item_id")
       .autocomplete({
-        appendTo: ".ui-dialog",
+        appendTo: "#dialog-item-form",
         source: function (request, response) {
           $.ajax({
             url: "/item/index",
@@ -459,11 +669,6 @@ $(function () {
         )
         .appendTo(ul);
     };
-  }
-
-  // Utility function to enable/disable buttons
-  function disableButton($button, state) {
-    $button.prop("disabled", state);
   }
 
   // Fetch UOMs and select the old one when editing
@@ -515,7 +720,7 @@ $(function () {
 
   // Add Item Function
   function additem() {
-    disableButton($btnAdd, true);
+    disableButton($dialogBtnAddItem, true);
     let formData =
       $itemForm.serialize() +
       "&project_id=" +
@@ -528,7 +733,7 @@ $(function () {
       data: formData,
       contentType: "application/x-www-form-urlencoded",
     })
-      .done(() => itemTable.ajax.reload())
+      .done(() => projectItemTable.ajax.reload())
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error(
           "Error adding item:",
@@ -538,35 +743,13 @@ $(function () {
         );
         alert("Failed to add item. Please try again.");
       })
-      .always(() => disableButton($btnAdd, false));
-  }
-
-  function getolddata(row = currentRow) {
-    if (!row) {
-      console.error("getolddata(): currentRow is undefined");
-      return {};
-    }
-
-    const { item_uid, item_id, note, quantity, unit_price, uom } = currentRow;
-
-    return {
-      item_uid,
-      old_item_id: item_id,
-      old_uom: uom,
-      old_price: unit_price,
-      old_qty: quantity,
-      old_note: note,
-    };
+      .always(() => disableButton($dialogBtnAddItem, false));
   }
 
   // Edit Item Function
   function edititem() {
-    disableButton($btnAdd, true);
-    let formData =
-      $itemForm.serialize() +
-      "&uid=" +
-      encodeURIComponent(getolddata().item_uid) +
-      "&type=project";
+    disableButton($dialogBtnAddItem, true);
+    let formData = $itemForm.serialize() + "&type=project";
 
     $.ajax({
       url: "/item/edit",
@@ -574,7 +757,7 @@ $(function () {
       data: formData,
       contentType: "application/x-www-form-urlencoded",
     })
-      .done(() => itemTable.ajax.reload())
+      .done(() => projectItemTable.ajax.reload())
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error(
           "Error adding item:",
@@ -584,7 +767,7 @@ $(function () {
         );
         alert("Failed to edit item. Please try again.");
       })
-      .always(() => disableButton($btnAdd, false));
+      .always(() => disableButton($dialogBtnAddItem, false));
   }
 
   // Handle Item Delete
@@ -595,9 +778,14 @@ $(function () {
         url: $(this).attr("href"),
         type: "GET",
       })
-        .done(() => itemTable.ajax.reload())
+        .done(() => projectItemTable.ajax.reload())
         .fail((jqXHR, textStatus, errorThrown) => {
-          console.error("Error deleting item:", textStatus, errorThrown, jqXHR.responseText);
+          console.error(
+            "Error deleting item:",
+            textStatus,
+            errorThrown,
+            jqXHR.responseText
+          );
         });
     }
   });
@@ -606,8 +794,8 @@ $(function () {
 
   const $noteForm = $("#note");
   const $dialogNote = $("#dialog-message");
+  const $dialogBtnAddNote = $("#note-form-btn-add");
 
-  let currentnoteRow = "";
   let isEditnote = false;
 
   $("#dialog-message").dialog({
@@ -615,7 +803,7 @@ $(function () {
     modal: true,
     minWidth: 800,
     width: 1000,
-    //minHeight: 600,
+    height: 650,
     open: function () {
       // fade in background
       resetForm($noteForm);
@@ -628,10 +816,10 @@ $(function () {
         $(this).remove();
       });
     },
-    dialogClass: "add-item-dialog",
+    dialogClass: "add-note-dialog",
     buttons: [
       {
-        id: "btn-add",
+        id: "note-form-btn-add",
         text: "Add Log",
         click: function () {
           if ($noteForm.validationEngine("validate")) {
@@ -641,13 +829,13 @@ $(function () {
               editnote();
             }
             $(this).dialog("close");
-            setTimeout(() => disableButton($btnAdd, false), 1000);
+            setTimeout(() => disableButton($dialogBtnAddNote, false), 1000);
           }
         },
         "aria-label": "Add Log",
       },
       {
-        id: "btn-cancel",
+        id: "note-form-btn-cancel",
         text: "Cancel",
         click: function () {
           $(this).dialog("close");
@@ -657,11 +845,6 @@ $(function () {
     ],
   });
 
-  $("#project_note tbody").on("click", "tr", function () {
-    currentnoteRow = noteTable.row(this).data();
-    console.log(currentnoteRow);
-  });
-
   $(document).on("click", ".note-edit", function (e) {
     e.preventDefault();
 
@@ -669,22 +852,50 @@ $(function () {
 
     $dialogNote.dialog("option", "title", "Edit Log");
     $dialogNote.dialog("open");
+    $dialogBtnAddNote.text("Save Changes");
 
-    $("#note #note_title").val(currentnoteRow["note_title"] || "");
-    $("#note #project_note").val(currentnoteRow["project_note"] || "");
-    $("#note #next_action").val(currentnoteRow["next_action"] || "");
-    let followUpDate = new Date(currentnoteRow["follow_up_date"]["date"] || "");
-    $("#note #follow_up_date").val(followUpDate.toLocaleDateString() || "");
+    $.ajax({
+      url: $(this).attr("href"),
+      type: "GET",
+      dataType: "json",
+    })
+      .done((response) => {
+        if (response.success && response.data) {
+          const data = response.data;
+
+          $("#note #note_id").val(data["project_note_id"] || "");
+          $("#note #note_title").val(data["note_title"] || "");
+          $("#note #project_note").val(data["project_note"] || "");
+          $("#note #next_action").val(data["next_action"] || "");
+          if (data["follow_up_date"]) {
+            let followUpDate = new Date(data["follow_up_date"]["date"] || "");
+            $("#note #follow_up_date").val(
+              followUpDate.toLocaleDateString() || ""
+            );
+          }
+        } else {
+          alert(response.message || "Failed to fetch note data.");
+        }
+      })
+      .fail((jqXHR, textStatus, errorThrown) => {
+        console.error(
+          "Error fetch note data:",
+          textStatus,
+          errorThrown,
+          jqXHR.responseText
+        );
+      });
   });
 
-  $("#opener").on("click", function () {
+  $("#widget-btn-add-note").on("click", function () {
     isEditnote = false;
     $dialogNote.dialog("option", "title", "Add Log");
     $dialogNote.dialog("open");
+    $dialogBtnAddNote.text("Add Note");
   });
 
   function addnote() {
-    disableButton($btnAdd, true);
+    disableButton($dialogBtnAddNote, true);
     let formData =
       $noteForm.serialize() + "&project_id=" + encodeURIComponent($projectId);
 
@@ -694,7 +905,7 @@ $(function () {
       data: formData,
       contentType: "application/x-www-form-urlencoded",
     })
-      .done(() => noteTable.ajax.reload())
+      .done(() => projectNoteTable.ajax.reload())
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error(
           "Error adding note:",
@@ -704,15 +915,12 @@ $(function () {
         );
         alert("Failed to add note. Please try again.");
       })
-      .always(() => disableButton($btnAdd, false));
+      .always(() => disableButton($dialogBtnAddNote, false));
   }
 
   function editnote() {
-    disableButton($btnAdd, true);
-    let formData =
-      $noteForm.serialize() +
-      "&note_id=" +
-      encodeURIComponent(currentnoteRow["project_note_id"]);
+    disableButton($dialogBtnAddNote, true);
+    let formData = $noteForm.serialize();
 
     $.ajax({
       url: "/note/edit",
@@ -720,7 +928,7 @@ $(function () {
       data: formData,
       contentType: "application/x-www-form-urlencoded",
     })
-      .done(() => noteTable.ajax.reload())
+      .done(() => projectNoteTable.ajax.reload())
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error(
           "Error editing note:",
@@ -730,7 +938,7 @@ $(function () {
         );
         alert("Failed to edit note. Please try again.");
       })
-      .always(() => disableButton($btnAdd, false));
+      .always(() => disableButton($dialogBtnAddNote, false));
   }
 
   $(document).on("click", ".note_delete", function (e) {
@@ -740,33 +948,259 @@ $(function () {
         url: $(this).attr("href"),
         type: "get",
       })
-      .done(() => noteTable.ajax.reload())
-      .fail((jqXHR, textStatus, errorThrown) => {
-        console.error("Error deleting item:", textStatus, errorThrown, jqXHR.responseText);
-      });;
+        .done(() => projectNoteTable.ajax.reload())
+        .fail((jqXHR, textStatus, errorThrown) => {
+          console.error(
+            "Error deleting item:",
+            textStatus,
+            errorThrown,
+            jqXHR.responseText
+          );
+        });
     }
   });
 
+  /* --------------------------  MAKE QUOTE FUNCTION ---------------------------- */
+
+  const $makeQuoteForm = $("#dialog-make-quote-form");
+  const $dialogMakeQuote = $("#dialog-make-quote");
+  const $dialogBtnAddCustomer = $("#customer-form-btn-add");
+
+  let $customerFields = $(
+    "#customer_id, #customer_name, #company_id, #salesrep_full_name"
+  );
+  let $contactDropdown = $("#contact_name");
+  let $contactFields = $(
+    "#contact_id, #first_name, #last_name, #phys_address1, #phys_address2, #phys_city, #phys_state, #phys_postal_code, #phys_country, #central_phone_number, #email_address"
+  );
+
+  $contactDropdown.data("default-options", $contactDropdown.html());
+  $contactFields.prop("readonly", true);
+
+  $dialogMakeQuote.dialog({
+    autoOpen: false,
+    modal: true,
+    minWidth: 800,
+    width: 1200,
+    height: 650,
+    open: function () {
+      // fade in background
+      resetForm($makeQuoteForm);
+      $(".ui-widget-overlay").hide().fadeIn().css("z-index", 1000);
+      $(".ui-dialog").css("z-index", 2000);
+    },
+    beforeClose: function () {
+      //fade out background
+      $(".ui-widget-overlay").fadeOut(400, function () {
+        $(this).remove();
+      });
+    },
+    dialogClass: "add-customer-dialog",
+    buttons: [
+      {
+        id: "customer-form-btn-add",
+        text: "Make Quote",
+        click: function () {
+          if ($makeQuoteForm.validationEngine("validate")) {
+            disableButton($dialogBtnAddCustomer, true);
+            makeQuote();
+            $(this).dialog("close");
+            setTimeout(() => disableButton($dialogBtnAddCustomer, false), 1000);
+          }
+        },
+        "aria-label": "Make Quote",
+      },
+      {
+        id: "customer-form-btn-cancel",
+        text: "Cancel",
+        click: function () {
+          $(this).dialog("close");
+        },
+        "aria-label": "Cancel",
+      },
+    ],
+  });
+
+  $("#widget-btn-add-quote").on("click", function () {
+    //$dialogNote.dialog("option", "title", "Add Log");
+    $dialogMakeQuote.dialog("open");
+  });
+
+  if ($(".dialog #customer_name").length) {
+    $(".dialog #customer_name")
+      .autocomplete({
+        appendTo: "#dialog-make-quote-form",
+        source: function (request, response) {
+          $.ajax({
+            url: "/customer/fetch",
+            dataType: "json",
+            data: { term: request.term, limit: 10 },
+          })
+            .done((data) => response(data))
+            .fail((jqXHR, textStatus, errorThrown) => {
+              console.error(
+                "AJAX Error: ",
+                textStatus,
+                errorThrown,
+                jqXHR.responseText
+              );
+              response([]);
+            });
+        },
+        minLength: 2,
+        open: function (event, ui) {
+          $("ui-autocomplete").css("z-index", 2001);
+        },
+        select: function (event, ui) {
+          if (ui.item && ui.item.customer_id) {
+            $customerFields.each(function () {
+              let fieldName = $(this).attr("id");
+              $(this).val(ui.item[fieldName] || "");
+            });
+            getCustomerContacts(ui.item.customer_id);
+          }
+          return false;
+        },
+      })
+      .autocomplete("instance")._renderItem = function (ul, item) {
+      return $("<li>")
+        .append(
+          $("<div>")
+            .addClass("autocomplete-item")
+            .append($("<strong>").text(item.customer_id))
+            .append($("<span>").text(" - " + item.customer_name))
+        )
+        .appendTo(ul);
+    };
+  }
+
+  function getCustomerContacts(customer_id) {
+    if (!customer_id) return;
+    $.ajax({
+      url: "/customer/contacts",
+      data: { customer_id },
+      dataType: "json",
+      type: "get",
+    })
+      .done((data) => {
+        $contactDropdown.empty();
+
+        $.each(data, function (i, item) {
+          $contactDropdown.append(
+            '<option value="' +
+              item.contact_id +
+              '">' +
+              item.contact_full_name +
+              "</option>"
+          );
+        });
+        getContactInfo();
+      })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        console.error("Error fetching specifier:", textStatus, errorThrown);
+      });
+  }
+
+  $("#contact_name").on("change", function () {
+    getContactInfo();
+  });
+
+  function getContactInfo() {
+    let contactID = $("#contact_name").val();
+    if (!contactID) return;
+    $.ajax({
+      url: "/customer/contactinfo",
+      data: { contact_id: contactID },
+      dataType: "json",
+      type: "get",
+    })
+      .done((data) => {
+        if (data) {
+          $contactFields.each(function () {
+            let fieldName = $(this).attr("id");
+            $(this).val(data[fieldName] || "");
+          });
+        }
+      })
+      .fail((jqXHR, textStatus, errorThrown) => {
+        console.error("Error fetching specifier:", textStatus, errorThrown);
+      });
+  }
+
+  function makeQuote() {
+    disableButton($dialogBtnAddCustomer, true);
+
+    let contactID = $("#contact_id").val();
+    let formData =
+      $projectForm.serialize() + "&contact_id=" + encodeURIComponent(contactID);
+
+    $.ajax({
+      url: "/quote/create",
+      type: "post",
+      data: formData,
+      contentType: "application/x-www-form-urlencoded",
+      dataType: "json",
+    })
+      .done((response) => {
+        if (response.success && response.quote_id) {
+          window.location.href = `/quote/${response.quote_id}/edit`;
+        } else {
+          alert(response.message || "Failed to make quote. Please try again.");
+        }
+      })
+      .fail((jqXHR, textStatus, errorThrown) => {
+        console.error(
+          "Error making quote:",
+          textStatus,
+          errorThrown,
+          jqXHR.responseText
+        );
+        alert("Failed to make quote. Please try again.");
+      })
+      .always(() => disableButton($dialogBtnAddCustomer, false));
+  }
+
   /* ----------------------------- Page Load -------------------------------- */
+
+  const $architectDetails = $("#architect-details");
+  const architectName = $("#architect_name").val();
+
+  const $contractorDetails = $("#contractor-details");
+  const generalContractor = $("#general_contractor_name").val();
+  const awardedContractor = $("#awarded_contractor_name").val();
+
+  // Auto expand architect details
+  if ($architectDetails.length && architectName.trim() != "") {
+    $architectDetails.prop("open", true);
+  }
+
+  // Auto expand contractor details
+  // if either general or awarded contractor field is available (check with length)
+  if (
+    $contractorDetails.length &&
+    (generalContractor.trim() != "" || awardedContractor.trim() != "")
+  ) {
+    $contractorDetails.prop("open", true);
+  }
 
   let unsave = false;
 
-  $("#project_content").on("change", function () {
+  $projectForm.on("change", function () {
     $("#save-project").prop("disabled", false);
     unsave = true;
   });
 
   $("#save-project").on("click", function (e) {
     e.preventDefault();
-    if ($("#project_content").validationEngine("validate") == true) {
+    if ($projectForm.validationEngine("validate") == true) {
       if ($("#status").val() != 13) {
-        if ($("#gerneral_contractor").val() == "") {
-          $("#gerneral_contractor_id").val("");
+        if (generalContractor.trim() == "") {
+          $("#general_contractor_id").val("");
         } // delete contractor
-        if ($("#awarded_contractor").val() == "") {
+        if (awardedContractor.trim() == "") {
           $("#awarded_contractor_id").val("");
         }
-        $("#project_content").trigger("submit");
+        $projectForm.trigger("submit");
         unsave = false;
       }
     }
@@ -779,18 +1213,28 @@ $(function () {
     }
   };
 
-  $(".delete_pro").on("click", function () {
-    if (confirm("Are you sure you want to delete this project?") == true) {
-      $(".loading").show();
-      $.ajax({
-        url: "/project/delete/id/" + $projectId,
-        type: "get",
-        success: function (data) {
-          $(".loading").hide();
+  $(".delete_pro").on("click", async function () {
+    if (!confirm("Are you sure you want to delete this project?")) return;
 
-          window.location = "/";
-        },
+    $(".loading").show();
+
+    try {
+      const response = await $.ajax({
+        url: `/project/${$projectId}/delete`,
+        type: "GET",
+        dataType: "json",
       });
+
+      if (response.success) {
+        window.location.href = "/index/project";
+      } else {
+        alert(response.message || "Failed to delete the project.");
+      }
+    } catch (error) {
+      console.error("Delete failed:", error);
+      alert("Error occurred while deleting the project.");
+    } finally {
+      $(".loading").hide();
     }
   });
 

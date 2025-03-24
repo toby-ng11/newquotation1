@@ -179,6 +179,25 @@ class Item
         return $result;
     }
 
+    public function fetchItemByUID($item_uid, $sheetType) {
+        if (!$item_uid || !$sheetType) {
+            return false;
+        }
+
+        switch ($sheetType) {
+            case 'project':
+                $result = $this->project_items->select(['item_uid' => $item_uid]);
+                break;
+            case 'quote':
+                $result = $this->quote_items->select(['item_uid' => $item_uid]);
+                break;
+            default:
+                return false;
+        }
+
+        return $result->current();
+    }
+
     public function fetchUomByItemId($item_id, $location = DEFAULT_LOCATION_ID)
     {
         $sql = new Sql($this->adapter);

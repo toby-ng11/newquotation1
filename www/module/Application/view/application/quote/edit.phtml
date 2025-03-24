@@ -1,0 +1,1063 @@
+<?php
+$user = $this->user;
+$project = $this->project;
+$projectDueDate = $project['due_date'];
+
+$quote = $this->quote;
+$quoteID = $quote['quote_id'];
+$quoteShipRequiredDate = $quote['ship_required_date'];
+$quoteExpireDate = $quote['expire_date'];
+
+$architect_rep = $this->architect_rep;
+
+$contact = $this->contact;
+$customer = $this->customer;
+$contactList = $this->contactList;
+
+$approved = 3;
+$waitingApprove = 2;
+$disapproved = 4;
+
+$oeID = $this->oe_id['order_no'];
+
+$maintainenceMode = 0;
+
+if ($maintainenceMode != 0 and $session->user['sale_role'] != 'admin') {
+?>
+	<main id="content" class="main-content">
+		<div class="main-page-content">
+			<header class="main-page-content-header">
+				<h1>An error has occured :&#40;</h1>
+				<h2>Maybe this page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h2>
+			</header>
+		</div>
+	</main>
+<?php } else { ?>
+
+	<!-- Title area -->
+	<main id="content" class="main-content">
+		<div class="main-page-content">
+			<header class="main-page-content-header">
+				<div class="options-menu">
+					<button class="quick-link options-button" id="options-button" type="button">
+						<span class='icon icon-menu'></span>
+						Options
+					</button>
+
+					<!-- Right panel -->
+					<div class="sidebar-container" id="options-menu-items">
+						<a href="/quote/index/project/<?= $project['project_id'] ?>" class="button quick-link" title="">
+							<span class='icon icon-add'></span>
+							Add new quote</a>
+						<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
+                    <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
+						<a class="button quick-link" href="<?= 'http://' . SITEURL . "/dompdf/print.php?url=" . 'http://' . SITEURL . "/quote/print/id/" . $quoteID . "?company=" . substr($quote['quote_id_ext'], 0, 3) . "&name=Centura_Quote_" . $quoteID . '.pdf' ?>" title="Print this quote">
+							<span class='icon icon-pdf'></span>
+							Print Quote</a>
+						<a class="button quick-link" target="_blank" href="/project/edit/id/<?= $project['project_id'] ?>" title="Go to project for this quote">
+							<span class='icon icon-external'></span>
+							Go to Project</a>
+						<?php if ($session->user['approve_id'] != null  and $quote['quote_status_id'] != 0) { ?>
+							<a class='button quick-link' target="_blank" href="/approve/index/id/<?= $quoteID ?>" title="Go to this quote approval">
+								<span class='icon icon-external'></span>
+								Go to Approval</a>
+							<?php }
+						switch ($quote['quote_status_id']) {
+							case $approved: ?>
+								<a class="button quick-link" href="/mail/quote/id/<?= $quoteID ?>" title="mail">
+									<span class='icon icon-mail'></span>
+									Mail Quote</a>
+								<a href="/quote/ready/id/<?= $quoteID ?>" title="" class='button quick-link quote-edit-again'>
+									<span class='icon icon-edit'></span>
+									Edit Again</a>
+							<?php break;
+
+							case $waitingApprove: ?>
+								<a href="/quote/unsubmit/id/<?= $quoteID ?>" title="" class='button quick-link undo-submit'>
+									<span class='icon icon-undo'></span>
+									Undo Submit</a>
+								<?php break;
+
+							default:
+								if ($quote['quote_status_id'] != 0) { ?>
+									<a href="/quote/ready/id/<?= $quoteID ?>" title="" class='button quick-link ready_quote'>
+										<span class='icon icon-approval'></span>
+										Submit Approval</a>
+							<?php }
+								break;
+						}
+						if ($quote['quote_status_id'] != $approved) { ?>
+							<a href="/quote/delete/id/<?= $quoteID ?>" title="" class='button quick-link delete_quote'>
+								<span class='icon icon-trash'></span>
+								Delete Quote</a>
+						<?php } ?>
+					</div>
+				</div>
+
+				<h1>Edit Quote</h1>
+			</header>
+
+			<!-- Main content wrapper -->
+			<div class="widget-information">
+				<div class="widget-table dashboard">
+					<div class="project-information project-name">
+						<h2><?= $project['project_name'] ?></h2>
+						<p><?= $project['project_address'] ?></p>
+						</br>
+						<p>by <b><?= $project['owner_id'] ?></b></p>
+						<?php if (($project['shared_id']) != null) { ?>
+							<p>shared with <b><?= $project['shared_id'] ?></b></p>
+						<?php } ?>
+					</div>
+				</div>
+
+				<div class="widget-table dashboard">
+					<div class="project-information">
+						<p>P21 Order ID</p>
+						<h2><?php if ($oeID != "") {
+								echo $oeID;
+							} else {
+								echo 'Unavailable';
+							} ?></h2>
+					</div>
+				</div>
+
+				<div class="widget-table dashboard">
+					<div class="project-information">
+						<p>Project status</p>
+						<h2><?= $project['status_desc'] ?></h2>
+					</div>
+				</div>
+
+				<div class="widget-table dashboard">
+					<div class="project-information">
+						<p>Due date</p>
+						<h2><?php if (!empty($project['due_date'])) {
+								echo $projectDueDate->format('Y-m-d');
+							} ?></h2>
+					</div>
+				</div>
+
+				<?php
+				if ($quote['quote_status_id'] != 0 and strcmp($quote['delete_flag'], "N") == 0) {
+					switch ($quote['quote_status_id']) {
+						case $approved: ?>
+							<div class="widget-table dashboard quote-status status-approved">
+								<div class="project-information">
+									<p>Quote status</p>
+									<h2>Approved</h2>
+								</div>
+							</div>
+						<?php break;
+
+						case $waitingApprove: ?>
+							<div class="widget-table dashboard quote-status status-waiting">
+								<div class="project-information">
+									<p>Quote status</p>
+									<h2>Waiting for approval</h2>
+								</div>
+							</div>
+						<?php break;
+
+						case $disapproved: ?>
+							<div class="widget-table dashboard quote-status status-disapproved">
+								<div class="project-information">
+									<p>Quote status</p>
+									<h2>Disapproved</h2>
+								</div>
+							</div>
+						<?php break;
+
+						default: ?>
+							<div class="widget-table dashboard quote-status status-notsubmitted">
+								<div class="project-information">
+									<p>Quote status</p>
+									<h2>Not submitted</h2>
+								</div>
+							</div>
+					<?php break;
+					}
+				} else {  ?>
+					<div class="widget-table dashboard quote-status status-disapproved">
+						<div class="project-information">
+							<p>Quote status</p>
+							<h2>Deleted</h2>
+						</div>
+					</div>
+				<?php } ?>
+			</div>
+
+			<!-- Form -->
+			<form method='post' class="form" id="quote_content">
+				<div class="widget-table" id="customer_info">
+					<div class="widget-header">
+						<div class="widget-title">
+							<h2>Quote details</h2>
+						</div>
+						<div class="widget-button">
+							<?php if ($quote['quote_status_id'] != $approved) { ?>
+								<button type="button" class="button action has-icon new-customer small" id="add_new_mode">
+									<span class="button-wrap">
+										<span class="icon icon-add"></span>
+										New Customer
+									</span>
+								</button>
+								<button type="button" class="button action has-icon discard-customer small basic" style='display:none;' id="discard_new_mode">
+									<span class="button-wrap">
+										<span class="icon icon-undo"></span>
+										Discard Adding
+									</span>
+								</button>
+							<?php } ?>
+						</div>
+					</div>
+
+					<div class="line"></div>
+
+					<div class="widget-section">
+						<h3>Quote</h3>
+						<div class="formRow">
+							<input type="hidden" id='project_id' name='project_id' value="<?= $project['project_id'] ?>" />
+							<input type="hidden" id='lead_time_id' name='lead_time_id' value="<?= $quote['lead_time_id'] ?>" />
+							<div class="oneTwo">
+								<label for='quote_id'>Quote ID</label>
+								<input id='quote_id' type="text" value='<?= $quoteID ?>' readonly />
+							</div>
+							<div class="oneTwo">
+								<label for='quote_type'>Type</label>
+								<select name="quote_type_id" id='quote_type' class="validate[required]">
+									<option value="">Select Quote type</option>
+									<?php foreach ($this->type as $t) { ?>
+										<option value="<?= $t['type_id'] ?>" <?php if ($t['type_id'] == $quote['type_id']) echo 'selected'; ?>><?= $t['type_desc'] ?></option>
+									<?php } ?>
+								</select>
+							</div>
+
+							<div class="oneTwo">
+								<label for='market_segment'>Project segment</label>
+								<input readonly id="market_segment" type="text" value='<?= $project['market_segment_desc'] ?>' />
+							</div>
+
+							<div class="oneTwo">
+								<label for='ship_required_date'>Ship Required Date</label>
+								<input id='ship_required_date' type="text" class="datepicker" name='ship_required_date' value="<?php if ($quoteShipRequiredDate && $quoteShipRequiredDate > new DateTime('2000-01-01')) {
+																																	echo $quoteShipRequiredDate->format('Y-m-d');
+																																} ?>" />
+							</div>
+							<div class="oneTwo">
+								<label for="quote_date">Expire Date</label>
+								<input id="expire_date" name="expire_date" type="text" class="datepicker" value='<?= $quoteExpireDate->format('Y-m-d') ?>' />
+							</div>
+
+							<div class="oneTwo">
+								<label for='architect_rep_id'>Architectural Representative</label>
+								<input readonly id='architect_rep_id' name='architect_rep_id' type="text" value='<?= $architect_rep['name'] . ' - ' .  $architect_rep['default_company'] ?>' />
+							</div>
+						</div>
+					</div>
+
+					<div class="line"></div>
+
+					<div class="widget-section">
+						<h3>Customer</h3>
+						<div class="formRow">
+							<input type="hidden" id="customer_id" name="customer_id" value="<?= $customer['customer_id']  ?>" />
+							<input type="hidden" id="salesrep_id" name="salesrep_id" value="<?= $customer['salesrep_id'] ?>" />
+							<div class="oneTwo required-field">
+								<label for="customer_name">Customer</label>
+								<input id='customer_name' name='customer_name' type="text" value="<?= $customer['customer_name'] ?>" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="company_id">Company ID</label>
+								<input type="text" name='company_id' id='company_id' value="<?= $customer['company_id'] ?>" readonly />
+							</div>
+
+							<div class="oneTwo">
+								<label for='salesrep_full_name'>Sales Representative</label>
+								<input id='salesrep_full_name' name='salesrep_full_name' type="text" value="<?= $customer['salesrep_full_name'] ?>" readonly />
+							</div>
+
+							<div class="oneTwo">
+								<label for="credit_term">Credit Terms</label>
+								<input id="credit_term" type="text" value="<?= $customer['terms_desc'] ?>" readonly />
+							</div>
+						</div>
+					</div>
+
+					<div class="line"></div>
+
+					<div class="widget-section">
+						<h3>Contact</h3>
+						<div class="formRow">
+							<input type="hidden" id="contact_id" name="contact_id" value="<?= $contact['contact_id'] ?>" />
+							<div class="oneTwo required-field">
+								<label for="contact_name">Contact</label>
+								<select id='contact_name' class="validate[required]">
+									<option value=''>-- Please search for a customer first --</option>
+									<?php
+									foreach ($contactList as $c) { ?>
+										<option value="<?= $c['contact_id'] ?>" <?php if ($c['contact_id'] == $quote['contact_id']) echo 'selected' ?>><?= $c['contact_full_name'] ?></option>
+									<?php }
+									?>
+								</select>
+							</div>
+
+							<div class="oneTwo">
+								<label for="first_name">First Name</label>
+								<input readonly id='first_name' name='first_name' type="text" value="<?= $contact['first_name'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="last_name">Last Name</label>
+								<input readonly id='last_name' name='last_name' type="text" value="<?= $contact['last_name'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_address1">Address 1</label>
+								<input readonly id='phys_address1' name='phys_address1' type="text" value="<?= $contact['phys_address1'] ?>" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_address2">Address 2</label>
+								<input readonly id='phys_address2' name='phys_address2' type="text" value="<?= $contact['phys_address2']  ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_city">City</label>
+								<input readonly id='phys_city' name='phys_city' type="text" value="<?= $contact['phys_city'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_state">Province</label>
+								<input readonly id='phys_state' name='phys_state' type="text" value="<?= $contact['phys_state'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_postal_code">Postal Code</label>
+								<input readonly id='phys_postal_code' name='phys_postal_code' type="text" value="<?= $contact['phys_postal_code'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_country">Country</label>
+								<input readonly id='phys_country' name='phys_country' type="text" value="<?= $contact['phys_country'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="central_phone_number">Phone Number</label>
+								<input readonly id='central_phone_number' name='central_phone_number' type="text" class="maskPhoneExt" value="<?= $contact['central_phone_number'] ?>" />
+							</div>
+
+
+							<div class="oneTwo required-field">
+								<label for="email_address">Email</label>
+								<input readonly type="text" value="<?= $contact['email_address'] ?>" id='email_address' name='email_address'>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="line"></div>
+
+					<?php if ($quote['quote_status_id'] == $approved) { ?>
+						<div class="widget-section">
+							<h3>Approval</h3>
+							<div class="formRow">
+								<div class="oneTwo">
+									<label for="price_approve_id">Quote Approval</label>
+									<select id="price_approve_id" name="price_approve_id">
+										<?php foreach ($this->approval as $a) {
+											if ($a['uid'] == $quote['quote_status_id']) { ?>
+												<option value="<?= $a['uid'] ?>" selected><?= $a['Name'] . ' - ' . $a['Company_ID'] ?>
+												</option>
+										<?php }
+										} ?>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="line"></div>
+					<?php } else { ?>
+						<input type="hidden" id='price_approve_id' name='price_approve_id' value="<?= $quote['quote_status_id'] ?>" />
+					<?php } ?>
+
+					<div class="widget-section">
+						<h3>Comment</h3>
+						<div class="formRow">
+							<div class="oneTwo">
+								<label for="quote-note">Quote Note</label>
+								<textarea id="quote-note" rows="5" cols="" name="note" placeholder="Add quote note here..."><?= $quote['note'] ?></textarea>
+							</div>
+						</div>
+					</div>
+
+					<?php if ($quote['quote_status_id'] != $approved) { ?>
+
+						<div class="line"></div>
+
+						<div class="widget-footer">
+							<div class="widget-footer-button">
+								<button disabled id="save_quote" type="button" title="Save quote information" class="button action save-quote-button small">
+									<span class="button-wrap">
+										Save
+									</span>
+								</button>
+							</div>
+						</div>
+
+					<?php } ?>
+				</div>
+			</form>
+
+			<section aria-labelledby="items" id="section4" data-nav="Items">
+				<div class="widget-table">
+					<div class="widget-header">
+						<div class="widget-title">
+							<h2>Items</h2>
+						</div>
+						<div class="widget-button">
+							<?php if ($quote['quote_status_id'] != $approved) { ?>
+								<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="add_item">
+									<span class="button-wrap">
+										<span class="icon icon-add"></span>
+										Add Item
+									</span>
+								</button>
+							<?php } ?>
+
+						</div>
+					</div>
+
+					<div class="line"></div>
+
+					<div class="widget-section">
+						<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="quote-item-table">
+							<thead>
+								<tr>
+									<th>Item</th>
+									<th>Quality</th>
+									<th>Unit Price</th>
+									<th>UOM</th>
+									<th>Total Price</th>
+									<th>Note</th>
+									<th>Options</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</section>
+
+			<div id="dialog-item" title="Add Item">
+				<form action="" class="dialog" id='item'>
+					<div class="dialog-form">
+						<div class="oneTwo required-field">
+							<label for="item_id">Item ID</label>
+							<input type="hidden" name="item" id='item_input' />
+							<input type="text" id="item_id" name='item_id' class="validate[required]" />
+						</div>
+
+						<div class="oneTwo required-field">
+							<label for="uom">Unit of Measure</label>
+							<select name="uom" id='uom' class="validate[required]">
+								<option value=''>Select UOM</option>
+							</select>
+						</div>
+
+						<div class="oneTwo required-field">
+							<label for='price'>Price</label>
+							<input type="text" class="validate[required,custom[number]]" name="price" id='price' placeholder="*You can override the price" />
+						</div>
+
+						<div class="oneTwo required-field">
+							<label for='qty'>Quantity</label>
+							<input type="text" name="qty" id='qty' class="validate[required]" />
+						</div>
+
+						<div class="oneTwo dialog-note">
+							<label for='note'>Note</label>
+							<textarea rows="10" name='note' id='note' maxlength="255" class="validate[maxSize[255]]" placeholder="*Please type item note in one line only"></textarea>
+							<input type="hidden" id="is_edit" value='0' />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</main>
+<?php }
+?>
+
+<script type="text/javascript">
+	$("textarea").each(function() {
+		this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+	}).on("input", function() {
+		this.style.height = 0;
+		this.style.height = (this.scrollHeight) + "px";
+	});
+
+	let itemTable = $("#items").DataTable({
+		ajax: {
+			url: "/quote/item/id/" + $('#quote_id').val(),
+			dataSrc: ''
+		},
+		processing: true,
+		columns: [{
+				data: "item_id",
+				render: function(data, type, row, meta) {
+					return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
+				}
+			},
+			{
+				data: "quantity",
+				render: function(data) {
+					let qty = Number.parseFloat(data).toFixed(0);
+					return '<b>' + qty + '</b>';
+				}
+			},
+			{
+				data: "unit_price",
+				render: function(data) {
+					return '<b>' + data + '</b>';
+				}
+			},
+			{
+				data: "uom",
+				render: function(data) {
+					return '<b>' + data + '</b>';
+				}
+			},
+			{
+				data: "subtotal",
+				render: function(data) {
+					return '<b>' + data + '</b>';
+				}
+			},
+			{
+				data: "note",
+				render: function(data) {
+					let formattedText = data.replace(/(?:\r\n|\r|\n)/g, '<br>');
+					return '<p>' + formattedText + '</p>';
+				}
+			},
+			{
+				data: "item_id",
+				render: function(data, type, row, meta) {
+					//var oldData = getolddata($(this).closest('tr'));
+					<?php if ($quote['quote_status_id'] != $approved) { ?>
+						return '<div class="row-button">' +
+							'<a title="Edit this item" class="edit" href="#">' +
+							'<span class="button-wrap">' +
+							'<span class="icon icon-edit"></span>' +
+							'</span></a>' +
+							'<a title="Delete this item" class="item_delete" href="/quote/deleteitem/uid/' + row.item_uid + '"' +
+							'index="' + data + '">' +
+							'<span class="button-wrap">' +
+							'<span class="icon icon-delete"></span>' +
+							'</span></a></div>';
+					<?php } else { ?>
+						return null;
+					<?php } ?>
+				}
+			},
+			{
+				data: "item_uid",
+				visible: false
+			}
+		],
+		columnDefs: [{
+			targets: '_all',
+			className: 'dt-head-center'
+		}, {
+			targets: [0, 1, 2, 3, 4],
+			className: 'dt-body-center'
+		}],
+		layout: {
+			topStart: null,
+			topEnd: null
+		},
+		order: [[7, 'desc']], // sort by item uid, newest item on top
+		paging: false,
+		scrollX: true,
+		fixedColumns: {
+			start: 1,
+			end: 1
+		}
+	});
+
+	var current_edit_row = '';
+
+	$(function() {
+
+		let currentRow = '';
+
+		$('#items tbody').on('click', 'tr', function() {
+			currentRow = itemTable.row(this).data();
+		});
+
+		function getolddata(row) {
+			let item_uid = currentRow['item_uid'];
+			let item_id = currentRow['item_id'];
+			let note = currentRow['note'];
+			let qty = currentRow['quantity'];
+			let unit_price = currentRow['unit_price'];
+			let uom = currentRow['uom'];
+			var data = {
+				'item_uid': item_uid,
+				'old_item_id': item_id,
+				'old_uom': uom,
+				'old_price': unit_price,
+				'old_qty': qty,
+				'old_note': note
+			};
+			return data;
+		}
+
+		$("#dialog-item").dialog({
+			autoOpen: false,
+			modal: true,
+			width: 800,
+			minWidth: 800,
+			open: function() { // fade in background
+				$('.ui-widget-overlay').hide().fadeIn();
+			},
+			beforeClose: function() { //fade out background
+				$('.ui-widget-overlay:first')
+					.clone()
+					.appendTo('body')
+					.show()
+					.fadeOut(400, function() {
+						$(this).remove();
+					});
+			},
+			dialogClass: 'add-item-dialog',
+			buttons: [{
+					id: "add-item-confirm-button",
+					text: "Add",
+					click: function() {
+						if ($("#item").validationEngine('validate') == true) {
+							if ($('#is_edit').val() == 1) {
+								edititem();
+							} else {
+								additem();
+							}
+							$(this).dialog("close");
+							resetForm($('#item'));
+						}
+					}
+				},
+				{
+					id: "add-item-cancel-button",
+					text: "Cancel",
+					click: function() {
+						$(this).dialog("close");
+					}
+				}
+			]
+		});
+
+		$('#add_item').on("click", function() {
+			resetForm($('#item'));
+			$("#dialog-item").dialog("open");
+			$('#is_edit').val(0);
+			return false;
+		});
+
+		$(document).on("click", "a.edit", function() {
+			$("#dialog-item").dialog("open");
+			current_edit_row = $(this).closest('tr');
+			set_edit(current_edit_row);
+			return false;
+		});
+
+		$(document).on("click", ".item_delete", function(e) {
+			e.preventDefault();
+			if (confirm("Are you sure you want to delete this item?") == true) {
+				$('.loading').show();
+				$.ajax({
+					url: $(this).attr('href'),
+					type: "get",
+					success: function(data) {
+						itemTable.ajax.reload();
+						$('.loading').hide();
+					}
+				});
+			}
+		});
+
+		function set_edit(row) {
+			$("#dialog-item").dialog("option", "title", "Edit Item");
+			$('#is_edit').val(1);
+
+			let oldData = getolddata(current_edit_row);
+
+			$('#item #item_id').val(oldData['old_item_id']);
+			$('#item #price').val(oldData['old_price']);
+			$('#item #qty').val(oldData['old_qty']);
+			$('#item #note').val(oldData['old_note']);
+
+			getoumedit(oldData['old_item_id'], oldData['old_uom'], oldData['old_price']);
+		}
+
+		function getoumedit(item_id, unit_number, price) {
+			$('.loading').show();
+			$.ajax({
+				url: '/item/uom/id/' + $("#item_id ").val(),
+				type: "get",
+				success: function(data) {
+					var uom = JSON.parse(data);
+					var list = '';
+					$.each(uom, function(i, item) {
+						list = list + '<option value="' + item.uom + '">' + item.uom + '</option>';
+					});
+					$('#uom').html(list);
+					$('#uom option[value=' + unit_number + ']').attr('selected', 'selected');
+					$('#uniform-uom span').html(unit_number);
+					$('#price').val(price);
+					$('.loading').hide();
+				}
+			});
+
+		}
+
+		function edititem() {
+			var olddata = getolddata(current_edit_row);
+			$.ajax({
+				url: '/quote/edititem/uid/' + olddata['item_uid'],
+				type: "post",
+				data: $("#item").serialize(),
+				success: function(data) {
+					itemTable.ajax.reload();
+				}
+			});
+		}
+
+		function additem() {
+			$('.loading').show();
+			$.ajax({
+				url: '/quote/additem/id/' + $('#quote_id').val(),
+				type: "post",
+				data: $("#item").serialize(),
+				success: function(data) {
+					$('.loading').hide();
+					itemTable.ajax.reload();
+				}
+			});
+		}
+
+		function getoum(item_id) {
+			$('.loading').show();
+			$.ajax({
+				url: '/item/uom/id/' + $("#item_id ").val(),
+				type: "get",
+				success: function(data) {
+					var uom = JSON.parse(data);
+					var list = '';
+					$.each(uom, function(i, item) {
+						list = list + '<option value="' + item.uom + '">' + item.uom + '</option>';
+					});
+					$('#uom').html(list);
+					$('#uom option').eq(0).attr("selected", "selected");
+					$('#uniform-uom span').html(uom[0].uom);
+					getprice();
+					$('.loading').hide();
+				}
+			});
+
+		}
+
+		function getprice() {
+			$('.loading').show();
+			$.ajax({
+				url: '/item/price/id/' + $("#item_id ").val() + '/uom/' + $("#uom ").val(),
+				type: "get",
+				success: function(data) {
+					var price = JSON.parse(data);
+					$('#price').val(price.price);
+				}
+			});
+
+		}
+
+		$("#uom,#uniform-uom").on("change", function() {
+			getprice();
+			return false;
+		});
+
+		$(".dialog #item_id").autocomplete({
+			source: '/item/index/',
+			minLength: 2,
+			select: function(event, ui) {
+				$("#item_input").val(ui.item.item_desc);
+				$("#item_id ").val(ui.item.item_id);
+				getoum(ui.item.item_id);
+				$('#uom').prop('disabled', false);
+				$('#uniform-uom').removeClass('disabled');
+				return false;
+			}
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
+			return $("<li></li>")
+				.data("item.autocomplete", item)
+				.append("<a><b>" + item.item_id + " - " + item.item_desc + "</b></a>")
+				.appendTo(ul);
+		};
+
+		function getcustomerbyid(id) {
+			$.ajax({
+				url: '/customer/fetchbyid/id/' + id,
+				type: "get",
+				success: function(data) {
+					var result = JSON.parse(data);
+					if (result != null) {
+						$('#customer_id').val(result.customer_id);
+						$('#customer_name').val(result.customer_name);
+						$('#company_id').val(result.company_id);
+						$('#salesrep_id').val(result.salesrep_id);
+						$('#salesrep_full_name').val(result.salesrep_full_name);
+						$('#credit_term').val(result.terms_desc);
+					} else {
+						alert('Can\'t find customer');
+						$('#customer_info input').val('');
+					}
+				}
+			});
+		}
+
+		function getContacts(customerID) {
+			$.ajax({
+				url: '/customer/contact/id/' + customerID,
+				type: "get",
+				success: function(data) {
+					var contact = JSON.parse(data);
+					var list = '';
+					$.each(contact, function(i, item) {
+						list = list + '<option value="' + item.contact_id + '">' + item.contact_full_name + '</option>';
+					});
+					$('#contact_name').html(list);
+					$('#contact_name option').eq(0).attr("selected", "");
+					$('#uniform-contact_name span').html(contact[0].contact);
+					getContactInfo();
+				}
+			});
+		}
+
+		function getContactInfo() {
+			$.ajax({
+				url: '/customer/contactinfo/id/' + $('#contact_name').val(),
+				type: "get",
+				success: function(data) {
+					var result = JSON.parse(data);
+					if (result != null) {
+						$('#contact_id').val(result.contact_id);
+						$('#first_name').val(result.first_name);
+						$('#last_name').val(result.last_name);
+						$('#phys_address1').val(result.phys_address1);
+						$('#phys_address2').val(result.phys_address2);
+						$('#phys_city').val(result.phys_city);
+						$('#mail_state').val(result.mail_state);
+						$('#mail_postal_code').val(result.mail_postal_code);
+						$('#phys_country').val(result.phys_country);
+						$('#central_phone_number').val(result.central_phone_number);
+						$('#Contacts_Email').val(result.Contacts_Email);
+					}
+				}
+			});
+		}
+
+		$("#contact_name, #uniform-contact_name").on("change", function() {
+			getContactInfo();
+			return false;
+		});
+
+		/*
+		function getOldCustomer() {
+			let quoteTo = $('#quote').val();
+			let firstName = $('#first_name').val();
+			let lastName = $('#last_name').val();
+			let address1 = $('#address').val();
+			let address2 = $('#phys_address2').val();
+			let city = $('#phys_city').val();
+			let province = $('#mail_state').val();
+			let postalCode = $('#mail_postal_code').val();
+			let country = $('#phys_country').val();
+			let phoneNumber = $('#tel').val();
+			let contact = $('#contact').val();
+			let email = $('#customer_email').val();
+			let companyId = $('#company_id').val();
+			let customerId = $('#contact_id').val();
+			let salesRep = $('#sale_rep').val();
+			let oldData = {
+				'oldQuoteTo': quoteTo,
+				'oldFirstName': firstName,
+				'oldLastName': lastName,
+				'oldAddress1': address1,
+				'oldAddress2': address2,
+				'oldCity': city,
+				'oldProvince': province,
+				'oldPostalCode': postalCode,
+				'oldCountry': country,
+				'oldPhoneNumber': phoneNumber,
+				'oldContact': contact,
+				'oldEmail': email,
+				'oldCustomerId': customerId,
+				'oldCompanyId': companyId,
+				'oldSalesRep': salesRep
+			};
+			return oldData;
+		}
+
+		let oldCustomer = '';
+
+		$('#add_new_mode').on("click", function() {
+			oldCustomer = getOldCustomer();
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #contact_id, #sale_rep').prop('readonly', false);
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #contact_id, #sale_rep').val('');
+			$('#quote, #address, #customer_email').addClass('validate[required]');
+			$('#add_new_mode').hide();
+			$('#discard_new_mode').show();
+			//console.log(oldCustomer);
+		});
+
+		$('#discard_new_mode').on("click", function() {
+			$('#quote, #first_name, #last_name, #address, #phys_address2, #phys_city, #mail_state, #mail_postal_code, #phys_country, #tel, #contact, #customer_email, #company_id, #contact_id, #sale_rep').prop('readonly', true);
+			$('#quote').val(oldCustomer['oldQuoteTo']);
+			$('#first_name').val(oldCustomer['oldFirstName']);
+			$('#last_name').val(oldCustomer['oldLastName']);
+			$('#address').val(oldCustomer['oldAddress1']);
+			$('#phys_address2').val(oldCustomer['oldAddress2']);
+			$('#phys_city').val(oldCustomer['oldCity']);
+			$('#mail_state').val(oldCustomer['oldProvince']);
+			$('#mail_postal_code').val(oldCustomer['oldPostalCode']);
+			$('#phys_country').val(oldCustomer['oldCountry']);
+			$('#tel').val(oldCustomer['oldPhoneNumber']);
+			$('#contact').val(oldCustomer['oldContact']);
+			$('#customer_email').val(oldCustomer['oldEmail']);
+			$('#contact_id').val(oldCustomer['oldCustomerId']);
+			$('#company_id').val(oldCustomer['oldCompanyId']);
+			$('#sale_rep').val(oldCustomer['oldSalesRep']);
+
+			$('#quote, #address, #tel,#customer_email').removeClass('validate[required]');
+			$('#add_new_mode').show();
+			$('#discard_new_mode').hide();
+			oldCustomer = '';
+		});
+
+		/*$("#customer_email").autocomplete({
+			source: "/customer/email/",
+			minLength: 2,
+			select: function(event, ul) {
+				getcustomerbyid(ul.item.contact_id);
+			}
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
+			return $("<li></li>")
+				.data("item.autocomplete", item)
+				.append("<a>" + item.email + "<br>" + item.first_name + ' ' + item.last_name + "</a>")
+				.appendTo(ul);
+		};*/
+
+		$("#customer_name").autocomplete({
+			source: "/customer/quote/",
+			minLength: 2,
+			select: function(event, ul) {
+				getcustomerbyid(ul.item.customer_id);
+				getContacts(ul.item.customer_id);
+			}
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
+			return $("<li>")
+				.data("item.autocomplete", item)
+				.append("<a>" + item.customer_id + " - " + item.company_id + "<br>" + item.customer_name + "</a>")
+				.appendTo(ul);
+		};
+
+		/*$("#contact").autocomplete({
+			source: "/customer/name/",
+			minLength: 2,
+			select: function(event, ul) {
+				getcustomerbyid(ul.item.contact_id);
+			}
+		}).data("ui-autocomplete")._renderItem = function(ul, item) {
+			return $("<li></li>")
+				.data("item.autocomplete", item)
+				.append("<a>Company: " + item.name + "<br>" + item.fullname + ' ' + item.city + ' ' + item.tel + "</a>")
+				.appendTo(ul);
+		};*/
+
+		let unsave = false;
+
+		$('#quote_content').on("change", function() {
+			$('#save_quote').prop("disabled", false);
+			unsave = true;
+		});
+
+		$('#save_quote').on("click", function(e) {
+			e.preventDefault();
+			if ($("#quote_content").validationEngine('validate') == true) {
+				$('#quote_content').trigger("submit");
+				unsave = false;
+				//location.reload();
+			}
+		});
+
+		window.onbeforeunload = function() {
+			if (unsave) {
+				$('#save_quote').trigger("focus");
+				return "You have unsaved changes project information. Do you want to leave this page and discard your changes or stay on this page?";
+			}
+		}
+
+		$('.delete_quote').on("click", function(e) {
+			if (confirm("Are you sure you want to delete this quote?") == true) {
+				unsave = false;
+				$.ajax({
+					url: $(this).attr('href'),
+					type: "post",
+					success: function(data) {}
+				});
+			} else {
+				e.preventDefault();
+			}
+		});
+
+		$('a.ready_quote').on("click", function(e) {
+			if (confirm("You are about to submit this quote. Continue?") == true) {
+				unsave = false;
+				e.preventDefault();
+				$('.loading').show();
+				$.ajax({
+					url: "/quote/ready/id/<?= $quoteID ?>",
+					type: "get",
+					success: function(data) {
+						//$('#status').html('<div class="nNote nInformation hideit"><p><strong>INFORMATION: </strong>Your Quote is Waiting for Approval.</p></div>');
+						//$('a.ready_quote').hide();
+						<?php if ($session->user['approve_id'] != null) { ?>
+							window.location.replace('<?= 'http://' . SITEURL . '/approve/index/id/' . $quoteID ?>');
+						<?php } else { ?>
+							window.scrollTo(0, 0);
+							location.reload();
+						<?php } ?>
+					}
+				});
+			} else {
+				e.preventDefault();
+			}
+		});
+
+
+		$('a.quote-edit-again').on("click", function(e) {
+			if (confirm("You are about to edit this approved quote. Continue?") == true) {
+				e.preventDefault();
+				$('.loading').show();
+				$.ajax({
+					url: "/quote/ready/id/<?= $quoteID ?>",
+					type: "get",
+					success: function(data) {
+						//$('#status').html('<div class="nNote nInformation hideit"><p><strong>INFORMATION: </strong>You Need submit again after edit</p></div>');
+						location.reload();
+					}
+				});
+				$('.loading').hide();
+			} else {
+				e.preventDefault();
+			}
+		});
+	});
+</script>

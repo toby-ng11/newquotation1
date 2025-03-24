@@ -40,7 +40,7 @@ return [
             'project' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route'    => '/project[/:action][/id/:id]',
+                    'route'    => '/project[/:id[/:action]]',
                     'defaults' => [
                         'controller' => Controller\ProjectController::class,
                         'action'     => 'new',
@@ -48,6 +48,20 @@ return [
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',
+                    ]
+                ],
+            ],
+            'quote' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/quote[/:id[/:action]]',
+                    'defaults' => [
+                        'controller' => Controller\QuoteController::class,
+                        'action'     => 'edit',
+                    ],
+                    'constraints' => [
+                        'id' => '[0-9]+',
+                        'action' => 'edit|delete|view',
                     ]
                 ],
             ],
@@ -134,7 +148,17 @@ return [
                     $container->get(Model\Item::class),
                     $container->get(Model\Note::class),
                     $container->get(Model\Architect::class),
-                    $container->get(Model\Specifier::class)
+                    $container->get(Model\Specifier::class),
+                    $container->get(Model\Customer::class)
+                );
+            },
+            Controller\QuoteController::class => function ($container) {
+                return new Controller\QuoteController(
+                    $container->get(Service\UserService::class),
+                    $container->get(Model\Quote::class),
+                    $container->get(Model\Project::class),
+                    $container->get(Model\Location::class),
+                    $container->get(Model\Item::class)
                 );
             },
             Controller\UserController::class => function ($container) {
@@ -148,8 +172,7 @@ return [
                     $container->get(Model\Customer::class)
                 );
             },
-            Controller\ArchitectController::class => function
-            ($container) {
+            Controller\ArchitectController::class => function ($container) {
                 return new Controller\ArchitectController(
                     $container->get(Model\Architect::class),
                     $container->get(Model\Specifier::class)
@@ -176,7 +199,7 @@ return [
         'exception_template'       => 'error/index',
         'template_map' => [
             'layout/layout'           => __DIR__ . '/../view/layout/default.phtml',
-            //'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+            'layout/nonheader'        => __DIR__ . '/../view/layout/nonheader.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ],
@@ -223,7 +246,7 @@ return [
                     $container->get(Model\Address::class)
                 );
             },
-            Model\Specifier::class =>function ($container) {
+            Model\Specifier::class => function ($container) {
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
                 return new Model\Specifier(
                     $dbAdapter,

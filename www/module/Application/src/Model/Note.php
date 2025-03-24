@@ -108,4 +108,13 @@ class Note
         $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
         return $result;
     }
+
+    public function fetchNote($id) {
+        if (!$id) {
+			return false;
+		}
+
+        $result = $this->project_note->select(['project_note_id' => $id]);
+        return $result->current();
+    }
 }
