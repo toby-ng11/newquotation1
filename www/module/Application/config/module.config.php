@@ -29,7 +29,7 @@ return [
                     'route'    => '/index[/:action][/:table]',
                     'constraints' => [
                         'action' => 'project|approval|admin|architect',
-                        'table' => 'project|quote',
+                        'table' => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ],
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
@@ -43,7 +43,7 @@ return [
                     'route'    => '/project[/:id[/:action]]',
                     'defaults' => [
                         'controller' => Controller\ProjectController::class,
-                        'action'     => 'new',
+                        'action'     => 'index',
                     ],
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
@@ -57,11 +57,11 @@ return [
                     'route'    => '/quote[/:id[/:action]]',
                     'defaults' => [
                         'controller' => Controller\QuoteController::class,
-                        'action'     => 'edit',
+                        'action'     => 'index',
                     ],
                     'constraints' => [
                         'id' => '[0-9]+',
-                        'action' => 'edit|delete|view',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ]
                 ],
             ],
@@ -137,7 +137,8 @@ return [
                 return new Controller\IndexController(
                     $container->get(Service\UserService::class),
                     $container->get(Model\Project::class),
-                    $container->get(Model\Quote::class)
+                    $container->get(Model\Quote::class),
+                    $container->get(Model\Note::class),
                 );
             },
             Controller\ProjectController::class => function ($container) {
@@ -158,7 +159,8 @@ return [
                     $container->get(Model\Quote::class),
                     $container->get(Model\Project::class),
                     $container->get(Model\Location::class),
-                    $container->get(Model\Item::class)
+                    $container->get(Model\Item::class),
+                    $container->get(Model\Customer::class)
                 );
             },
             Controller\UserController::class => function ($container) {
@@ -282,8 +284,12 @@ return [
             Model\Quote::class => function ($container) {
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
                 return new Model\Quote(
+                    $dbAdapter,
                     new TableGateway('quote', $dbAdapter),
                     new TableGateway('p2q_view_quote_x_project_x_oe', $dbAdapter),
+                    $container->get(Service\UserService::class),
+                    $container->get(Model\Project::class),
+                    $container->get(Model\Item::class)
                 );
             },
             Model\Item::class => function ($container) {

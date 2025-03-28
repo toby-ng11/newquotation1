@@ -117,4 +117,30 @@ class Note
         $result = $this->project_note->select(['project_note_id' => $id]);
         return $result->current();
     }
+
+    public function fetchOwnNotes($user_id)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select('p2q_view_project_note')
+            ->where([
+                'owner_id' => $user_id
+            ]);
+
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result;
+    }
+
+    public function countOwnNotes($user_id)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->from('p2q_view_project_note')
+            ->columns(['total' => new Expression('COUNT(*)')])
+            ->where(['owner_id' => $user_id]);
+
+            $statement = $sql->prepareStatementForSqlObject($select);
+            $result = $statement->execute()->current();
+        return $result['total'] ?? 0;
+    }
 }

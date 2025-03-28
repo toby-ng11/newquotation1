@@ -3359,6 +3359,15 @@ body,
 .icon.icon-undo {
   mask-image: url("../images/icons/assets/undo.svg");
 }
+.icon.icon-redo {
+  mask-image: url("../images/icons/assets/redo.svg");
+}
+.icon.icon-submit {
+  mask-image: url("../images/icons/assets/submit.svg");
+}
+.icon.icon-export {
+  mask-image: url("../images/icons/assets/export.svg");
+}
 
 svg.icon {
   background: transparent;
@@ -5770,8 +5779,8 @@ kbd {
     padding-right: 2rem;
   }
   .main-wrapper .main-content, .main-wrapper .toc {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
   }
   .main-wrapper {
     padding-left: 1rem;
@@ -6087,6 +6096,7 @@ input[readonly], input[disabled] {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
+  padding-top: 2rem;
 }
 .widget-information .widget-table {
   margin: 0;
@@ -9078,6 +9088,17 @@ u {
 .feature h3 {
   margin-bottom: 1rem;
   color: var(--text-link);
+}
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in-up.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Main content*/

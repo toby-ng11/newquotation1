@@ -23,8 +23,8 @@ $user = $this->user;
       <h1>Add Project</h1>
     </header>
     <!-- Main content wrapper -->
-    <section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
-      <form action="/project/create" method="post" class="form" id='project_content'>
+    <section class="fade-in-up" aria-labelledby="project-information" id="section1" data-nav="Project Information">
+      <form action="/project" method="post" class="form" id='project_content'>
         <div class="widget-table">
           <div class="widget-header">
             <div class="widget-title">
@@ -53,7 +53,7 @@ $user = $this->user;
                 <label for="location_id">Centura Location</label>
                 <select name="location_id" id="location_id">
                   <?php foreach ($this->locations as $l) { ?>
-                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == DEFAULT_LOCATION_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
+                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] === DEFAULT_LOCATION_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -251,7 +251,7 @@ $user = $this->user;
 
           <div class="widget-footer">
             <div class="widget-footer-button">
-              <button disabled id="save_pro" type="button" title="Create project" class="button action create-project-button small">
+              <button disabled id="form-btn-save-project" type="button" title="Create project" class="button action create-project-button project-action-button small">
                 <span class="button-wrap">
                   Create Project
                 </span>
@@ -265,20 +265,4 @@ $user = $this->user;
 </main>
 
 <script>
-  $(function() {
-    let unsave = false;
-
-    $('#project_content').on("change", function() {
-      $('#save_pro').prop("disabled", false);
-      unsave = true;
-    });
-
-    $('#save_pro').on("click", function(e) {
-      e.preventDefault();
-      if ($("#project_content").validationEngine('validate') == true) {
-        $('#project_content').trigger("submit");
-      }
-
-    });
-  })
 </script>

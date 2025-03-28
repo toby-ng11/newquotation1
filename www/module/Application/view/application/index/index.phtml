@@ -2,34 +2,40 @@
 $user = $this->user;
 ?>
 <main id="content" class="main-content">
-    <section class="hero">
+    <section class="hero fade-in-up">
         <h1>Welcome to Centura Quotation System</h1>
         <p>Your all-in-one platform for managing projects, approvals, and architectural collaboration with ease and efficiency.</p>
     </section>
 
-    <section class="features">
+    <section class="features fade-in-up">
         <?php if ($this->escapeHtml($user['sale_role']) == 'admin'): ?>
-            <a href="/index/admin" class="feature">
+            <a href="/index/admin" class="feature fade-in-up">
                 <h3>Admin Dashboard</h3>
                 <p>Gain full control over user roles, permissions, and platform settings through the Admin Portal.</p>
             </a>
         <?php endif; ?>
 
         <?php if ($this->escapeHtml($user['approve_id']) ?? '' != null): ?>
-            <a href="/index/approval" class="feature">
+            <a href="/index/approval" class="feature fade-in-up">
                 <h3>Approval Dashboard</h3>
                 <p>Easily manage approvals and ensure every step is properly authorized and documented.</p>
             </a>
         <?php endif; ?>
 
-        <a href="/index/project" class="feature">
+        <a href="/index/project" class="feature fade-in-up">
             <h3>Project Dashboard</h3>
             <p>Streamline your project workflows, track progress, and stay organized with our intuitive tools.</p>
         </a>
 
-        <a href="/index/architect" class="feature">
+        <a href="/index/architect" class="feature fade-in-up">
             <h3>Architect Dashboard</h3>
             <p>Connect and collaborate with architects seamlessly to ensure design accuracy and quality.</p>
         </a>
     </section>
 </main>
+
+<script>
+    $(document).ready(function() {
+    
+});
+</script>

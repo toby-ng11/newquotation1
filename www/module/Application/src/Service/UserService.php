@@ -26,6 +26,8 @@ class UserService
         $session = new UserSession();
         $session->user = [
             'id' => $userData['id'],
+			'first_name' => $userData['first_name'],
+			'last_name' => $userData['last_name'],
             'name' => $userData['name'],
             'email' => $userData['email_address'],
             'role' => $userData['role'],
@@ -73,4 +75,10 @@ class UserService
         
         return $session->user;
     }
+
+	public function fetchaAllApprovalID()
+	{
+		$id = $this->userModel->fetchaAllApprovalID();
+		return $id;
+	}
 }

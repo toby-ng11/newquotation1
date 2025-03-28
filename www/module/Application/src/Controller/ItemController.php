@@ -162,6 +162,7 @@ class ItemController extends AbstractActionController
         }
     }
 
+    // Search for items in P21
     public function indexAction()
     {
         $pattern = $this->params()->fromQuery('term', null);
@@ -176,6 +177,7 @@ class ItemController extends AbstractActionController
         return new JsonModel($item);
     }
 
+    // Fetch UOM from P21
     public function uomAction()
     {
         $item_id = $this->params()->fromQuery('term', null);
@@ -189,6 +191,7 @@ class ItemController extends AbstractActionController
         return new JsonModel($uom);
     }
 
+    // Fetch Price from P21
     public function priceAction()
     {
         $item_id = $this->params()->fromQuery('item_id', null);

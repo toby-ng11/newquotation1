@@ -40,4 +40,22 @@ class User
         $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
         return $result;
     }
+
+    public function fetchaAllApprovalID($company = DEFAULT_COMPANY)
+    {
+        $sql = new Sql($this->adapter, 'P21_Users');
+        $select = $sql->select()
+            ->columns(['id', 'name', 'default_company'])
+            ->where(['default_company' => $company]);
+
+        $select->where->nest()
+        ->like('role', '%Sales%')->or
+        ->like('role', '%Manager%')->or
+        ->like('role', '%Accounts Receivable%')
+        ->unnest();
+
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result;
+    }
 }

@@ -27,7 +27,7 @@ $user = $this->user;
             <p>Here's all projects and quotes</p>
         </header>
 
-        <section aria-labelledby="all_projects" id="section1" data-nav="All Projects">
+        <section class="fade-in-up" aria-labelledby="all_projects" id="section1" data-nav="All Projects">
             <div class="widget-table">
                 <table width="100%" class="sTable display nowrap" id="admin-project-table">
                     <thead>
@@ -48,7 +48,7 @@ $user = $this->user;
             </div>
         </section>
 
-        <section aria-labelledby="all_quotes" id="section2" data-nav="All Quotes">
+        <section class="fade-in-up" aria-labelledby="all_quotes" id="section2" data-nav="All Quotes">
             <div class="widget-table">
                 <table width="100%" class="sTable display nowrap" id='admin-quote-table'>
                     <thead>
@@ -66,85 +66,5 @@ $user = $this->user;
                 </table>
             </div>
         </section>
-
-        <div id="dialog-make-quote" title="Make Quote">
-            <form action="" class="dialog" id='dialog-make-quote-form'>
-                <div class="dialog-form-3">
-                    <div class="oneTwo required-field">
-                        <label for="quote">Customer</label>
-                        <input type="text" value="" id='quote' name='name' class='tipN validate[required]' />
-                    </div>
-
-                    <div class="oneTwo">
-                        <label for="company_id">Company ID</label>
-                        <select name='company_id' id='company_id'>
-                            <?php foreach ($this->companyId as $c) { ?>
-                                <option value="<?= $c['company_id'] ?>"><?= $c['company_id'] ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-
-                    <div class="oneTwo">
-                        <label for="sale_rep">Sales Representative</label>
-                        <input id="sale_rep" name="sale_rep" type="text" placeholder="Optional" />
-                    </div>
-
-                    <div class="oneTwo required-field">
-                        <label for="contact">Contact</label>
-                        <input type="text" id='contact' name='fullname' class="validate[required] tipN" value="" original-title="Enter Customer Name to fetch existing customer" />
-                    </div>
-
-                    <div class="oneTwo">
-                        <label for="first_name">First Name</label>
-                        <input id='first_name' name='first_name' type="text" placeholder="Optional">
-                    </div>
-
-                    <div class="oneTwo">
-                        <label for="last_name">Last Name</label>
-                        <input id='last_name' name='last_name' type="text" placeholder="Optional">
-                    </div>
-
-                    <div class="oneTwo required-field">
-                        <label for="address">Address 1</label>
-                        <input type="text" value="" id='address' name='phys_address1' />
-                    </div>
-
-                    <div class="oneTwo">
-                        <label for="phys_address2">Address 2</label>
-                        <input id='phys_address2' name='phys_address2' type="text" placeholder="Optional">
-                    </div>
-
-                    <div class="oneTwo">
-                        <label for="phys_city">City</label>
-                        <input id='phys_city' name='phys_city' type="text" placeholder="Optional">
-                    </div>
-
-                    <div class="oneTwo">
-                        <label for="mail_state">Province</label>
-                        <input id='mail_state' name='mail_state' type="text" placeholder="Optional">
-                    </div>
-
-                    <div class="oneTwo">
-                        <label for="mail_postal_code">Postal Code</label>
-                        <input id='mail_postal_code' name='mail_postal_code' type="text" placeholder="Optional">
-                    </div>
-
-                    <div class="oneTwo">
-                        <label for="phys_country">Country</label>
-                        <input id='phys_country' name='phys_country' type="text" placeholder="Optional">
-                    </div>
-
-                    <div class="oneTwo">
-                        <label for="tel">Phone Number</label>
-                        <input type="text" id='tel' name='phone' class="maskPhoneExt" value="" id='tel' name='tel' placeholder="Optional" />
-                    </div>
-
-                    <div class="oneTwo required-field">
-                        <label for="customer_email">Email</label>
-                        <input type="text" value="" id='customer_email' name='Contacts_email' class="validate[custom[email]] tipN" original-title="Enter Customer Email to fetch existing customer">
-                    </div>
-                </div>
-            </form>
-        </div>
     </div>
 </main>

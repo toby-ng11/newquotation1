@@ -2,9 +2,14 @@ $(function () {
   /* --------------------------  GLOBAL VARIABLES ---------------------------- */
 
   const $projectId = window.location.pathname.split("/")[2];
+  const $quoteId = window.location.pathname.split("/")[2];
+  const $sheetType = window.location.pathname.split("/")[1];
   const $projectForm = $("#project_content");
+  const $quoteForm = $("#quote-content");
 
   /* --------------------------  TABLES ---------------------------- */
+
+  /* ------ ADMIN PORTAL ------ */
 
   let adminProjectTable = $("#admin-project-table").DataTable({
     ajax: {
@@ -67,8 +72,9 @@ $(function () {
         data: "project_id",
         render: function (data, type, row, meta) {
           return (
-            '<a class="make-quote-button" title="Make Quote">' +
-            '<span class="button-wrap"><span class="icon icon-money"></span></span></a>'
+            '<a target="_blank" href="/project/' +
+            data +
+            '/edit?open=make-quote"><span class="button-wrap"><span class="icon icon-money"></span></span></a>'
           );
         },
       },
@@ -148,21 +154,24 @@ $(function () {
       {
         data: "ship_required_date.date",
         render: function (data) {
+          if (!data) {
+            return "<p>--</p>";
+          }
           let date = new Date(data);
-          return date.toLocaleDateString();
+          return "<p>" + date.toLocaleDateString("en-CA") + "</p>";
         },
       },
       {
         data: "project_status",
       },
       {
-        data: "quote_status",
+        data: "quote_status_id",
         render: function (data) {
-          if (data == -1) {
+          if (data == 4) {
             return '<span class="disapproved red">Disapproved</span>';
-          } else if (data == 10) {
+          } else if (data == 3) {
             return '<span class="approved green">Approved</span>';
-          } else if (data == 1) {
+          } else if (data == 2) {
             return '<span class="waiting orange">Waiting</span>';
           } else {
             return "Not submitted";
@@ -195,6 +204,473 @@ $(function () {
       bottomStart: "pageLength",
     },
   });
+
+  /* ------ PROJECT PORTAL ------ */
+
+  $("#dashboard-project-own-table").DataTable({
+    //select: true,
+    ajax: {
+      url: "/index/project/own?view=true",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "project_id_ext",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/project/" +
+            row.project_id +
+            "/edit'>" +
+            data +
+            "</a>"
+          );
+        },
+      },
+      {
+        data: "project_name",
+      },
+      {
+        data: "shared_id",
+      },
+      {
+        data: "market_segment_desc",
+      },
+      {
+        data: "specifier_name",
+      },
+      {
+        data: "create_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "due_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          let today = new Date();
+          if (date <= today) {
+            return '<span class="red">' + date.toLocaleDateString() + "</span>";
+          } else {
+            return date.toLocaleDateString();
+          }
+        },
+      },
+      {
+        data: "status_desc",
+      },
+      {
+        data: "project_id",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/project/" +
+            data +
+            "/edit?open=make-quote'><span class='button-wrap'><span class='icon icon-money'></span></span></a>"
+          );
+        },
+      },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        className: "dt-head-center",
+      },
+      {
+        targets: [0, 2, 3, 5, 6, 7],
+        className: "dt-body-center",
+      },
+    ],
+    processing: true,
+    order: {
+      name: "project_id",
+      dir: "desc",
+    },
+    fixedColumns: {
+      start: 1,
+      end: 2,
+    },
+    scrollX: true,
+    layout: {
+      topStart: function () {
+        let info = document.createElement("div");
+        info.innerHTML =
+          "<h2>My Projects</h2><p>" + ownTableCount + " projects";
+        return info;
+      },
+      bottomStart: "pageLength",
+    },
+  });
+
+  $("#dashboard-project-assigned-table").DataTable({
+    //select: true,
+    ajax: {
+      url: "/index/project/assigned",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "quote_no",
+        render: function (data, type, row, meta) {
+          {
+            return (
+              "<a target='_blank' href='/project/" +
+              row.project_id +
+              "/edit'>" +
+              data +
+              "</a>"
+            );
+          }
+        },
+      },
+      {
+        data: "project_name",
+      },
+      {
+        data: "owner",
+      },
+      {
+        data: "segment",
+      },
+      {
+        data: "Specifier_name",
+      },
+      {
+        data: "create_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "due_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          let today = new Date();
+          if (date <= today) {
+            return '<span class="red">' + date.toLocaleDateString() + "</span>";
+          } else {
+            return date.toLocaleDateString();
+          }
+        },
+      },
+      {
+        data: "status_name",
+      },
+      {
+        data: "project_id",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/project/" +
+            data +
+            "/edit?open=make-quote'><span class='button-wrap'><span class='icon icon-money'></span></span></a>"
+          );
+        },
+      },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        className: "dt-head-center",
+      },
+      {
+        targets: [0, 2, 3, 5, 6, 7],
+        className: "dt-body-center",
+      },
+    ],
+    processing: true,
+    order: {
+      name: "project_id",
+      dir: "desc",
+    },
+    fixedColumns: {
+      start: 1,
+      end: 2,
+    },
+    scrollX: true,
+    layout: {
+      topStart: function () {
+        let info = document.createElement("div");
+        info.innerHTML =
+          "<h2>Shared Projects</h2>" + assignTableCount + " shared projects";
+        return info;
+      },
+      bottomStart: "pageLength",
+    },
+  });
+
+  $("#dashboard-project-other-table").DataTable({
+    ajax: {
+      url: "/index/project/other",
+      dataSrc: "",
+    },
+    columns: [
+      {
+        data: "quote_no",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/project/" +
+            row.project_id +
+            "/edit'>" +
+            data +
+            "</a>"
+          );
+        },
+      },
+      {
+        data: "project_name",
+      },
+      {
+        data: "owner",
+      },
+      {
+        data: "worksheet_assign",
+      },
+      {
+        data: "segment",
+      },
+      {
+        data: "Specifier_name",
+      },
+      {
+        data: "create_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "due_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          let today = new Date();
+          if (date <= today) {
+            return '<span class="red">' + date.toLocaleDateString() + "</span>";
+          } else {
+            return date.toLocaleDateString();
+          }
+        },
+      },
+      {
+        data: "project_id",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/project/" +
+            data +
+            "/edit?open=make-quote'><span class='button-wrap'><span class='icon icon-money'></span></span></a>"
+          );
+        },
+      },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        className: "dt-head-center",
+      },
+      {
+        targets: [0, 2, 3, 4, 6, 7],
+        className: "dt-body-center",
+      },
+    ],
+    processing: true,
+    order: {
+      name: "project_id",
+      dir: "desc",
+    },
+    fixedColumns: {
+      start: 1,
+      end: 1,
+    },
+    scrollX: true,
+    layout: {
+      topStart: function () {
+        let info = document.createElement("div");
+        info.innerHTML =
+          "<h2>Other Projects At <?= $company ?></h2><p>" +
+          otherTableCount +
+          " projects at <?= $company ?>";
+        return info;
+      },
+      bottomStart: "pageLength",
+    },
+  });
+
+  $("#dashboard-project-quote-table").DataTable({
+    ajax: {
+      url: "/index/project/quote",
+      dataSrc: "",
+    },
+    processing: true,
+    //"serverSide": true,
+    columns: [
+      {
+        data: "quote_id",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/quote/" +
+            data +
+            "/edit'>" +
+            data +
+            "</a>"
+          );
+        },
+      },
+      {
+        data: "project_id",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/project/" +
+            data +
+            "/edit'>" +
+            data +
+            "</a>"
+          );
+        },
+      },
+      {
+        data: "project_name",
+      },
+      {
+        data: "quote_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "expire_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          let today = new Date();
+          if (date <= today) {
+            return '<span class="red">' + date.toLocaleDateString() + "</span>";
+          } else {
+            return date.toLocaleDateString();
+          }
+        },
+      },
+      {
+        data: "ship_required_date.date",
+        render: function (data) {
+          if (!data) {
+            return "<p>--</p>";
+          }
+          let date = new Date(data);
+          return "<p>" + date.toLocaleDateString("en-CA") + "</p>";
+        },
+      },
+      {
+        data: "customer_name",
+      },
+      {
+        data: "project_status",
+      },
+      {
+        data: "quote_status_id",
+        render: function (data) {
+          if (data == 4) {
+            return '<span class="disapproved red">Disapproved</span>';
+          } else if (data == 3) {
+            return '<span class="approved green">Approved</span>';
+          } else if (data == 2) {
+            return '<span class="waiting orange">Waiting</span>';
+          } else {
+            return "Not submitted";
+          }
+        },
+      },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        className: "dt-head-center",
+      },
+      {
+        targets: [0, 1, 3, 4, 5, 7, 8],
+        className: "dt-body-center",
+      },
+    ],
+    order: [[0, "desc"]],
+    fixedColumns: {
+      start: 2,
+      end: 2,
+    },
+    scrollX: true,
+    layout: {
+      topStart: function () {
+        let info = document.createElement("div");
+        info.innerHTML = "<h2>My Quotes</h2>" + quoteTableCount + " quotes";
+        return info;
+      },
+      bottomStart: "pageLength",
+    },
+  });
+
+  $("#dashboard-project-note-table").DataTable({
+    ajax: {
+      url: "/index/project/note",
+      dataSrc: "",
+    },
+    processing: true,
+    columns: [
+      {
+        data: "date_added.date",
+        render: function (data) {
+          let date = new Date(data);
+          return "<p><b>" + date.toLocaleString("en-CA") + "</b></p>";
+        },
+      },
+      {
+        data: "project_id",
+        render: function (data, type, row, meta) {
+          {
+            return (
+              "<a target='_blank' href='/project/" +
+              row.project_id +
+              "/edit'>" +
+              row.project_id +
+              "</a>"
+            );
+          }
+        },
+      },
+      {
+        data: "project_name",
+      },
+      {
+        data: "next_action",
+        render: function (data) {
+          let formattedText = data.replace(/(?:\r\n|\r|\n)/g, "<br>");
+          return "<p>" + formattedText + "</p>";
+        },
+      },
+    ],
+    columnDefs: [
+      {
+        targets: [0, 1, 2, 3],
+        className: "dt-head-center",
+      },
+      {
+        targets: [0, 1],
+        className: "dt-body-center",
+      },
+    ],
+    fixedColumns: {
+      //start: 3
+    },
+    scrollX: true,
+    order: [[0, "desc"]],
+    layout: {
+      topStart: function () {
+        let info = document.createElement("div");
+        info.innerHTML = "<h2>Follow Up Notes</h2>" + noteTableCount + " notes";
+        return info;
+      },
+      bottomStart: "pageLength",
+    },
+  });
+
+  /* ------ PROJECT + QUOTE EDIT ------ */
 
   let projectNoteTable = $("#project_note").DataTable({
     ajax: {
@@ -300,12 +776,12 @@ $(function () {
     },
   });
 
-  let projectItemTable = $("#project-item-table").DataTable({
+  let itemTable = $("#item-table").DataTable({
     ajax: {
       url: "/item/table",
       data: {
         id: $projectId,
-        type: "project",
+        type: $sheetType,
       },
       dataSrc: "",
     },
@@ -359,13 +835,17 @@ $(function () {
             '<div class="row-button">' +
             '<a title="Edit this item" class="item-edit" href="/item/fetch?uid=' +
             data +
-            '&type=project">' +
+            "&type=" +
+            $sheetType +
+            '">' +
             '<span class="button-wrap">' +
             '<span class="icon icon-edit"></span>' +
             "</span></a>" +
             '<a title="Delete this item" class="item_delete" href="/item/delete?uid=' +
             data +
-            '&type=project">' +
+            "&type=" +
+            $sheetType +
+            '">' +
             '<span class="button-wrap">' +
             '<span class="icon icon-delete"></span>' +
             "</span></a></div>"
@@ -420,7 +900,7 @@ $(function () {
         data: "project_name",
       },
       {
-        data: "quote_date",
+        data: "quote_date.date",
         render: function (data) {
           let date = new Date(data);
           return date.toLocaleDateString();
@@ -441,18 +921,21 @@ $(function () {
       {
         data: "ship_required_date.date",
         render: function (data) {
+          if (!data) {
+            return "<p>--</p>";
+          }
           let date = new Date(data);
-          return date.toLocaleDateString();
+          return "<p>" + date.toLocaleDateString("en-CA") + "</p>";
         },
       },
       {
-        data: "quote_status",
+        data: "quote_status_id",
         render: function (data) {
-          if (data == -1) {
+          if (data == 4) {
             return '<span class="disapproved red">Disapproved</span>';
-          } else if (data == 10) {
+          } else if (data == 3) {
             return '<span class="approved green">Approved</span>';
-          } else if (data == 1) {
+          } else if (data == 2) {
             return '<span class="waiting orange">Waiting</span>';
           } else {
             return "Not submitted";
@@ -541,12 +1024,12 @@ $(function () {
 
           $("#dialog-item-form #item_uid").val(data["item_uid"] || "");
           $("#dialog-item-form #item_id").val(data["item_id"] || "");
-          $("#dialog-item-form #price").val(data["unit_price"] || "");
-          $("#dialog-item-form #qty").val(data["quantity"] || "");
+          $("#dialog-item-form #unit_price").val(data["unit_price"] || "");
+          $("#dialog-item-form #quantity").val(data["quantity"] || "");
           $("#dialog-item-form #note").val(data["note"] || "");
           $("#dialog-item-form #uom").val(data["uom"] || "");
 
-          getoum(data["item_id"], data["uom"], data["price"]);
+          getoum(data["item_id"], data["uom"], data["unit_price"]);
         } else {
           alert(response.message || "Failed to fetch item data.");
         }
@@ -597,6 +1080,7 @@ $(function () {
     buttons: [
       {
         id: "item-form-btn-add",
+        text: "Save",
         click: function () {
           if ($itemForm.validationEngine("validate")) {
             disableButton($dialogBtnAddItem, true);
@@ -711,7 +1195,7 @@ $(function () {
       dataType: "json",
     })
       .done((data) => {
-        $("#price").val(data?.price || old_price || "");
+        $("#unit_price").val(data?.price || old_price || "");
       })
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error("Error fetching price:", textStatus, errorThrown);
@@ -725,7 +1209,8 @@ $(function () {
       $itemForm.serialize() +
       "&project_id=" +
       encodeURIComponent($projectId) +
-      "&type=project";
+      "&type=" +
+      encodeURIComponent($sheetType);
 
     $.ajax({
       url: "/item/add",
@@ -733,7 +1218,7 @@ $(function () {
       data: formData,
       contentType: "application/x-www-form-urlencoded",
     })
-      .done(() => projectItemTable.ajax.reload())
+      .done(() => itemTable.ajax.reload())
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error(
           "Error adding item:",
@@ -749,7 +1234,8 @@ $(function () {
   // Edit Item Function
   function edititem() {
     disableButton($dialogBtnAddItem, true);
-    let formData = $itemForm.serialize() + "&type=project";
+    let formData =
+      $itemForm.serialize() + "&type=" + encodeURIComponent($sheetType);
 
     $.ajax({
       url: "/item/edit",
@@ -757,7 +1243,7 @@ $(function () {
       data: formData,
       contentType: "application/x-www-form-urlencoded",
     })
-      .done(() => projectItemTable.ajax.reload())
+      .done(() => itemTable.ajax.reload())
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error(
           "Error adding item:",
@@ -778,7 +1264,7 @@ $(function () {
         url: $(this).attr("href"),
         type: "GET",
       })
-        .done(() => projectItemTable.ajax.reload())
+        .done(() => itemTable.ajax.reload())
         .fail((jqXHR, textStatus, errorThrown) => {
           console.error(
             "Error deleting item:",
@@ -1021,43 +1507,42 @@ $(function () {
     ],
   });
 
-  $("#widget-btn-add-quote").on("click", function () {
+  $("#widget-btn-add-quote, .make-quote").on("click", function (e) {
     //$dialogNote.dialog("option", "title", "Add Log");
+    e.preventDefault();
     $dialogMakeQuote.dialog("open");
   });
 
-  if ($(".dialog #customer_name").length) {
-    $(".dialog #customer_name")
+  function initCustomerAutocomplete($section) {
+    $section
+      .find("input[id$='_customer_name']")
       .autocomplete({
-        appendTo: "#dialog-make-quote-form",
+        appendTo:
+          $section.data("type") === "dialog" ? "#dialog-make-quote-form" : null,
         source: function (request, response) {
           $.ajax({
             url: "/customer/fetch",
             dataType: "json",
             data: { term: request.term, limit: 10 },
           })
-            .done((data) => response(data))
-            .fail((jqXHR, textStatus, errorThrown) => {
-              console.error(
-                "AJAX Error: ",
-                textStatus,
-                errorThrown,
-                jqXHR.responseText
-              );
-              response([]);
-            });
+            .done(response)
+            .fail(() => response([]));
         },
         minLength: 2,
-        open: function (event, ui) {
-          $("ui-autocomplete").css("z-index", 2001);
-        },
         select: function (event, ui) {
           if (ui.item && ui.item.customer_id) {
-            $customerFields.each(function () {
-              let fieldName = $(this).attr("id");
-              $(this).val(ui.item[fieldName] || "");
+            // Populate all customer fields dynamically
+            [
+              "customer_id",
+              "customer_name",
+              "company_id",
+              "salesrep_full_name",
+            ].forEach((field) => {
+              $section
+                .find(`#${$section.data("type")}_${field}`)
+                .val(ui.item[field] || "");
             });
-            getCustomerContacts(ui.item.customer_id);
+            getCustomerContacts(ui.item.customer_id, $section);
           }
           return false;
         },
@@ -1065,77 +1550,98 @@ $(function () {
       .autocomplete("instance")._renderItem = function (ul, item) {
       return $("<li>")
         .append(
-          $("<div>")
-            .addClass("autocomplete-item")
-            .append($("<strong>").text(item.customer_id))
-            .append($("<span>").text(" - " + item.customer_name))
+          `<div><strong>${item.customer_id}</strong> - ${item.customer_name}</div>`
         )
         .appendTo(ul);
     };
   }
 
-  function getCustomerContacts(customer_id) {
+  function getCustomerContacts(customer_id, $section) {
     if (!customer_id) return;
     $.ajax({
       url: "/customer/contacts",
       data: { customer_id },
       dataType: "json",
-      type: "get",
-    })
-      .done((data) => {
-        $contactDropdown.empty();
-
-        $.each(data, function (i, item) {
-          $contactDropdown.append(
-            '<option value="' +
-              item.contact_id +
-              '">' +
-              item.contact_full_name +
-              "</option>"
-          );
-        });
-        getContactInfo();
-      })
-      .fail(function (jqXHR, textStatus, errorThrown) {
-        console.error("Error fetching specifier:", textStatus, errorThrown);
+    }).done((data) => {
+      const $contactDropdown = $section
+        .find("select[id$='_contact_name']")
+        .empty();
+      $.each(data, (i, item) => {
+        $contactDropdown.append(
+          `<option value="${item.contact_id}">${item.contact_full_name}</option>`
+        );
       });
+      getContactInfo($section);
+    });
   }
 
-  $("#contact_name").on("change", function () {
-    getContactInfo();
-  });
-
-  function getContactInfo() {
-    let contactID = $("#contact_name").val();
+  function getContactInfo($section) {
+    const contactID = $section.find("select[id$='_contact_name']").val();
     if (!contactID) return;
     $.ajax({
       url: "/customer/contactinfo",
       data: { contact_id: contactID },
       dataType: "json",
-      type: "get",
-    })
-      .done((data) => {
-        if (data) {
-          $contactFields.each(function () {
-            let fieldName = $(this).attr("id");
-            $(this).val(data[fieldName] || "");
-          });
-        }
-      })
-      .fail((jqXHR, textStatus, errorThrown) => {
-        console.error("Error fetching specifier:", textStatus, errorThrown);
+    }).done((data) => {
+      // Fill contact fields dynamically based on ID suffix
+      [
+        "contact_id",
+        "first_name",
+        "last_name",
+        "phys_address1",
+        "phys_address2",
+        "phys_city",
+        "phys_state",
+        "phys_postal_code",
+        "phys_country",
+        "central_phone_number",
+        "email_address",
+      ].forEach((field) => {
+        $section
+          .find(`#${$section.data("type")}_${field}`)
+          .val(data[field] || "");
       });
+    });
   }
+
+  // Initialize both sections (main and dialog)
+  $(".customer-section").each(function () {
+    const $section = $(this);
+    initCustomerAutocomplete($section);
+    $section
+      .find("select[id$='_contact_name']")
+      .on("change", () => getContactInfo($section));
+  });
 
   function makeQuote() {
     disableButton($dialogBtnAddCustomer, true);
 
-    let contactID = $("#contact_id").val();
-    let formData =
-      $projectForm.serialize() + "&contact_id=" + encodeURIComponent(contactID);
+    let contactID = $("#dialog_contact_id").val();
+    let formData = "";
+    if ($sheetType === "project") {
+      // if make quote from project page
+      formData =
+        $projectForm.serialize() +
+        "&contact_id=" +
+        encodeURIComponent(contactID) +
+        "&project_id=" +
+        encodeURIComponent($projectId) +
+        "&sheetType=" +
+        encodeURIComponent($sheetType);
+    }
+
+    if ($sheetType === "quote") {
+      // if make quote from quote page
+      formData =
+        "&contact_id=" +
+        encodeURIComponent(contactID) +
+        "&project_id=" +
+        encodeURIComponent($("#project_id").val());
+      "&sheetType=" + encodeURIComponent($sheetType);
+    }
 
     $.ajax({
-      url: "/quote/create",
+      url: "/quote",
       type: "post",
       data: formData,
       contentType: "application/x-www-form-urlencoded",
@@ -1159,84 +1665,6 @@ $(function () {
       })
       .always(() => disableButton($dialogBtnAddCustomer, false));
   }
-
-  /* ----------------------------- Page Load -------------------------------- */
-
-  const $architectDetails = $("#architect-details");
-  const architectName = $("#architect_name").val();
-
-  const $contractorDetails = $("#contractor-details");
-  const generalContractor = $("#general_contractor_name").val();
-  const awardedContractor = $("#awarded_contractor_name").val();
-
-  // Auto expand architect details
-  if ($architectDetails.length && architectName.trim() != "") {
-    $architectDetails.prop("open", true);
-  }
-
-  // Auto expand contractor details
-  // if either general or awarded contractor field is available (check with length)
-  if (
-    $contractorDetails.length &&
-    (generalContractor.trim() != "" || awardedContractor.trim() != "")
-  ) {
-    $contractorDetails.prop("open", true);
-  }
-
-  let unsave = false;
-
-  $projectForm.on("change", function () {
-    $("#save-project").prop("disabled", false);
-    unsave = true;
-  });
-
-  $("#save-project").on("click", function (e) {
-    e.preventDefault();
-    if ($projectForm.validationEngine("validate") == true) {
-      if ($("#status").val() != 13) {
-        if (generalContractor.trim() == "") {
-          $("#general_contractor_id").val("");
-        } // delete contractor
-        if (awardedContractor.trim() == "") {
-          $("#awarded_contractor_id").val("");
-        }
-        $projectForm.trigger("submit");
-        unsave = false;
-      }
-    }
-  });
-
-  window.onbeforeunload = function () {
-    if (unsave) {
-      $("#save-project").trigger("focus");
-      return "You have unsaved changes project information. Do you want to leave this page and discard your changes or stay on this page?";
-    }
-  };
-
-  $(".delete_pro").on("click", async function () {
-    if (!confirm("Are you sure you want to delete this project?")) return;
-
-    $(".loading").show();
-
-    try {
-      const response = await $.ajax({
-        url: `/project/${$projectId}/delete`,
-        type: "GET",
-        dataType: "json",
-      });
-
-      if (response.success) {
-        window.location.href = "/index/project";
-      } else {
-        alert(response.message || "Failed to delete the project.");
-      }
-    } catch (error) {
-      console.error("Delete failed:", error);
-      alert("Error occurred while deleting the project.");
-    } finally {
-      $(".loading").hide();
-    }
-  });
 
   /* ------------------------------   For project/{new, edit} ---------------------------------*/
   if ($("#shared_id").length) {
@@ -1510,5 +1938,199 @@ $(function () {
         }
       },
     });
+  }
+
+  /* ----------------------------- Page Load -------------------------------- */
+
+  let unsave = false;
+  let lastChanged = null;
+
+  window.onbeforeunload = function () {
+    if (unsave) {
+      if (lastChanged === "project")
+        $("#form-btn-save-project").trigger("focus");
+      if (lastChanged === "quote") $("#form-btn-save-quote").trigger("focus");
+      return "You have unsaved changes. Do you want to leave this page and discard your changes or stay on this page?";
+    }
+  };
+
+  /*------------------------ Project -------------------------*/
+  const $architectDetails = $("#architect-details");
+  const architectName = $("#architect_name").val();
+
+  const $contractorDetails = $("#contractor-details");
+  const generalContractor = $("#general_contractor_name").val();
+  const awardedContractor = $("#awarded_contractor_name").val();
+
+  // Auto expand architect details
+  if ($architectDetails.length && architectName.trim() != "") {
+    $architectDetails.prop("open", true);
+  }
+
+  // Auto expand contractor details
+  // if either general or awarded contractor field is available (check with length)
+  if (
+    $contractorDetails.length &&
+    (generalContractor.trim() != "" || awardedContractor.trim() != "")
+  ) {
+    $contractorDetails.prop("open", true);
+  }
+
+  // Enable save button
+  $projectForm.on("change", function () {
+    $("#form-btn-save-project").prop("disabled", false);
+    unsave = true;
+    lastChanged = "project";
+  });
+
+  // Save edit
+  $("#form-btn-save-project").on("click", function (e) {
+    e.preventDefault();
+    if ($projectForm.validationEngine("validate")) {
+      if ($("#status").val() != 13) {
+        if (generalContractor.trim() === "")
+          $("#general_contractor_id").val("");
+        if (awardedContractor.trim() === "")
+          $("#awarded_contractor_id").val("");
+        $projectForm.trigger("submit");
+        unsave = false;
+      }
+    }
+  });
+
+  // Delete project
+  $(".delete_pro").on("click", async function () {
+    if (!confirm("Are you sure you want to delete this project?")) return;
+
+    $(".loading").show();
+
+    try {
+      const response = await $.ajax({
+        url: `/project/${$projectId}/delete`,
+        type: "GET",
+        dataType: "json",
+      });
+
+      if (response.success) {
+        window.location.href = "/index/project";
+      } else {
+        alert(response.message || "Failed to delete the project.");
+      }
+    } catch (error) {
+      console.error("Delete failed:", error);
+      alert("Error occurred while deleting the project.");
+    } finally {
+      $(".loading").hide();
+    }
+  });
+
+  /*------------------------ Quote -------------------------*/
+
+  // Enable save button
+  $quoteForm.on("change", function () {
+    $("#form-btn-save-quote").prop("disabled", false);
+    unsave = true;
+    lastChanged = "quote";
+  });
+
+  // Save edit
+  $("#form-btn-save-quote").on("click", function (e) {
+    e.preventDefault();
+    $quoteForm.trigger("submit");
+    unsave = false;
+  });
+
+  // Submit approval
+  $(".quote-action-button").on("click", async function (e) {
+    e.preventDefault();
+
+    const $button = $(this);
+    const action = $button.data("action");
+    const label = $button.data("label")?.toLowerCase();
+
+    if (!action) return;
+
+    // Only validate for 'submit' and 'approve' actions
+    const requiresValidation = ["submit", "approve", "submit-approve"].includes(action);
+    if (requiresValidation && !$quoteForm.validationEngine("validate")) return;
+
+    if (!confirm(`You are about to ${label} this quote. Continue?`)) return;
+
+    $button.prop("disabled", true);
+    unsave = false;
+    let formData = $quoteForm.serialize();
+    $(".loading").show();
+
+    try {
+      const response = await $.post(`/quote/${$quoteId}/${action}`, formData);
+
+      if (response.success) {
+        window.scrollTo(0, 0);
+        location.reload();
+      } else {
+        alert(response.message || `Failed to ${label} the quote.`);
+      }
+    } catch (error) {
+      console.error(`Submit failed:`, error);
+      alert(`Error occurred while trying to ${label} the quote.`);
+    } finally {
+      $(".loading").hide();
+      setTimeout(() => $button.prop("disabled", false), 1000); // Prevents spam clicking
+    }
+  });
+
+  $(".delete_quote").on("click", async function (e) {
+    e.preventDefault();
+    if (confirm("Are you sure you want to delete this quote?") == true) {
+      unsave = false;
+      $(".loading").show();
+      try {
+        const response = await $.ajax({
+          url: `/quote/${$quoteId}/delete`,
+          type: "GET",
+          dataType: "json",
+        });
+
+        if (response.success) {
+          window.location.href = "/index/project";
+        } else {
+          alert(response.message || "Failed to delete the quote.");
+        }
+      } catch (error) {
+        console.error("Delete failed:", error);
+        alert("Error occurred while deleting the quote.");
+      } finally {
+        $(".loading").hide();
+      }
+    }
+  });
+
+  $("a.quote-edit-again").on("click", function (e) {
+    if (
+      confirm("You are about to edit this approved quote. Continue?") == true
+    ) {
+      e.preventDefault();
+      $(".loading").show();
+      $.ajax({
+        url: "/quote/ready/id/<?= $quoteID ?>",
+        type: "get",
+        success: function (data) {
+          //$('#status').html('<div class="nNote nInformation hideit"><p><strong>INFORMATION: </strong>You Need submit again after edit</p></div>');
+          location.reload();
+        },
+      });
+      $(".loading").hide();
+    } else {
+      e.preventDefault();
+    }
+  });
+
+  /* ------------------------- MORE GLOBAL VARIABLES ---------------------------- */
+
+  const params = new URLSearchParams(window.location.search);
+  const dialogToOpen = params.get("open");
+
+  if (dialogToOpen === "make-quote") {
+    $dialogMakeQuote.dialog("open");
   }
 });

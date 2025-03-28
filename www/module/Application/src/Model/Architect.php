@@ -11,7 +11,8 @@ use Exception;
 use Application\Model\Address;
 use Laminas\Db\TableGateway\TableGateway;
 
-class Architect {
+class Architect
+{
     protected $adapter;
     protected $address;
     protected $architect;
@@ -19,16 +20,18 @@ class Architect {
     public function __construct(
         Adapter $adapter,
         TableGateway $architect,
-        Address $address) {
+        Address $address
+    ) {
         $this->adapter = $adapter;
         $this->address = $address;
         $this->architect = $architect;
     }
 
-    public function add($data) {
+    public function add($data)
+    {
         if ($data == null) {
-			return  false;
-		}
+            return  false;
+        }
 
         $info = [
             'architect_name' => $data['architect_name'],
@@ -37,8 +40,8 @@ class Architect {
             'delete_flag' => 'N',
             'date_added' => new Expression('GETDATE()')
         ];
-        
-        if(empty($data['address_id'])) {
+
+        if (empty($data['address_id'])) {
             $info['address_id'] = $this->address->add($data);
         } else {
             $info['address_id'] = $data['address_id'];
@@ -54,7 +57,8 @@ class Architect {
         }
     }
 
-    public function fetchArchitectById($id, $company = DEFAULT_COMPANY) {
+    public function fetchArchitectById($id, $company = DEFAULT_COMPANY)
+    {
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('p2q_view_architect_x_address')
@@ -65,19 +69,20 @@ class Architect {
         return $result->current();
     }
 
-    public function fetchArchitectByPattern($pattern, $limit = 10, $company = DEFAULT_COMPANY) {
+    public function fetchArchitectByPattern($pattern, $limit = 10, $company = DEFAULT_COMPANY)
+    {
         $sql = new Sql($this->adapter);
         $select = $sql->select('architect')  // can use TableGateway instead
-            ->where(function ($where) use ($pattern) {
-                $where->like('architect_id', $pattern . '%')
-                    ->or
-                    ->like('architect_name', $pattern . '%');
-            })
             ->where(['company_id' => $company])
             ->where(['delete_flag' => 'N'])
             ->limit($limit);
 
+        $select->where->nest()->like('architect_id', $pattern . '%')
+            ->or
+            ->like('architect_name', $pattern . '%')->unnest();
+
         $selectString = $sql->buildSqlString($select);
+        error_log($selectString);
         $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
         return $result;
     }

@@ -9,20 +9,21 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
 use Application\Service\UserService;
-use Application\Model\Project;
-use Application\Model\Quote;
+use Application\Model\{Project, Quote, Note};
 
 class IndexController extends AbstractActionController
 {
     protected $userService;
     protected $project;
     protected $quote;
+    protected $note;
 
-    public function __construct(UserService $userService, Project $project, Quote $quote)
+    public function __construct(UserService $userService, Project $project, Quote $quote, Note $note)
     {
         $this->userService = $userService;
         $this->project = $project;
         $this->quote = $quote;
+        $this->note = $note;
     }
 
     public function indexAction()
@@ -64,8 +65,40 @@ class IndexController extends AbstractActionController
     {
         $user = $this->userService->getCurrentUser();
 
+        $table = $this->params()->fromRoute('table', 'own');
+        $ownTableCount = $this->project->countOwnProjects($user['id']);
+        $assignTableCount = $this->project->countAssignedProjects($user['id']);
+        $otherTableCount = $this->project->countOtherUsersProjects($user['id']);
+        $quoteTableCount = $this->quote->countOwnQuotes($user['id']);
+        $noteTableCount = $this->note->countOwnNotes($user['id']); 
+
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            switch ($table) {
+                case 'own':
+                    $TableView = $this->project->fetchOwnProjects($user['id']);
+                    return new JsonModel($TableView);
+                case 'assigned':
+                    $TableView = $this->project->fetchAssignedProjects($user['id']);
+                    return new JsonModel($TableView);
+                case 'other':
+                    $TableView = $this->project->fetchOtherUsersProjects($user['id']);
+                    return new JsonModel($TableView);
+                case 'quote':
+                    $TableView = $this->quote->fetchOwnQuotes($user['id']);
+                    return new JsonModel($TableView);
+                case 'note':
+                    $TableView = $this->note->fetchOwnNotes($user['id']);
+                    return new JsonModel($TableView);
+            }
+        }
+
         return new ViewModel([
-            'user' => $user
+            'user' => $user,
+            'ownTableCount' => $ownTableCount,
+            'assignTableCount' => $assignTableCount,
+            'otherTableCount' => $otherTableCount,
+            'quoteTableCount' => $quoteTableCount,
+            'noteTableCount' => $noteTableCount
         ]);
     }
 

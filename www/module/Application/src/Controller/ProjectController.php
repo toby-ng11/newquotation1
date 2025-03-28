@@ -42,6 +42,21 @@ class ProjectController extends AbstractActionController
         $this->customer = $customer;
     }
 
+    public function indexAction()
+    {
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            return $this->forward()->dispatch(ProjectController::class, [
+                'action' => 'create',
+            ]);
+        }
+        
+        return $this->forward()->dispatch(ProjectController::class, [
+            'action' => 'new',
+        ]);
+    }
+
     public function newAction()
     {
         $user = $this->userService->getCurrentUser();

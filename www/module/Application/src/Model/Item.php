@@ -39,11 +39,11 @@ class Item
 
         $info = [
             'item_id'              => $data['item_id'],
-            'quantity'             => $data['qty'],
+            'quantity'             => $data['quantity'],
             'note'                 => trim($data['note']),
-            'unit_price'           => $data['price'],
+            'unit_price'           => $data['unit_price'],
             'uom'                  => $data['uom'],
-            'subtotal'             => round($data['qty'] * $data['price'], 2),
+            'subtotal'             => round($data['quantity'] * $data['unit_price'], 2),
             'added_by'             => $user['id'],
             'last_maintained_by'   => $user['id'],
             'date_add'             => new Expression('GETDATE()'),
@@ -87,11 +87,11 @@ class Item
 
         $info = [
             'item_id'              => $data['item_id'],
-            'quantity'             => $data['qty'],
+            'quantity'             => $data['quantity'],
             'note'                 => trim($data['note']),
-            'unit_price'           => $data['price'],
+            'unit_price'           => $data['unit_price'],
             'uom'                  => $data['uom'],
-            'subtotal'             => round($data['qty'] * $data['price'], 2),
+            'subtotal'             => round($data['quantity'] * $data['unit_price'], 2),
             'last_maintained_by'   => $user['id'],
             'date_last_maintained' => new Expression('GETDATE()'),
             'delete_flag'          => 'N'
@@ -179,7 +179,8 @@ class Item
         return $result;
     }
 
-    public function fetchItemByUID($item_uid, $sheetType) {
+    public function fetchItemByUID($item_uid, $sheetType)
+    {
         if (!$item_uid || !$sheetType) {
             return false;
         }
@@ -241,14 +242,16 @@ class Item
                     ->where([
                         'location_id' => $location,
                         'project_id' => $project_id
-                    ]);
+                    ])
+                    ->order('item_uid DESC');
                 break;
             case 'quote':
                 $select = $sql->select('p2q_view_quote_items')
                     ->where([
                         'location_id' => $location,
                         'quote_id' => $project_id
-                    ]);
+                    ])
+                    ->order('item_uid DESC');
                 break;
             default:
                 return false;
@@ -257,5 +260,27 @@ class Item
         $selectString = $sql->buildSqlString($select);
         $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
         return $result;
+    }
+
+    public function fetchExistItems($id, $sheetType)
+    {
+        if (!$id || !$sheetType) {
+            return false;
+        }
+
+        switch ($sheetType) {
+            case 'project':
+                $select = $this->project_items->getSql()->select()
+                    ->where(['project_id' => $id]);
+                return $this->project_items->selectWith($select)->toArray();
+                break;
+            case 'quote':
+                $select = $this->quote_items->getSql()->select()
+                    ->where(['quote_id' => $id]);
+                return $this->quote_items->selectWith($select)->toArray();
+                break;
+            default:
+                return false;
+        }
     }
 }

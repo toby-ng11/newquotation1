@@ -12,7 +12,7 @@ $specifierList = $this->specifierList;
 $generalContractor = $this->generalContractor;
 $awardedContractor = $this->awardedContractor;
 $projectID = $project['project_id'];
-$this->headTitle('Edit Project: ' . $projectID)->setSeparator(' - ')->setAutoEscape(false);
+$this->headTitle('Edit Project: ' . $projectID. ' - ' . $project['project_name'])->setSeparator(' - ')->setAutoEscape(false);
 $projectCreateDate = $project['create_date'];
 $projectDueDate = $project['due_date'];
 $projectRequiredDate = $project['require_date'];
@@ -44,8 +44,7 @@ $projectRequiredDate = $project['require_date'];
 															preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print">
 						<span class='icon icon-pdf'></span>
 						Print Project</a>
-					<a class='button quick-link make-quote' href="/quote/index/project/<?= $project['project_id'] ?>"
-						title="Make quote">
+					<a class='button quick-link make-quote' title="Make quote">
 						<span class='icon icon-dollar'></span>
 						Make Quote
 					</a>
@@ -59,8 +58,8 @@ $projectRequiredDate = $project['require_date'];
 		</header>
 
 		<!-- Form -->
-		<section aria-labelledby="project-information" id="section1" data-nav="Project Information" class="active">
-			<form action="/project/edit/id/<?= $projectID ?>" method="post" class="form" id='project_content'>
+		<section class="fade-in-up" aria-labelledby="project-information" id="section1" data-nav="Project Information">
+			<form action="/project/<?= $projectID ?>/edit" method="post" class="form" id='project_content' data-save-btn="#form-btn-save-project" data-form="#projectForm">
 				<div class="widget-table">
 					<!--<div class="widget-button">
 						<div class="widget-pin">
@@ -368,7 +367,7 @@ $projectRequiredDate = $project['require_date'];
 
 						<div class="widget-footer">
 							<div class="widget-footer-button">
-								<button disabled id="save-project" type="button" title="Save project information"
+								<button disabled id="form-btn-save-project" type="button" title="Save project information"
 									class="button action save-project-button small">
 									<span class="button-wrap">
 										<span class="icon icon-save"></span>
@@ -382,11 +381,11 @@ $projectRequiredDate = $project['require_date'];
 			</form>
 		</section>
 
-		<section aria-labelledby="quoted-items" id="section2" data-nav="Quoted Items">
+		<section class="fade-in-up" aria-labelledby="quoted-items" id="section2" data-nav="Quoted Items">
 			<div class="widget-table">
 				<div class="widget-header">
 					<div class="widget-title">
-						<h2>Quoted Items</h2>
+						<h2>Items</h2>
 					</div>
 					<div class="widget-button">
 						<?php if ($owner) { ?>
@@ -405,7 +404,7 @@ $projectRequiredDate = $project['require_date'];
 
 				<div class="widget-section">
 					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap"
-						id="project-item-table">
+						id="item-table">
 						<thead>
 							<tr>
 								<th>Item</th>
@@ -422,7 +421,7 @@ $projectRequiredDate = $project['require_date'];
 			</div>
 		</section>
 
-		<section aria-labelledby="quote-by-project" id="section3" data-nav="Quote by this project">
+		<section class="fade-in-up" aria-labelledby="quote-by-project" id="section3" data-nav="Quote by this project">
 			<div class="widget-table">
 				<div class="widget-header">
 					<div class="widget-title">
@@ -461,7 +460,7 @@ $projectRequiredDate = $project['require_date'];
 			</div>
 		</section>
 
-		<section aria-labelledby="project-log" id="section4" data-nav="Project Log">
+		<section class="fade-in-up" aria-labelledby="project-log" id="section4" data-nav="Project Log">
 			<div class="widget-table">
 				<div class="widget-header">
 					<div class="widget-title">
@@ -517,14 +516,14 @@ $projectRequiredDate = $project['require_date'];
 					</div>
 
 					<div class="oneTwo required-field">
-						<label for='price'>Price ($)</label>
-						<input type="text" class="validate[required,custom[number]]" name="price" id='price'
+						<label for='unit_price'>Price ($)</label>
+						<input type="text" class="validate[required,custom[number]]" name="unit_price" id='unit_price'
 							placeholder="*You can override the price" />
 					</div>
 
 					<div class="oneTwo required-field">
-						<label for='qty'>Quantity</label>
-						<input type="text" name="qty" id='qty' class="validate[required,custom[number]]" />
+						<label for='quantity'>Quantity</label>
+						<input type="text" name="quantity" id='quantity' class="validate[required,custom[number]]" />
 					</div>
 
 					<div class="oneTwo dialog-note">
@@ -553,38 +552,37 @@ $projectRequiredDate = $project['require_date'];
 					</div>
 
 					<div class="oneTwo dialog-note">
-						<label for='follow_up_date'>Follow Up Date</label>
-						<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker">
+						<label for="next_action">Follow Up Note</label>
+						<textarea rows="3" name="next_action" id='next_action'
+							placeholder="Can be left empty. Follow up message will be sent via email if the follow up date is set."></textarea>
 					</div>
 
 					<div class="oneTwo dialog-note">
-						<label for="next_action">Next Action</label>
-						<textarea rows="3" name="next_action" id='next_action'
-							placeholder="Can be left empty"></textarea>
+						<label for='follow_up_date'>Follow Up Date</label>
+						<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker">
 					</div>
-
 				</div>
 			</form>
 		</div>
 
 		<div id="dialog-make-quote" title="Add Customer">
-			<form action="" class="dialog" id='dialog-make-quote-form'>
+			<form action="" class="dialog customer-section" data-type="dialog" id='dialog-make-quote-form'>
 				<h3>Customer</h3>
 				<div class="dialog-form-3">
-					<input type="hidden" id="customer_id" name="customer_id" value="">
+					<input type="hidden" id="dialog_customer_id" name="customer_id" value="">
 					<div class="oneTwo required-field">
-						<label for="customer_name">Customer</label>
-						<input type="text" value="" id="customer_name" class='tipN validate[required]' placeholder="Search by ID or name">
+						<label for="dialog_customer_name">Customer</label>
+						<input type="text" value="" id="dialog_customer_name" class='tipN validate[required]' placeholder="Search by ID or name">
 					</div>
 
 					<div class="oneTwo">
-						<label for="company_id">Company ID</label>
-						<input id="company_id" type="text">
+						<label for="dialog_company_id">Company ID</label>
+						<input id="dialog_company_id" type="text">
 					</div>
 
 					<div class="oneTwo">
-						<label for="salesrep_full_name">Sales Representative</label>
-						<input id="salesrep_full_name" type="text">
+						<label for="dialog_salesrep_full_name">Sales Representative</label>
+						<input id="dialog_salesrep_full_name" type="text">
 					</div>
 				</div>
 
@@ -592,62 +590,62 @@ $projectRequiredDate = $project['require_date'];
 
 				<h3>Contact</h3>
 				<div class="dialog-form-3">
-					<input type="hidden" id="contact_id" name="contact_id" value="">
+					<input type="hidden" id="dialog_contact_id" name="contact_id" value="">
 					<div class="oneTwo required-field">
-						<label for="contact_name">Contact</label>
-						<select id="contact_name" class="validate[required]">
+						<label for="dialog_contact_name">Contact</label>
+						<select id="dialog_contact_name" class="validate[required]">
 							<option value=''>-- Please search for a customer first --</option>
 						</select>
 					</div>
 
 					<div class="oneTwo">
-						<label for="first_name">First Name</label>
-						<input type="text" id="first_name">
+						<label for="dialog_first_name">First Name</label>
+						<input type="text" id="dialog_first_name">
 					</div>
 
 					<div class="oneTwo">
-						<label for="last_name">Last Name</label>
-						<input type="text" id="last_name">
+						<label for="dialog_last_name">Last Name</label>
+						<input type="text" id="dialog_last_name">
 					</div>
 
 					<div class="oneTwo">
-						<label for="phys_address1">Address 1</label>
-						<input type="text" id="phys_address1">
+						<label for="dialog_phys_address1">Address 1</label>
+						<input type="text" id="dialog_phys_address1">
 					</div>
 
 					<div class="oneTwo">
-						<label for="phys_address2">Address 2</label>
-						<input type="text" id="phys_address2">
+						<label for="dialog_phys_address2">Address 2</label>
+						<input type="text" id="dialog_phys_address2">
 					</div>
 
 					<div class="oneTwo">
-						<label for="phys_city">City</label>
-						<input type="text" id="phys_city">
+						<label for="dialog_phys_city">City</label>
+						<input type="text" id="dialog_phys_city">
 					</div>
 
 					<div class="oneTwo">
-						<label for="phys_state">Province</label>
-						<input type="text" id="phys_state">
+						<label for="dialog_phys_state">Province</label>
+						<input type="text" id="dialog_phys_state">
 					</div>
 
 					<div class="oneTwo">
-						<label for="phys_postal_code">Postal Code</label>
-						<input type="text" id="phys_postal_code">
+						<label for="dialog_phys_postal_code">Postal Code</label>
+						<input type="text" id="dialog_phys_postal_code">
 					</div>
 
 					<div class="oneTwo">
-						<label for="phys_country">Country</label>
-						<input type="text" id="phys_country">
+						<label for="dialog_phys_country">Country</label>
+						<input type="text" id="dialog_phys_country">
 					</div>
 
 					<div class="oneTwo">
-						<label for="central_phone_number">Phone Number</label>
-						<input type="text" id="central_phone_number" class="maskPhoneExt">
+						<label for="dialog_central_phone_number">Phone Number</label>
+						<input type="text" id="dialog_central_phone_number" class="maskPhoneExt">
 					</div>
 
 					<div class="oneTwo">
-						<label for="email_address">Email</label>
-						<input type="text" id="email_address">
+						<label for="dialog_email_address">Email</label>
+						<input type="text" id="dialog_email_address">
 					</div>
 				</div>
 			</form>

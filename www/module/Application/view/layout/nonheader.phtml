@@ -109,60 +109,8 @@ $user = $this->userHelper();
         -->
         </div>
     </div>
-    <script>
-        const themeBtnIcon = $('.theme-switcher-menu .icon');
 
-        $(setTheme(window.localStorage.getItem('theme')));
-
-        $(function() {
-            $('.button.theme-switcher-menu').on("click", toggleTheme);
-        })
-
-        function setTheme(themeName) {
-            const validThemes = ['light', 'dark']; // Add more themes as needed
-            if (!validThemes.includes(themeName)) {
-                console.error('Invalid theme name:', themeName);
-                return; // Exit function if themeName is invalid
-            }
-            window.localStorage.setItem('theme', themeName);
-            document.documentElement.className = themeName;
-            updateThemeIcon();
-        }
-
-        function toggleTheme() {
-            const currentTheme = window.localStorage.getItem('theme');
-            const newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
-            setTheme(newTheme);
-            //console.log(`Theme is set to ${newTheme}-mode.`);
-        }
-
-        function updateThemeIcon() {
-            const currentTheme = window.localStorage.getItem('theme');
-            if (currentTheme === 'dark') {
-                themeBtnIcon.removeClass('icon-theme-light').addClass('icon-theme-dark');
-            } else {
-                themeBtnIcon.removeClass('icon-theme-dark').addClass('icon-theme-light');
-            }
-        }
-
-        const userBtn = $('#centura-account-button');
-        const userMenu = $('#centura-account');
-
-        userBtn.on('click', toggleUserMenu);
-
-        userMenu.hide();
-
-        function toggleUserMenu() {
-            const isMenuOpen = userBtn.attr('aria-expanded') === 'true';
-            if (isMenuOpen) {
-                userBtn.removeAttr('aria-expanded');
-                userMenu.hide();
-            } else {
-                userBtn.attr('aria-expanded', true);
-                userMenu.show();
-            }
-        }
-    </script>
+    <script type="text/javascript" src="/js/home.js"></script>
 </body>
 
 <!-- Footer -->

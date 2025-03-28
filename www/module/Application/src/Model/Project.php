@@ -3,7 +3,6 @@
 namespace Application\Model;
 
 use Laminas\Db\Adapter\Adapter;
-use Laminas\Db\TableGateway\TableGatewayInterface;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\{Sql, Expression};
 
@@ -22,7 +21,7 @@ class Project
     public function __construct(
         Adapter $adapter,
         TableGateway $project,
-        TableGatewayInterface $p2q_view_project,
+        TableGateway $p2q_view_project,
         Architect $architect,
         Specifier $specifier
     ) {
@@ -162,6 +161,71 @@ class Project
         return $this->p2q_view_project->select(['project_id' => $id])->current();
     }
 
+    public function fetchOwnProjects($user_id)
+    {
+        return $this->p2q_view_project->select(['owner_id' => $user_id])->toArray();
+    }
+
+    public function countOwnProjects($user_id)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->from('p2q_view_project')
+            ->columns(['total' => new Expression('COUNT(*)')])
+            ->where(['owner_id' => $user_id]);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
+        return $result['total'] ?? 0;
+    }
+
+    public function fetchAssignedProjects($user_id)
+    {
+        return $this->p2q_view_project->select(['shared_id' => $user_id])->toArray();
+    }
+
+    public function countAssignedProjects($user_id)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->from('p2q_view_project')
+            ->columns(['total' => new Expression('COUNT(*)')])
+            ->where(['shared_id' => $user_id]);
+
+            $statement = $sql->prepareStatementForSqlObject($select);
+            $result = $statement->execute()->current();
+        return $result['total'] ?? 0;
+    }
+
+    public function fetchOtherUsersProjects($user_id, $company_id = DEFAULT_COMPANY)
+    {
+        $sql = new Sql($this->adapter);
+
+        $select = $sql->select('p2q_view_project')
+            ->where(['company_id' => $company_id]);
+
+        $select->where->notEqualTo('owner_id', $user_id);
+
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result;
+    }
+
+    public function countOtherUsersProjects($user_id, $company_id = DEFAULT_COMPANY)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->from('p2q_view_project')
+            ->columns(['total' => new Expression('COUNT(*)')])
+            ->where(['company_id' => $company_id]);
+
+        $select->where->notEqualTo('owner_id', $user_id);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
+        return $result['total'] ?? 0;
+    }
+
     public function fetchProjectStatus()
     {
         $sql = new Sql($this->adapter);
@@ -209,5 +273,22 @@ class Project
         $selectString = $sql->buildSqlString($select);
         $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
         return $result;
+    }
+
+    public function QuoteCountByProject($project_id)
+    {
+        if (!$project_id) {
+            return 0;
+        }
+
+        $sql = new Sql($this->adapter);
+        $select = $sql->select('p2q_view_quote_x_project_x_oe')
+            ->columns(['total' => new Expression('COUNT(*)')])
+            ->where(['project_id' => $project_id]);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
+
+        return $result ? (int)$result['total'] : 0;
     }
 }
