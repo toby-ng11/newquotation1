@@ -115,8 +115,6 @@ $user = $this->user;
             <summary>Architect & Specifier</summary>
             <div class="widget-section">
               <h4>Architect</h4>
-              <p>*If you want to edit the architect, please edit it in Architect Portal.</p>
-              <div class="formRow">
                 <div class="oneTwo">
                   <label for="architect_name">Architect Name</label>
                   <input type='text' name="architect_name" id='architect_name' class="tipN" original-title="Search by ID or Name" />
@@ -137,10 +135,44 @@ $user = $this->user;
                   <input type="text" id="architect_rep_id" name="architect_rep_id" value='<?= $user['id'] ?>' readonly />
                 </div>
 
-                <input type="hidden" name='address_id' id='address_id' />
                 <div class="oneTwo">
+                  <label for="architect_type_id">Architect Type</label>
+                  <select id="architect_type_id" name="architect_type_id">
+                    <option value="">-- Choose architect type --</option>
+                    <?php foreach ($this->architectType as $l) { ?>
+                      <option value="<?= $l['architect_type_id'] ?>"><?= $l['architect_type_desc'] ?></option>
+                    <?php } ?>
+                  </select>
+                </div>
+
+                <div class="oneTwo">
+                  <label for="architect_class_id">Architect Class</label>
+                  <input type="text" id="architect_class_id" name="architect_class_id" readonly />
+                </div>
+              </div>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="widget-section">
+              <h4>Address</h4>
+              <input type="hidden" name='address_id' id='address_id' />
+              <div class="formRow">
+                <div class="oneTwo ">
+                  <label for="address_list">Address List</label>
+                  <select name='address_list' id='address_list'>
+                    <option value=''>-- Please search for an architect first --</option>
+                  </select>
+                </div>
+
+                <div class="oneTwo ">
+                  <label for="address_name">Address Nickname</label>
+                  <input type='text' name="address_name" id='address_name' />
+                </div>
+
+                <div class="oneTwo ">
                   <label for="phys_address1">Address 1</label>
-                  <input type='text' name="phys_address1" id='phys_address1' />
+                  <input type='text' name="phys_address1" id='phys_address1' placeholder="Optional" />
                 </div>
 
                 <div class="oneTwo">
@@ -149,7 +181,7 @@ $user = $this->user;
                 </div>
 
                 <div class="oneTwo">
-                  <label for="phys_city">City 2</label>
+                  <label for="phys_city">City</label>
                   <input type='text' name="phys_city" id='phys_city' placeholder="Optional" />
                 </div>
 
@@ -189,7 +221,6 @@ $user = $this->user;
 
             <div class="widget-section">
               <h4>Specifier</h4>
-              <p>*If you want to edit the specifier, please edit it in Architect Portal.</p>
               <div class="formRow">
                 <input type="hidden" id='specifier_id' name="specifier_id" />
                 <input type="hidden" id='specifier_address_id' name="specifier_address_id" />

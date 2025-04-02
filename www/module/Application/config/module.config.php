@@ -92,7 +92,7 @@ return [
             'architect' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route'    => '/architect[/:action][/id/:id]',
+                    'route'    => '/architect[/:id[/:action]]',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'     => '[0-9]+',
@@ -149,6 +149,7 @@ return [
                     $container->get(Model\Item::class),
                     $container->get(Model\Note::class),
                     $container->get(Model\Architect::class),
+                    $container->get(Model\Address::class),
                     $container->get(Model\Specifier::class),
                     $container->get(Model\Customer::class)
                 );
@@ -177,6 +178,7 @@ return [
             Controller\ArchitectController::class => function ($container) {
                 return new Controller\ArchitectController(
                     $container->get(Model\Architect::class),
+                    $container->get(Model\Address::class),
                     $container->get(Model\Specifier::class)
                 );
             },
@@ -278,6 +280,7 @@ return [
                     new TableGateway('project', $dbAdapter),
                     new TableGateway('p2q_view_project', $dbAdapter),
                     $container->get(Model\Architect::class),
+                    $container->get(Model\Address::class),
                     $container->get(Model\Specifier::class)
                 );
             },

@@ -310,7 +310,7 @@ $(function () {
     },
     columns: [
       {
-        data: "quote_no",
+        data: "project_id_ext",
         render: function (data, type, row, meta) {
           {
             return (
@@ -327,13 +327,13 @@ $(function () {
         data: "project_name",
       },
       {
-        data: "owner",
+        data: "owner_id",
       },
       {
-        data: "segment",
+        data: "market_segment_desc",
       },
       {
-        data: "Specifier_name",
+        data: "specifier_name",
       },
       {
         data: "create_date.date",
@@ -355,7 +355,7 @@ $(function () {
         },
       },
       {
-        data: "status_name",
+        data: "status_desc",
       },
       {
         data: "project_id",
@@ -406,7 +406,7 @@ $(function () {
     },
     columns: [
       {
-        data: "quote_no",
+        data: "project_id_ext",
         render: function (data, type, row, meta) {
           return (
             "<a target='_blank' href='/project/" +
@@ -421,16 +421,16 @@ $(function () {
         data: "project_name",
       },
       {
-        data: "owner",
+        data: "owner_id",
       },
       {
-        data: "worksheet_assign",
+        data: "shared_id",
       },
       {
-        data: "segment",
+        data: "market_segment_desc",
       },
       {
-        data: "Specifier_name",
+        data: "specifier_name",
       },
       {
         data: "create_date.date",
@@ -1461,7 +1461,7 @@ $(function () {
   );
 
   $contactDropdown.data("default-options", $contactDropdown.html());
-  $contactFields.prop("readonly", true);
+  //$contactFields.prop("readonly", true);
 
   $dialogMakeQuote.dialog({
     autoOpen: false,
@@ -1704,30 +1704,37 @@ $(function () {
   /* ----------------------------- Architect / Specifier -------------------------------- */
 
   let architectFields = $(
-    "#architect_name, #architect_id, #architect_company_id, #architect_rep_id, #address_id, " +
-      "#phys_address1, #phys_address2, #phys_city, #phys_state, #phys_postal_code, #phys_country, " +
+    "#architect_name, #architect_id, #architect_company_id, #architect_rep_id, " +
+    "#architect_type_id, #architect_class_id"
+  );
+
+  let addressDropdown = $("#address_list");
+  let addressFields = $(
+    "#address_id, #address_name, #phys_address1, " +
+      "#phys_address2, #phys_city, #phys_state, #phys_postal_code, #phys_country, " +
       "#central_phone_number, #email_address, #url"
   );
 
   let specifierDropdown = $("#specifier_name");
   let specifierFields = $(
-    "#specifier_id, #specifier_address_id, #specifier_first_name, #specifier_last_name, #specifier_job_title, #specifier_phone_number, #specifier_email"
+    "#specifier_id, #specifier_address_id, #specifier_first_name, #specifier_last_name, " +
+    "#specifier_job_title, #specifier_phone_number, #specifier_email"
   );
 
   $("#add_architect").on("click", function () {
-    architectFields.val("").prop("readonly", false);
-    specifierFields.val("").prop("readonly", false);
-  });
+    [architectFields, addressFields, specifierFields].forEach(field => field.val("").prop("readonly", false));
+    [addressDropdown, specifierDropdown].forEach(dropdown => dropdown.html('<option value="">-- Please search for an architect first --</option>'));
+});
 
   if ($("#architect_name").length) {
     $("#architect_name")
       .autocomplete({
         source: function (request, response) {
           $.ajax({
-            url: "/architect/fetch",
+            url: "/architect",
             dataType: "json",
             data: {
-              term: request.term,
+              search: request.term,
               limit: 10,
             },
           })
@@ -1748,6 +1755,7 @@ $(function () {
         select: function (event, ui) {
           if (ui.item && ui.item.architect_id) {
             getArchitectById(ui.item.architect_id);
+            getAddress(ui.item.architect_id);
             getSpecifier(ui.item.architect_id);
           }
           return false;
@@ -1771,7 +1779,7 @@ $(function () {
   function getArchitectById(id) {
     if (!id) return;
     $.ajax({
-      url: "/architect/fetchfull/id/" + id,
+      url: `/architect/${id}/fetchfull`,
       dataType: "json",
       type: "get",
     })
@@ -1780,8 +1788,7 @@ $(function () {
           architectFields.each(function () {
             let fieldName = $(this).attr("id");
             $(this)
-              .val(architect[fieldName] || "")
-              .prop("readonly", true);
+              .val(architect[fieldName] || "");
             $("#architect_company_id").val(architect.company_id);
             $("#architect_name").prop("readonly", false);
           });
@@ -1800,10 +1807,47 @@ $(function () {
       });
   }
 
+  function getAddress(id) {
+    if (!id) return;
+    $.ajax({
+      url: `/architect/${id}/address`,
+      dataType: "json",
+      type: "get",
+    })
+      .done(function (address) {
+        addressDropdown.empty();
+        if (!address || address.length === 0) {
+          addressDropdown.html(
+            '<option value="">No addresses found, please add.</option>'
+          );
+          addressFields.val("").prop("readonly", false);
+          return;
+        } else {
+          $.each(address, function (i, item) {
+            addressDropdown.append(
+              '<option value="' +
+                item.address_id +
+                '">' +
+                item.name +
+                "</option>"
+            );
+          });
+          addressDropdown.append(
+            '<option value="new">+ Add New Address</option>'
+          );
+          addressDropdown.prop("selectedIndex", 0);
+          getAddressInfo();
+        }
+      })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        console.error("Error fetching address:", textStatus, errorThrown);
+      });
+  }
+
   function getSpecifier(id) {
     if (!id) return;
     $.ajax({
-      url: "/architect/fetchspecs/id/" + id,
+      url: `/architect/${id}/fetchspecs`,
       dataType: "json",
       type: "get",
     })
@@ -1849,11 +1893,21 @@ $(function () {
     }
   });
 
+  $("#address_list").on("change", function () {
+    if ($(this).val() === "new") {
+      // for add new specifier
+      addressFields.val("");
+      addressFields.prop("readonly", false);
+    } else {
+      getAddressInfo();
+    }
+  });
+
   function getSpecifierInfo() {
     let specifierId = $("#specifier_name").val();
     if (!specifierId || specifierId === "new") return;
     $.ajax({
-      url: "/architect/specinfo/id/" + specifierId,
+      url: `/architect/${specifierId}/specinfo`,
       dataType: "json",
       type: "get",
     })
@@ -1862,8 +1916,7 @@ $(function () {
           specifierFields.each(function () {
             let fieldName = $(this).attr("id");
             $(this)
-              .val(specifier[fieldName] || "")
-              .prop("readonly", true);
+              .val(specifier[fieldName] || "");
             $("#specifier_first_name").val(specifier.first_name);
             $("#specifier_last_name").val(specifier.last_name);
             $("#specifier_job_title").val(specifier.job_title);
@@ -1880,6 +1933,35 @@ $(function () {
         );
       });
   }
+
+  function getAddressInfo() {
+    let addressID = $("#address_list").val();
+    if (!addressID || addressID === "new") return;
+    $.ajax({
+      url: `/architect/${addressID}/addressinfo`,
+      dataType: "json",
+      type: "get",
+    })
+      .done(function (address) {
+        if (address) {
+          addressFields.each(function () {
+            let fieldName = $(this).attr("id");
+            $(this)
+              .val(address[fieldName] || "");
+              $("#address_name").val(address.name);
+          });
+        }
+      })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        console.error(
+          "Error fetching specifier details:",
+          textStatus,
+          errorThrown
+        );
+      });
+  };
+
+  /* ----------------------------- Contractor / Customer -------------------------------- */
 
   function setupAutocomplete(selector, sourceUrl, selectCallback) {
     if ($(selector).length) {
@@ -1907,8 +1989,6 @@ $(function () {
       };
     }
   }
-
-  /* ----------------------------- Contractor / Customer -------------------------------- */
 
   setupAutocomplete(
     "#general_contractor_name",
@@ -2051,7 +2131,9 @@ $(function () {
     if (!action) return;
 
     // Only validate for 'submit' and 'approve' actions
-    const requiresValidation = ["submit", "approve", "submit-approve"].includes(action);
+    const requiresValidation = ["submit", "approve", "submit-approve"].includes(
+      action
+    );
     if (requiresValidation && !$quoteForm.validationEngine("validate")) return;
 
     if (!confirm(`You are about to ${label} this quote. Continue?`)) return;

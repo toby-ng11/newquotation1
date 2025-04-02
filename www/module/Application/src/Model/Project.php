@@ -16,6 +16,7 @@ class Project
     protected $project;
     protected $p2q_view_project;
     protected $architect;
+    protected $address;
     protected $specifier;
 
     public function __construct(
@@ -23,12 +24,14 @@ class Project
         TableGateway $project,
         TableGateway $p2q_view_project,
         Architect $architect,
+        Address $address,
         Specifier $specifier
     ) {
         $this->adapter = $adapter;
         $this->project = $project;
         $this->p2q_view_project = $p2q_view_project;
         $this->architect = $architect;
+        $this->address = $address;
         $this->specifier = $specifier;
     }
 
@@ -56,17 +59,30 @@ class Project
             'due_date'              => !empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()')
         ];
 
-        if (empty($data['architect_id'])) {
-            $info['architect_id'] = $this->architect->add($data);
+        $info['architect_id'] = empty($data['architect_id']) && !empty($data['architect_name'])
+            ? $this->specifier->add($data, $info['architect_id'])
+            : $data['architect_id'];
+
+        if (empty($data['address_id']) && array_filter(array_intersect_key($data, array_flip([
+            'address_name',
+            'phys_address1',
+            'phys_address2',
+            'phys_city',
+            'phys_state',
+            'phys_postal_code',
+            'phys_country',
+            'central_phone_number',
+            'email_address',
+            'url'
+        ])))) {
+            $info['architect_address_id'] = $this->address->add($data, $info['architect_id']);
         } else {
-            $info['architect_id'] = $data['architect_id'];
+            $info['architect_address_id'] = $data['address_id'];
         }
 
-        if (empty($data['specifier_id'])) {
-            $info['specifier_id'] = $this->specifier->add($data, $info['architect_id']);
-        } else {
-            $info['specifier_id'] = $data['specifier_id'];
-        }
+        $info['specifier_id'] = empty($data['specifier_id']) && !empty($data['specifier_name'])
+            ? $this->specifier->add($data, $info['architect_id'])
+            : $data['specifier_id'];
 
         try {
             $this->project->insert($info);
@@ -110,16 +126,33 @@ class Project
             'due_date'              => !empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()')
         ];
 
-        if (empty($data['architect_id'])) {
+        if (empty($data['architect_id']) && !empty($data['architect_name'])) {
             $info['architect_id'] = $this->architect->add($data);
         } else {
-            $info['architect_id'] = $data['architect_id'];
+            $info['architect_id'] = $this->architect->edit($data, $data['architect_id']);
         }
 
-        if (empty($data['specifier_id'])) {
+        if (empty($data['address_id']) && array_filter(array_intersect_key($data, array_flip([
+            'address_name',
+            'phys_address1',
+            'phys_address2',
+            'phys_city',
+            'phys_state',
+            'phys_postal_code',
+            'phys_country',
+            'central_phone_number',
+            'email_address',
+            'url'
+        ])))) {
+            $info['architect_address_id'] = $this->address->add($data, $info['architect_id']);
+        } else {
+            $info['architect_address_id'] = $this->address->edit($data, $data['address_id']);
+        }
+
+        if (empty($data['specifier_id']) && !empty($data['specifier_name'])) {
             $info['specifier_id'] = $this->specifier->add($data, $info['architect_id']);
         } else {
-            $info['specifier_id'] = $data['specifier_id'];
+            $info['specifier_id'] = $this->specifier->edit($data, $data['specifier_id']);
         }
 
         try {
@@ -192,8 +225,8 @@ class Project
             ->columns(['total' => new Expression('COUNT(*)')])
             ->where(['shared_id' => $user_id]);
 
-            $statement = $sql->prepareStatementForSqlObject($select);
-            $result = $statement->execute()->current();
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
         return $result['total'] ?? 0;
     }
 

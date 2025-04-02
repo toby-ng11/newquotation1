@@ -17,13 +17,14 @@ class Address {
         $this->address = $address;
     }
 
-    public function add($data) {
-        if ($data == null) {
+    public function add($data, $architectID) {
+        if (!$data || !$architectID) {
 			return  false;
 		}
 
         $info = [
-            'name'                  => $data['architect_name'],
+            'architect_id'          => $architectID,
+            'name'                  => $data['address_name'],
             'phys_address1'         => $data['phys_address1'],
             'phys_address2'         => $data['phys_address2'],
             'phys_city'             => $data['phys_city'],
@@ -42,6 +43,35 @@ class Address {
             return $newAdressId;
         } catch (Exception $e) {
             error_log("Address\add: Database Insert Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function edit($data, $id) {
+        if (!$data || !$id) {
+			return  false;
+		}
+
+        $info = [
+            //'architect_id'          => $architectID,
+            'name'                  => $data['address_name'],
+            'phys_address1'         => $data['phys_address1'],
+            'phys_address2'         => $data['phys_address2'],
+            'phys_city'             => $data['phys_city'],
+            'phys_state'            => $data['phys_state'],
+            'phys_postal_code'      => $data['phys_postal_code'],
+            'phys_country'          => $data['phys_country'],
+            'central_phone_number'  => $data['central_phone_number'],
+            //'delete_flag'           => 'N',
+            'email_address'         => $data['email_address'],
+            'url'                   => $data['url']
+        ];
+
+        try {
+            $this->address->update($info, ['address_id' => $id]);
+            return $id;
+        } catch (Exception $e) {
+            error_log("Address\update: Database Update Error: " . $e->getMessage());
             return false;
         }
     }
@@ -66,5 +96,28 @@ class Address {
             error_log("Address\addSpecifierAddress:Database Insert Error: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function fetchAddressesByArchitect($id)
+    {
+        $sql = new Sql($this->adapter);
+
+        $select = $sql->select('p2q_view_address')
+            ->where(['architect_id' => $id]);
+
+            $selectString = $sql->buildSqlString($select);
+            $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+            return $result;
+    }
+
+    public function fetchAddressesById($id) {
+        $sql = new Sql($this->adapter);
+
+        $select = $sql->select('p2q_view_address')
+            ->where(['address_id' => $id]);
+
+            $selectString = $sql->buildSqlString($select);
+            $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+            return $result->current();
     }
 }

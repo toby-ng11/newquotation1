@@ -8,7 +8,7 @@ use Laminas\Mvc\Plugin\FlashMessenger;
 use Laminas\View\Model\{ViewModel, JsonModel};
 
 use Application\Service\UserService;
-use Application\Model\{Project, Quote, Location, Item, Note, Architect, Specifier, Customer};
+use Application\Model\{Address, Project, Quote, Location, Item, Note, Architect, Specifier, Customer};
 
 class ProjectController extends AbstractActionController
 {
@@ -18,6 +18,7 @@ class ProjectController extends AbstractActionController
     protected $item;
     protected $note;
     protected $architect;
+    protected $address;
     protected $specifier;
     protected $customer;
 
@@ -28,6 +29,7 @@ class ProjectController extends AbstractActionController
         Item $item,
         Note $note,
         Architect $architect,
+        Address $address,
         Specifier $specifier,
         Customer $customer
         )
@@ -39,6 +41,7 @@ class ProjectController extends AbstractActionController
         $this->note = $note;
         $this->architect = $architect;
         $this->specifier = $specifier;
+        $this->address = $address;
         $this->customer = $customer;
     }
 
@@ -57,6 +60,25 @@ class ProjectController extends AbstractActionController
         ]);
     }
 
+    public function createAction() {
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $data = $this->params()->fromPost();
+
+            $project_id = $this->project->save($data);
+
+            if ($project_id) {
+                return $this->redirect()->toRoute('project', [
+                    'action' => 'edit',
+                    'id' => $project_id
+                ]);
+            } else {
+                return $this->redirect()->toRoute('project', ['action' => 'index']);
+            }
+        }
+    }
+
     public function newAction()
     {
         $user = $this->userService->getCurrentUser();
@@ -64,13 +86,15 @@ class ProjectController extends AbstractActionController
         $location = $this->location->fetchAllBranches();
         $status = $this->project->fetchProjectStatus();
         $marketSegment = $this->project->fetchProjectSegment();
+        $architectType = $this->architect->fetchArchitectType();
 
         return new ViewModel([
             'user' => $user,
             'company' => $company,
             'locations' => $location,
             'status' => $status,
-            'seg' => $marketSegment
+            'seg' => $marketSegment,
+            'architectType' => $architectType
         ]);
     }
 
@@ -89,8 +113,11 @@ class ProjectController extends AbstractActionController
         $status = $this->project->fetchProjectStatus();
         $marketSegment = $this->project->fetchProjectSegment();
         $architect = $this->architect->fetchArchitectById($project['architect_id']);
-        $specifierList = $this->specifier->fetchSpecifiersByArchitect($project['architect_id']);
+        $address = $this->address->fetchAddressesById($project['architect_address_id']);
         $specifier = $this->specifier->fetchSpecifierById($project['specifier_id']);
+        $architectType = $this->architect->fetchArchitectType();
+        $addressList = $this->address->fetchAddressesByArchitect($project['architect_id']);
+        $specifierList = $this->specifier->fetchSpecifiersByArchitect($project['architect_id']);
         $generalContractor = $this->customer->fetchCustomerById($project['general_contractor_id']);
         $awardedContractor = $this->customer->fetchCustomerById($project['awarded_contractor_id']);
 
@@ -129,30 +156,14 @@ class ProjectController extends AbstractActionController
             'marketSegment' => $marketSegment,
             'owner' => $owner,
             'architect' => $architect,
-            'specifierList' => $specifierList,
+            'address' => $address,
             'specifier' => $specifier,
+            'architectType' => $architectType,
+            'specifierList' => $specifierList,
+            'addressList' => $addressList,
             'generalContractor' => $generalContractor,
             'awardedContractor' => $awardedContractor
         ]);
-    }
-
-    public function createAction() {
-        $request = $this->getRequest();
-
-        if ($request->isPost()) {
-            $data = $this->params()->fromPost();
-
-            $project_id = $this->project->save($data);
-
-            if ($project_id) {
-                return $this->redirect()->toRoute('project', [
-                    'action' => 'edit',
-                    'id' => $project_id
-                ]);
-            } else {
-                return $this->redirect()->toRoute('project', ['action' => 'index']);
-            }
-        }
     }
 
     public function deleteAction() {

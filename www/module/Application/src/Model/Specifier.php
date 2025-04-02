@@ -23,7 +23,7 @@ class Specifier {
     }
 
     public function add($data, $architect_id) {
-        if ($data == null) {
+        if (!$data || !$architect_id) {
 			return  false;
 		}
 
@@ -53,8 +53,38 @@ class Specifier {
         }
     }
 
+    public function edit($data, $id) {
+        if (!$data || !$id) {
+			return  false;
+		}
+
+        $info = [
+            'first_name'        => $data['specifier_first_name'],
+            'last_name'         => $data['specifier_last_name'],
+            'job_title'         => $data['specifier_job_title'],
+            //'architect_id'      => $architect_id,
+            //'delete_flag'       => 'N',
+            //'date_added'        => new Expression('GETDATE()'),
+            //'added_by'          => $data['owner_id']
+        ];
+
+        if(empty($data['specifier_address_id'])) {
+            $info['address_id'] = $this->address->addSpecifierAddress($data);
+        } else {
+            $info['address_id'] = $this->address->edit($data, $data['specifier_address_id']);
+        }
+
+        try {
+            $this->specifier->update($info, ['address_id' => $id]);
+            return $id;
+        } catch (Exception $e) {
+            error_log("Specifer\update:Database Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function fetchSpecifiersByArchitect($architect_id) {
-        if ($architect_id === null) {
+        if (!$architect_id) {
             return false;
         }
 
