@@ -226,6 +226,55 @@ class Quote
         return $this->p2q_view_quote_x_project_x_oe->select(['taker' => $user_id])->toArray();
     }
 
+    public function fetchApprovalTable($table)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+
+        switch ($table) {
+            case Quote::WAITING_APPROVAL:
+                $select->from('p2q_view_quote_waiting');
+                break;
+            case Quote::APPROVED:
+                $select->from('p2q_view_quote_approved');
+                break;
+            case Quote::DISAPPROVED:
+                $select->from('p2q_view_quote_disapproved');
+                break;
+            default:
+                return false;
+        }
+
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result;
+    }
+
+    public function countApproval($table)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+
+        switch ($table) {
+            case Quote::WAITING_APPROVAL:
+                $select->from('p2q_view_quote_waiting');
+                break;
+            case Quote::APPROVED:
+                $select->from('p2q_view_quote_approved');
+                break;
+            case Quote::DISAPPROVED:
+                $select->from('p2q_view_quote_disapproved');
+                break;
+            default:
+                return false;
+        }
+
+        $select->columns(['total' => new Expression('COUNT(*)')]);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
+        return $result['total'] ?? 0;
+    }
+
     public function countOwnQuotes($user_id)
     {
         $sql = new Sql($this->adapter);

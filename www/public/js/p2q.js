@@ -670,6 +670,285 @@ $(function () {
     },
   });
 
+  /* ------ APPROVAL PORTAL ------ */
+
+  $("#dashboard-approve-waiting-table").DataTable({
+    ajax: {
+      url: "/index/approval/waiting",
+      dataSrc: "",
+    },
+    processing: true,
+    //serverSide: true,
+    columns: [
+      {
+        data: "quote_id",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/approve/index/id/" +
+            row.quote_id +
+            "'>" +
+            row.quote_id +
+            "</a>"
+          );
+        },
+      },
+      {
+        data: "project_name",
+      },
+      {
+        data: "architect_rep_id",
+      },
+      {
+        data: "customer_name",
+      },
+      {
+        data: "owner_name",
+      },
+      {
+        data: "market_segment_desc",
+      },
+      {
+        data: "quote_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "ship_required_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "quote_status",
+      },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        className: "dt-head-center",
+      },
+      {
+        targets: [0, 2, 3, 4, 5, 6, 7, 8],
+        className: "dt-body-center",
+      },
+    ],
+    order: [[0, "desc"]],
+    fixedColumns: {
+      start: 1,
+      end: 1,
+    },
+    scrollX: true,
+    layout: {
+      topStart: function () {
+        let info = document.createElement("div");
+        info.innerHTML =
+          "<h2>Waiting for Approval</h2><p>" + waitingTableCount + " quotes waiting for approval</p>";
+        return info;
+      },
+      bottomStart: "pageLength",
+    },
+  });
+
+  $("#dashboard-approve-approved-table").DataTable({
+    ajax: {
+      url: "/index/approval/approved",
+      dataSrc: "",
+    },
+    processing: true,
+    //serverSide: true,
+    columns: [
+      {
+        data: "quote_id",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/approve/index/id/" +
+            row.quote_id +
+            "'>" +
+            row.quote_id +
+            "</a>"
+          );
+        },
+      },
+      {
+        data: "project_name",
+      },
+      {
+        data: "architect_name",
+      },
+      {
+        data: "customer_name",
+      },
+      {
+        data: "owner_name",
+      },
+      {
+        data: "market_segment_desc",
+      },
+      {
+        data: "quote_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "expire_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          let today = new Date();
+          if (date <= today) {
+            return '<span class="red">' + date.toLocaleDateString() + "</span>";
+          } else {
+            return date.toLocaleDateString();
+          }
+        },
+      },
+      {
+        data: "ship_required_date.date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "quote_status",
+      },
+      {
+        data: "order_no",
+      },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        className: "dt-head-center",
+      },
+      {
+        targets: [0, 2, 4, 5, 6, 7, 8, 9, 10],
+        className: "dt-body-center",
+      },
+    ],
+    order: [[0, "desc"]],
+    fixedColumns: {
+      start: 1,
+      end: 1,
+    },
+    scrollX: true,
+    layout: {
+      topStart: function () {
+        let info = document.createElement("div");
+        info.innerHTML =
+          "<h2>Approved</h2><p>" + approvedTableCount + " approved quotes";
+        return info;
+      },
+      bottomStart: "pageLength",
+    },
+  });
+
+  $("#dashboard-approve-disapproved-table").DataTable({
+    ajax: {
+      url: "/index/approval/disapproved",
+      dataSrc: "",
+    },
+    processing: true,
+    //serverSide: true,
+    columns: [
+      {
+        data: "quote_id",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/approve/index/id/" +
+            row.quote_id +
+            "'>" +
+            row.quote_id +
+            "</a>"
+          );
+        },
+      },
+      {
+        data: "project_name",
+      },
+      {
+        data: "architect_name",
+      },
+      {
+        data: "customer_name",
+      },
+      {
+        data: "owner_name",
+      },
+      {
+        data: "market_segment_desc",
+      },
+      {
+        data: "quote_date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "expire_date",
+        render: function (data) {
+          let date = new Date(data);
+          let today = new Date();
+          if (date <= today) {
+            return '<span class="red">' + date.toLocaleDateString() + "</span>";
+          } else {
+            return date.toLocaleDateString();
+          }
+        },
+      },
+      {
+        data: "ship_required_date",
+        render: function (data) {
+          let date = new Date(data);
+          return date.toLocaleDateString();
+        },
+      },
+      {
+        data: "quote_status",
+      },
+      {
+        data: "quote_id",
+        render: function (data, type, row, meta) {
+          return (
+            "<a target='_blank' href='/quote/edit/id/" +
+            row.quote_id +
+            "'><span class='button-wrap'><span class='icon icon-edit'></span></span></a>"
+          );
+        },
+      },
+    ],
+    columnDefs: [
+      {
+        targets: "_all",
+        className: "dt-head-center",
+      },
+      {
+        targets: [0, 2, 4, 5, 6, 7, 8, 9, 10],
+        className: "dt-body-center",
+      },
+    ],
+    order: [[0, "desc"]],
+    fixedColumns: {
+      start: 1,
+      end: 1,
+    },
+    scrollX: true,
+    layout: {
+      topStart: function () {
+        let info = document.createElement("div");
+        info.innerHTML =
+          "<h2>Disapproved</h2><p>" + disapprovedTableCount + " disapproved quotes";
+        return info;
+      },
+      bottomStart: "pageLength",
+    },
+  });
+
   /* ------ PROJECT + QUOTE EDIT ------ */
 
   let projectNoteTable = $("#project_note").DataTable({
@@ -1705,7 +1984,7 @@ $(function () {
 
   let architectFields = $(
     "#architect_name, #architect_id, #architect_company_id, #architect_rep_id, " +
-    "#architect_type_id, #architect_class_id"
+      "#architect_type_id, #architect_class_id"
   );
 
   let addressDropdown = $("#address_list");
@@ -1718,13 +1997,19 @@ $(function () {
   let specifierDropdown = $("#specifier_name");
   let specifierFields = $(
     "#specifier_id, #specifier_address_id, #specifier_first_name, #specifier_last_name, " +
-    "#specifier_job_title, #specifier_phone_number, #specifier_email"
+      "#specifier_job_title, #specifier_phone_number, #specifier_email"
   );
 
   $("#add_architect").on("click", function () {
-    [architectFields, addressFields, specifierFields].forEach(field => field.val("").prop("readonly", false));
-    [addressDropdown, specifierDropdown].forEach(dropdown => dropdown.html('<option value="">-- Please search for an architect first --</option>'));
-});
+    [architectFields, addressFields, specifierFields].forEach((field) =>
+      field.val("").prop("readonly", false)
+    );
+    [addressDropdown, specifierDropdown].forEach((dropdown) =>
+      dropdown.html(
+        '<option value="">-- Please search for an architect first --</option>'
+      )
+    );
+  });
 
   if ($("#architect_name").length) {
     $("#architect_name")
@@ -1787,8 +2072,7 @@ $(function () {
         if (architect) {
           architectFields.each(function () {
             let fieldName = $(this).attr("id");
-            $(this)
-              .val(architect[fieldName] || "");
+            $(this).val(architect[fieldName] || "");
             $("#architect_company_id").val(architect.company_id);
             $("#architect_name").prop("readonly", false);
           });
@@ -1915,8 +2199,7 @@ $(function () {
         if (specifier) {
           specifierFields.each(function () {
             let fieldName = $(this).attr("id");
-            $(this)
-              .val(specifier[fieldName] || "");
+            $(this).val(specifier[fieldName] || "");
             $("#specifier_first_name").val(specifier.first_name);
             $("#specifier_last_name").val(specifier.last_name);
             $("#specifier_job_title").val(specifier.job_title);
@@ -1946,9 +2229,8 @@ $(function () {
         if (address) {
           addressFields.each(function () {
             let fieldName = $(this).attr("id");
-            $(this)
-              .val(address[fieldName] || "");
-              $("#address_name").val(address.name);
+            $(this).val(address[fieldName] || "");
+            $("#address_name").val(address.name);
           });
         }
       })
@@ -1959,7 +2241,7 @@ $(function () {
           errorThrown
         );
       });
-  };
+  }
 
   /* ----------------------------- Contractor / Customer -------------------------------- */
 

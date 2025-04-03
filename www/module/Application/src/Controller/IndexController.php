@@ -70,7 +70,7 @@ class IndexController extends AbstractActionController
         $assignTableCount = $this->project->countAssignedProjects($user['id']);
         $otherTableCount = $this->project->countOtherUsersProjects($user['id']);
         $quoteTableCount = $this->quote->countOwnQuotes($user['id']);
-        $noteTableCount = $this->note->countOwnNotes($user['id']); 
+        $noteTableCount = $this->note->countOwnNotes($user['id']);
 
         if ($this->getRequest()->isXmlHttpRequest()) {
             switch ($table) {
@@ -105,9 +105,30 @@ class IndexController extends AbstractActionController
     public function approvalAction()
     {
         $user = $this->userService->getCurrentUser();
+        $table = $this->params()->fromRoute('table', 'approved');
+        $waitingTableCount = $this->quote->countApproval(Quote::WAITING_APPROVAL);
+        $approvedTableCount = $this->quote->countApproval(Quote::APPROVED);
+        $disapprovedTableCount = $this->quote->countApproval(Quote::DISAPPROVED);
+
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            switch ($table) {
+                case 'waiting':
+                    $TableView = $this->quote->fetchApprovalTable(Quote::WAITING_APPROVAL);
+                    return new JsonModel($TableView);
+                case 'approved':
+                    $TableView = $this->quote->fetchApprovalTable(Quote::APPROVED);
+                    return new JsonModel($TableView);
+                case 'disapproved':
+                    $TableView = $this->quote->fetchApprovalTable(Quote::DISAPPROVED);
+                    return new JsonModel($TableView);
+            }
+        }
 
         return new ViewModel([
-            'user' => $user
+            'user' => $user,
+            'waitingTableCount' => $waitingTableCount,
+            'approvedTableCount' => $approvedTableCount,
+            'disapprovedTableCount' => $disapprovedTableCount,
         ]);
     }
 
