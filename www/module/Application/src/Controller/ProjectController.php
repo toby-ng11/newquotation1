@@ -5,14 +5,17 @@ namespace Application\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger;
+use Laminas\Http\Response\Stream;
 use Laminas\View\Model\{ViewModel, JsonModel};
 
 use Application\Service\UserService;
 use Application\Model\{Address, Project, Quote, Location, Item, Note, Architect, Specifier, Customer};
+use Application\Service\PdfExportService;
 
 class ProjectController extends AbstractActionController
 {
     protected $userService;
+    protected $pdfExportService;
     protected $project;
     protected $location;
     protected $item;
@@ -24,6 +27,7 @@ class ProjectController extends AbstractActionController
 
     public function __construct(
         UserService $userService,
+        PdfExportService $pdfExportService,
         Project $project,
         Location $location,
         Item $item,
@@ -35,6 +39,7 @@ class ProjectController extends AbstractActionController
         )
     {
         $this->userService = $userService;
+        $this->pdfExportService = $pdfExportService;
         $this->project = $project;
         $this->location = $location;
         $this->item = $item;
@@ -196,6 +201,51 @@ class ProjectController extends AbstractActionController
             return $view;
         }
         return $this->getResponse()->setStatusCode(404);
+    }
+
+    public function exportAction()
+    {
+        $project_id = $this->params()->fromRoute('id');
+
+        $project = $this->project->fetchById($project_id);
+        $architect = $this->architect->fetchArchitectById($project['architect_id']);
+        $archAddress = $this->address->fetchAddressesById($project['architect_address_id']);
+        $specifier = $this->specifier->fetchSpecifierById($project['specifier_id']);
+        $generalContractor = $this->customer->fetchCustomerById($project['general_contractor_id']);
+        $awardedContractor = $this->customer->fetchCustomerById($project['awarded_contractor_id']);
+        $items = $this->item->fetchDataTables($project_id, 'project');
+        $branches = $this->location->fetchAllBranches();
+
+        $data = [
+            'project' => $project,
+            'items' => $items,
+            'branches' => $branches,
+            'architect' => $architect,
+            'archAddress' => $archAddress,
+            'specifier' => $specifier,
+            'generalContractor' => $generalContractor,
+            'awardedContractor' => $awardedContractor,
+        ];
+
+        $pdfContent = $this->pdfExportService->generatePdf('application/project/export', $data);
+
+        // Return PDF as a downloadable file
+        $response = new Stream();
+        $response->setStream(fopen('php://memory', 'wb+'));
+        fwrite($response->getStream(), $pdfContent);
+        rewind($response->getStream());
+
+        $response->setStatusCode(200);
+        $headers = $response->getHeaders();
+        $headers->addHeaderLine('Content-Type', 'application/pdf');
+        $headers->addHeaderLine('Content-Disposition', 'attachment; filename="project_' . $project_id . '.pdf"');
+        $headers->addHeaderLine('Content-Length', strlen($pdfContent));
+
+        return $response;
+        
+
+        //return new ViewModel($data);
+
     }
 
 }

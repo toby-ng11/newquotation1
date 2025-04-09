@@ -34,13 +34,13 @@ class Architect
         }
 
         $info = [
-            'architect_name' => $data['architect_name'],
-            'company_id' => $data['architect_company_id'],
-            'architect_rep_id' => $data['architect_rep_id'],
-            'architect_type_id' => $data['architect_type_id'],
-            'class_id' => $data['architect_class_id'],
-            'delete_flag' => 'N',
-            'date_added' => new Expression('GETDATE()')
+            'architect_name'    => trim($data['architect_name']),
+            'company_id'        => trim($data['architect_company_id']),
+            'architect_rep_id'  => trim($data['architect_rep_id']),
+            'architect_type_id' => trim($data['architect_type_id']),
+            'class_id'          => trim($data['architect_class_id']),
+            'delete_flag'       => 'N',
+            'date_added'        => new Expression('GETDATE()')
         ];
 
         try {
@@ -60,13 +60,13 @@ class Architect
         }
 
         $info = [
-            'architect_name' => $data['architect_name'],
-            //'company_id' => $data['architect_company_id'],
-            'architect_rep_id' => $data['architect_rep_id'],
-            'architect_type_id' => $data['architect_type_id'],
-            'class_id' => $data['architect_class_id'],
-            //'delete_flag' => 'N',
-            //'date_added' => new Expression('GETDATE()')
+            'architect_name'    => trim($data['architect_name']),
+            //'company_id'      => $data['architect_company_id'],
+            'architect_rep_id'  => trim($data['architect_rep_id']),
+            'architect_type_id' => trim($data['architect_type_id']),
+            'class_id'          => trim($data['architect_class_id']),
+            //'delete_flag'     => 'N',
+            //'date_added'      => new Expression('GETDATE()')
         ];
 
         try {

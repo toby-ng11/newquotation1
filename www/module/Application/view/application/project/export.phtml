@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        @page {
+            size: 8.5in 11in;
+            margin-top: 20mm;
+            margin-right: 10mm;
+            margin-left: 10mm;
+            margin-bottom: 20mm;
+            header: html_CenturaHeader;
+            /* define in Service */
+            footer: html_CenturaFooter;
+        }
+
+        @page :first {
+            margin-top: 8mm;
+        }
+
+        body {
+            font-family: inter, sans-serif;
+            font-size: 11px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 25px;
+            color: #2D75C3;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            text-align: left;
+            font-size: 20px;
+            color: #2D75C3;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #meta {
+            margin: 30px 0px;
+        }
+
+        #meta th {
+            padding-bottom: 10px;
+        }
+
+        #meta td {
+            padding: 2px 0;
+        }
+
+        #items {
+            margin: 20px 0px;
+        }
+
+        #items th,
+        #items td {
+            text-align: center;
+        }
+
+        #items th {
+            border-bottom: 5px solid black;
+            padding-bottom: 20px;
+        }
+
+        #items td {
+            border-top: 1px solid grey;
+            padding: 20px 0px;
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+        .item-desc {
+            color: #808080;
+        }
+
+        .item-note {
+            font-style: italic;
+        }
+
+        #subtotal {
+            margin-top: 0px;
+            margin-bottom: 20px;
+            margin-left: auto;
+            margin-right: 0;
+            width: 30%;
+            font-size: 15px;
+            border-top: 5px solid black;
+        }
+
+        #subtotal th {
+            padding-top: 15px;
+        }
+
+        .contact-header {
+            color: #808080;
+            text-align: right;
+            font-size: 8px;
+            line-height: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-page">
+        <div class="contact-header">
+            <p style="margin: 0;">
+                950 LAWRENCE AVENUE WEST<br>
+                TORONTO, ONTARIO, CANADA M6A 1C4<br>
+                ORDER DESK: 416-785-5151<br>
+                OFFICE: 416-785-5165<br>
+                WATTS: 1-800-263-9400<br>
+                FAX: 416-783-0636<br>
+                www.centura.ca
+            </p>
+        </div>
+
+        <h1>PROJECT INFO</h1>
+
+        <h2><?= $this->escapeHtml($project['project_name']) ?></h2>
+        <p>Project #<?= $this->escapeHtml($project['project_id']) ?> at <?= $this->escapeHtml($project['project_address']) ?></p>
+        <p>Created on <?= $this->escapeHtml($project['create_date']->format('M j, Y')) ?></p>
+        <p>Required on <?= $this->escapeHtml($project['require_date']->format('M j, Y')) ?></p>
+        <p>Due on <?= $this->escapeHtml($project['due_date']->format('M j, Y')) ?></p>
+
+        <table id="meta" width="100%">
+            <tr>
+                <!-- Architect Details -->
+                <td valign="top" width="25%" style="padding-right:15px;">
+                    <?php if ($architect): ?>
+                        <table width="100%" style="border-top: 1px solid grey;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left; padding-top: 15px">Architect details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><?= $architect['architect_id'] ? 'Architect #' . $this->escapeHtml($architect['architect_id']) : '' ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($architect['architect_name']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($archAddress['phys_address1']) . ' ' . $this->escapeHtml($archAddress['phys_address2']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $archAddress['phys_city'] ? $this->escapeHtml($archAddress['phys_city']) . ', ' . $this->escapeHtml($archAddress['phys_state']) : $this->escapeHtml($archAddress['phys_state']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($archAddress['phys_postal_code']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($archAddress['phys_country']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($archAddress['email_address']) ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+                </td>
+
+
+                <!-- Specifier Details -->
+                <td valign="top" width="25%" style="padding-right:15px">
+                    <?php if ($specifier): ?>
+                        <table width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left; padding-top: 15px">Specifier details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Specifier #<?= $this->escapeHtml($specifier['specifier_id']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($specifier['first_name']) . ' ' . $this->escapeHtml($specifier['last_name']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($specifier['job_title']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($specifier['central_phone_number']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($specifier['email_address']) ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+                </td>
+
+                <!-- General Contractor -->
+                <td valign="top" width="25%" style="padding-right:15px;">
+                    <?php if ($generalContractor): ?>
+                        <table width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left; padding-top: 15px">General Contractor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Contractor #<?= $this->escapeHtml($generalContractor['customer_id']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($generalContractor['customer_name']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($generalContractor['phys_address1']) . ' ' . $this->escapeHtml($generalContractor['phys_address2']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($generalContractor['phys_city']) . ', ' . $this->escapeHtml($generalContractor['phys_state']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($generalContractor['phys_postal_code']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($generalContractor['phys_country']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($generalContractor['central_phone_number']) ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+                </td>
+
+                <!-- Awarded Contractor -->
+                <td valign="top" width="25%">
+                    <?php if ($awardedContractor): ?>
+                        <table width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left; padding-top: 15px">Awarded Contractor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Contractor #<?= $this->escapeHtml($awardedContractor['customer_id']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($awardedContractor['customer_name']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($awardedContractor['phys_address1']) . ' ' . $this->escapeHtml($awardedContractor['phys_address2']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($awardedContractor['phys_city']) . ', ' . $this->escapeHtml($awardedContractor['phys_state']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($awardedContractor['phys_postal_code']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($awardedContractor['phys_country']) ?></td>
+                                </tr>
+                                <tr>
+                                    <td><?= $this->escapeHtml($awardedContractor['central_phone_number']) ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        </table>
+
+        <table id="items" width='100%'>
+            <thead>
+                <tr>
+                    <th class="title" style="text-align:left" width="60%">ITEM</th>
+                    <th class="title" style="text-align:center" width="13%">QTY</th>
+                    <th class="title" style="text-align:center" width="13%">UNIT PRICE</th>
+                    <th class="title" style="text-align:center" width="13%">UOM</th>
+                    <th class="title" style="text-align:right" width="13%">TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $subtotal = 0;
+                if (count($items) === 0): ?>
+                    <tr>
+                        <td colspan="5" style="text-align:center">No items quoted.</td>
+                    </tr>
+                    <?php else:
+                    foreach ($items as $i): ?>
+                        <tr>
+                            <td style="text-align:left">
+                                <div class="item-id">
+                                    <?= $this->escapeHtml($i['item_id']) ?>
+                                </div>
+                                <div class="item-desc">
+                                    <span class='break'>
+                                        <?= $this->escapeHtml($i['item_desc']) ?>
+                                    </span><br>
+                                    <span class='item-note'>
+                                        <?= ' ' . nl2br($this->escapeHtml($i['note'])) ?>
+                                    </span>
+                                </div>
+                            </td>
+                            <td><?= $this->escapeHtml($i['quantity']) ?></td>
+                            <td><?= '$' . $this->escapeHtml($i['unit_price']) ?></td>
+                            <td><?= $this->escapeHtml($i['uom']) ?></td>
+                            <td style='text-align:right;'><?= '$' . $this->escapeHtml(number_format($i['subtotal'], 2)) ?></td>
+                        </tr>
+                <?php
+                        $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'];
+                    endforeach;
+                endif; ?>
+            </tbody>
+        </table>
+
+        <table id='subtotal'>
+            <thead>
+                <tr>
+                    <th><strong>Subtotal: </strong></td>
+                    <th style="text-align:right"><strong><?= '$' . $this->escapeHtml(number_format($subtotal, 2)) ?></strong></td>
+                </tr>
+            </thead>
+        </table>
+
+        <table id="footer" width='100%'>
+            <tr>
+                <td>
+                    <ul>
+                        <li>TO ENSURE CORRECT PROJECT PRICING PLEASE INCLUDE THE QUOTE NUMBER ON YOUR P.O. AND WHEN PLACING YOUR ORDER.</li>
+                        <li>PRODUCT FOR CENTURA TORONTO UNLESS OTHERWISE NOTED.</li>
+                        <li>ALL SIZES ARE NOMINAL AND ARE SUBJECT TO MINOR VARIANCES ACCORDING TO MANUFACTURING PROCESS.</li>
+                        <li>PLEASE NOTE THIS QUOTATION WILL EXPIRE ON DECEMBER 31ST OF THE CURRENT YEAR UNLESS OTHERWISE SPECIFIED.</li>
+                    </ul>
+                    <div style="font-size:12px;font-weight:bold;">Visit us at: www.centura.ca</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

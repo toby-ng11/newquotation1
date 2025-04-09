@@ -745,7 +745,9 @@ $(function () {
       topStart: function () {
         let info = document.createElement("div");
         info.innerHTML =
-          "<h2>Waiting for Approval</h2><p>" + waitingTableCount + " quotes waiting for approval</p>";
+          "<h2>Waiting for Approval</h2><p>" +
+          waitingTableCount +
+          " quotes waiting for approval</p>";
         return info;
       },
       bottomStart: "pageLength",
@@ -942,7 +944,9 @@ $(function () {
       topStart: function () {
         let info = document.createElement("div");
         info.innerHTML =
-          "<h2>Disapproved</h2><p>" + disapprovedTableCount + " disapproved quotes";
+          "<h2>Disapproved</h2><p>" +
+          disapprovedTableCount +
+          " disapproved quotes";
         return info;
       },
       bottomStart: "pageLength",
@@ -2200,6 +2204,7 @@ $(function () {
           specifierFields.each(function () {
             let fieldName = $(this).attr("id");
             $(this).val(specifier[fieldName] || "");
+            $("#specifier_address_id").val(specifier.address_id);
             $("#specifier_first_name").val(specifier.first_name);
             $("#specifier_last_name").val(specifier.last_name);
             $("#specifier_job_title").val(specifier.job_title);
@@ -2349,14 +2354,10 @@ $(function () {
   $("#form-btn-save-project").on("click", function (e) {
     e.preventDefault();
     if ($projectForm.validationEngine("validate")) {
-      if ($("#status").val() != 13) {
-        if (generalContractor.trim() === "")
-          $("#general_contractor_id").val("");
-        if (awardedContractor.trim() === "")
-          $("#awarded_contractor_id").val("");
-        $projectForm.trigger("submit");
-        unsave = false;
-      }
+      if ($("#general_contractor_name").val().trim() === "") $("#general_contractor_id").val("");
+      if ($("#awarded_contractor_name").val().trim() === "") $("#awarded_contractor_id").val("");
+      $projectForm.trigger("submit");
+      unsave = false;
     }
   });
 

@@ -67,7 +67,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 						</a>
 						<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
                     <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-						<a class="button quick-link" href="" title="Print this quote">
+						<a class="button quick-link" href="/quote/<?= $quoteID ?>/export" title="Print this quote">
 							<span class='icon icon-pdf'></span>
 							Print Quote</a>
 						<a class="button quick-link" target="_blank" href="/project/<?= $project['project_id'] ?>/edit" title="Go to project for this quote">
@@ -79,9 +79,6 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 								<a class="button quick-link" href="/mail/quote/id/<?= $quoteID ?>" title="mail">
 									<span class='icon icon-mail'></span>
 									Mail Quote</a>
-								<a href="/quote/ready/id/<?= $quoteID ?>" title="" class='button quick-link quote-edit-again'>
-									<span class='icon icon-edit'></span>
-									Edit Again</a>
 							<?php break;
 
 							case $waitingApprove: ?>
@@ -426,7 +423,45 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 									</div>
 								</div>
 							</div>
-						<?php endif; ?>
+							<?php else:
+							if ($quoteStatusID === $approved): ?>
+								<div class="line"></div>
+								<div class="widget-section">
+									<h3>Approval</h3>
+									<div class="formRow">
+										<div class="oneTwo required-field">
+											<label for="price_approve_id">Quote Approval</label>
+											<?php if ($user['approve_id'] != null) { ?>
+												<select name="price_approve_id" id="price_approve_id" class="validate[required]">
+													<option value="">Select Approval</option>
+													<?php foreach ($this->approval as $a) { ?>
+														<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $quote['price_approve_id']) echo 'selected'; ?>><?= $user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company'] ?></option>
+													<?php } ?>
+												</select>
+											<?php } else { ?>
+												<select name="price_approve_id" id="price_approve_id">
+													<?php foreach ($this->approval as $a) { ?>
+														<?php if ($a['id'] == $quote['price_approve_id']) { ?><option value="<?= $a['id'] ?>" selected><?= $user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company'] ?></option> <?php } ?>
+													<?php } ?>
+												</select>
+											<?php } ?>
+										</div>
+
+										<div class="oneTwo required-field">
+											<label for="lead_time_id">Lead Time</label>
+											<select name="lead_time_id" id="lead_time_id" class="validate[required]">
+												<option value="">Select Lead Time</option>
+												<?php foreach ($this->leadtime as $a) { ?>
+													<option value="<?= $a['lead_time_id'] ?>" <?php if ($quote['lead_time_id'] == $a['lead_time_id']) {
+																									echo 'selected';
+																								} ?>><?= $a['lead_time_desc'] ?></option>
+												<?php } ?>
+											</select>
+										</div>
+									</div>
+								</div>
+						<?php endif;
+						endif; ?>
 
 						<?php
 						if (!$admin) {

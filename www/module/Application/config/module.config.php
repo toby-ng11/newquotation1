@@ -144,6 +144,7 @@ return [
             Controller\ProjectController::class => function ($container) {
                 return new Controller\ProjectController(
                     $container->get(Service\UserService::class),
+                    $container->get(Service\PdfExportService::class),
                     $container->get(Model\Project::class),
                     $container->get(Model\Location::class),
                     $container->get(Model\Item::class),
@@ -157,6 +158,7 @@ return [
             Controller\QuoteController::class => function ($container) {
                 return new Controller\QuoteController(
                     $container->get(Service\UserService::class),
+                    $container->get(Service\PdfExportService::class),
                     $container->get(Model\Quote::class),
                     $container->get(Model\Project::class),
                     $container->get(Model\Location::class),

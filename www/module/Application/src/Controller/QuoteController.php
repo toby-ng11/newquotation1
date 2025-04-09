@@ -6,14 +6,17 @@ namespace Application\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger;
+use Laminas\Http\Response\Stream;
 use Laminas\View\Model\{ViewModel, JsonModel};
 
 use Application\Service\UserService;
 use Application\Model\{Project, Quote, Location, Item, Customer};
+use Application\Service\PdfExportService;
 
 class QuoteController extends AbstractActionController
 {
     protected $userService;
+    protected $pdfExportService;
     protected $quote;
     protected $project;
     protected $location;
@@ -29,9 +32,9 @@ class QuoteController extends AbstractActionController
     const ACTION_UNDO_APPROVE = 7;
     const ACTION_SUBMIT_APPROVE = 8;
 
-
     public function __construct(
         UserService $userService,
+        PdfExportService $pdfExportService,
         Quote $quote,
         Project $project,
         Location $location,
@@ -39,6 +42,7 @@ class QuoteController extends AbstractActionController
         Customer $customer
     ) {
         $this->userService = $userService;
+        $this->pdfExportService = $pdfExportService;
         $this->quote = $quote;
         $this->project = $project;
         $this->location = $location;
@@ -231,5 +235,50 @@ class QuoteController extends AbstractActionController
     public function submitApproveAction()
     {
         return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_SUBMIT_APPROVE, 'Quote submitted and approved.'); //back to waiting status (2)
+    }
+
+    public function exportAction()
+    {
+        $quote_id = $this->params()->fromRoute('id');
+
+        $quote = $this->quote->fetchById($quote_id);
+        $project = $this->project->fetchById($quote['project_id']);
+        $customer = $this->customer->fetchCustomerByContact($quote['contact_id']);
+        $contact = $this->customer->fetchContactById($quote['contact_id']);
+        $quoteType = $this->quote->fetchQuoteType();
+        $items = $this->item->fetchDataTables($quote_id, 'quote');
+        $branches = $this->location->fetchAllBranches();
+        $approvalUsers = $this->userService->fetchaAllApprovalID();
+
+        $data = [
+            'quote' => $quote,
+            'project' => $project,
+            'customer' => $customer,
+            'contact' => $contact,
+            'type' => $quoteType,
+            'items' => $items,
+            'branches' => $branches,
+            'approvalList' => $approvalUsers
+        ];
+
+        $pdfContent = $this->pdfExportService->generatePdf('application/quote/export', $data);
+
+        // Return PDF as a downloadable file
+        $response = new Stream();
+        $response->setStream(fopen('php://memory', 'wb+'));
+        fwrite($response->getStream(), $pdfContent);
+        rewind($response->getStream());
+
+        $response->setStatusCode(200);
+        $headers = $response->getHeaders();
+        $headers->addHeaderLine('Content-Type', 'application/pdf');
+        $headers->addHeaderLine('Content-Disposition', 'attachment; filename="quote_' . $quote_id . '.pdf"');
+        $headers->addHeaderLine('Content-Length', strlen($pdfContent));
+
+        return $response;
+        
+
+        //return new ViewModel($data);
+
     }
 }

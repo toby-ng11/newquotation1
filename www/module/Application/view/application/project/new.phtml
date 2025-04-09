@@ -115,10 +115,11 @@ $user = $this->user;
             <summary>Architect & Specifier</summary>
             <div class="widget-section">
               <h4>Architect</h4>
+              <div class="formRow">
+                <input type="hidden" name='architect_id' id='architect_id' />
                 <div class="oneTwo">
                   <label for="architect_name">Architect Name</label>
                   <input type='text' name="architect_name" id='architect_name' class="tipN" original-title="Search by ID or Name" />
-                  <input type="hidden" name='architect_id' id='architect_id' />
                 </div>
 
                 <div class="oneTwo">
@@ -256,6 +257,7 @@ $user = $this->user;
                   <input type='text' id='specifier_email' name="specifier_email" class="tipN" placeholder="Optional" />
                 </div>
               </div>
+            </div>
           </details>
 
           <div class="line"></div>
@@ -294,6 +296,3 @@ $user = $this->user;
     </section>
   </div>
 </main>
-
-<script>
-</script>

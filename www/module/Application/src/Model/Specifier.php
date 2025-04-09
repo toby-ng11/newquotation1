@@ -28,9 +28,9 @@ class Specifier {
 		}
 
         $info = [
-            'first_name'        => $data['specifier_first_name'],
-            'last_name'         => $data['specifier_last_name'],
-            'job_title'         => $data['specifier_job_title'],
+            'first_name'        => trim($data['specifier_first_name']),
+            'last_name'         => trim($data['specifier_last_name']),
+            'job_title'         => trim($data['specifier_job_title']),
             'architect_id'      => $architect_id,
             'delete_flag'       => 'N',
             'date_added'        => new Expression('GETDATE()'),
@@ -59,9 +59,9 @@ class Specifier {
 		}
 
         $info = [
-            'first_name'        => $data['specifier_first_name'],
-            'last_name'         => $data['specifier_last_name'],
-            'job_title'         => $data['specifier_job_title'],
+            'first_name'        => trim($data['specifier_first_name']),
+            'last_name'         => trim($data['specifier_last_name']),
+            'job_title'         => trim($data['specifier_job_title']),
             //'architect_id'      => $architect_id,
             //'delete_flag'       => 'N',
             //'date_added'        => new Expression('GETDATE()'),
@@ -75,7 +75,7 @@ class Specifier {
         }
 
         try {
-            $this->specifier->update($info, ['address_id' => $id]);
+            $this->specifier->update($info, ['specifier_id' => $id]);
             return $id;
         } catch (Exception $e) {
             error_log("Specifer\update:Database Update Error: " . $e->getMessage());

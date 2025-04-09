@@ -253,7 +253,7 @@ $quoteExpireDate = DateTime::createFromFormat('Y-m-d H:i:s.v', $quote['expire_da
           } ?></td>
 
       <td><?= $this->spec_name ?></td>
-      <td class='counter'><?= 1 + ceil((count($this->items) - 8) / 14) ?></td>
+      <td class='counter'>{nbpg}</td>
     </tr>
     <tr>
       <td class='th' colspan="2">Project Name</td>

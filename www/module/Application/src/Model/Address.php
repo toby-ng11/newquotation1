@@ -24,17 +24,17 @@ class Address {
 
         $info = [
             'architect_id'          => $architectID,
-            'name'                  => $data['address_name'],
-            'phys_address1'         => $data['phys_address1'],
-            'phys_address2'         => $data['phys_address2'],
-            'phys_city'             => $data['phys_city'],
-            'phys_state'            => $data['phys_state'],
-            'phys_postal_code'      => $data['phys_postal_code'],
-            'phys_country'          => $data['phys_country'],
+            'name'                  => trim($data['address_name']),
+            'phys_address1'         => trim($data['phys_address1']),
+            'phys_address2'         => trim($data['phys_address2']),
+            'phys_city'             => trim($data['phys_city']),
+            'phys_state'            => trim($data['phys_state']),
+            'phys_postal_code'      => trim($data['phys_postal_code']),
+            'phys_country'          => trim($data['phys_country']),
             'central_phone_number'  => $data['central_phone_number'],
             'delete_flag'           => 'N',
-            'email_address'         => $data['email_address'],
-            'url'                   => $data['url']
+            'email_address'         => trim($data['email_address']),
+            'url'                   => trim($data['url'])
         ];
 
         try {
@@ -54,17 +54,17 @@ class Address {
 
         $info = [
             //'architect_id'          => $architectID,
-            'name'                  => $data['address_name'],
-            'phys_address1'         => $data['phys_address1'],
-            'phys_address2'         => $data['phys_address2'],
-            'phys_city'             => $data['phys_city'],
-            'phys_state'            => $data['phys_state'],
-            'phys_postal_code'      => $data['phys_postal_code'],
-            'phys_country'          => $data['phys_country'],
+            'name'                  => trim($data['address_name']),
+            'phys_address1'         => trim($data['phys_address1']),
+            'phys_address2'         => trim($data['phys_address2']),
+            'phys_city'             => trim($data['phys_city']),
+            'phys_state'            => trim($data['phys_state']),
+            'phys_postal_code'      => trim($data['phys_postal_code']),
+            'phys_country'          => trim($data['phys_country']),
             'central_phone_number'  => $data['central_phone_number'],
             //'delete_flag'           => 'N',
-            'email_address'         => $data['email_address'],
-            'url'                   => $data['url']
+            'email_address'         => trim($data['email_address']),
+            'url'                   => trim($data['url'])
         ];
 
         try {
@@ -82,10 +82,10 @@ class Address {
 		}
 
         $info = [
-            'name'                  => $data['specifier_first_name'] . ' ' . $data['specifier_last_name'],
+            'name'                  => trim($data['specifier_first_name']) . ' ' . trim($data['specifier_last_name']),
             'central_phone_number'  => $data['specifier_phone_number'],
             'delete_flag'           => 'N',
-            'email_address'         => $data['specifier_email']
+            'email_address'         => trim($data['specifier_email'])
         ];
 
         try {

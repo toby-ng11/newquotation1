@@ -40,10 +40,7 @@ $projectRequiredDate = $project['require_date'];
 						Add Project</a>
 					<!--<li><a href="#" class='edit_pro' title="edit"><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Project</span></a></li>-->
 					<!--<li><a href="#" class='update_pro' title="update"><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Project</span></a></li>-->
-					<a class='button quick-link' href="<?= 'http://' . SITEURL . "
-						/dompdf/print.php?url=" . 'http://' . SITEURL . " /project/print/id/" . $project['project_id']
-															. "?company=" . substr($project['project_id_ext'], 0, 3) . "&name=Centura_Project_" .
-															preg_replace("![^a-z0-9]+!i", "_", $project['project_name']) . '.pdf' ?>" title="print">
+					<a class='button quick-link' href="/project/<?= $projectID ?>/export" title="print">
 						<span class='icon icon-pdf'></span>
 						Print Project</a>
 					<a class='button quick-link make-quote' title="Make quote">
@@ -223,7 +220,7 @@ $projectRequiredDate = $project['require_date'];
 									<select id="architect_type_id" name="architect_type_id">
 										<option value="">-- Choose architect type --</option>
 										<?php foreach ($this->architectType as $a) { ?>
-											<option value="<?= $a['architect_type_id'] ?>" <?= ($a['architect_type_id'] === $architect['architect_type_id']) ? 'selected' : '' ?>><?= $a['architect_type_desc'] ?></option>
+											<option value="<?= $a['architect_type_id'] ?>" <?= ($a['architect_type_id'] === ($architect['architect_type_id'] ?? '')) ? 'selected' : '' ?>><?= $a['architect_type_desc'] ?></option>
 										<?php } ?>
 									</select>
 								</div>

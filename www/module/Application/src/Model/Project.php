@@ -50,7 +50,7 @@ class Project
             'owner_id'              => $data['owner_id'],
             'last_maintained_by'    => $data['owner_id'],
             'shared_id'             => $data['shared_id'],
-            'reed'                  => $data['reed'],
+            'reed'                  => trim($data['reed']),
             'status'                => $data['status'],
             'general_contractor_id' => !empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
             'awarded_contractor_id' => !empty($data['awarded_contractor_id']) ? $data['awarded_contractor_id'] : null,
@@ -60,7 +60,7 @@ class Project
         ];
 
         $info['architect_id'] = empty($data['architect_id']) && !empty($data['architect_name'])
-            ? $this->specifier->add($data, $info['architect_id'])
+            ? $this->architect->add($data)
             : $data['architect_id'];
 
         if (empty($data['address_id']) && array_filter(array_intersect_key($data, array_flip([
@@ -128,7 +128,9 @@ class Project
 
         if (empty($data['architect_id']) && !empty($data['architect_name'])) {
             $info['architect_id'] = $this->architect->add($data);
-        } else {
+        }
+        
+        if (!empty($data['architect_id'])) {
             $info['architect_id'] = $this->architect->edit($data, $data['architect_id']);
         }
 
@@ -145,13 +147,16 @@ class Project
             'url'
         ])))) {
             $info['architect_address_id'] = $this->address->add($data, $info['architect_id']);
-        } else {
+        }
+        if (!empty($data['address_id'])) {
             $info['architect_address_id'] = $this->address->edit($data, $data['address_id']);
         }
 
-        if (empty($data['specifier_id']) && !empty($data['specifier_name'])) {
+        if (empty($data['specifier_id']) && !empty($data['specifier_first_name'])) {
             $info['specifier_id'] = $this->specifier->add($data, $info['architect_id']);
-        } else {
+        }
+
+        if (!empty($data['specifier_id'])) {
             $info['specifier_id'] = $this->specifier->edit($data, $data['specifier_id']);
         }
 
