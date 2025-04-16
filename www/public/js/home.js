@@ -1,11 +1,9 @@
-$(function () {
-  const themeBtnIcon = $(".theme-switcher-menu .icon");
+document.addEventListener("DOMContentLoaded", () => {
+  const themeBtnIcon = document.querySelector(".theme-switcher-menu .icon");
+  const themeButton = document.querySelector(".button.theme-switcher-menu");
 
-  $(setTheme(window.localStorage.getItem("theme")));
-
-  $(function () {
-    $(".button.theme-switcher-menu").on("click", toggleTheme);
-  });
+  themeButton.addEventListener("click", toggleTheme);
+  updateThemeIcon(); 
 
   function setTheme(themeName) {
     const validThemes = ["light", "dark"]; // Add more themes as needed
@@ -13,24 +11,26 @@ $(function () {
       console.error("Invalid theme name:", themeName);
       return; // Exit function if themeName is invalid
     }
-    window.localStorage.setItem("theme", themeName);
+    localStorage.setItem("theme", themeName);
     document.documentElement.className = themeName;
     updateThemeIcon();
   }
 
   function toggleTheme() {
-    const currentTheme = window.localStorage.getItem("theme");
+    const currentTheme = localStorage.getItem("theme");
     const newTheme = currentTheme === "dark" ? "light" : "dark";
     setTheme(newTheme);
     //console.log(`Theme is set to ${newTheme}-mode.`);
   }
 
   function updateThemeIcon() {
-    const currentTheme = window.localStorage.getItem("theme");
+    const currentTheme = localStorage.getItem("theme") || "light";
     if (currentTheme === "dark") {
-      themeBtnIcon.removeClass("icon-theme-light").addClass("icon-theme-dark");
+      themeBtnIcon.classList.remove("icon-theme-light");
+      themeBtnIcon.classList.add("icon-theme-dark");
     } else {
-      themeBtnIcon.removeClass("icon-theme-dark").addClass("icon-theme-light");
+      themeBtnIcon.classList.remove("icon-theme-dark");
+      themeBtnIcon.classList.add("icon-theme-light");
     }
   }
 
@@ -74,23 +74,23 @@ $(function () {
     menuBtnText.textContent = buttonText;
   }
 
-  const userBtn = $("#centura-account-button");
-  const userMenu = $("#centura-account");
+  const userBtn = document.getElementById("centura-account-button");
+  const userMenu = document.getElementById("centura-account");
 
-  userBtn.on("click", toggleUserMenu);
+  userBtn.addEventListener("click", () => {
+    const isExpanded = userBtn.getAttribute("aria-expanded") === "true";
 
-  userMenu.hide();
+    userBtn.setAttribute("aria-expanded", String(!isExpanded));
+    userMenu.style.display = isExpanded ? "none" : "block";
+  });
 
-  function toggleUserMenu() {
-    const isMenuOpen = userBtn.attr("aria-expanded") === "true";
-    if (isMenuOpen) {
-      userBtn.removeAttr("aria-expanded");
-      userMenu.hide();
-    } else {
-      userBtn.attr("aria-expanded", true);
-      userMenu.show();
+  // Optional: Close menu when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
+      userMenu.style.display = "none";
+      userBtn.setAttribute("aria-expanded", "false");
     }
-  }
+  });
 
   // Animate hero and features section first
   $(".hero.fade-in-up, .features.fade-in-up").addClass("show");
@@ -127,5 +127,23 @@ $(function () {
 
   $elements.each(function () {
     observer.observe(this);
+  });
+
+  let sideBarExpanded = false;
+
+  $("#options-button").on("click", function () {
+    if (sideBarExpanded != true) {
+      $("#options-menu-items").slideToggle({
+        start: function () {
+          $(this).css("display", "flex");
+          $(".options-menu").css("transform", "translateX(-20%)");
+        },
+      });
+      sideBarExpanded = true;
+    } else {
+      $("#options-menu-items").slideToggle();
+      $(".options-menu").css("transform", "translateX(60%)");
+      sideBarExpanded = false;
+    }
   });
 });

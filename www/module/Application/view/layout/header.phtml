@@ -63,7 +63,7 @@ $user = $this->userHelper();
         </div>
 
         <div class="top-level-entry-container user-menu">
-          <button id="centura-account-button" type="button" class="button action top-level-entry menu-toggle user-menu-toggle" aria-controls="centura-account" aria-haspopup="menu">
+          <button id="centura-account-button" aria-expanded="false" type="button" class="button action top-level-entry menu-toggle user-menu-toggle" aria-controls="centura-account" aria-haspopup="menu">
             <span class="button-wrap">
               <div class="avatar-wrap" aria-hidden="true">
                 <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -74,7 +74,7 @@ $user = $this->userHelper();
             </span>
           </button>
 
-          <ul id="centura-account" class="submenu centura-account inline-submenu-lg" aria-labelledby="centura-account-button">
+          <ul id="centura-account" style="display: none;" class="submenu centura-account inline-submenu-lg" aria-labelledby="centura-account-button">
             <li class="submenu-header">
               <div class="submenu-item">
                 <div class="submenu-content-container">

@@ -43,8 +43,16 @@
     <script type="text/javascript" src="/js/plugins/forms/jquery.maskedinput.min.js"></script>
     <script src="/node_modules/flatpickr/dist/flatpickr.min.js"></script>
 
-    <?php //echo $this->headScript(); 
+    <?php //echo $this->headScript();
     ?>
+    <script>
+        (function() {
+            const theme = localStorage.getItem("theme");
+            if (theme === "dark" || theme === "light") {
+                document.documentElement.className = theme;
+            }
+        })();
+    </script>
 </head>
 
 <body>
@@ -53,7 +61,7 @@
         <div id="js-flash-container"></div>
 
         <?php if ($this->flashMessenger()->hasSuccessMessages()): ?>
-            <div class="flash-message success">
+            <div class="flash-message widget-table success">
                 <?php foreach ($this->flashMessenger()->getSuccessMessages() as $message): ?>
                     <p><?= $this->escapeHtml($message) ?></p>
                 <?php endforeach; ?>
@@ -61,7 +69,7 @@
         <?php endif; ?>
 
         <?php if ($this->flashMessenger()->hasErrorMessages()): ?>
-            <div class="flash-message error">
+            <div class="flash-message widget-table error">
                 <?php foreach ($this->flashMessenger()->getErrorMessages() as $message): ?>
                     <p><?= $this->escapeHtml($message) ?></p>
                 <?php endforeach; ?>
@@ -77,9 +85,14 @@
             <div class="main-wrapper" id="main-wrapper">
                 <?php echo $this->layout()->content ?>
             </div>
-            <!--
-        <div class="loading" style="z-index:1003; top:0;left:0; width:100%; height:100%; background: url(/images/loaders/loader4.gif) #AAA center center no-repeat;position:absolute;display:none;opacity: .30;"> </div>
-        -->
+
+        </div>
+
+        <div class="loading" style="display:none;">
+            <div class="loading-overlay">
+                <div class="spinner"></div>
+                <p>Loading, please wait...</p>
+            </div>
         </div>
     </div>
     <script type="text/javascript" src="/js/home.js"></script>

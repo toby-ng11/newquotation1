@@ -28,6 +28,14 @@ $user = $this->userHelper();
 
     <!-- jQuery UI CDN -->
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+    <script>
+        (function() {
+            const theme = localStorage.getItem("theme");
+            if (theme === "dark" || theme === "light") {
+                document.documentElement.className = theme;
+            }
+        })();
+    </script>
 </head>
 
 <body>
@@ -64,7 +72,7 @@ $user = $this->userHelper();
                             </div>
 
                             <div class="top-level-entry-container user-menu">
-                                <button id="centura-account-button" type="button" class="button action top-level-entry menu-toggle user-menu-toggle" aria-controls="centura-account" aria-haspopup="menu">
+                                <button id="centura-account-button" aria-expanded="false" type="button" class="button action top-level-entry menu-toggle user-menu-toggle" aria-controls="centura-account" aria-haspopup="menu">
                                     <span class="button-wrap">
                                         <div class="avatar-wrap" aria-hidden="true">
                                             <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -75,7 +83,7 @@ $user = $this->userHelper();
                                     </span>
                                 </button>
 
-                                <ul id="centura-account" class="submenu centura-account inline-submenu-lg" aria-labelledby="centura-account-button">
+                                <ul id="centura-account" style="display: none;" class="submenu centura-account inline-submenu-lg" aria-labelledby="centura-account-button">
                                     <li class="submenu-header">
                                         <div class="submenu-item">
                                             <div class="submenu-content-container">
@@ -104,9 +112,6 @@ $user = $this->userHelper();
             <div class="main-wrapper" id="main-wrapper">
                 <?php echo $this->layout()->content ?>
             </div>
-            <!--
-        <div class="loading" style="z-index:1003; top:0;left:0; width:100%; height:100%; background: url(/images/loaders/loader4.gif) #AAA center center no-repeat;position:absolute;display:none;opacity: .30;"> </div>
-        -->
         </div>
     </div>
 
