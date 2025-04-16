@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Application\Controller;
@@ -36,8 +37,7 @@ class ProjectController extends AbstractActionController
         Address $address,
         Specifier $specifier,
         Customer $customer
-        )
-    {
+    ) {
         $this->userService = $userService;
         $this->pdfExportService = $pdfExportService;
         $this->project = $project;
@@ -59,13 +59,14 @@ class ProjectController extends AbstractActionController
                 'action' => 'create',
             ]);
         }
-        
+
         return $this->forward()->dispatch(ProjectController::class, [
             'action' => 'new',
         ]);
     }
 
-    public function createAction() {
+    public function createAction()
+    {
         $request = $this->getRequest();
 
         if ($request->isPost()) {
@@ -73,6 +74,26 @@ class ProjectController extends AbstractActionController
 
             $project_id = $this->project->save($data);
 
+            // Handle AJAX request
+            if ($request->isXmlHttpRequest()) {
+                if ($project_id) {
+                    // Optional: also return the redirect URL
+                    $this->flashMessenger()->addSuccessMessage("Project created successfully!");
+                    return new JsonModel([
+                        'success' => true,
+                        'message' => 'Project created successfully!',
+                        'redirect' => $this->url()->fromRoute('project', [
+                            'action' => 'edit',
+                            'id' => $project_id
+                        ])
+                    ]);
+                } else {
+                    return new JsonModel([
+                        'success' => false,
+                        'message' => 'Failed to create the project.'
+                    ]);
+                }
+            }
             if ($project_id) {
                 return $this->redirect()->toRoute('project', [
                     'action' => 'edit',
@@ -128,9 +149,9 @@ class ProjectController extends AbstractActionController
 
         $owner = false;
 
-        if($user['id'] === $project['shared_id'] || $user['id'] === $project['owner_id'] || $user['sale_role'] === 'admin' || $user['approve_id'] !== null) {
-    		$owner = true;
-    	}
+        if ($user['id'] === $project['shared_id'] || $user['id'] === $project['owner_id'] || $user['sale_role'] === 'admin' || $user['approve_id'] !== null) {
+            $owner = true;
+        }
 
         $request = $this->getRequest(); // for submit edit form
 
@@ -140,13 +161,25 @@ class ProjectController extends AbstractActionController
             $result = $this->project->edit($data, $project_id);
 
             if ($result) {
-                //$this->flashMessenger()->addSuccessMessage("Project saved successfully.");
+                $this->flashMessenger()->addSuccessMessage("Project saved successfully!");
+
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonModel([
+                        'success' => (bool) $result,
+                        'message' => $result ? 'Project saved successfully.' : 'Save failed. Please try again.',
+                        'redirect' => $this->url()->fromRoute('project', [
+                            'action' => 'edit',
+                            'id' => $project_id
+                        ])
+                    ]);
+                }
+
                 return $this->redirect()->toRoute('project', [
                     'action' => 'edit',
                     'id' => $project_id
                 ]);
             } else {
-                //$this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
+                $this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
                 return $this->redirect()->toRoute('project', ['action' => 'index']);
             }
         }
@@ -171,7 +204,8 @@ class ProjectController extends AbstractActionController
         ]);
     }
 
-    public function deleteAction() {
+    public function deleteAction()
+    {
         $project_id = (int) $this->params()->fromRoute('id');
 
         if (!$project_id) {
@@ -180,21 +214,25 @@ class ProjectController extends AbstractActionController
 
         $result = $this->project->delete($project_id);
 
-        if ($this->getRequest()->isXmlHttpRequest()) {
-            return new JsonModel(['success' => $result]);
-        }
-    
         // Fallback if accessed normally (non-AJAX)
         if ($result) {
+            $this->flashMessenger()->addSuccessMessage("Project deleted successfully!");
+
+            if ($this->getRequest()->isXmlHttpRequest()) {
+                return new JsonModel(['success' => $result]);
+            }
+
             return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
         } else {
+            $this->flashMessenger()->addErrorMessage("Delete failed. Please try again.");
             return $this->redirect()->toRoute('project', ['action' => 'edit', 'id' => $project_id]);
         }
     }
 
-    public function quotetableAction() {
+    public function quotetableAction()
+    {
         $request = $this->getRequest();
-        if ($request->isXmlHttpRequest()) { 
+        if ($request->isXmlHttpRequest()) {
             $project_id = $this->params()->fromRoute('id');
             $projectQuotes = $this->project->fetchQuoteByProject($project_id);
             $view = new JsonModel($projectQuotes);
@@ -238,14 +276,13 @@ class ProjectController extends AbstractActionController
         $response->setStatusCode(200);
         $headers = $response->getHeaders();
         $headers->addHeaderLine('Content-Type', 'application/pdf');
-        $headers->addHeaderLine('Content-Disposition', 'attachment; filename="project_' . $project_id . '.pdf"');
+        $headers->addHeaderLine('Content-Disposition', 'attachment; filename="' . $project['project_name'] .'.pdf"');
         $headers->addHeaderLine('Content-Length', strlen($pdfContent));
 
         return $response;
-        
+
 
         //return new ViewModel($data);
 
     }
-
 }

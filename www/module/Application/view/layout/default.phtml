@@ -36,57 +36,12 @@
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
     <!-- Hamburger menu -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!--
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/node_modules/flatpickr/dist/flatpickr.min.css" />
 
-<script type="text/javascript" src="/js/plugins/ui/jquery.ui.widget.js"></script>        
-<script type="text/javascript" src="/js/plugins/ui/jquery.ui.mouse.js"></script>          
-<script type="text/javascript" src="/js/plugins/ui/jquery.ui.resizable.js"></script>
--->
-
-    <script type="text/javascript" src="/js/plugins/spinner/ui.spinner.js"></script>
-    <script type="text/javascript" src="/js/plugins/spinner/jquery.mousewheel.js"></script>
-
-    <script type="text/javascript" src="/js/plugins/charts/excanvas.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/charts/jquery.sparkline.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/forms/uniform.js"></script>
-    <script type="text/javascript" src="/js/plugins/forms/jquery.cleditor.js"></script>
     <script type="text/javascript" src="/js/plugins/forms/jquery.validationEngine-en.js"></script>
     <script type="text/javascript" src="/js/plugins/forms/jquery.validationEngine.js"></script>
-    <script type="text/javascript" src="/js/plugins/forms/jquery.tagsinput.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/forms/autogrowtextarea.js"></script>
     <script type="text/javascript" src="/js/plugins/forms/jquery.maskedinput.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/forms/jquery.dualListBox.js"></script>
-    <script type="text/javascript" src="/js/plugins/forms/jquery.inputlimiter.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/forms/chosen.jquery.min.js"></script>
-
-    <script type="text/javascript" src="/js/plugins/wizard/jquery.form.js"></script>
-    <script type="text/javascript" src="/js/plugins/wizard/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/wizard/jquery.form.wizard.js"></script>
-
-    <script type="text/javascript" src="/js/plugins/uploader/plupload.js"></script>
-    <script type="text/javascript" src="/js/plugins/uploader/plupload.html5.js"></script>
-    <script type="text/javascript" src="/js/plugins/uploader/plupload.html4.js"></script>
-    <script type="text/javascript" src="/js/plugins/uploader/jquery.plupload.queue.js"></script>
-
-    <!--<script type="text/javascript" src="/js/plugins/tables/tablesort.min.js"></script>
-<script type="text/javascript" src="/js/plugins/tables/resizable.min.js"></script>-->
-
-    <script type="text/javascript" src="/js/plugins/ui/jquery.tipsy.js"></script>
-    <script type="text/javascript" src="/js/plugins/ui/jquery.collapsible.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/ui/jquery.prettyPhoto.js"></script>
-    <script type="text/javascript" src="/js/plugins/ui/jquery.progress.js"></script>
-    <script type="text/javascript" src="/js/plugins/ui/jquery.timeentry.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/ui/jquery.colorpicker.js"></script>
-    <script type="text/javascript" src="/js/plugins/ui/jquery.jgrowl.js"></script>
-    <script type="text/javascript" src="/js/plugins/ui/jquery.breadcrumbs.js"></script>
-    <script type="text/javascript" src="/js/plugins/ui/jquery.sourcerer.js"></script>
-
-    <script type="text/javascript" src="/js/plugins/calendar.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/elfinder.min.js"></script>
-
-    <script type="text/javascript" src="/js/custom.js"></script>
+    <script src="/node_modules/flatpickr/dist/flatpickr.min.js"></script>
 
     <?php //echo $this->headScript(); 
     ?>
@@ -94,6 +49,25 @@
 
 <body>
     <div id="root">
+
+        <div id="js-flash-container"></div>
+
+        <?php if ($this->flashMessenger()->hasSuccessMessages()): ?>
+            <div class="flash-message success">
+                <?php foreach ($this->flashMessenger()->getSuccessMessages() as $message): ?>
+                    <p><?= $this->escapeHtml($message) ?></p>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($this->flashMessenger()->hasErrorMessages()): ?>
+            <div class="flash-message error">
+                <?php foreach ($this->flashMessenger()->getErrorMessages() as $message): ?>
+                    <p><?= $this->escapeHtml($message) ?></p>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
         <div class="page-wrapper category-html document-page">
 
             <!-- Header -->

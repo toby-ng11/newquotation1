@@ -81,11 +81,13 @@ class QuoteController extends AbstractActionController
         }
 
         if ($quote_id) {
+            $this->flashMessenger()->addSuccessMessage("Quote created successfully!");
             return new JsonModel([
                 'success' => true,
                 'quote_id' => $quote_id
             ]);
         } else {
+            $this->flashMessenger()->addErrorMessage("Create quote failed. Please try again.");
             return new JsonModel([
                 'success' => false,
                 'message' => 'Failed to create quote.'
@@ -160,14 +162,21 @@ class QuoteController extends AbstractActionController
 
         $result = $this->quote->delete($quote_id);
 
-        if ($this->getRequest()->isXmlHttpRequest()) {
-            return new JsonModel(['success' => $result]);
-        }
-
-        // Fallback if accessed normally (non-AJAX)
         if ($result) {
+            $this->flashMessenger()->addSuccessMessage("Quote deleted successfully!");
+
+            if ($this->getRequest()->isXmlHttpRequest()) {
+                return new JsonModel(['success' => $result]);
+            }
+
             return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
         } else {
+            $this->flashMessenger()->addErrorMessage("Failed to delete quote. Please try again.");
+            
+            if ($this->getRequest()->isXmlHttpRequest()) {
+                return new JsonModel(['success' => $result]);
+            }
+
             return $this->redirect()->toRoute('quote', ['action' => 'edit', 'id' => $quote_id]);
         }
     }
@@ -187,6 +196,12 @@ class QuoteController extends AbstractActionController
             $result = $this->quote->edit($data, $quote_id);
         }
 
+        if ($result) {
+            $this->flashMessenger()->addSuccessMessage($successMsg);
+        } else {
+            $this->flashMessenger()->addErrorMessage("Failed to update quote status. Please try again.");
+        }
+
         if ($request->isXmlHttpRequest()) {
             return new JsonModel([
                 'success' => $result,
@@ -199,7 +214,7 @@ class QuoteController extends AbstractActionController
 
     public function saveAction()
     {
-        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_SAVE, 'Quote saved.');
+        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_SAVE, 'Quote saved!');
     }
 
     public function submitAction()
@@ -209,22 +224,22 @@ class QuoteController extends AbstractActionController
 
     public function undoSubmitAction()
     {
-        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_UNDO_SUBMIT, 'Undo submitted quote.');
+        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_UNDO_SUBMIT, 'Undo submitted quote!');
     }
 
     public function disapproveAction()
     {
-        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_DISAPPROVE, 'Quote disapproved.');
+        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_DISAPPROVE, 'Quote disapproved!');
     }
 
     public function approveAction()
     {
-        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_APPROVE, 'Quote approved.');
+        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_APPROVE, 'Quote approved!');
     }
 
     public function undoApproveAction()
     {
-        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_UNDO_APPROVE, 'Undo approved quote.');
+        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_UNDO_APPROVE, 'Undo approved quote!');
     }
 
     public function submitAgainAction()
@@ -234,7 +249,7 @@ class QuoteController extends AbstractActionController
 
     public function submitApproveAction()
     {
-        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_SUBMIT_APPROVE, 'Quote submitted and approved.'); //back to waiting status (2)
+        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_SUBMIT_APPROVE, 'Quote submitted and approved!'); //back to waiting status (2)
     }
 
     public function exportAction()
@@ -272,7 +287,7 @@ class QuoteController extends AbstractActionController
         $response->setStatusCode(200);
         $headers = $response->getHeaders();
         $headers->addHeaderLine('Content-Type', 'application/pdf');
-        $headers->addHeaderLine('Content-Disposition', 'attachment; filename="quote_' . $quote_id . '.pdf"');
+        $headers->addHeaderLine('Content-Disposition', 'attachment; filename="' . $project['project_name'] . ' - ' . $customer['customer_name'] . '.pdf"');
         $headers->addHeaderLine('Content-Length', strlen($pdfContent));
 
         return $response;

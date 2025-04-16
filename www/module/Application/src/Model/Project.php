@@ -201,7 +201,15 @@ class Project
 
     public function fetchOwnProjects($user_id)
     {
-        return $this->p2q_view_project->select(['owner_id' => $user_id])->toArray();
+        $sql = new Sql($this->adapter);
+
+        $select = $sql->select('p2q_view_project')
+            ->where(['owner_id' => $user_id])
+            ->order('project_id DESC');
+
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result;
     }
 
     public function countOwnProjects($user_id)
@@ -243,6 +251,7 @@ class Project
             ->where(['company_id' => $company_id]);
 
         $select->where->notEqualTo('owner_id', $user_id);
+        $select->order('project_id DESC');
 
         $selectString = $sql->buildSqlString($select);
         $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);

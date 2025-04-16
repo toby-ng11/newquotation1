@@ -215,17 +215,34 @@ class Item
         return $result;
     }
 
-    public function fetchItemPrice($item_id, $uom, $location = DEFAULT_LOCATION_ID)
+    public function fetchItemPrice($item_id, $uom, $fromP21, $sheetType = '', $location = DEFAULT_LOCATION_ID)
     {
         $sql = new Sql($this->adapter);
-        $select = $sql->select('P21_Items_x_uom')
-            ->columns(['price'])
-            ->where([
-                'location_id' => $location,
-                'item_id' => $item_id,
-                'unit_of_measure' => $uom
-            ])
-            ->quantifier(Select::QUANTIFIER_DISTINCT);
+        if ($fromP21) {
+            $select = $sql->select('P21_Items_x_uom')
+                ->columns(['price'])
+                ->where([
+                    'location_id' => $location,
+                    'item_id' => $item_id,
+                    'unit_of_measure' => $uom
+                ])
+                ->quantifier(Select::QUANTIFIER_DISTINCT);
+        } else {
+            switch ($sheetType) {
+                case 'project':
+                    $select = $sql->select('p2q_view_project_items')
+                        ->columns(['unit_price'])
+                        ->where(['location_id' => $location, 'item_uid' => $item_id]);
+                    break;
+                case 'quote':
+                    $select = $sql->select('p2q_view_quote_items')
+                        ->columns(['unit_price'])
+                        ->where(['location_id' => $location, 'item_uid' => $item_id]);
+                    break;
+                default:
+                    return false;
+            }
+        }
 
         $selectString = $sql->buildSqlString($select);
         $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);

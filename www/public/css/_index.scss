@@ -314,14 +314,15 @@ u {
 	border-radius: 16px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 	transition: transform 0.3s, background-color 0.3s;
-      cursor: pointer;
-      text-decoration: none;
-      color: inherit;
-      display: block;
+	cursor: pointer;
+	text-decoration: none;
+	color: inherit;
+	display: block;
 
 	&:hover {
 		transform: translateY(-10px);
-		background: var(--widget-background-hover);;
+		background: var(--widget-background-hover);
+		;
 	}
 
 	h3 {
@@ -331,14 +332,84 @@ u {
 }
 
 .fade-in-up {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+	opacity: 0;
+	transform: translateY(30px);
+	transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
 .fade-in-up.show {
-    opacity: 1;
-    transform: translateY(0);
+	opacity: 1;
+	transform: translateY(0);
+}
+
+//* Loading overlay
+.loading {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, 0.8);
+	z-index: 9999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.loading-overlay {
+	text-align: center;
+}
+
+.spinner {
+	border: 8px solid #f3f3f3;
+	border-top: 8px solid #3498db;
+	border-radius: 50%;
+	width: 60px;
+	height: 60px;
+	margin: 0 auto 15px auto;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+// Flash message
+#js-flash-container {
+	position: fixed;
+	top: 2rem;
+	right: 2rem;
+	z-index: 9999;
+}
+
+.flash-message {
+	position: fixed;
+	top: 2rem;
+	right: 2rem;
+	z-index: 9999;
+	width: 500px;
+	opacity: 0;
+	padding: 1rem 2rem;
+	text-align: left;
+	transition: opacity 0.4s ease, transform 0.4s ease;
+
+	&.show {
+		opacity: 1;
+	}
+
+	&.success {
+		background-color: #e6f4ea;
+		color: #256029;
+		border-left: 6px solid #2e7d32;
+	}
+
+	&.error {
+		background-color: #fcebea;
+		color: #a94442;
+		border-left: 6px solid #c0392b;
+	}
 }
 
 /* Main content*/

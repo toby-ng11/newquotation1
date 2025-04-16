@@ -228,7 +228,7 @@ $projectRequiredDate = $project['require_date'];
 								<div class="oneTwo">
 									<label for="architect_class_id">Architect Class</label>
 									<input type="text" id="architect_class_id" name="architect_class_id"
-									value='<?= $architect['class_id'] ?? '' ?>' >
+										value='<?= $architect['class_id'] ?? '' ?>'>
 								</div>
 							</div>
 						</div>
@@ -529,9 +529,9 @@ $projectRequiredDate = $project['require_date'];
 						<thead>
 							<tr>
 								<th>Log Time</th>
-								<th>Log</th>
+								<th>Note</th>
 								<th>Next Action</th>
-								<th>Follow Up Date</th>
+								<th>Reminder Time</th>
 								<th>Author</th>
 								<th class="action">Options</th>
 							</tr>
@@ -601,8 +601,9 @@ $projectRequiredDate = $project['require_date'];
 					</div>
 
 					<div class="oneTwo dialog-note">
-						<label for='follow_up_date'>Follow Up Date</label>
-						<input type="text" name='follow_up_date' id='follow_up_date' class="datepicker">
+						<label for='follow_up_date'>Follow Up Date & Time</label>
+						<input type="text" name='follow_up_date' id='follow_up_date'
+							placeholder="Select date and time...">
 					</div>
 				</div>
 			</form>

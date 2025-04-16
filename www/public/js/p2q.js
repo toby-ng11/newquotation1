@@ -684,10 +684,10 @@ $(function () {
         data: "quote_id",
         render: function (data, type, row, meta) {
           return (
-            "<a target='_blank' href='/approve/index/id/" +
-            row.quote_id +
-            "'>" +
-            row.quote_id +
+            "<a target='_blank' href='/quote/" +
+            data +
+            "/edit'>" +
+            data +
             "</a>"
           );
         },
@@ -766,10 +766,10 @@ $(function () {
         data: "quote_id",
         render: function (data, type, row, meta) {
           return (
-            "<a target='_blank' href='/approve/index/id/" +
-            row.quote_id +
-            "'>" +
-            row.quote_id +
+            "<a target='_blank' href='/quote/" +
+            data +
+            "/edit'>" +
+            data +
             "</a>"
           );
         },
@@ -861,10 +861,10 @@ $(function () {
         data: "quote_id",
         render: function (data, type, row, meta) {
           return (
-            "<a target='_blank' href='/approve/index/id/" +
-            row.quote_id +
-            "'>" +
-            row.quote_id +
+            "<a target='_blank' href='/quote/" +
+            data +
+            "/edit'>" +
+            data +
             "</a>"
           );
         },
@@ -1007,7 +1007,7 @@ $(function () {
             return "<p><b>--</b></p>";
           }
           let date = new Date(data);
-          return "<p><b>" + date.toLocaleDateString("en-CA") + "</b></p>";
+          return "<p><b>" + date.toLocaleString("en-CA") + "</b></p>";
         },
       },
       {
@@ -1278,6 +1278,7 @@ $(function () {
   /* --------------------------  ITEM FUNCTION ---------------------------- */
 
   let isEditItem = false;
+  let isUOMChanged = false;
 
   const $dialogItem = $("#dialog-item");
   const $itemForm = $("#dialog-item-form");
@@ -1307,12 +1308,17 @@ $(function () {
 
           $("#dialog-item-form #item_uid").val(data["item_uid"] || "");
           $("#dialog-item-form #item_id").val(data["item_id"] || "");
-          $("#dialog-item-form #unit_price").val(data["unit_price"] || "");
+          //$("#dialog-item-form #unit_price").val(data["unit_price"] || "");
           $("#dialog-item-form #quantity").val(data["quantity"] || "");
           $("#dialog-item-form #note").val(data["note"] || "");
           $("#dialog-item-form #uom").val(data["uom"] || "");
 
-          getoum(data["item_id"], data["uom"], data["unit_price"]);
+          getoum(
+            data["item_id"],
+            data["uom"],
+            data["unit_price"],
+            data["item_uid"]
+          );
         } else {
           alert(response.message || "Failed to fetch item data.");
         }
@@ -1325,11 +1331,6 @@ $(function () {
           jqXHR.responseText
         );
       });
-  });
-
-  // Fetch price when UOM changes
-  $uomDropdown.on("change", function () {
-    getprice($("#item_id").val(), $("#uom").val());
   });
 
   // Open Add Item Dialog
@@ -1438,8 +1439,13 @@ $(function () {
     };
   }
 
+  // Fetch price when UOM changes
+  $uomDropdown.on("change", function () {
+    getP21Price($("#item_id").val(), $("#uom").val());
+  });
+
   // Fetch UOMs and select the old one when editing
-  function getoum(item_id, old_uom = null, old_price = null) {
+  function getoum(item_id, old_uom = null, old_price = null, item_uid = null) {
     if (!item_id) return;
     $.ajax({
       url: "/item/uom",
@@ -1462,15 +1468,20 @@ $(function () {
 
           $uomDropdown.append(option);
         });
-        getprice(item_id, old_uom || $("#uom").val(), old_price);
+
+        if (isEditItem) {
+          getQuotedPrice(item_uid, $sheetType);
+        } else {
+          getP21Price(item_id, old_uom || $("#uom").val(), old_price);
+        }
       })
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error("Error fetching specifier:", textStatus, errorThrown);
       });
   }
 
-  // Fetch Item Price
-  function getprice(item_id, uom, old_price = null) {
+  // Fetch P21 Item Price
+  function getP21Price(item_id, uom, old_price = null) {
     if (!item_id || !uom) return;
     $.ajax({
       url: "/item/price",
@@ -1479,6 +1490,21 @@ $(function () {
     })
       .done((data) => {
         $("#unit_price").val(data?.price || old_price || "");
+      })
+      .fail((jqXHR, textStatus, errorThrown) => {
+        console.error("Error fetching price:", textStatus, errorThrown);
+      });
+  }
+
+  function getQuotedPrice(item_uid, type) {
+    if (!item_uid) return;
+    $.ajax({
+      url: "/item/quotedprice",
+      data: { item_uid, type },
+      dataType: "json",
+    })
+      .done((data) => {
+        $("#unit_price").val(data?.unit_price || "");
       })
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error("Error fetching price:", textStatus, errorThrown);
@@ -1501,7 +1527,10 @@ $(function () {
       data: formData,
       contentType: "application/x-www-form-urlencoded",
     })
-      .done(() => itemTable.ajax.reload())
+      .done(() => {
+        itemTable.ajax.reload();
+        showFlashMessage("Item added successfully!");
+      })
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error(
           "Error adding item:",
@@ -1519,14 +1548,16 @@ $(function () {
     disableButton($dialogBtnAddItem, true);
     let formData =
       $itemForm.serialize() + "&type=" + encodeURIComponent($sheetType);
-
     $.ajax({
       url: "/item/edit",
       type: "post",
       data: formData,
       contentType: "application/x-www-form-urlencoded",
     })
-      .done(() => itemTable.ajax.reload())
+      .done(() => {
+        itemTable.ajax.reload();
+        showFlashMessage("Item saved.");
+      })
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error(
           "Error adding item:",
@@ -1566,6 +1597,11 @@ $(function () {
   const $dialogBtnAddNote = $("#note-form-btn-add");
 
   let isEditnote = false;
+
+  flatpickr("#follow_up_date", {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i",
+  });
 
   $("#dialog-message").dialog({
     autoOpen: false,
@@ -1631,16 +1667,13 @@ $(function () {
       .done((response) => {
         if (response.success && response.data) {
           const data = response.data;
-
           $("#note #note_id").val(data["project_note_id"] || "");
           $("#note #note_title").val(data["note_title"] || "");
           $("#note #project_note").val(data["project_note"] || "");
           $("#note #next_action").val(data["next_action"] || "");
           if (data["follow_up_date"]) {
-            let followUpDate = new Date(data["follow_up_date"]["date"] || "");
-            $("#note #follow_up_date").val(
-              followUpDate.toLocaleDateString() || ""
-            );
+            let followUpDate = data["follow_up_date"]["date"];
+            $("#note #follow_up_date").val(followUpDate);
           }
         } else {
           alert(response.message || "Failed to fetch note data.");
@@ -1667,14 +1700,16 @@ $(function () {
     disableButton($dialogBtnAddNote, true);
     let formData =
       $noteForm.serialize() + "&project_id=" + encodeURIComponent($projectId);
-
     $.ajax({
       url: "/note/add",
       type: "post",
       data: formData,
       contentType: "application/x-www-form-urlencoded",
     })
-      .done(() => projectNoteTable.ajax.reload())
+      .done(() => {
+        projectNoteTable.ajax.reload();
+        showFlashMessage("Note added!");
+      })
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error(
           "Error adding note:",
@@ -1697,7 +1732,10 @@ $(function () {
       data: formData,
       contentType: "application/x-www-form-urlencoded",
     })
-      .done(() => projectNoteTable.ajax.reload())
+      .done(() => {
+        projectNoteTable.ajax.reload();
+        showFlashMessage("Note saved.");
+      })
       .fail((jqXHR, textStatus, errorThrown) => {
         console.error(
           "Error editing note:",
@@ -1804,7 +1842,7 @@ $(function () {
           $section.data("type") === "dialog" ? "#dialog-make-quote-form" : null,
         source: function (request, response) {
           $.ajax({
-            url: "/customer/fetch",
+            url: "/customer",
             dataType: "json",
             data: { term: request.term, limit: 10 },
           })
@@ -1842,8 +1880,7 @@ $(function () {
   function getCustomerContacts(customer_id, $section) {
     if (!customer_id) return;
     $.ajax({
-      url: "/customer/contacts",
-      data: { customer_id },
+      url: `/customer/${customer_id}/contacts`,
       dataType: "json",
     }).done((data) => {
       const $contactDropdown = $section
@@ -1862,8 +1899,7 @@ $(function () {
     const contactID = $section.find("select[id$='_contact_name']").val();
     if (!contactID) return;
     $.ajax({
-      url: "/customer/contactinfo",
-      data: { contact_id: contactID },
+      url: `/customer/${contactID}/contactinfo`,
       dataType: "json",
     }).done((data) => {
       // Fill contact fields dynamically based on ID suffix
@@ -1923,6 +1959,8 @@ $(function () {
       "&sheetType=" + encodeURIComponent($sheetType);
     }
 
+    $(".loading").show();
+
     $.ajax({
       url: "/quote",
       type: "post",
@@ -1946,7 +1984,10 @@ $(function () {
         );
         alert("Failed to make quote. Please try again.");
       })
-      .always(() => disableButton($dialogBtnAddCustomer, false));
+      .always(() => {
+        disableButton($dialogBtnAddCustomer, false);
+        $(".loading").hide();
+      });
   }
 
   /* ------------------------------   For project/{new, edit} ---------------------------------*/
@@ -2295,7 +2336,7 @@ $(function () {
 
   function getContractor(id, targetPrefix) {
     $.ajax({
-      url: "/customer/fetchbyid/id/" + id,
+      url: `/customer/${id}/fetchbyid/`,
       dataType: "json",
       type: "get",
       success: function (result) {
@@ -2354,10 +2395,35 @@ $(function () {
   $("#form-btn-save-project").on("click", function (e) {
     e.preventDefault();
     if ($projectForm.validationEngine("validate")) {
-      if ($("#general_contractor_name").val().trim() === "") $("#general_contractor_id").val("");
-      if ($("#awarded_contractor_name").val().trim() === "") $("#awarded_contractor_id").val("");
-      $projectForm.trigger("submit");
+      if ($("#general_contractor_name").val().trim() === "")
+        $("#general_contractor_id").val("");
+      if ($("#awarded_contractor_name").val().trim() === "")
+        $("#awarded_contractor_id").val("");
+
+      $(".loading").show();
       unsave = false;
+
+      // Submit via AJAX
+      $.ajax({
+        url: $projectForm.attr("action"),
+        type: $projectForm.attr("method"),
+        data: $projectForm.serialize(),
+        dataType: "json",
+      })
+        .done(function (response) {
+          if (response.success) {
+            window.location.href = response.redirect;
+          } else {
+            alert(response.message || "Failed to save project.");
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.error("Save failed:", error);
+          alert("An error occurred while saving the project.");
+        })
+        .always(function () {
+          $(".loading").hide(); // Hide loading in all cases
+        });
     }
   });
 
@@ -2477,7 +2543,7 @@ $(function () {
       e.preventDefault();
       $(".loading").show();
       $.ajax({
-        url: "/quote/ready/id/<?= $quoteID ?>",
+        url: `/quote/${$quoteId}/edit`,
         type: "get",
         success: function (data) {
           //$('#status').html('<div class="nNote nInformation hideit"><p><strong>INFORMATION: </strong>You Need submit again after edit</p></div>');
@@ -2497,5 +2563,40 @@ $(function () {
 
   if (dialogToOpen === "make-quote") {
     $dialogMakeQuote.dialog("open");
+  }
+
+  function showFlashMessage(message, type = "success") {
+    const flash = document.createElement("div");
+    flash.className = `flash-message widget-table ${type}`;
+    flash.innerHTML = `<p>${message}</p>`;
+
+    document.getElementById("js-flash-container").appendChild(flash);
+
+    // Force reflow to allow animation
+    void flash.offsetWidth;
+
+    flash.classList.add("show");
+
+    setTimeout(() => {
+      flash.style.opacity = "0";
+      flash.style.transform = "translateY(-10px)";
+      setTimeout(() => flash.remove(), 500); // match fade-out duration
+    }, 4000);
+  }
+
+  const flash = document.querySelector(".flash-message");
+  if (flash) {
+    setTimeout(() => {
+      flash.classList.add("show");
+    }, 300);
+
+    // Flash message auto-hide
+    setTimeout(() => {
+      if (flash) {
+        flash.style.opacity = "0";
+        flash.style.transform = "translateY(-10px)";
+        setTimeout(() => flash.remove(), 500); // remove after animation
+      }
+    }, 4000);
   }
 });

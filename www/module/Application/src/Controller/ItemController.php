@@ -201,7 +201,22 @@ class ItemController extends AbstractActionController
             return new JsonModel(['error' => 'Pattern is required']);
         }
 
-        $uom = $this->item->fetchItemPrice($item_id, $uom);
+        $uom = $this->item->fetchItemPrice($item_id, $uom, true);
+
+        return new JsonModel($uom);
+    }
+
+    // Fetch Quoted price from Quotation
+    public function quotedpriceAction()
+    {
+        $item_uid = $this->params()->fromQuery('item_uid', null);
+        $sheetType = $this->params()->fromQuery('type', null);
+
+        if (empty($item_uid) || empty($sheetType)) {
+            return new JsonModel(['error' => 'Pattern is required']);
+        }
+
+        $uom = $this->item->fetchItemPrice($item_uid, null, false, $sheetType);
 
         return new JsonModel($uom);
     }
