@@ -77,12 +77,12 @@ class Project
         ])))) {
             $info['architect_address_id'] = $this->address->add($data, $info['architect_id']);
         } else {
-            $info['architect_address_id'] = $data['address_id'];
+            $info['architect_address_id'] = $data['address_id'] ?? null;
         }
 
         $info['specifier_id'] = empty($data['specifier_id']) && !empty($data['specifier_name'])
             ? $this->specifier->add($data, $info['architect_id'])
-            : $data['specifier_id'];
+            : $data['specifier_id'] ?? null;
 
         try {
             $this->project->insert($info);
@@ -150,6 +150,8 @@ class Project
         }
         if (!empty($data['address_id'])) {
             $info['architect_address_id'] = $this->address->edit($data, $data['address_id']);
+        } else {
+            $info['architect_address_id'] = null;
         }
 
         if (empty($data['specifier_id']) && !empty($data['specifier_first_name'])) {
@@ -158,6 +160,8 @@ class Project
 
         if (!empty($data['specifier_id'])) {
             $info['specifier_id'] = $this->specifier->edit($data, $data['specifier_id']);
+        } else {
+            $info['specifier_id'] = null;
         }
 
         try {

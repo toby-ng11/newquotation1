@@ -2584,8 +2584,8 @@ body,
   --text-link: #8cb4ff;
   --text-visited: #ffadff;
   --text-invert: #1b1b1b;
-  --widget-background-primary: rgba(255, 255, 255, 0.05);
-  --widget-background-hover: rgba(255, 255, 255, 0.08);
+  --widget-background-primary: rgba(255, 255, 255, 0.08);
+  --widget-background-hover: rgba(255, 255, 255, 0.1);
   --widget-box-shadow: 0 5px 15px rgb(0, 0, 0);
   --widget-icon-box-shadow: 0 5px 10x rgba(0, 0, 0, 0.1);
   --widget-background-green: #06d6a0;
@@ -2903,8 +2903,8 @@ body,
     --text-link: #8cb4ff;
     --text-visited: #ffadff;
     --text-invert: #1b1b1b;
-    --widget-background-primary: rgba(255, 255, 255, 0.05);
-    --widget-background-hover: rgba(255, 255, 255, 0.08);
+    --widget-background-primary: rgba(255, 255, 255, 0.08);
+    --widget-background-hover: rgba(255, 255, 255, 0.1);
     --widget-box-shadow: 0 5px 15px rgb(0, 0, 0);
     --widget-icon-box-shadow: 0 5px 10x rgba(0, 0, 0, 0.1);
     --widget-background-green: #06d6a0;

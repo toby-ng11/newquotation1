@@ -1,17 +1,20 @@
-$(function () {
+/* global $ */
+
+document.addEventListener("DOMContentLoaded", () => {
   /* --------------------------  GLOBAL VARIABLES ---------------------------- */
 
   const $projectId = window.location.pathname.split("/")[2];
   const $quoteId = window.location.pathname.split("/")[2];
   const $sheetType = window.location.pathname.split("/")[1];
   const $projectForm = $("#project_content");
+  const projectForm = document.getElementById("project_content");
   const $quoteForm = $("#quote-content");
 
   /* --------------------------  TABLES ---------------------------- */
 
   /* ------ ADMIN PORTAL ------ */
 
-  let adminProjectTable = $("#admin-project-table").DataTable({
+  $("#admin-project-table").DataTable({
     ajax: {
       url: "/index/admin/project?view=true",
       dataSrc: "",
@@ -106,7 +109,7 @@ $(function () {
     },
   });
 
-  let adminQuoteTable = $("#admin-quote-table").DataTable({
+  $("#admin-quote-table").DataTable({
     ajax: {
       url: "/index/admin/quote?view=true",
       dataSrc: "",
@@ -617,7 +620,7 @@ $(function () {
         data: "date_added.date",
         render: function (data) {
           let date = new Date(data);
-          return "<p><b>" + date.toLocaleString("en-CA") + "</b></p>";
+          return "<p><b>" + date.toLocaleDateString("en-CA") + "</b></p>";
         },
       },
       {
@@ -969,7 +972,7 @@ $(function () {
         data: "date_added.date",
         render: function (data) {
           let date = new Date(data);
-          return "<p><b>" + date.toLocaleString("en-CA") + "</b></p>";
+          return "<p><b>" + date.toLocaleDateString("en-CA") + "</b></p>";
         },
       },
       {
@@ -1160,7 +1163,7 @@ $(function () {
     //rowReorder: true
   });
 
-  let projectQuoteTable = $("#project-quote-table").DataTable({
+  $("#project-quote-table").DataTable({
     ajax: {
       url: `/project/${$projectId}/quotetable`,
       dataSrc: "",
@@ -1275,10 +1278,13 @@ $(function () {
     $button.prop("disabled", state);
   }
 
+  flatpickr(".flatpickr", {
+    dateFormat: "Y-m-d",
+  });
+
   /* --------------------------  ITEM FUNCTION ---------------------------- */
 
   let isEditItem = false;
-  let isUOMChanged = false;
 
   const $dialogItem = $("#dialog-item");
   const $itemForm = $("#dialog-item-form");
@@ -1414,7 +1420,7 @@ $(function () {
             });
         },
         minLength: 2,
-        open: function (event, ui) {
+        open: function () {
           $("ui-autocomplete").css("z-index", 2001);
         },
         select: function (event, ui) {
@@ -1598,7 +1604,7 @@ $(function () {
 
   let isEditnote = false;
 
-  flatpickr("#follow_up_date", {
+  let follow_up_date = flatpickr("#follow_up_date", {
     enableTime: true,
     dateFormat: "Y-m-d H:i",
   });
@@ -1672,8 +1678,9 @@ $(function () {
           $("#note #project_note").val(data["project_note"] || "");
           $("#note #next_action").val(data["next_action"] || "");
           if (data["follow_up_date"]) {
-            let followUpDate = data["follow_up_date"]["date"];
-            $("#note #follow_up_date").val(followUpDate);
+            follow_up_date.setDate(data["follow_up_date"]["date"]);
+          } else {
+            follow_up_date.clear();
           }
         } else {
           alert(response.message || "Failed to fetch note data.");
@@ -1991,6 +1998,8 @@ $(function () {
   }
 
   /* ------------------------------   For project/{new, edit} ---------------------------------*/
+
+  // Autocomplete for shared_id
   if ($("#shared_id").length) {
     $("#shared_id")
       .autocomplete({
@@ -2393,6 +2402,7 @@ $(function () {
 
   // Save edit
   $("#form-btn-save-project").on("click", function (e) {
+    if (projectForm.checkValidity()) {
     e.preventDefault();
     if ($projectForm.validationEngine("validate")) {
       if ($("#general_contractor_name").val().trim() === "")
@@ -2424,7 +2434,7 @@ $(function () {
         .always(function () {
           $(".loading").hide(); // Hide loading in all cases
         });
-    }
+    }}
   });
 
   // Delete project

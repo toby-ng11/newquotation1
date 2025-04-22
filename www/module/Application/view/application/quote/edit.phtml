@@ -232,14 +232,14 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 
 								<div class="oneTwo">
 									<label for='ship_required_date'>Ship Required Date</label>
-									<input id='ship_required_date' type="text" class="datepicker validate[required]" name='ship_required_date' value="<?php if ($quoteShipRequiredDate && $quoteShipRequiredDate > new DateTime('2000-01-01')) {
+									<input id='ship_required_date' type="text" class="flatpickr validate[required]" name='ship_required_date' value="<?php if ($quoteShipRequiredDate && $quoteShipRequiredDate > new DateTime('2000-01-01')) {
 																																							echo $quoteShipRequiredDate->format('Y-m-d');
 																																						} ?>" />
 								</div>
 
 								<div class="oneTwo">
 									<label for="quote_date">Expire Date</label>
-									<input id="expire_date" name="expire_date" type="text" class="datepicker" value='<?= $quoteExpireDate->format('Y-m-d') ?? '' ?>' />
+									<input id="expire_date" name="expire_date" type="text" class="flatpickr" value='<?= $quoteExpireDate->format('Y-m-d') ?? '' ?>' />
 								</div>
 
 								<div class="oneTwo">

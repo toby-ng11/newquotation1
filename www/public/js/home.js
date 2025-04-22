@@ -1,9 +1,12 @@
+/* global $ */
+
 document.addEventListener("DOMContentLoaded", () => {
   const themeBtnIcon = document.querySelector(".theme-switcher-menu .icon");
   const themeButton = document.querySelector(".button.theme-switcher-menu");
 
   themeButton.addEventListener("click", toggleTheme);
-  updateThemeIcon(); 
+  updateThemeIcon();
+  loadFlatpickrTheme(localStorage.getItem("theme") || "material_blue");
 
   function setTheme(themeName) {
     const validThemes = ["light", "dark"]; // Add more themes as needed
@@ -14,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("theme", themeName);
     document.documentElement.className = themeName;
     updateThemeIcon();
+    loadFlatpickrTheme(themeName);
   }
 
   function toggleTheme() {
@@ -32,6 +36,28 @@ document.addEventListener("DOMContentLoaded", () => {
       themeBtnIcon.classList.remove("icon-theme-dark");
       themeBtnIcon.classList.add("icon-theme-light");
     }
+  }
+
+  function loadFlatpickrTheme(theme) {
+    const existing = document.querySelector("link[data-flatpickr-theme]");
+    if (existing) existing.remove();
+
+    let themeFile;
+    if (theme === "dark") {
+      themeFile = "dark";
+    } else {
+      themeFile = "material_blue";
+    }
+
+    const themeHref = `https://npmcdn.com/flatpickr/dist/themes/${themeFile}.css`;
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.type = "text/css";
+    link.href = themeHref;
+    link.setAttribute("data-flatpickr-theme", "true");
+
+    document.head.appendChild(link);
   }
 
   const menu = document.querySelector(".top-navigation");

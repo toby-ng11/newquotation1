@@ -41,12 +41,12 @@ $user = $this->user;
 
               <div class="oneTwo required-field">
                 <label for="project_name">Project Name</label>
-                <input type="text" id='project_name' name='project_name' class="validate[required]" />
+                <input required type="text" id='project_name' name='project_name'/>
               </div>
 
               <div class="oneTwo required-field">
                 <label for='project_address'>Project Location</label>
-                <input id='project_address' name='project_address' type="text" class="validate[required] tipN" original-title="Example: 53 Apex Road, Toronto, Ontario, M6A 2V6" />
+                <input required id='project_address' name='project_address' type="text" />
               </div>
 
               <div class="oneTwo">
@@ -60,7 +60,7 @@ $user = $this->user;
 
               <div class="oneTwo required-field">
                 <label for="status">Project Stage</label>
-                <select name="status" id='status' class="validate[required]">
+                <select required name="status" id='status'>
                   <option value="">-- Select stage --</option>
                   <?php foreach ($this->status as $s) { ?>
                     <option value="<?= $s['status_id'] ?>"><?= $s['status_desc'] ?></option>
@@ -70,7 +70,7 @@ $user = $this->user;
 
               <div class="oneTwo required-field">
                 <label for="market_segment_id">Project Segment</label>
-                <select name="market_segment_id" id='market_segment_id' class="validate[required]">
+                <select required name="market_segment_id" id='market_segment_id'>
                   <option value="">-- Choose market segment --</option>
                   <?php foreach ($this->seg as $s) { ?>
                     <option value="<?= $s['market_segment_id'] ?>"><?= $s['market_segment_desc'] ?></option>
@@ -83,19 +83,19 @@ $user = $this->user;
                 <input type="text" id="owner_id" name="owner_id" value='<?= $user['id'] ?>' readonly />
               </div>
 
-              <div class="oneTwo required-field">
+              <div class="oneTwo">
                 <label for="reed">REED ID</label>
-                <input type="text" name='reed' original-title="REED Format" id='reed' class="validate[required] tipN" />
+                <input type="text" name='reed' original-title="REED Format" id='reed' />
               </div>
 
               <div class="oneTwo">
                 <label for="due_date">Tender Due Date</label>
-                <input type="text" id="due_date" name='due_date' class="datepicker" />
+                <input type="text" id="due_date" name='due_date' class="flatpickr" placeholder="Due date"/>
               </div>
 
               <div class="oneTwo">
                 <label for="require_date">Required Date</label>
-                <input type="text" id="require_date" name='require_date' placeholder="Required date" class="datepicker" />
+                <input type="text" id="require_date" name='require_date' class="flatpickr" placeholder="Required date" />
               </div>
 
               <?php if ($user['approve_id'] != null) { ?>
@@ -284,7 +284,7 @@ $user = $this->user;
 
           <div class="widget-footer">
             <div class="widget-footer-button">
-              <button disabled id="form-btn-save-project" type="button" title="Create project" class="button action create-project-button project-action-button small">
+              <button disabled id="form-btn-save-project" type="submit" title="Create project" class="button action create-project-button project-action-button small">
                 <span class="button-wrap">
                   Create Project
                 </span>

@@ -134,21 +134,20 @@ $projectRequiredDate = $project['require_date'];
 									readonly />
 							</div>
 
-							<div class="oneTwo required-field">
+							<div class="oneTwo">
 								<label for="reed">REED ID</label>
-								<input type="text" name="reed" id="reed" value="<?= $project['reed'] ?>"
-									class="validate[required]" />
+								<input type="text" name="reed" id="reed" value="<?= $project['reed'] ?>" />
 							</div>
 
 							<div class="oneTwo">
 								<label for="due_date">Tender Due Date</label>
-								<input id="due_date" type="text" name='due_date' class="datepicker"
+								<input id="due_date" type="text" name='due_date' class="flatpickr"
 									value='<?= $projectDueDate?->format('Y-m-d') ?? '' ?>' />
 							</div>
 
 							<div class="oneTwo">
 								<label for='required_date'>Required Date</label>
-								<input id='required_date' type="text" name='required_date' class="datepicker"
+								<input id='required_date' type="text" name='required_date' class="flatpickr"
 									value='<?= $projectRequiredDate?->format('Y-m-d') ?>' />
 							</div>
 
@@ -192,7 +191,7 @@ $projectRequiredDate = $project['require_date'];
 							<div class="formRow">
 								<div class="oneTwo">
 									<label for="architect_name">Architect Name</label>
-									<input readonly type='text' name="architect_name" id='architect_name' class="tipN"
+									<input type='text' name="architect_name" id='architect_name' class="tipN"
 										original-title="Search by ID or Name" value='<?= $architect['architect_name']
 																							?? '' ?>' />
 									<input type="hidden" name='architect_id' id='architect_id' value='<?= $architect['architect_id'] ?? '' ?>' />
@@ -528,7 +527,7 @@ $projectRequiredDate = $project['require_date'];
 					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display" id='project_note'>
 						<thead>
 							<tr>
-								<th>Log Time</th>
+								<th>Date Add</th>
 								<th>Note</th>
 								<th>Next Action</th>
 								<th>Reminder Time</th>
@@ -603,7 +602,7 @@ $projectRequiredDate = $project['require_date'];
 					<div class="oneTwo dialog-note">
 						<label for='follow_up_date'>Follow Up Date & Time</label>
 						<input type="text" name='follow_up_date' id='follow_up_date'
-							placeholder="Select date and time...">
+							placeholder="Select date and time..." readonly>
 					</div>
 				</div>
 			</form>
