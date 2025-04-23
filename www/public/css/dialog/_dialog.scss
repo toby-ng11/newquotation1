@@ -83,6 +83,7 @@
 .ui-dialog {
 
     background-color: var(--widget-background-primary);
+    -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border-radius: 15px;
     border: 0px;

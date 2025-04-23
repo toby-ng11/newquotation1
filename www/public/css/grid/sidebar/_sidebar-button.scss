@@ -18,6 +18,7 @@
 	background: var(--widget-background-primary);
 	color: var(--text-secondary);
 	box-shadow: var(--widget-box-shadow);
+	-webkit-backdrop-filter: blur(10px);
 	backdrop-filter: blur(10px);
 	transition: all 0.3s ease-in-out;
 

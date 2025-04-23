@@ -3,7 +3,8 @@
 .widget-table {
 	background-color: var(--widget-background-primary);
 	/*border: 1px solid var(--border-primary);*/
-	backdrop-filter: blur(200px);
+	-webkit-backdrop-filter: blur(100px);
+	backdrop-filter: blur(100px);
 	margin-top: 2rem;
 	margin-bottom: 2rem;
 	/* clear: both; */

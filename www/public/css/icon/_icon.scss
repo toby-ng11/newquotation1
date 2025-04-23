@@ -21,13 +21,16 @@ $icons: "add-filled", "add", "altname", "bell", "bell-filled", "bell-ring",
   display: inline-block;
   flex-shrink: 0;
   height: var(--size);
+  -webkit-mask-position: center;
   mask-position: center;
+  -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   vertical-align: middle;
   width: var(--size);
 
   @each $name in $icons {
     &.icon-#{$name} {
+      -webkit-mask-image: url("../images/icons/assets/" + $name + ".svg");
       mask-image: url("../images/icons/assets/" + $name + ".svg");
     }
   }

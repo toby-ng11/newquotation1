@@ -78,6 +78,8 @@
       display: block;
       height: 16px;
       margin-left: auto;
+      -webkit-mask-image: url("../../images/chevron-right.svg");
+      -webkit-mask-size: 16px;
       mask-image: url("../../images/chevron-right.svg");
       mask-size: 16px;
       width: 16px;

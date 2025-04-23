@@ -26,6 +26,7 @@
       content: "";
       display: block;
       height: calc(1em * $line-height);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 75%);
       mask-image: linear-gradient(to right, transparent, #000 75%);
       pointer-events: none;
       position: absolute;
@@ -37,6 +38,7 @@
     &:dir(rtl) {
       &::after {
         left: 0;
+        -webkit-mask-image: linear-gradient(to left, transparent, #000 75%);
         mask-image: linear-gradient(to left, transparent, #000 75%);
         right: initial;
       }

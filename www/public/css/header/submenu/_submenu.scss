@@ -3,6 +3,7 @@
 
 @mixin not-inline-submenu {
   background: var(--widget-background-primary);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid var(--border-primary);
   border-radius: var(--elem-radius);

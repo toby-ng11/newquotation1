@@ -179,6 +179,8 @@ button,
     content: "";
     display: block;
     height: 16px;
+    -webkit-mask-image: url("../../../assets/icons/small-arrow.svg");
+    -webkit-mask-size: cover;
     mask-image: url("../../../assets/icons/small-arrow.svg");
     mask-size: cover;
     position: absolute;

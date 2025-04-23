@@ -172,6 +172,7 @@ body {
 	//background: rgb(34,195,194);
 	background: var(--background-primary);
 	//background-image: var(--background-img);
+	-webkit-scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
 	scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
 }
 

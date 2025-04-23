@@ -21,6 +21,7 @@
     display: inline-block;
     font-style: normal;
     font-weight: 600;
+    -webkit-hyphens: auto;
     hyphens: auto;
     padding: 0.25rem;
     padding-left: 0.5rem;
@@ -30,6 +31,7 @@
   a {
     color: var(--text-secondary);
     display: inline-flex;
+    -webkit-hyphens: auto;
     hyphens: auto;
     //padding: 0.25rem;
 
@@ -186,6 +188,11 @@
 
       .sidebar-inner-nav {
         display: contents;
+        -webkit-mask-image: linear-gradient(
+          to bottom,
+          rgb(0, 0, 0) 0% calc(100% - 3rem),
+          rgba(0, 0, 0, 0) 100%
+        );
         mask-image: linear-gradient(
           to bottom,
           rgb(0, 0, 0) 0% calc(100% - 3rem),

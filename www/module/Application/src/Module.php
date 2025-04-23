@@ -45,6 +45,15 @@ class Module implements ConfigProviderInterface
 
         define("DEFAULT_COMPANY", $default_company);
         define("DEFAULT_LOCATION_ID", $location_id);
+
+        $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function ($e) {
+            $response = $e->getResponse();
+            $headers = $response->getHeaders();
+    
+            $headers->addHeaderLine('Cache-Control', 'no-cache');
+            $headers->addHeaderLine('Pragma', '');
+            $headers->addHeaderLine('Expires', '');
+        }, 100);
     }
 
     public function getServiceConfig()

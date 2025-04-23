@@ -18,6 +18,7 @@
       display: inline-block;
       height: 1.2em;
       mask: url("../../assets/m-logo.svg") no-repeat 50% 50%;
+      -webkit-mask-size: cover;
       mask-size: cover;
       transform: translate(-0.2em, 0.2em);
       width: 1.2em;

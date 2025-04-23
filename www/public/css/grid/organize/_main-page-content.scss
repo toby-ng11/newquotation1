@@ -471,6 +471,7 @@ pre {
 
   &::before {
     background-color: var(--icon-critical);
+    -webkit-mask-image: url("../assets/icons/no.svg");
     mask-image: url("../assets/icons/no.svg");
   }
 }
@@ -480,6 +481,7 @@ pre {
 
   &::before {
     background-color: var(--icon-success);
+    -webkit-mask-image: url("../assets/icons/checkmark.svg");
     mask-image: url("../assets/icons/checkmark.svg");
   }
 }
@@ -574,6 +576,7 @@ pre {
       --icon-size: 12px;
       background-color: var(--icon-secondary);
       cursor: pointer;
+      -webkit-mask-size: contain;
       mask-size: contain;
 
       &:hover,
@@ -701,7 +704,9 @@ pre {
         display: inline-block;
         height: 1rem;
         margin-right: 4px;
+        -webkit-mask-image: url("../assets/icons/queue.svg");
         mask-image: url("../assets/icons/queue.svg");
+        -webkit-mask-size: cover;
         mask-size: cover;
         vertical-align: middle;
         width: 1rem;
@@ -723,6 +728,7 @@ pre {
         opacity: 1;
 
         &::before {
+          -webkit-mask-image: url("../assets/icons/queued.svg");
           mask-image: url("../assets/icons/queued.svg");
         }
       }
@@ -743,6 +749,8 @@ pre {
     display: inline-block;
     height: 1rem;
     margin-right: 4px;
+    -webkit-mask-image: url("../assets/icons/play.svg");
+    -webkit-mask-size: cover;
     mask-image: url("../assets/icons/play.svg");
     mask-size: cover;
     vertical-align: middle;
@@ -755,6 +763,8 @@ pre {
     cursor: pointer;
     height: 1rem;
     margin-top: -0.1rem;
+    -webkit-mask-image: url("../assets/clippy.svg");
+    -webkit-mask-size: cover;
     mask-image: url("../assets/clippy.svg");
     mask-size: cover;
     width: 1rem;

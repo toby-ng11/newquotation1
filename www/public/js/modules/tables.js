@@ -950,7 +950,7 @@ export function initTables() {
 
   /* ------ PROJECT + QUOTE EDIT ------ */
 
-  projectNoteTable = $("#project_note").DataTable({
+  projectNoteTable = $("#note-table").DataTable({
     ajax: {
       url: "/note/table",
       data: {
