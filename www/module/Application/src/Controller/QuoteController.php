@@ -72,14 +72,8 @@ class QuoteController extends AbstractActionController
 
         $data = $this->params()->fromPost();
 
-        if ($data['sheetType'] === 'quote') {
-            $projectData = $this->project->fetchById($data['project_id']);
-            $projectData['contact_id'] = $data['contact_id'];
-            $quote_id = $this->quote->create($projectData);
-        } else {
-            $quote_id = $this->quote->create($data);
-        }
-
+        $quote_id = $this->quote->create($data);
+        
         if ($quote_id) {
             $this->flashMessenger()->addSuccessMessage("Quote created successfully!");
             return new JsonModel([

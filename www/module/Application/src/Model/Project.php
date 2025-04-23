@@ -333,7 +333,7 @@ class Project
         }
 
         $sql = new Sql($this->adapter);
-        $select = $sql->select('p2q_view_quote_x_project_x_oe')
+        $select = $sql->select('quote')
             ->columns(['total' => new Expression('COUNT(*)')])
             ->where(['project_id' => $project_id]);
 

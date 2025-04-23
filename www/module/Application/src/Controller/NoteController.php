@@ -37,16 +37,25 @@ class NoteController extends AbstractActionController
             $id = $this->params()->fromPost('project_id', null);
             $data = $this->params()->fromPost();
 
+            $missingFields = [];
+
+            if (!$id) {
+                $missingFields[] = 'id';
+            }
+            if (empty($data['project_note'])) {
+                $missingFields[] = 'project_note';
+            }
+
             if (!$id || empty($data['project_note'])) {
                 return new JsonModel([
                     'success' => false,
-                    'message' => 'Missing required fields.'
+                    'message' => 'Missing required fields: ' . implode(', ', $missingFields)
                 ]);
             }
 
             try {
                 $result = $this->note->add($data, $id);
-    
+
                 return new JsonModel([
                     'success' => true,
                     'message' => 'Note added successfully!',
@@ -79,7 +88,7 @@ class NoteController extends AbstractActionController
 
             try {
                 $result = $this->note->edit($data, $id);
-    
+
                 return new JsonModel([
                     'success' => true,
                     'message' => 'Note edit successfully!',
@@ -142,7 +151,7 @@ class NoteController extends AbstractActionController
                 'message' => 'Note not found.'
             ]);
         }
-    
+
         return new JsonModel([
             'success' => true,
             'data' => $note
