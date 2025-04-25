@@ -39,7 +39,7 @@ class Customer
     {
         $sql = new Sql($this->adapter);
         $select = $sql->select('P21_customers_x_address')
-            ->columns(['customer_id', 'customer_name', 'company_id', 'salesrep_full_name'])
+            ->columns(['customer_id', 'customer_name', 'company_id', 'salesrep_full_name', 'from_P21'])
             ->where(['company_id' => $company])
             ->where(function ($where) use ($pattern) {
                 $where->nest()->like('customer_id', $pattern . '%')

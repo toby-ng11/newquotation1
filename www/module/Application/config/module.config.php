@@ -28,7 +28,7 @@ return [
                 'options' => [
                     'route'    => '/index[/:action][/:table]',
                     'constraints' => [
-                        'action' => 'project|approval|admin|architect',
+                        'action' => 'home|approval|admin|architect',
                         'table' => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ],
                     'defaults' => [

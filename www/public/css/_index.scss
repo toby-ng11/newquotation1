@@ -87,7 +87,7 @@
 
 	/* Grid and Layout */
 	--max-width: 1440px;
-	--gutter: 1rem;
+	--gutter: 7rem;
 	/* Space between content and browser window */
 	--top-navigation-height: 4rem;
 	--top-navigation-offset: -4rem;
@@ -118,13 +118,13 @@
 	--form-elem-height: 2rem;
 
 	/* Major Components */
-	--top-nav-height: 4rem;
+	--top-nav-height: 2rem;
 	--article-actions-container-height: 2rem;
 	--icon-size: 1rem;
 	--sticky-header-without-actions-height: calc(var(--top-nav-height) + 1px);
 	--sticky-header-with-actions-height: calc(var(--sticky-header-without-actions-height) + var(--article-actions-container-height) + 1px);
 
-	font-size: 15.5px;
+	font-size: 14px;
 }
 
 @media screen and (min-width: $screen-md) {
@@ -174,6 +174,8 @@ body {
 	//background-image: var(--background-img);
 	-webkit-scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
 	scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
+	display: flex;
+	flex-direction: column;
 }
 
 body:not(textarea) {

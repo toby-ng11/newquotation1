@@ -1,12 +1,14 @@
 <?php
 $user = $this->userHelper();
+$controller = $this->currentController ?? '';
+$action     = $this->currentAction ?? '';
 ?>
 
 <div class="sticky-header-container">
   <header class="top-navigation">
     <div class="container">
       <div class="top-navigation-wrap">
-        <a href="http://devquotation.centura.local" class="logo" aria-label="Centura Quotation homepage">
+        <a href="https://devquotation.centura.local" class="logo" aria-label="Centura Quotation homepage">
           <svg id="centura-logo" width="200" height="20" viewBox="0 0 200 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" role="img">
             <title>Centura Quotation Portal</title>
             <path d="M113.755 0.361084H87.4381V5.40201H97.9096V19.524H103.284V5.40201H113.755V0.361084Z" />
@@ -28,30 +30,67 @@ $user = $this->userHelper();
         </button>
       </div>
 
+      <nav class="main-nav" id="leftSide">
+        <ul id="menu" class="nav nav-wrapper" x-data="navUnderline()" x-init="init">
+          <?php if ($this->escapeHtml($user['sale_role']) == 'admin') { ?>
+            <li class="top-level-entry-container">
+              <a href="/index/admin"
+                hx-get="/index/admin"
+                hx-target="#content"
+                hx-swap="innerHTML"
+                @click="setActive($event)"
+                @mouseenter="setHover($event)"
+                @mouseleave="clearHover()"
+                title="Admin Dashboard"
+                class="top-level-entry<?= ($action === 'admin') ? ' active' : '' ?>">Admin</a>
+            </li>
+          <?php } ?>
+
+          <li class="top-level-entry-container">
+            <a href="/index/home"
+              hx-get="/index/home"
+              hx-target="#content"
+              hx-swap="innerHTML"
+              @click="setActive($event)"
+              @mouseenter="setHover($event)"
+              @mouseleave="clearHover()"
+              title="Home Dashboard"
+              class="top-level-entry<?= ($action === 'home') ? ' active' : '' ?>">Home</a>
+          </li>
+
+          <?php if ($this->escapeHtml($user['approve_id']) ?? '' != null) { ?>
+            <li class="top-level-entry-container">
+              <a href="/index/approval"
+                hx-get="/index/approval"
+                hx-target="#content"
+                hx-swap="innerHTML"
+                @click="setActive($event)"
+                @mouseenter="setHover($event)"
+                @mouseleave="clearHover()"
+                title="Approve Dashboard"
+                class="top-level-entry<?= ($action === 'approval') ? ' active' : '' ?>">Approval</a>
+            </li>
+          <?php } ?>
+
+          <li class="top-level-entry-container">
+            <a href="/index/architect"
+              hx-get="/index/architect"
+              hx-target="#content"
+              hx-swap="innerHTML"
+              @click="setActive($event)"
+              @mouseenter="setHover($event)"
+              @mouseleave="clearHover()"
+              title="Architect Dashboard"
+              class="top-level-entry<?= ($action === 'architect') ? ' active' : '' ?>">Architect</a>
+          </li>
+        </ul>
+
+        <div x-ref="underline" class="nav-underline"></div>
+      </nav>
+
+
+
       <div class="top-navigation-main">
-        <nav class="main-nav" id="leftSide">
-          <ul id="menu" class="nav">
-            <?php if ($this->escapeHtml($user['sale_role']) == 'admin') { ?>
-              <li class="top-level-entry-container">
-                <a href="/index/admin" title="admin" class="top-level-entry">Admin Portal</a>
-              </li>
-            <?php } ?>
-
-            <li class="top-level-entry-container">
-              <a href="/index/project" class="top-level-entry">Project Portal</a>
-            </li>
-
-            <?php if ($this->escapeHtml($user['approve_id']) ?? '' != null) { ?>
-              <li class="top-level-entry-container">
-                <a href="/index/approval" title="approve" class="top-level-entry">Approval Portal</a>
-              </li>
-            <?php } ?>
-
-            <li class="top-level-entry-container">
-              <a href="/index/architect" class="top-level-entry">Architect Portal</a>
-            </li>
-          </ul>
-        </nav>
 
         <div class="theme-switcher-menu">
           <button type="button" class="button action has-icon theme-switcher-menu small" aria-haspopup="menu">
@@ -63,7 +102,7 @@ $user = $this->userHelper();
         </div>
 
         <div class="top-level-entry-container user-menu">
-          <button type="button" id="centura-account-button" title="User account" aria-expanded="false"  class="button action top-level-entry menu-toggle user-menu-toggle" aria-controls="centura-account" aria-haspopup="menu">
+          <button type="button" id="centura-account-button" title="User account" aria-expanded="false" class="button action top-level-entry menu-toggle user-menu-toggle" aria-controls="centura-account" aria-haspopup="menu">
             <span class="button-wrap">
               <div class="avatar-wrap" aria-hidden="true">
                 <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

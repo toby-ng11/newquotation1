@@ -1,0 +1,168 @@
+<?php
+
+$this->headTitle('Project portal')->setSeparator(' - ')->setAutoEscape(false);
+$user = $this->user;
+$company = DEFAULT_COMPANY;
+$ownTableCount = $this->ownTableCount;
+$assignTableCount = $this->assignTableCount;
+$otherTableCount = $this->otherTableCount;
+$quoteTableCount = $this->quoteTableCount;
+$noteTableCount = $this->noteTableCount;
+
+$hour = date('H'); // 24-hour format of the current hour
+
+if ($hour >= 5 && $hour < 12) {
+    $greeting = "Good morning";
+} elseif ($hour >= 12 && $hour < 18) {
+    $greeting = "Good afternoon";
+} else {
+    $greeting = "Good evening";
+}
+?>
+
+<!-- Title area -->
+<div class="main-page-content">
+    <header class="main-page-content-header">
+        <h1><?= $greeting ?>, <?= $user['first_name'] ?>!</h1>
+        <p>Here's the quick summary your projects and quotes.</p>
+    </header>
+
+    <div class="options-menu">
+        <button class="quick-link options-button" id="options-button" type="button">
+            <span class='icon icon-menu'></span>
+            Options
+        </button>
+
+        <!-- Right panel -->
+        <div class="sidebar-container" id="options-menu-items">
+            <a href="/project" target="_blank" class='button quick-link add-project' title="Add new project">
+                <span class='icon icon-add'></span>
+                Add Project</a>
+        </div>
+    </div>
+
+    <section class="fade-in-up" aria-labelledby="my_projects" id="section1" data-nav="My Projects">
+        <div class="widget-table">
+            <table width="100%" class="sTable display nowrap" id='dashboard-home-own-table' data-init="homeOwnProject">
+                <thead>
+                    <tr>
+                        <th>Project ID</th>
+                        <th>Project Name</th>
+                        <th>Shared</th>
+                        <th>Segment</th>
+                        <th>Specifier</th>
+                        <th>Create Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Make Quote</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+
+    <section class="fade-in-up" aria-labelledby="assigned_projects" id="section2" data-nav="Assigned Projects">
+        <div class="widget-table">
+            <table width="100%" class="sTable display nowrap" id='dashboard-home-assigned-table' data-init="homeSharedProject">
+                <thead>
+                    <tr>
+                        <th>Quote ID</th>
+                        <th>Project Name</th>
+                        <th>Owner</th>
+                        <th>Segment</th>
+                        <th>Specifier</th>
+                        <th>Create Date</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Make Quote</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+
+    <?php if ($user['approve_id'] != null) { ?>
+        <section class="fade-in-up" aria-labelledby="other_projects" id="section3" data-nav="Other Projects">
+            <div class="widget-table">
+                <table width="100%" class="sTable display nowrap" id='dashboard-home-other-table' data-init="homeOtherProject">
+                    <thead>
+                        <tr>
+                            <th>Project ID</th>
+                            <th>Project Name</th>
+                            <th>Owner</th>
+                            <th>Shared</th>
+                            <th>Segment</th>
+                            <th>Specifier</th>
+                            <th>Create Date</th>
+                            <th>Due Date</th>
+                            <th>Make Quote</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
+    <?php } ?>
+
+    <section class="fade-in-up" aria-labelledby="my_quotes" <?php if ($user['approve_id'] != null) { ?> id="section4" <?php } else { ?> id="section3" <?php } ?> data-nav="My Quotes">
+        <div class="widget-table">
+            <table width="100%" class="sTable display nowrap" id='dashboard-home-quote-table' data-init="homeQuote">
+                <thead>
+                    <tr>
+                        <th>Quote ID</th>
+                        <th>Project ID</th>
+                        <th>Project Name</th>
+                        <th>Quote Date</th>
+                        <th>Expire Date</th>
+                        <th>Ship Required Date</th>
+                        <th>Company Name</th>
+                        <th>Project Status</th>
+                        <th>Approval Status</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+
+    <section class="fade-in-up" aria-labelledby="follow_up_logs" <?php if ($user['approve_id'] != null) { ?> id="section5" <?php } else { ?> id="section4" <?php } ?> data-nav="Follow Up Logs">
+        <div class="widget-table">
+            <table width="100%" class="sTable display" id='dashboard-home-note-table' data-init="homeNote">
+                <thead>
+                    <tr>
+                        <th>Log Time</th>
+                        <th>Project ID</th>
+                        <th>Project Name</th>
+                        <th>Next Action</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+</div>
+
+<!-- Right panel -->
+<div class="sidebar-container">
+    <aside id="sidebar-quicklinks" class="sidebar">
+        <nav aria-label="Actions" class="sidebar-inner">
+            <div class="sidebar-inner-nav">
+                <div class="quick-links">
+                    <ol>
+                        <li>
+                            <a href="/project/" target="_blank" class='quick-link add_pro' title="Add new project">
+                                <span class='icon icon-add'></span>
+                                Add Project
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </nav>
+    </aside>
+</div>
+
+<script>
+    window.ownTableCount = <?= $ownTableCount ?>;
+    window.assignTableCount = <?= $assignTableCount ?>;
+    window.otherTableCount = <?= $otherTableCount ?>;
+    window.quoteTableCount = <?= $quoteTableCount ?>;
+    window.noteTableCount = <?= $noteTableCount ?>;
+</script>

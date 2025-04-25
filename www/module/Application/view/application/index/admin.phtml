@@ -1,70 +1,77 @@
-
 <?php
 
 $this->headTitle('Admin portal')->setSeparator(' - ')->setAutoEscape(false);
 $user = $this->user;
+
+$hour = date('H'); // 24-hour format of the current hour
+
+if ($hour >= 5 && $hour < 12) {
+    $greeting = "Good morning";
+} elseif ($hour >= 12 && $hour < 18) {
+    $greeting = "Good afternoon";
+} else {
+    $greeting = "Good evening";
+}
 ?>
 
 <!-- Title area -->
-<main id="content" class="main-content">
-    <div class="main-page-content">
-        <header class="main-page-content-header">
-            <div class="options-menu">
-                <button class="quick-link options-button" id="options-button" type="button">
-                    <span class='icon icon-menu'></span>
-                    <span class="options-button-text">Options</span>
-                </button>
+<div class="main-page-content">
+    <header class="main-page-content-header">
+        <h1><?= $greeting ?>, <?= $user['first_name'] ?>!</h1>
+        <p>Here's all projects and quotes</p>
+    </header>
 
-                <!-- Right panel -->
-                <div class="sidebar-container" id="options-menu-items">
-                    <a href="/project" target="_blank" class='button quick-link add-project' title="Add new project">
-                        <span class='icon icon-add'></span>
-                        Add Project</a>
-                </div>
-            </div>
+    <div class="options-menu">
+        <button class="quick-link options-button" id="options-button" type="button">
+            <span class='icon icon-menu'></span>
+            <span class="options-button-text">Options</span>
+        </button>
 
-            <h1>Welcome Back, <span style="font-weight: 300;"><?php echo $user['name'] ?></span></h1>
-            <p>Here's all projects and quotes</p>
-        </header>
-
-        <section class="fade-in-up" aria-labelledby="all_projects" id="section1" data-nav="All Projects">
-            <div class="widget-table">
-                <table width="100%" class="sTable display nowrap" id="admin-project-table">
-                    <thead>
-                        <tr>
-                            <th>Quote #</th>
-                            <th>Name</th>
-                            <th>Owner</th>
-                            <th>Shared</th>
-                            <th>Create Date</th>
-                            <th>Due Date</th>
-                            <th>Architect</th>
-                            <th>Market Segment</th>
-                            <th>Status</th>
-                            <th>Make Quote</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </section>
-
-        <section class="fade-in-up" aria-labelledby="all_quotes" id="section2" data-nav="All Quotes">
-            <div class="widget-table">
-                <table width="100%" class="sTable display nowrap" id='admin-quote-table'>
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Project Name</th>
-                            <th>Segment</th>
-                            <th>Quote Date</th>
-                            <th>Expire Date</th>
-                            <th>Ship Required Date</th>
-                            <th>Project Status</th>
-                            <th>Approval</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </section>
+        <!-- Right panel -->
+        <div class="sidebar-container" id="options-menu-items">
+            <a href="/project" target="_blank" class='button quick-link add-project' title="Add new project">
+                <span class='icon icon-add'></span>
+                Add Project</a>
+        </div>
     </div>
-</main>
+
+    <section class="fade-in-up" aria-labelledby="all_projects" id="section1" data-nav="All Projects">
+        <div class="widget-table">
+            <table width="100%" class="sTable display nowrap" id="admin-project-table" data-init="adminProject">
+                <thead>
+                    <tr>
+                        <th>Quote #</th>
+                        <th>Name</th>
+                        <th>Owner</th>
+                        <th>Shared</th>
+                        <th>Create Date</th>
+                        <th>Due Date</th>
+                        <th>Architect</th>
+                        <th>Market Segment</th>
+                        <th>Status</th>
+                        <th>Make Quote</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+
+    <section class="fade-in-up" aria-labelledby="all_quotes" id="section2" data-nav="All Quotes">
+        <div class="widget-table">
+            <table width="100%" class="sTable display nowrap" id='admin-quote-table' data-init="adminQuote">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Project Name</th>
+                        <th>Segment</th>
+                        <th>Quote Date</th>
+                        <th>Expire Date</th>
+                        <th>Ship Required Date</th>
+                        <th>Project Status</th>
+                        <th>Approval</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </section>
+</div>

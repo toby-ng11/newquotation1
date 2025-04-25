@@ -49,10 +49,24 @@ class Module implements ConfigProviderInterface
         $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function ($e) {
             $response = $e->getResponse();
             $headers = $response->getHeaders();
-    
+
             $headers->addHeaderLine('Cache-Control', 'no-cache');
             $headers->addHeaderLine('Pragma', '');
             $headers->addHeaderLine('Expires', '');
+            //$headers->addHeaderLine('Content-Type', 'charset=utf-8');
+
+            $routeMatch = $e->getRouteMatch();
+
+            if (!$routeMatch) {
+                return;
+            }
+
+            $controller = $routeMatch->getParam('controller');
+            $action     = $routeMatch->getParam('action');
+
+            $viewModel = $e->getViewModel();
+            $viewModel->setVariable('currentController', $controller);
+            $viewModel->setVariable('currentAction', $action);
         }, 100);
     }
 

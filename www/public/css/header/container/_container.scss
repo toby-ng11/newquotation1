@@ -3,8 +3,9 @@
 .container {
 	margin-left: auto;
 	margin-right: auto;
-	max-width: var(--max-width);
 	padding-left: var(--gutter);
 	padding-right: var(--gutter);
+	padding-top: 1rem;
+	padding-bottom: 1rem;
 	width: 100%;
 }

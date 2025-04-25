@@ -875,76 +875,11 @@ kbd {
   display: none;
 }
 
-/*.sidebar-container {
-  --offset: var(--sticky-header-with-actions-height);
-  --max-height: calc(100vh - var(--offset));
-
-  @media screen and (min-width: $screen-md) and (min-height: $screen-height-place-limit) {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  max-height: var(--max-height);
-  position: sticky;
-  top: var(--offset);
-  z-index: var(--z-index-sidebar-mobile);
-
-  @media screen and (min-width: $screen-md) {
-    z-index: auto;
-
-    .sidebar {
-      mask-image: linear-gradient(
-        to bottom,
-        rgb(0, 0, 0) 0% calc(100% - 3rem),
-        rgba(0, 0, 0, 0) 100%
-      );
-    }
-
-    @media screen and not (min-height: $screen-height-place-limit) {
-      overflow: auto;
-    }
-  }
-
-  &.toc-container,
-  .toc-container {
-    .place {
-      grid-area: toc;
-      margin: 0;
-    }
-    @media screen and (min-width: $screen-xl) {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      height: calc(100vh - var(--offset));
-      mask-image: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0) 0%,
-        rgb(0, 0, 0) 3rem calc(100% - 3rem),
-        rgba(0, 0, 0, 0) 100%
-      );
-      overflow: auto;
-      position: sticky;
-      top: var(--offset);
-
-      .place {
-        margin: 1rem 0;
-        padding-bottom: 3rem;
-      }
-    }
-    @media screen and (max-width: #{$screen-md - 1}) {
-      .place {
-        display: none;
-      }
-    }
-  }
-  @media screen and (min-width: $screen-xl) {
-    display: contents;
-
-    .sidebar {
-      mask-image: none;
-    }
-  }
-}*/
+.wrapper-1 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
 
 @keyframes ai-explain-highlight-frames {
   0% {

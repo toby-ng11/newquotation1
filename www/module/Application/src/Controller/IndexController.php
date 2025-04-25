@@ -56,12 +56,19 @@ class IndexController extends AbstractActionController
             }
         }
 
-        return new ViewModel([
-            'user' => $user
+        $viewModel = new ViewModel([
+            'user' => $this->userService->getCurrentUser(),
         ]);
+    
+        // If HTMX request, skip layout
+        if ($this->getRequest()->getHeader('HX-Request')) {
+            $viewModel->setTerminal(true);
+        }
+    
+        return $viewModel;
     }
 
-    public function projectAction()
+    public function homeAction()
     {
         $user = $this->userService->getCurrentUser();
 
@@ -92,7 +99,7 @@ class IndexController extends AbstractActionController
             }
         }
 
-        return new ViewModel([
+        $viewModel = new ViewModel([
             'user' => $user,
             'ownTableCount' => $ownTableCount,
             'assignTableCount' => $assignTableCount,
@@ -100,6 +107,13 @@ class IndexController extends AbstractActionController
             'quoteTableCount' => $quoteTableCount,
             'noteTableCount' => $noteTableCount
         ]);
+
+        // If HTMX request, skip layout
+        if ($this->getRequest()->getHeader('HX-Request')) {
+            $viewModel->setTerminal(true);
+        }
+    
+        return $viewModel;
     }
 
     public function approvalAction()
@@ -124,20 +138,34 @@ class IndexController extends AbstractActionController
             }
         }
 
-        return new ViewModel([
+        $viewModel = new ViewModel([
             'user' => $user,
             'waitingTableCount' => $waitingTableCount,
             'approvedTableCount' => $approvedTableCount,
-            'disapprovedTableCount' => $disapprovedTableCount,
+            'disapprovedTableCount' => $disapprovedTableCount
         ]);
+
+        // If HTMX request, skip layout
+        if ($this->getRequest()->getHeader('HX-Request')) {
+            $viewModel->setTerminal(true);
+        }
+
+        return $viewModel;
     }
 
     public function architectAction()
     {
         $user = $this->userService->getCurrentUser();
 
-        return new ViewModel([
+        $viewModel =  new ViewModel([
             'user' => $user
         ]);
+
+        // If HTMX request, skip layout
+        if ($this->getRequest()->getHeader('HX-Request')) {
+            $viewModel->setTerminal(true);
+        }
+
+        return $viewModel;
     }
 }

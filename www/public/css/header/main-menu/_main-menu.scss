@@ -8,26 +8,25 @@ ul.nav {
 	margin-top: 1rem;
 }
 
-
 /* Media Queries */
 @media screen and (min-width: 992px) {
-	
-	ul.nav{
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    margin: 0 auto 0 0;
+
+	ul.nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-around;
+		margin: 0 auto 0 0;
 	}
 
-	ul.nav .forms{
-	flex-shrink: 0;
-}
+	ul.nav .forms {
+		flex-shrink: 0;
+	}
 
 
 }
 
 @media screen and (min-width: 1200px) {
-	ul.nav{
-    gap: 1rem;
+	ul.nav {
+		gap: .5rem;
 	}
 }

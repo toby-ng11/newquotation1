@@ -7,17 +7,14 @@ $disapprovedTableCount = $this->disapprovedTableCount;
 $maintainenceMode = 0;
 if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 ?>
-    <main id="content" class="main-content">
         <div class="main-page-content">
             <header class="main-page-content-header">
                 <h1>This page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h1>
             </header>
         </div>
-    </main>
 <?php } else { ?>
 
     <!-- Main page -->
-    <main id="content" class="main-content">
         <div class="main-page-content">
             <header class="main-page-content-header">
                 <div class="options-menu">
@@ -40,7 +37,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 
             <section class="active fade-in-up">
                 <div class="widget-table">
-                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-waiting-table'>
+                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-waiting-table' data-init="approvalWaiting">
                         <thead>
                             <tr>
                                 <th>Quote ID</th>
@@ -60,7 +57,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 
             <section class="active fade-in-up">
                 <div class="widget-table">
-                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-approved-table'>
+                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-approved-table' data-init="approvalApproved">
                         <thead>
                             <tr>
                                 <th>Quote ID</th>
@@ -82,7 +79,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 
             <section class="active fade-in-up">
                 <div class="widget-table">
-                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-disapproved-table'>
+                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-disapproved-table' data-init="approvalDisapproved">
                         <thead>
                             <tr>
                                 <th>Quote ID</th>
@@ -102,13 +99,12 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                 </div>
             </section>
         </div>
-    </main>
 
 <?php }
 ?>
 
 <script>
-    let waitingTableCount = <?= $waitingTableCount ?>;
-    let approvedTableCount = <?= $approvedTableCount ?>;
-    let disapprovedTableCount = <?= $disapprovedTableCount ?>;
+    window.waitingTableCount = <?= $waitingTableCount ?>;
+    window.approvedTableCount = <?= $approvedTableCount ?>;
+    window.disapprovedTableCount = <?= $disapprovedTableCount ?>;
 </script>

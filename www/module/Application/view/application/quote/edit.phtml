@@ -39,355 +39,389 @@ $maintainenceMode = 0;
 
 if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 ?>
-	<main id="content" class="main-content">
-		<div class="main-page-content">
-			<header class="main-page-content-header">
-				<h1>An error has occured :&#40;</h1>
-				<h2>Maybe this page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h2>
-			</header>
-		</div>
-	</main>
+	<div class="main-page-content">
+		<header class="main-page-content-header">
+			<h1>An error has occured :&#40;</h1>
+			<h2>Maybe this page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h2>
+		</header>
+	</div>
 <?php } else { ?>
 
 	<!-- Title area -->
-	<main id="content" class="main-content">
-		<div class="main-page-content">
-			<header class="main-page-content-header">
-				<div class="options-menu">
-					<button class="quick-link options-button" id="options-button" type="button">
-						<span class='icon icon-menu'></span>
-						Options
-					</button>
+	<div class="main-page-content">
+		<header class="main-page-content-header">
+			<div class="options-menu">
+				<button class="quick-link options-button" id="options-button" type="button">
+					<span class='icon icon-menu'></span>
+					Options
+				</button>
 
-					<!-- Right panel -->
-					<div class="sidebar-container" id="options-menu-items">
-						<a class='button quick-link make-quote' title="Make quote">
-							<span class='icon icon-dollar'></span>
-							Add new quote
-						</a>
-						<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
+				<!-- Right panel -->
+				<div class="sidebar-container" id="options-menu-items">
+					<a class='button quick-link make-quote' title="Make quote">
+						<span class='icon icon-dollar'></span>
+						Add new quote
+					</a>
+					<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
                     <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-						<a class="button quick-link" href="/quote/<?= $quoteID ?>/export" title="Print this quote">
-							<span class='icon icon-pdf'></span>
-							Print Quote</a>
-						<a class="button quick-link" target="_blank" href="/project/<?= $project['project_id'] ?>/edit" title="Go to project for this quote">
-							<span class='icon icon-external'></span>
-							Go to Project</a>
-						<?php
-						switch ($quoteStatusID) {
-							case $approved: ?>
-								<a class="button quick-link" href="/mail/quote/id/<?= $quoteID ?>" title="mail">
-									<span class='icon icon-mail'></span>
-									Mail Quote</a>
+					<a class="button quick-link" href="/quote/<?= $quoteID ?>/export" title="Print this quote">
+						<span class='icon icon-pdf'></span>
+						Print Quote</a>
+					<a class="button quick-link" target="_blank" href="/project/<?= $project['project_id'] ?>/edit" title="Go to project for this quote">
+						<span class='icon icon-external'></span>
+						Go to Project</a>
+					<?php
+					switch ($quoteStatusID) {
+						case $approved: ?>
+							<a class="button quick-link" href="/mail/quote/id/<?= $quoteID ?>" title="mail">
+								<span class='icon icon-mail'></span>
+								Mail Quote</a>
+						<?php break;
+
+						case $waitingApprove: ?>
+							<a href="/quote/unsubmit/id/<?= $quoteID ?>" title="" class='button quick-link undo-submit'>
+								<span class='icon icon-undo'></span>
+								Undo Submit</a>
 							<?php break;
 
-							case $waitingApprove: ?>
-								<a href="/quote/unsubmit/id/<?= $quoteID ?>" title="" class='button quick-link undo-submit'>
-									<span class='icon icon-undo'></span>
-									Undo Submit</a>
-								<?php break;
+						default:
+							if ($quoteStatusID != 0) { ?>
+								<a href="/quote/ready/id/<?= $quoteID ?>" title="" class='button quick-link ready_quote'>
+									<span class='icon icon-approval'></span>
+									Submit Approval</a>
+						<?php }
+							break;
+					}
+					if ($quoteStatusID != $approved) { ?>
+						<a href="#" title="" class='button quick-link delete_quote'>
+							<span class='icon icon-trash'></span>
+							Delete Quote</a>
+					<?php } ?>
+				</div>
+			</div>
 
-							default:
-								if ($quoteStatusID != 0) { ?>
-									<a href="/quote/ready/id/<?= $quoteID ?>" title="" class='button quick-link ready_quote'>
-										<span class='icon icon-approval'></span>
-										Submit Approval</a>
-							<?php }
-								break;
-						}
-						if ($quoteStatusID != $approved) { ?>
-							<a href="#" title="" class='button quick-link delete_quote'>
-								<span class='icon icon-trash'></span>
-								Delete Quote</a>
+			<h1>Edit Quote</h1>
+		</header>
+
+		<section class="fade-in-up" aria-labelledby="widget-board" id="section1" data-nav="Widget Board">
+			<div class="widget-information">
+				<div class="widget-table dashboard">
+					<div class="project-information project-name">
+						<h2><?= $project['project_name'] ?></h2>
+						<p><?= $project['project_address'] ?></p>
+						</br>
+						<p>by <b><?= $project['owner_id'] ?></b></p>
+						<?php if (($project['shared_id']) != null) { ?>
+							<p>shared with <b><?= $project['shared_id'] ?></b></p>
 						<?php } ?>
 					</div>
 				</div>
 
-				<h1>Edit Quote</h1>
-			</header>
-
-			<section class="fade-in-up" aria-labelledby="widget-board" id="section1" data-nav="Widget Board">
-				<div class="widget-information">
-					<div class="widget-table dashboard">
-						<div class="project-information project-name">
-							<h2><?= $project['project_name'] ?></h2>
-							<p><?= $project['project_address'] ?></p>
-							</br>
-							<p>by <b><?= $project['owner_id'] ?></b></p>
-							<?php if (($project['shared_id']) != null) { ?>
-								<p>shared with <b><?= $project['shared_id'] ?></b></p>
-							<?php } ?>
-						</div>
+				<div class="widget-table dashboard">
+					<div class="project-information">
+						<p>P21 Order ID</p>
+						<h2><?php if ($oeID != "") {
+								echo $oeID;
+							} else {
+								echo 'Unavailable';
+							} ?></h2>
 					</div>
+				</div>
 
-					<div class="widget-table dashboard">
-						<div class="project-information">
-							<p>P21 Order ID</p>
-							<h2><?php if ($oeID != "") {
-									echo $oeID;
-								} else {
-									echo 'Unavailable';
-								} ?></h2>
-						</div>
+				<div class="widget-table dashboard">
+					<div class="project-information">
+						<p>Project status</p>
+						<h2><?= $project['status_desc'] ?></h2>
 					</div>
+				</div>
 
-					<div class="widget-table dashboard">
-						<div class="project-information">
-							<p>Project status</p>
-							<h2><?= $project['status_desc'] ?></h2>
-						</div>
+				<div class="widget-table dashboard">
+					<div class="project-information">
+						<p>Taker</p>
+						<h2><?= $quote['taker'] ?? "";
+							?></h2>
 					</div>
+				</div>
 
-					<div class="widget-table dashboard">
-						<div class="project-information">
-							<p>Taker</p>
-							<h2><?= $quote['taker'] ?? "";
-								?></h2>
-						</div>
-					</div>
-
-					<?php
-					if ($quoteStatusID != 0 and strcmp($quote['delete_flag'], "N") == 0) {
-						switch ($quoteStatusID) {
-							case $approved: ?>
-								<div class="widget-table dashboard quote-status status-approved">
-									<div class="project-information">
-										<p>Quote status</p>
-										<h2>Approved</h2>
-									</div>
+				<?php
+				if ($quoteStatusID != 0 and strcmp($quote['delete_flag'], "N") == 0) {
+					switch ($quoteStatusID) {
+						case $approved: ?>
+							<div class="widget-table dashboard quote-status status-approved">
+								<div class="project-information">
+									<p>Quote status</p>
+									<h2>Approved</h2>
 								</div>
-							<?php break;
-
-							case $waitingApprove: ?>
-								<div class="widget-table dashboard quote-status status-waiting">
-									<div class="project-information">
-										<p>Quote status</p>
-										<h2>Waiting for approval</h2>
-									</div>
-								</div>
-							<?php break;
-
-							case $disapproved: ?>
-								<div class="widget-table dashboard quote-status status-disapproved">
-									<div class="project-information">
-										<p>Quote status</p>
-										<h2>Disapproved</h2>
-									</div>
-								</div>
-							<?php break;
-
-							default: ?>
-								<div class="widget-table dashboard quote-status status-notsubmitted">
-									<div class="project-information">
-										<p>Quote status</p>
-										<h2>Not submitted</h2>
-									</div>
-								</div>
+							</div>
 						<?php break;
-						}
-					} else {  ?>
-						<div class="widget-table dashboard quote-status status-disapproved">
-							<div class="project-information">
-								<p>Quote status</p>
-								<h2>Deleted</h2>
+
+						case $waitingApprove: ?>
+							<div class="widget-table dashboard quote-status status-waiting">
+								<div class="project-information">
+									<p>Quote status</p>
+									<h2>Waiting for approval</h2>
+								</div>
+							</div>
+						<?php break;
+
+						case $disapproved: ?>
+							<div class="widget-table dashboard quote-status status-disapproved">
+								<div class="project-information">
+									<p>Quote status</p>
+									<h2>Disapproved</h2>
+								</div>
+							</div>
+						<?php break;
+
+						default: ?>
+							<div class="widget-table dashboard quote-status status-notsubmitted">
+								<div class="project-information">
+									<p>Quote status</p>
+									<h2>Not submitted</h2>
+								</div>
+							</div>
+					<?php break;
+					}
+				} else {  ?>
+					<div class="widget-table dashboard quote-status status-disapproved">
+						<div class="project-information">
+							<p>Quote status</p>
+							<h2>Deleted</h2>
+						</div>
+					</div>
+				<?php } ?>
+			</div>
+		</section>
+
+		<!-- Form -->
+		<section class="fade-in-up" aria-labelledby="quote-detail" id="section2" data-nav="Quote Details">
+			<form action="/quote/<?= $quoteID ?>/edit" method='post' class="form" id="quote-content" data-save-btn="#form-btn-save-quote" data-form="#quoteForm">
+				<div class="widget-table" id="customer_info">
+					<div class="widget-header">
+						<div class="widget-title">
+							<h2>Quote details</h2>
+						</div>
+					</div>
+
+					<div class="line"></div>
+
+					<div class="widget-section">
+						<h3>Quote</h3>
+						<div class="formRow">
+							<input type="hidden" id='project_id' name='project_id' value="<?= $project['project_id'] ?>" />
+							<input type="hidden" id='lead_time_id' name='lead_time_id' value="<?= $quote['lead_time_id'] ?>" />
+							<div class="oneTwo">
+								<label for='quote_id'>Quote ID</label>
+								<input id='quote_id' type="text" value='<?= $quoteID ?>' readonly />
+							</div>
+							<div class="oneTwo">
+								<label for='quote_type'>Type</label>
+								<select name="quote_type_id" id='quote_type' class="validate[required]">
+									<option value="">Select Quote type</option>
+									<?php
+									foreach ($this->type as $t): ?>
+										<option value="<?= $t['type_id'] ?>" <?= ($t['type_id'] == $quote['type_id']) ? 'selected' : ''; ?>>
+											<?= $t['type_desc'] ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+
+							<div class="oneTwo">
+								<label for='ship_required_date'>Ship Required Date</label>
+								<input id='ship_required_date' type="text" class="flatpickr validate[required]" name='ship_required_date' value="<?php if ($quoteShipRequiredDate && $quoteShipRequiredDate > new DateTime('2000-01-01')) {
+																																						echo $quoteShipRequiredDate->format('Y-m-d');
+																																					} ?>" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="quote_date">Expire Date</label>
+								<input id="expire_date" name="expire_date" type="text" class="flatpickr" value='<?= $quoteExpireDate->format('Y-m-d') ?? '' ?>' />
+							</div>
+
+							<div class="oneTwo">
+								<label for='market_segment'>Project segment</label>
+								<input readonly id="market_segment" type="text" value='<?= $project['market_segment_desc'] ?>' />
+							</div>
+
+							<div class="oneTwo">
+								<label for='architect_rep_id'>Architectural Representative</label>
+								<input readonly id='architect_rep_id' name='architect_rep_id' type="text" value='<?= $project['architect_rep_name'] ?>' />
 							</div>
 						</div>
-					<?php } ?>
-				</div>
-			</section>
+					</div>
 
-			<!-- Form -->
-			<section class="fade-in-up" aria-labelledby="quote-detail" id="section2" data-nav="Quote Details">
-				<form action="/quote/<?= $quoteID ?>/edit" method='post' class="form" id="quote-content" data-save-btn="#form-btn-save-quote" data-form="#quoteForm">
-					<div class="widget-table" id="customer_info">
+					<div class="line"></div>
+
+					<div class="widget-section customer-section" data-type="main" id="main-customer-section">
 						<div class="widget-header">
 							<div class="widget-title">
-								<h2>Quote details</h2>
+								<h3>Customer</h3>
+							</div>
+							<div class="widget-button">
+								<?php if ($quoteStatusID != $approved) { ?>
+									<button type="button" class="button action has-icon new-customer small" id="add_new_mode">
+										<span class="button-wrap">
+											<span class="icon icon-add"></span>
+											New Customer
+										</span>
+									</button>
+									<button type="button" class="button action has-icon discard-customer small basic" style='display:none;' id="discard_new_mode">
+										<span class="button-wrap">
+											<span class="icon icon-undo"></span>
+											Discard Adding
+										</span>
+									</button>
+								<?php } ?>
 							</div>
 						</div>
+						<div class="formRow">
+							<input type="hidden" id="main_customer_id" name="customer_id" value="<?= $customer['customer_id']  ?>" />
+							<input type="hidden" id="main_salesrep_id" name="salesrep_id" value="<?= $customer['salesrep_id'] ?>" />
+							<div class="oneTwo required-field">
+								<label for="main_customer_name">Customer</label>
+								<input readonly id='main_customer_name' name='customer_name' type="text" value="<?= $customer['customer_name'] ?>" />
+							</div>
 
+							<div class="oneTwo">
+								<label for="main_company_id">Company ID</label>
+								<input type="text" name='company_id' id='main_company_id' value="<?= $customer['company_id'] ?>" readonly />
+							</div>
+
+							<div class="oneTwo">
+								<label for='main_salesrep_full_name'>Sales Representative</label>
+								<input id='main_salesrep_full_name' name='salesrep_full_name' type="text" value="<?= $customer['salesrep_full_name'] ?>" readonly />
+							</div>
+
+							<div class="oneTwo">
+								<label for="main_credit_term">Credit Terms</label>
+								<input id="main_credit_term" type="text" value="<?= $customer['terms_desc'] ?>" readonly />
+							</div>
+						</div>
+					</div>
+
+					<div class="line"></div>
+
+					<div class="widget-section">
+						<h3>Contact</h3>
+						<div class="formRow">
+							<input type="hidden" id="main_contact_id" name="contact_id" value="<?= $contact['contact_id'] ?>" />
+							<div class="oneTwo required-field">
+								<label for="main_contact_name">Contact</label>
+								<select id='main_contact_name' class="validate[required]">
+									<option value=''>-- Please search for a customer first --</option>
+									<?php
+									foreach ($contactList as $c) { ?>
+										<option value="<?= $c['contact_id'] ?>" <?php if ($c['contact_id'] == $quote['contact_id']) echo 'selected' ?>><?= $c['contact_full_name'] ?></option>
+									<?php }
+									?>
+								</select>
+							</div>
+
+							<div class="oneTwo">
+								<label for="main_first_name">First Name</label>
+								<input readonly id='main_first_name' name='first_name' type="text" value="<?= $contact['first_name'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="main_last_name">Last Name</label>
+								<input readonly id='main_last_name' name='last_name' type="text" value="<?= $contact['last_name'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="main_phys_address1">Address 1</label>
+								<input readonly id='main_phys_address1' name='phys_address1' type="text" value="<?= $contact['phys_address1'] ?>" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="main_phys_address2">Address 2</label>
+								<input readonly id='main_phys_address2' name='phys_address2' type="text" value="<?= $contact['phys_address2']  ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="main_phys_city">City</label>
+								<input readonly id='main_phys_city' name='phys_city' type="text" value="<?= $contact['phys_city'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="main_phys_state">Province</label>
+								<input readonly id='main_phys_state' name='phys_state' type="text" value="<?= $contact['phys_state'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="main_phys_postal_code">Postal Code</label>
+								<input readonly id='main_phys_postal_code' name='phys_postal_code' type="text" value="<?= $contact['phys_postal_code'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="main_phys_country">Country</label>
+								<input readonly id='main_phys_country' name='phys_country' type="text" value="<?= $contact['phys_country'] ?>">
+							</div>
+
+							<div class="oneTwo">
+								<label for="main_central_phone_number">Phone Number</label>
+								<input readonly id='main_central_phone_number' name='central_phone_number' type="text" class="maskPhoneExt" value="<?= $contact['central_phone_number'] ?>" />
+							</div>
+
+
+							<div class="oneTwo required-field">
+								<label for="main_email_address">Email</label>
+								<input readonly type="text" value="<?= $contact['email_address'] ?>" id='main_email_address' name='email_address'>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="line"></div>
+
+					<div class="widget-section">
+						<h3>Comment</h3>
+						<div class="formRow">
+							<div class="oneTwo">
+								<label for="quote-note">Quote Note</label>
+								<textarea id="quote-note" rows="5" cols="" name="note" placeholder="Add quote note here..."><?= $quote['note'] ?></textarea>
+							</div>
+						</div>
+					</div>
+
+					<?php if ($admin): ?>
 						<div class="line"></div>
-
 						<div class="widget-section">
-							<h3>Quote</h3>
+							<h3>Approval</h3>
 							<div class="formRow">
-								<input type="hidden" id='project_id' name='project_id' value="<?= $project['project_id'] ?>" />
-								<input type="hidden" id='lead_time_id' name='lead_time_id' value="<?= $quote['lead_time_id'] ?>" />
-								<div class="oneTwo">
-									<label for='quote_id'>Quote ID</label>
-									<input id='quote_id' type="text" value='<?= $quoteID ?>' readonly />
-								</div>
-								<div class="oneTwo">
-									<label for='quote_type'>Type</label>
-									<select name="quote_type_id" id='quote_type' class="validate[required]">
-										<option value="">Select Quote type</option>
-										<?php
-										foreach ($this->type as $t): ?>
-											<option value="<?= $t['type_id'] ?>" <?= ($t['type_id'] == $quote['type_id']) ? 'selected' : ''; ?>>
-												<?= $t['type_desc'] ?>
-											</option>
-										<?php endforeach; ?>
-									</select>
-								</div>
-
-								<div class="oneTwo">
-									<label for='ship_required_date'>Ship Required Date</label>
-									<input id='ship_required_date' type="text" class="flatpickr validate[required]" name='ship_required_date' value="<?php if ($quoteShipRequiredDate && $quoteShipRequiredDate > new DateTime('2000-01-01')) {
-																																							echo $quoteShipRequiredDate->format('Y-m-d');
-																																						} ?>" />
-								</div>
-
-								<div class="oneTwo">
-									<label for="quote_date">Expire Date</label>
-									<input id="expire_date" name="expire_date" type="text" class="flatpickr" value='<?= $quoteExpireDate->format('Y-m-d') ?? '' ?>' />
-								</div>
-
-								<div class="oneTwo">
-									<label for='market_segment'>Project segment</label>
-									<input readonly id="market_segment" type="text" value='<?= $project['market_segment_desc'] ?>' />
-								</div>
-
-								<div class="oneTwo">
-									<label for='architect_rep_id'>Architectural Representative</label>
-									<input readonly id='architect_rep_id' name='architect_rep_id' type="text" value='<?= $project['architect_rep_name'] ?>' />
-								</div>
-							</div>
-						</div>
-
-						<div class="line"></div>
-
-						<div class="widget-section customer-section" data-type="main" id="main-customer-section">
-							<div class="widget-header">
-								<div class="widget-title">
-									<h3>Customer</h3>
-								</div>
-								<div class="widget-button">
-									<?php if ($quoteStatusID != $approved) { ?>
-										<button type="button" class="button action has-icon new-customer small" id="add_new_mode">
-											<span class="button-wrap">
-												<span class="icon icon-add"></span>
-												New Customer
-											</span>
-										</button>
-										<button type="button" class="button action has-icon discard-customer small basic" style='display:none;' id="discard_new_mode">
-											<span class="button-wrap">
-												<span class="icon icon-undo"></span>
-												Discard Adding
-											</span>
-										</button>
+								<div class="oneTwo required-field">
+									<label for="price_approve_id">Quote Approval</label>
+									<?php if ($user['approve_id'] != null) { ?>
+										<select name="price_approve_id" id="price_approve_id" class="validate[required]">
+											<option value="">Select Approval</option>
+											<?php foreach ($this->approval as $a) { ?>
+												<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $quote['price_approve_id']) echo 'selected'; ?>><?= $user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company'] ?></option>
+											<?php } ?>
+										</select>
+									<?php } else { ?>
+										<select name="price_approve_id" id="price_approve_id">
+											<?php foreach ($this->approval as $a) { ?>
+												<?php if ($a['id'] == $quote['price_approve_id']) { ?><option value="<?= $a['id'] ?>" selected><?= $user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company'] ?></option> <?php } ?>
+											<?php } ?>
+										</select>
 									<?php } ?>
 								</div>
-							</div>
-							<div class="formRow">
-								<input type="hidden" id="main_customer_id" name="customer_id" value="<?= $customer['customer_id']  ?>" />
-								<input type="hidden" id="main_salesrep_id" name="salesrep_id" value="<?= $customer['salesrep_id'] ?>" />
+
 								<div class="oneTwo required-field">
-									<label for="main_customer_name">Customer</label>
-									<input readonly id='main_customer_name' name='customer_name' type="text" value="<?= $customer['customer_name'] ?>" />
-								</div>
-
-								<div class="oneTwo">
-									<label for="main_company_id">Company ID</label>
-									<input type="text" name='company_id' id='main_company_id' value="<?= $customer['company_id'] ?>" readonly />
-								</div>
-
-								<div class="oneTwo">
-									<label for='main_salesrep_full_name'>Sales Representative</label>
-									<input id='main_salesrep_full_name' name='salesrep_full_name' type="text" value="<?= $customer['salesrep_full_name'] ?>" readonly />
-								</div>
-
-								<div class="oneTwo">
-									<label for="main_credit_term">Credit Terms</label>
-									<input id="main_credit_term" type="text" value="<?= $customer['terms_desc'] ?>" readonly />
-								</div>
-							</div>
-						</div>
-
-						<div class="line"></div>
-
-						<div class="widget-section">
-							<h3>Contact</h3>
-							<div class="formRow">
-								<input type="hidden" id="main_contact_id" name="contact_id" value="<?= $contact['contact_id'] ?>" />
-								<div class="oneTwo required-field">
-									<label for="main_contact_name">Contact</label>
-									<select id='main_contact_name' class="validate[required]">
-										<option value=''>-- Please search for a customer first --</option>
-										<?php
-										foreach ($contactList as $c) { ?>
-											<option value="<?= $c['contact_id'] ?>" <?php if ($c['contact_id'] == $quote['contact_id']) echo 'selected' ?>><?= $c['contact_full_name'] ?></option>
-										<?php }
-										?>
+									<label for="lead_time_id">Lead Time</label>
+									<select name="lead_time_id" id="lead_time_id" class="validate[required]">
+										<option value="">Select Lead Time</option>
+										<?php foreach ($this->leadtime as $a) { ?>
+											<option value="<?= $a['lead_time_id'] ?>" <?php if ($quote['lead_time_id'] == $a['lead_time_id']) {
+																							echo 'selected';
+																						} ?>><?= $a['lead_time_desc'] ?></option>
+										<?php } ?>
 									</select>
 								</div>
-
-								<div class="oneTwo">
-									<label for="main_first_name">First Name</label>
-									<input readonly id='main_first_name' name='first_name' type="text" value="<?= $contact['first_name'] ?>">
-								</div>
-
-								<div class="oneTwo">
-									<label for="main_last_name">Last Name</label>
-									<input readonly id='main_last_name' name='last_name' type="text" value="<?= $contact['last_name'] ?>">
-								</div>
-
-								<div class="oneTwo">
-									<label for="main_phys_address1">Address 1</label>
-									<input readonly id='main_phys_address1' name='phys_address1' type="text" value="<?= $contact['phys_address1'] ?>" />
-								</div>
-
-								<div class="oneTwo">
-									<label for="main_phys_address2">Address 2</label>
-									<input readonly id='main_phys_address2' name='phys_address2' type="text" value="<?= $contact['phys_address2']  ?>">
-								</div>
-
-								<div class="oneTwo">
-									<label for="main_phys_city">City</label>
-									<input readonly id='main_phys_city' name='phys_city' type="text" value="<?= $contact['phys_city'] ?>">
-								</div>
-
-								<div class="oneTwo">
-									<label for="main_phys_state">Province</label>
-									<input readonly id='main_phys_state' name='phys_state' type="text" value="<?= $contact['phys_state'] ?>">
-								</div>
-
-								<div class="oneTwo">
-									<label for="main_phys_postal_code">Postal Code</label>
-									<input readonly id='main_phys_postal_code' name='phys_postal_code' type="text" value="<?= $contact['phys_postal_code'] ?>">
-								</div>
-
-								<div class="oneTwo">
-									<label for="main_phys_country">Country</label>
-									<input readonly id='main_phys_country' name='phys_country' type="text" value="<?= $contact['phys_country'] ?>">
-								</div>
-
-								<div class="oneTwo">
-									<label for="main_central_phone_number">Phone Number</label>
-									<input readonly id='main_central_phone_number' name='central_phone_number' type="text" class="maskPhoneExt" value="<?= $contact['central_phone_number'] ?>" />
-								</div>
-
-
-								<div class="oneTwo required-field">
-									<label for="main_email_address">Email</label>
-									<input readonly type="text" value="<?= $contact['email_address'] ?>" id='main_email_address' name='email_address'>
-								</div>
-
 							</div>
 						</div>
-
-						<div class="line"></div>
-
-						<div class="widget-section">
-							<h3>Comment</h3>
-							<div class="formRow">
-								<div class="oneTwo">
-									<label for="quote-note">Quote Note</label>
-									<textarea id="quote-note" rows="5" cols="" name="note" placeholder="Add quote note here..."><?= $quote['note'] ?></textarea>
-								</div>
-							</div>
-						</div>
-
-						<?php if ($admin): ?>
+						<?php else:
+						if ($quoteStatusID === $approved): ?>
 							<div class="line"></div>
 							<div class="widget-section">
 								<h3>Approval</h3>
@@ -423,266 +457,228 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 									</div>
 								</div>
 							</div>
-							<?php else:
-							if ($quoteStatusID === $approved): ?>
-								<div class="line"></div>
-								<div class="widget-section">
-									<h3>Approval</h3>
-									<div class="formRow">
-										<div class="oneTwo required-field">
-											<label for="price_approve_id">Quote Approval</label>
-											<?php if ($user['approve_id'] != null) { ?>
-												<select name="price_approve_id" id="price_approve_id" class="validate[required]">
-													<option value="">Select Approval</option>
-													<?php foreach ($this->approval as $a) { ?>
-														<option value="<?= $a['id'] ?>" <?php if ($a['id'] == $quote['price_approve_id']) echo 'selected'; ?>><?= $user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company'] ?></option>
-													<?php } ?>
-												</select>
-											<?php } else { ?>
-												<select name="price_approve_id" id="price_approve_id">
-													<?php foreach ($this->approval as $a) { ?>
-														<?php if ($a['id'] == $quote['price_approve_id']) { ?><option value="<?= $a['id'] ?>" selected><?= $user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company'] ?></option> <?php } ?>
-													<?php } ?>
-												</select>
-											<?php } ?>
-										</div>
+					<?php endif;
+					endif; ?>
 
-										<div class="oneTwo required-field">
-											<label for="lead_time_id">Lead Time</label>
-											<select name="lead_time_id" id="lead_time_id" class="validate[required]">
-												<option value="">Select Lead Time</option>
-												<?php foreach ($this->leadtime as $a) { ?>
-													<option value="<?= $a['lead_time_id'] ?>" <?php if ($quote['lead_time_id'] == $a['lead_time_id']) {
-																									echo 'selected';
-																								} ?>><?= $a['lead_time_desc'] ?></option>
-												<?php } ?>
-											</select>
-										</div>
-									</div>
-								</div>
-						<?php endif;
-						endif; ?>
-
-						<?php
-						if (!$admin) {
-							switch ($quoteStatusID) {
-								case $waitingApprove:
-									if ($quote['submit_by'] === $user['id']) {
-										$buttons = $btnSave . $btnUndoSubmit;
-									} else {
-										$buttons = $btnSave;
-									}
-									break;
-								case $disapproved:
-									$buttons = $btnSave . $btnSubmitAgain;
-									break;
-								case $approved:
-									// No buttons for user if approved
-									break;
-								default:
-									$buttons = $btnSave . $btnSubmit;
-									break;
-							}
-						} else {
-							// Admin logic
-							switch ($quoteStatusID) {
-								case $waitingApprove:
-									if ($quote['submit_by'] === $user['id']) {
-										$buttons = $btnSave . $btnUndoSubmit . $btnDisapprove . $btnApprove;
-									} else {
-										$buttons = $btnSave . $btnDisapprove . $btnApprove;
-									}
-									break;
-								case $approved:
-									$buttons = $btnSave . $btnUndoApprove;
-									break;
-								case $disapproved:
-									$buttons = $btnSave . $btnSubmitAgain;
-									break;
-								default:
-									$buttons = $btnSave . $btnSubmitApprove;
-									break;
-							}
+					<?php
+					if (!$admin) {
+						switch ($quoteStatusID) {
+							case $waitingApprove:
+								if ($quote['submit_by'] === $user['id']) {
+									$buttons = $btnSave . $btnUndoSubmit;
+								} else {
+									$buttons = $btnSave;
+								}
+								break;
+							case $disapproved:
+								$buttons = $btnSave . $btnSubmitAgain;
+								break;
+							case $approved:
+								// No buttons for user if approved
+								break;
+							default:
+								$buttons = $btnSave . $btnSubmit;
+								break;
 						}
+					} else {
+						// Admin logic
+						switch ($quoteStatusID) {
+							case $waitingApprove:
+								if ($quote['submit_by'] === $user['id']) {
+									$buttons = $btnSave . $btnUndoSubmit . $btnDisapprove . $btnApprove;
+								} else {
+									$buttons = $btnSave . $btnDisapprove . $btnApprove;
+								}
+								break;
+							case $approved:
+								$buttons = $btnSave . $btnUndoApprove;
+								break;
+							case $disapproved:
+								$buttons = $btnSave . $btnSubmitAgain;
+								break;
+							default:
+								$buttons = $btnSave . $btnSubmitApprove;
+								break;
+						}
+					}
 
-						// Render if buttons exist
-						if (!empty($buttons)):
-						?>
-							<div class="line"></div>
-							<div class="widget-footer">
-								<div class="widget-footer-button">
-									<?= $buttons ?>
-								</div>
+					// Render if buttons exist
+					if (!empty($buttons)):
+					?>
+						<div class="line"></div>
+						<div class="widget-footer">
+							<div class="widget-footer-button">
+								<?= $buttons ?>
 							</div>
-						<?php endif; ?>
-					</div>
-				</form>
-			</section>
-
-			<section class="fade-in-up" aria-labelledby="items" id="section3" data-nav="Items">
-				<div class="widget-table">
-					<div class="widget-header">
-						<div class="widget-title">
-							<h2>Items</h2>
 						</div>
-						<div class="widget-button">
-							<?php if ($quoteStatusID != $approved) { ?>
-								<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="widget-btn-add-item">
-									<span class="button-wrap">
-										<span class="icon icon-add"></span>
-										Add Item
-									</span>
-								</button>
-							<?php } ?>
+					<?php endif; ?>
+				</div>
+			</form>
+		</section>
 
-						</div>
+		<section class="fade-in-up" aria-labelledby="items" id="section3" data-nav="Items">
+			<div class="widget-table">
+				<div class="widget-header">
+					<div class="widget-title">
+						<h2>Items</h2>
 					</div>
+					<div class="widget-button">
+						<?php if ($quoteStatusID != $approved) { ?>
+							<button type="button" title="Add new item" class="button action has-icon add-item-button small" id="widget-btn-add-item">
+								<span class="button-wrap">
+									<span class="icon icon-add"></span>
+									Add Item
+								</span>
+							</button>
+						<?php } ?>
 
-					<div class="line"></div>
-
-					<div class="widget-section">
-						<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="item-table">
-							<thead>
-								<tr>
-									<th>Item</th>
-									<th>Quality</th>
-									<th>Unit Price</th>
-									<th>UOM</th>
-									<th>Total Price</th>
-									<th>Note</th>
-									<th>Options</th>
-								</tr>
-							</thead>
-						</table>
 					</div>
 				</div>
-			</section>
 
-			<div id="dialog-item" title="Add Item">
-				<form action="" class="dialog" id='dialog-item-form'>
-					<div class="dialog-form">
-						<div class="oneTwo required-field">
-							<label for="item_id">Item ID</label>
-							<input type="hidden" name="item_uid" id='item_uid'>
-							<input type="text" id="item_id" name='item_id' class="validate[required]"
-								placeholder="Search by ID or name">
-						</div>
+				<div class="line"></div>
 
-						<div class="oneTwo required-field">
-							<label for='uom'>Unit Of Measure</label>
-							<select name="uom" id='uom' class="validate[required]">
-								<option value=''>-- Search for item first --</option>
-							</select>
-						</div>
-
-						<div class="oneTwo required-field">
-							<label for='unit_price'>Price ($)</label>
-							<input type="text" class="validate[required,custom[number]]" name="unit_price" id='unit_price'
-								placeholder="*You can override the price" />
-						</div>
-
-						<div class="oneTwo required-field">
-							<label for='quantity'>Quantity</label>
-							<input type="text" name="quantity" id='quantity' class="validate[required,custom[number]]" />
-						</div>
-
-						<div class="oneTwo dialog-note">
-							<label for='note'>Note</label>
-							<textarea rows="8" name='note' id='note' maxlength="255"
-								class="validate[maxSize[255]]"></textarea>
-							<input type="hidden" id="is_edit" value='0' />
-						</div>
-					</div>
-				</form>
+				<div class="widget-section">
+					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="item-table" data-init="item">
+						<thead>
+							<tr>
+								<th>Item</th>
+								<th>Quality</th>
+								<th>Unit Price</th>
+								<th>UOM</th>
+								<th>Total Price</th>
+								<th>Note</th>
+								<th>Options</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
 			</div>
+		</section>
 
-			<div id="dialog-make-quote" title="Add Customer">
-				<form action="" class="dialog customer-section" data-type="dialog" id='dialog-make-quote-form'>
-					<h3>Customer</h3>
-					<div class="dialog-form-3">
-						<input type="hidden" id="dialog_customer_id" name="customer_id" value="">
-						<div class="oneTwo required-field">
-							<label for="dialog_customer_name">Customer</label>
-							<input type="text" value="" id="dialog_customer_name" class='tipN validate[required]' placeholder="Search by ID or name">
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_company_id">Company ID</label>
-							<input id="dialog_company_id" type="text">
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_salesrep_full_name">Sales Representative</label>
-							<input id="dialog_salesrep_full_name" type="text">
-						</div>
+		<div id="dialog-item" title="Add Item">
+			<form action="" class="dialog" id='dialog-item-form'>
+				<div class="dialog-form">
+					<div class="oneTwo required-field">
+						<label for="item_id">Item ID</label>
+						<input type="hidden" name="item_uid" id='item_uid'>
+						<input type="text" id="item_id" name='item_id' class="validate[required]"
+							placeholder="Search by ID or name">
 					</div>
 
-					<div class="line"></div>
-
-					<h3>Contact</h3>
-					<div class="dialog-form-3">
-						<input type="hidden" id="dialog_contact_id" name="dialog_contact_id" value="">
-						<div class="oneTwo required-field">
-							<label for="dialog_contact_name">Contact</label>
-							<select id="dialog_contact_name" class="validate[required]">
-								<option value=''>-- Please search for a customer first --</option>
-							</select>
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_first_name">First Name</label>
-							<input type="text" id="dialog_first_name">
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_last_name">Last Name</label>
-							<input type="text" id="dialog_last_name">
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_phys_address1">Address 1</label>
-							<input type="text" id="dialog_phys_address1">
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_phys_address2">Address 2</label>
-							<input type="text" id="dialog_phys_address2">
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_phys_city">City</label>
-							<input type="text" id="dialog_phys_city">
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_phys_state">Province</label>
-							<input type="text" id="dialog_phys_state">
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_phys_postal_code">Postal Code</label>
-							<input type="text" id="dialog_phys_postal_code">
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_phys_country">Country</label>
-							<input type="text" id="dialog_phys_country">
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_central_phone_number">Phone Number</label>
-							<input type="text" id="dialog_central_phone_number" class="maskPhoneExt">
-						</div>
-
-						<div class="oneTwo">
-							<label for="dialog_email_address">Email</label>
-							<input type="text" id="dialog_email_address">
-						</div>
+					<div class="oneTwo required-field">
+						<label for='uom'>Unit Of Measure</label>
+						<select name="uom" id='uom' class="validate[required]">
+							<option value=''>-- Search for item first --</option>
+						</select>
 					</div>
-				</form>
-			</div>
+
+					<div class="oneTwo required-field">
+						<label for='unit_price'>Price ($)</label>
+						<input type="text" class="validate[required,custom[number]]" name="unit_price" id='unit_price'
+							placeholder="*You can override the price" />
+					</div>
+
+					<div class="oneTwo required-field">
+						<label for='quantity'>Quantity</label>
+						<input type="text" name="quantity" id='quantity' class="validate[required,custom[number]]" />
+					</div>
+
+					<div class="oneTwo dialog-note">
+						<label for='note'>Note</label>
+						<textarea rows="8" name='note' id='note' maxlength="255"
+							class="validate[maxSize[255]]"></textarea>
+						<input type="hidden" id="is_edit" value='0' />
+					</div>
+				</div>
+			</form>
 		</div>
-	</main>
+
+		<div id="dialog-make-quote" title="Add Customer">
+			<form action="" class="dialog customer-section" data-type="dialog" id='dialog-make-quote-form'>
+				<h3>Customer</h3>
+				<div class="dialog-form-3">
+					<input type="hidden" id="dialog_customer_id" name="customer_id" value="">
+					<div class="oneTwo required-field">
+						<label for="dialog_customer_name">Customer</label>
+						<input type="text" value="" id="dialog_customer_name" class='tipN validate[required]' placeholder="Search by ID or name">
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_company_id">Company ID</label>
+						<input id="dialog_company_id" type="text">
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_salesrep_full_name">Sales Representative</label>
+						<input id="dialog_salesrep_full_name" type="text">
+					</div>
+				</div>
+
+				<div class="line"></div>
+
+				<h3>Contact</h3>
+				<div class="dialog-form-3">
+					<input type="hidden" id="dialog_contact_id" name="dialog_contact_id" value="">
+					<div class="oneTwo required-field">
+						<label for="dialog_contact_name">Contact</label>
+						<select id="dialog_contact_name" class="validate[required]">
+							<option value=''>-- Please search for a customer first --</option>
+						</select>
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_first_name">First Name</label>
+						<input type="text" id="dialog_first_name">
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_last_name">Last Name</label>
+						<input type="text" id="dialog_last_name">
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_phys_address1">Address 1</label>
+						<input type="text" id="dialog_phys_address1">
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_phys_address2">Address 2</label>
+						<input type="text" id="dialog_phys_address2">
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_phys_city">City</label>
+						<input type="text" id="dialog_phys_city">
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_phys_state">Province</label>
+						<input type="text" id="dialog_phys_state">
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_phys_postal_code">Postal Code</label>
+						<input type="text" id="dialog_phys_postal_code">
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_phys_country">Country</label>
+						<input type="text" id="dialog_phys_country">
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_central_phone_number">Phone Number</label>
+						<input type="text" id="dialog_central_phone_number" class="maskPhoneExt">
+					</div>
+
+					<div class="oneTwo">
+						<label for="dialog_email_address">Email</label>
+						<input type="text" id="dialog_email_address">
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 <?php }
 ?>
 

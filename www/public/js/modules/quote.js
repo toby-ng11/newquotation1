@@ -210,7 +210,7 @@ export function initQuote() {
       .autocomplete("instance")._renderItem = function (ul, item) {
       return $("<li>")
         .append(
-          `<div><strong>${item.customer_id}</strong> - ${item.customer_name}</div>`
+          `<div><b>${item.customer_id}</b> - ${item.customer_name} - <small>${item.from_P21}</small></div>`
         )
         .appendTo(ul);
     };

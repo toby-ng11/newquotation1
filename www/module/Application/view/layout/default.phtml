@@ -11,9 +11,9 @@
     ?>
 
     <meta charset="utf-8">
-    
+
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico.png">
-    <link href="/css/index.css" rel="stylesheet" type="text/css">
+    <link href="/css/index.css" rel="stylesheet">
     <?php //echo $this->headLink(); 
     ?>
 
@@ -29,6 +29,9 @@
 
     <!-- jQuery UI CDN -->
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 
     <!-- DataTables CDN -->
     <link href="https://cdn.datatables.net/v/dt/dt-2.0.3/date-1.5.2/fc-5.0.0/r-3.0.1/rr-1.5.0/sl-2.0.0/datatables.min.css" rel="stylesheet">
@@ -58,7 +61,7 @@
     </script>
 </head>
 
-<body>
+<body x-data="loadingState">
     <div id="root">
 
         <div id="js-flash-container"></div>
@@ -86,18 +89,21 @@
 
             <!-- Main -->
             <div class="main-wrapper" id="main-wrapper">
-                <?php echo $this->layout()->content ?>
+                <main id="content" class="main-content" hx-target="this" hx-swap="innerHTML">
+                    <?php echo $this->layout()->content ?>
+                </main>
             </div>
 
         </div>
 
-        <div class="loading" style="display:none;">
+        <div class="loading" x-show="loading" x-transition style="display: none;">
             <div class="loading-overlay">
                 <div class="spinner"></div>
                 <p>Loading, please wait...</p>
             </div>
         </div>
     </div>
+    <script type="module" src="/js/p2q-init.js"></script>
     <script type="text/javascript" src="/js/home.js"></script>
     <script type="module" src="/js/p2q.js"></script>
 </body>

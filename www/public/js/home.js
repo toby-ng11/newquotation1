@@ -129,32 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, index * 500); // 300ms delay between each card
   });
 
-  const $elements = $(".fade-in-up");
-
-  // Fallback if Intersection Observer is not supported
-  if (!("IntersectionObserver" in window)) {
-    $elements.addClass("show");
-    return;
-  }
-
-  const observer = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          $(entry.target).addClass("show");
-          observer.unobserve(entry.target); // Animate once
-        }
-      });
-    },
-    {
-      threshold: 0.1, // Trigger when 10% of the element is visible
-    }
-  );
-
-  $elements.each(function () {
-    observer.observe(this);
-  });
-
   let sideBarExpanded = false;
 
   $("#options-button").on("click", function () {

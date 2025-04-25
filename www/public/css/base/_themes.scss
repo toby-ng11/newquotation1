@@ -51,7 +51,7 @@ $centura-theme-dark-widget-green-shadow: 0 5px 15x rgba(55, 255, 0, 0.451);
   --form-widget-section-background:#{$centura-theme-light-widget-background};
   --form-widget-section-background-hover:var(--form-input-background-hover);
 
-  --header-background-primary: rgba(241, 241, 241, 0);
+  --header-background-primary: var(--background-primary);
 
   --background-primary: rgb(240, 240, 240);
   --background-img: url("./5297078.jpg");
@@ -286,7 +286,7 @@ $centura-theme-dark-widget-green-shadow: 0 5px 15x rgba(55, 255, 0, 0.451);
   --form-input-background:rgb(50, 50, 50);
   --form-input-background-hover:rgb(55, 55, 55);
 
-  --header-background-primary: rgba(32, 32, 32, 0);
+  --header-background-primary: var(--background-primary);
 
   --background-primary: rgb(16, 16, 16);
   --background-img: url("./5297078.jpg");
