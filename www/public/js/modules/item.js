@@ -1,7 +1,7 @@
 import { $projectId, $sheetType } from "./init.js";
 import { itemTable } from "./tables.js";
 import { resetForm, disableButton } from "./utils.js";
-import { showFlashMessage } from "./flashmessage.js";
+import { showFlashMessage } from "../api/flashmessage.js";
 
 let isEditItem = false;
 

@@ -1,5 +1,3 @@
-/* global $ */
-
 import { initTables } from "./modules/tables.js";
 import { initItem } from "./modules/item.js";
 import { initNote } from "./modules/note.js";

@@ -1,132 +1,109 @@
+import { setupAutoComplete } from "../api/autocomplete.js";
 import { $projectId, $projectForm, projectForm } from "./init.js";
 import { setState } from "./state.js";
 
-const $architectDetails = $("#architect-details");
-const architectNameVal = $("#architect_name").val();
-
-const $contractorDetails = $("#contractor-details");
-const generalContractor = $("#general_contractor_name").val();
-const awardedContractor = $("#awarded_contractor_name").val();
-
 export function initProject() {
+  const architectDetails = document.querySelector("#architect-details");
+  const architectNameInput = document.querySelector("#architect_name");
+  const contractorDetails = document.querySelector("#contractor-details");
+  const generalContractorInput = document.querySelector(
+    "#general_contractor_name"
+  );
+  const awardedContractorInput = document.querySelector(
+    "#awarded_contractor_name"
+  );
+
+  // Autocomplete for shared_id
+  setupAutoComplete({
+    fieldName: "#shared_id",
+    fetchUrl: "/user/fetchbypattern",
+    fillFields: [{ fieldSelector: "#shared_id", itemKey: "id" }],
+    renderItem: (item) =>
+      `<div><strong>${item.id}</strong><br>${item.name}</div>`,
+  });
+
   // Auto expand architect details
-  if ($architectDetails.length && architectNameVal.trim() != "") {
-    $architectDetails.prop("open", true);
-  }
+  if (architectDetails && architectNameInput.value.trim() !== "")
+    architectDetails.open = true;
 
   // Auto expand contractor details
   // if either general or awarded contractor field is available (check with length)
   if (
-    $contractorDetails.length &&
-    (generalContractor.trim() != "" || awardedContractor.trim() != "")
-  ) {
-    $contractorDetails.prop("open", true);
-  }
+    contractorDetails &&
+    (generalContractorInput.value.trim() !== "" ||
+      awardedContractorInput.value.trim() !== "")
+  )
+    contractorDetails.open = true;
 
   // Enable save button
-  $projectForm.on("change", function () {
-    $("#form-btn-save-project").prop("disabled", false);
+  $projectForm.addEventListener("change", () => {
+    document.querySelector("#form-btn-save-project").disabled = false;
     setState({ unsave: true, lastChanged: "project" });
   });
 
   // Save edit
-  $("#form-btn-save-project").on("click", function (e) {
-    if (projectForm.checkValidity()) {
+  document
+    .querySelector("#form-btn-save-project")
+    .addEventListener("click", async (e) => {
+      if (!projectForm.checkValidity()) return;
       e.preventDefault();
-      if ($projectForm.validationEngine("validate")) {
-        if ($("#general_contractor_name").val().trim() === "")
-          $("#general_contractor_id").val("");
-        if ($("#awarded_contractor_name").val().trim() === "")
-          $("#awarded_contractor_id").val("");
+      if (
+        window.jQuery &&
+        window.jQuery($projectForm).validationEngine("validate")
+      ) {
+        if (generalContractorInput.value.trim() === "")
+          document.querySelector("#general_contractor_id").value = "";
+        if (awardedContractorInput.value.trim() === "")
+          document.querySelector("#awarded_contractor_id").value = "";
 
-        $(".loading").show();
-        setState({unsave: false});
+        document.querySelector(".loading").style.display = "block";
+        setState({ unsave: false });
 
-        // Submit via AJAX
-        $.ajax({
-          url: $projectForm.attr("action"),
-          type: $projectForm.attr("method"),
-          data: $projectForm.serialize(),
-          dataType: "json",
-        })
-          .done(function (response) {
-            if (response.success) {
-              window.location.href = response.redirect;
-            } else {
-              alert(response.message || "Failed to save project.");
-            }
-          })
-          .fail(function (xhr, status, error) {
-            console.error("Save failed:", error);
-            alert("An error occurred while saving the project.");
-          })
-          .always(function () {
-            $(".loading").hide(); // Hide loading in all cases
+        try {
+          const response = await fetch($projectForm.action, {
+            method: $projectForm.method,
+            body: new URLSearchParams(new FormData($projectForm)),
+            headers: { Accept: "application/json" },
           });
+          const data = await response.json();
+
+          if (data.success) {
+            window.location.href = data.redirect;
+          } else {
+            alert(data.message || "Failed to save project.");
+          }
+        } catch (error) {
+          console.error("Save failed:", error);
+          alert("An error occurred while saving the project.");
+        } finally {
+          document.querySelector(".loading").style.display = "none";
+        }
       }
-    }
-  });
+    });
 
   // Delete project
-  $(".delete_pro").on("click", async function () {
-    if (!confirm("Are you sure you want to delete this project?")) return;
+  document.querySelectorAll(".delete_pro").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!confirm("Are you sure you want to delete this project?")) return;
 
-    $(".loading").show();
+      document.querySelector(".loading").style.display = "block";
+      try {
+        const response = await fetch(`/project/${$projectId}/delete`);
+        const data = await response.json();
 
-    try {
-      const response = await $.ajax({
-        url: `/project/${$projectId}/delete`,
-        type: "GET",
-        dataType: "json",
-      });
-
-      if (response.success) {
-        window.location.href = "/index/project";
-      } else {
-        alert(response.message || "Failed to delete the project.");
+        if (data.success) {
+          window.location.href = "/index/project";
+        } else {
+          alert(data.message || "Failed to delete the project.");
+        }
+      } catch (error) {
+        console.error("Delete failed:", error);
+        alert("Error occurred while deleting the project.");
+      } finally {
+        document.querySelector(".loading").style.display = "none";
       }
-    } catch (error) {
-      console.error("Delete failed:", error);
-      alert("Error occurred while deleting the project.");
-    } finally {
-      $(".loading").hide();
-    }
+    });
   });
-
-  // Autocomplete for shared_id
-  if ($("#shared_id").length) {
-    $("#shared_id")
-      .autocomplete({
-        source: function (request, response) {
-          $.ajax({
-            url: "/user/fetchbypattern",
-            dataType: "json",
-            data: {
-              pattern: request.term,
-              limit: 10,
-            },
-            success: function (data) {
-              response(data);
-            },
-            error: function () {
-              response([]); // Handle errors gracefully
-            },
-          });
-        },
-        minLength: 1,
-        select: function (event, ui) {
-          $("#shared_id").val(ui.item.id);
-          return false;
-        },
-      })
-      .autocomplete("instance")._renderItem = function (ul, item) {
-      return $("<li>")
-        .append(
-          "<div><strong>" + item.id + "</strong><br>" + item.name + "</div>"
-        )
-        .appendTo(ul);
-    };
-  }
 
   /* ----------------------------- Architect / Specifier -------------------------------- */
 
@@ -159,55 +136,28 @@ export function initProject() {
     );
   });
 
-  if ($("#architect_name").length) {
-    $("#architect_name")
-      .autocomplete({
-        source: function (request, response) {
-          $.ajax({
-            url: "/architect",
-            dataType: "json",
-            data: {
-              search: request.term,
-              limit: 10,
-            },
-          })
-            .done(function (data) {
-              response(data);
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-              console.error(
-                "AJAX Error: ",
-                textStatus,
-                errorThrown,
-                jqXHR.responseText
-              );
-              response([]); // Handle failure gracefully
-            });
-        },
-        minLength: 1,
-        select: function (event, ui) {
-          if (ui.item && ui.item.architect_id) {
-            getArchitectById(ui.item.architect_id);
-            getAddress(ui.item.architect_id);
-            getSpecifier(ui.item.architect_id);
-          }
-          return false;
-        },
-      })
-      .autocomplete("instance")._renderItem = function (ul, item) {
-      return $("<li>")
-        .append(
-          $("<div>")
-            .addClass("autocomplete-item")
-            .append($("<strong>").text(item.architect_name))
-            .append($("<br>"))
-            .append(
-              $("<span>").text(item.architect_rep_id + " - " + item.company_id)
-            )
-        )
-        .appendTo(ul);
-    };
-  }
+  setupAutoComplete({
+    fieldName: "#architect_name",
+    fetchUrl: "/architect",
+    fillFields: [],
+    minLength: 2,
+    queryParamName: "search",
+    limitParamName: "limit",
+    renderItem: (item) => `
+    <div class="autocomplete-item">
+      <strong>${item.architect_name}</strong><br>
+      <span>${item.architect_rep_id} - ${item.company_id}</span>
+    </div>`,
+    extraSelectActions: [
+      (item) => {
+        if (item.architect_id) {
+          getArchitectById(item.architect_id);
+          getAddress(item.architect_id);
+          getSpecifier(item.architect_id);
+        }
+      },
+    ],
+  });
 
   function getArchitectById(id) {
     if (!id) return;
