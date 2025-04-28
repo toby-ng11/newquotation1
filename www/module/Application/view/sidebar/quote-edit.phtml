@@ -1,0 +1,43 @@
+<a class='button quick-link make-quote' title="Make quote">
+    <span class='icon icon-dollar'></span>
+    Add new quote
+</a>
+<a class="button quick-link" href="/quote/<?= $quoteID ?>/export" title="Print this quote">
+    <span class='icon icon-pdf'></span>
+    Print Quote
+</a>
+<a class="button quick-link" target="_blank" href="/project/<?= $projectID ?>/edit" title="Go to project for this quote">
+    <span class='icon icon-external'></span>
+    Go to Project
+</a>
+<?php
+switch ($quoteStatusID) {
+    case $approved: ?>
+        <a class="button quick-link" href="/mail/quote/id/<?= $quoteID ?>" title="mail">
+            <span class='icon icon-mail'></span>
+            Mail Quote
+        </a>
+    <?php break;
+
+    case $waitingApprove: ?>
+        <a href="/quote/unsubmit/id/<?= $quoteID ?>" title="" class='button quick-link undo-submit'>
+            <span class='icon icon-undo'></span>
+            Undo Submit
+        </a>
+        <?php break;
+
+    default:
+        if ($quoteStatusID != 0) { ?>
+            <a href="/quote/ready/id/<?= $quoteID ?>" title="" class='button quick-link ready_quote'>
+                <span class='icon icon-approval'></span>
+                Submit Approval
+            </a>
+    <?php }
+        break;
+}
+if ($quoteStatusID != $approved) { ?>
+    <a href="#" title="" class='button quick-link delete_quote'>
+        <span class='icon icon-trash'></span>
+        Delete Quote
+    </a>
+<?php } ?>

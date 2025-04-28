@@ -41,7 +41,7 @@ export function navUnderline() {
       const targetX = rect.left - wrapperRect.left;
 
       underline.style.transition =
-        "width 0.3s cubic-bezier(0.25, 1.5, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1.5, 0.5, 1)";
+        "width 0.5s cubic-bezier(0.25, 1.5, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1.5, 0.5, 1)";
       underline.style.width = `${targetWidth}px`;
       underline.style.transform = `translateX(${targetX}px)`;
     },

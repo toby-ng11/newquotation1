@@ -17,20 +17,6 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
     <!-- Main page -->
         <div class="main-page-content">
             <header class="main-page-content-header">
-                <div class="options-menu">
-                    <button class="quick-link options-button" id="options-button" type="button">
-                        <span class='icon icon-menu'></span>
-                        Options
-                    </button>
-
-                    <!-- Right panel -->
-                    <div class="sidebar-container" id="options-menu-items">
-                        <a href="/project" target="_blank" class='button quick-link add-project' title="Add new project">
-                            <span class='icon icon-add'></span>
-                            Add Project</a>
-                    </div>
-                </div>
-
                 <h1>Welcome Back, <span style="font-weight: 300;"><?= $user['name'] ?></span></h1>
                 <p>Here's the quick summary of quotes</p>
             </header>

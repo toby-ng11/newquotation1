@@ -146,7 +146,9 @@ class ProjectController extends AbstractActionController
         $specifierList = $this->specifier->fetchSpecifiersByArchitect($project['architect_id']);
         $generalContractor = $this->customer->fetchCustomerById($project['general_contractor_id']);
         $awardedContractor = $this->customer->fetchCustomerById($project['awarded_contractor_id']);
-
+        
+        $this->layout()->setVariable('id', $project_id); //for sidebar
+        
         $owner = false;
 
         if ($user['id'] === $project['shared_id'] || $user['id'] === $project['owner_id'] || $user['sale_role'] === 'admin' || $user['approve_id'] !== null) {

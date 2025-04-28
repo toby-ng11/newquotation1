@@ -2,6 +2,10 @@
 $user = $this->userHelper();
 $controller = $this->currentController ?? '';
 $action     = $this->currentAction ?? '';
+
+if (strpos($controller, '\\') !== false) {
+  $controller = substr(strrchr($controller, '\\'), 1);
+}
 ?>
 
 <div class="sticky-header-container">
@@ -138,4 +142,24 @@ $action     = $this->currentAction ?? '';
       </div>
     </div>
   </header>
+
+  <div class="options-menu">
+    <button class="quick-link options-button" id="options-button" type="button">
+      <span class='icon icon-menu'></span>
+      <span class="options-button-text">Options</span>
+    </button>
+
+    <!-- Right panel -->
+    <div class="sidebar-container" id="options-menu-items">
+      <?php 
+      $sidebarTemplate = 'sidebar/default';
+      if ($controller == 'ProjectController' && $action == 'edit') {
+        $sidebarTemplate = 'sidebar/project-edit';
+      } elseif ($controller == 'QuoteController' && $action == 'edit') {
+        $sidebarTemplate = 'sidebar/quote-edit';
+      }
+      echo $this->partial($sidebarTemplate);
+      ?>
+    </div>
+  </div>
 </div>
