@@ -1,6 +1,8 @@
 <?php
 
-$this->headTitle('Project portal')->setSeparator(' - ')->setAutoEscape(false);
+$this->headTitle('Home portal');
+echo $this->headTitle();
+
 $user = $this->user;
 $company = DEFAULT_COMPANY;
 $ownTableCount = $this->ownTableCount;

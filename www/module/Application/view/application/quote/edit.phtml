@@ -11,7 +11,8 @@ $quoteShipRequiredDate = $quote['ship_required_date'];
 $quoteExpireDate = $quote['expire_date'];
 $oeID = $quote['order_no'];
 
-$this->headTitle('Edit Quote: ' . $quoteID)->setSeparator(' - ')->setAutoEscape(false);
+$this->headTitle('Edit Quote: ' . $quoteID);
+echo $this->headTitle();
 
 $contact = $this->contact;
 $customer = $this->customer;

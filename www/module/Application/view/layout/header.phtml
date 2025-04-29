@@ -6,6 +6,8 @@ $action     = $this->currentAction ?? '';
 if (strpos($controller, '\\') !== false) {
   $controller = substr(strrchr($controller, '\\'), 1);
 }
+
+$sidebarTemplate = 'sidebar/default';
 ?>
 
 <div class="sticky-header-container">
@@ -42,7 +44,8 @@ if (strpos($controller, '\\') !== false) {
                 hx-get="/index/admin"
                 hx-target="#content"
                 hx-swap="innerHTML"
-                @click="setActive($event)"
+                hx-push-url="true"
+                @click.prevent="setActive($event); loadSidebar('/sidebar/home')"
                 @mouseenter="setHover($event)"
                 @mouseleave="clearHover()"
                 title="Admin Dashboard"
@@ -55,7 +58,8 @@ if (strpos($controller, '\\') !== false) {
               hx-get="/index/home"
               hx-target="#content"
               hx-swap="innerHTML"
-              @click="setActive($event)"
+              hx-push-url="true"
+              @click.prevent="setActive($event); loadSidebar('/sidebar/home')"
               @mouseenter="setHover($event)"
               @mouseleave="clearHover()"
               title="Home Dashboard"
@@ -68,7 +72,8 @@ if (strpos($controller, '\\') !== false) {
                 hx-get="/index/approval"
                 hx-target="#content"
                 hx-swap="innerHTML"
-                @click="setActive($event)"
+                hx-push-url="true"
+                @click.prevent="setActive($event); loadSidebar('/sidebar/home')"
                 @mouseenter="setHover($event)"
                 @mouseleave="clearHover()"
                 title="Approve Dashboard"
@@ -81,7 +86,8 @@ if (strpos($controller, '\\') !== false) {
               hx-get="/index/architect"
               hx-target="#content"
               hx-swap="innerHTML"
-              @click="setActive($event)"
+              hx-push-url="true"
+              @click.prevent="setActive($event); loadSidebar('/sidebar/home')"
               @mouseenter="setHover($event)"
               @mouseleave="clearHover()"
               title="Architect Dashboard"
@@ -143,7 +149,7 @@ if (strpos($controller, '\\') !== false) {
     </div>
   </header>
 
-  <div class="options-menu">
+  <div class="options-menu" id="sidebar-container">
     <button class="quick-link options-button" id="options-button" type="button">
       <span class='icon icon-menu'></span>
       <span class="options-button-text">Options</span>
@@ -152,11 +158,12 @@ if (strpos($controller, '\\') !== false) {
     <!-- Right panel -->
     <div class="sidebar-container" id="options-menu-items">
       <?php 
-      $sidebarTemplate = 'sidebar/default';
       if ($controller == 'ProjectController' && $action == 'edit') {
         $sidebarTemplate = 'sidebar/project-edit';
       } elseif ($controller == 'QuoteController' && $action == 'edit') {
         $sidebarTemplate = 'sidebar/quote-edit';
+      } else {
+        $sidebarTemplate = 'sidebar/default';
       }
       echo $this->partial($sidebarTemplate);
       ?>

@@ -23,6 +23,20 @@ return [
                     ],
                 ],
             ],
+            'sidebar' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/sidebar[/:action][/:id]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\SidebarController::class,
+                        'action' => 'home',
+                    ],
+                ],
+            ],
             'dashboard' => [
                 'type' => Segment::class,
                 'options' => [
@@ -139,6 +153,11 @@ return [
                     $container->get(Model\Project::class),
                     $container->get(Model\Quote::class),
                     $container->get(Model\Note::class),
+                );
+            },
+            Controller\SidebarController::class => function ($container) {
+                return new Controller\SidebarController(
+                    $container->get(Service\UserService::class)
                 );
             },
             Controller\ProjectController::class => function ($container) {

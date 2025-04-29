@@ -12,6 +12,12 @@ export function navUnderline() {
       this.currentEl = event.target.closest(".top-level-entry");
       this.moveUnderline(this.currentEl);
     },
+    loadSidebar(sidebar) {
+      htmx.ajax("GET", sidebar, {
+        target: "#options-menu-items",
+        swap: "innerHTML",
+      });
+    },
     setHover(event) {
       this.hoverEl = event.target.closest(".top-level-entry");
       this.moveUnderline(this.hoverEl);
