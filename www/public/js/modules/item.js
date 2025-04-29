@@ -280,7 +280,7 @@ export function initItem() {
       data: formData,
       contentType: "application/x-www-form-urlencoded",
     })
-      .done(() => {
+      .done((response) => {
         itemTable.ajax.reload();
         showFlashMessage(response.message, response.success);
       })

@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let that = $(this);
     setTimeout(function () {
       that.addClass("show");
-    }, index * 500); // 300ms delay between each card
+    }, index * 300); // 300ms delay between each card
   });
 
   let sideBarExpanded = false;

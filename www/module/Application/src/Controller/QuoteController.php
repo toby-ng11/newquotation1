@@ -105,6 +105,13 @@ class QuoteController extends AbstractActionController
 
         $admin = false;
 
+        $this->layout()->setVariable('quoteID', $quote_id);
+        $this->layout()->setVariable('projectID', $quote['project_id']);   //for sidebar
+        $this->layout()->setVariable('quoteStatusID', $quote['quote_status_id']);
+        $this->layout()->setVariable('approved', Quote::APPROVED);
+        $this->layout()->setVariable('waitingApprove', Quote::WAITING_APPROVAL);
+        $this->layout()->setVariable('disapproved', Quote::DISAPPROVED);
+
         if ($user['sale_role'] === 'admin' || $user['approve_id'] !== null) {
             $admin = true;
         }

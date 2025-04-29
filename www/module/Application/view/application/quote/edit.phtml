@@ -11,7 +11,8 @@ $quoteShipRequiredDate = $quote['ship_required_date'];
 $quoteExpireDate = $quote['expire_date'];
 $oeID = $quote['order_no'];
 
-$this->headTitle('Edit Quote: ' . $quoteID)->setSeparator(' - ')->setAutoEscape(false);
+$this->headTitle('Edit Quote: ' . $quoteID);
+echo $this->headTitle();
 
 $contact = $this->contact;
 $customer = $this->customer;
@@ -50,56 +51,6 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 	<!-- Title area -->
 	<div class="main-page-content">
 		<header class="main-page-content-header">
-			<div class="options-menu">
-				<button class="quick-link options-button" id="options-button" type="button">
-					<span class='icon icon-menu'></span>
-					Options
-				</button>
-
-				<!-- Right panel -->
-				<div class="sidebar-container" id="options-menu-items">
-					<a class='button quick-link make-quote' title="Make quote">
-						<span class='icon icon-dollar'></span>
-						Add new quote
-					</a>
-					<!--<li><a href="#" title=""><img src="/images/icons/control/32/doc_edit.png" alt="" /><span>Edit Current</span></a></li>
-                    <li><a href="#" title=""><img src="/images/icons/control/32/refresh.png" alt="" /><span>Update Quote</span></a></li>-->
-					<a class="button quick-link" href="/quote/<?= $quoteID ?>/export" title="Print this quote">
-						<span class='icon icon-pdf'></span>
-						Print Quote</a>
-					<a class="button quick-link" target="_blank" href="/project/<?= $project['project_id'] ?>/edit" title="Go to project for this quote">
-						<span class='icon icon-external'></span>
-						Go to Project</a>
-					<?php
-					switch ($quoteStatusID) {
-						case $approved: ?>
-							<a class="button quick-link" href="/mail/quote/id/<?= $quoteID ?>" title="mail">
-								<span class='icon icon-mail'></span>
-								Mail Quote</a>
-						<?php break;
-
-						case $waitingApprove: ?>
-							<a href="/quote/unsubmit/id/<?= $quoteID ?>" title="" class='button quick-link undo-submit'>
-								<span class='icon icon-undo'></span>
-								Undo Submit</a>
-							<?php break;
-
-						default:
-							if ($quoteStatusID != 0) { ?>
-								<a href="/quote/ready/id/<?= $quoteID ?>" title="" class='button quick-link ready_quote'>
-									<span class='icon icon-approval'></span>
-									Submit Approval</a>
-						<?php }
-							break;
-					}
-					if ($quoteStatusID != $approved) { ?>
-						<a href="#" title="" class='button quick-link delete_quote'>
-							<span class='icon icon-trash'></span>
-							Delete Quote</a>
-					<?php } ?>
-				</div>
-			</div>
-
 			<h1>Edit Quote</h1>
 		</header>
 

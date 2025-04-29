@@ -1,104 +1,103 @@
 <?php
+$this->headTitle('Approval portal');
+echo $this->headTitle();
+
 $user = $this->user;
 $waitingTableCount = $this->waitingTableCount;
 $approvedTableCount = $this->approvedTableCount;
 $disapprovedTableCount = $this->disapprovedTableCount;
 
+$hour = date('H'); // 24-hour format of the current hour
+
+if ($hour >= 5 && $hour < 12) {
+    $greeting = "Good morning";
+} elseif ($hour >= 12 && $hour < 18) {
+    $greeting = "Good afternoon";
+} else {
+    $greeting = "Good evening";
+}
+
 $maintainenceMode = 0;
 if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 ?>
-        <div class="main-page-content">
-            <header class="main-page-content-header">
-                <h1>This page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h1>
-            </header>
-        </div>
+    <div class="main-page-content">
+        <header class="main-page-content-header">
+            <h1>This page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h1>
+        </header>
+    </div>
 <?php } else { ?>
 
     <!-- Main page -->
-        <div class="main-page-content">
-            <header class="main-page-content-header">
-                <div class="options-menu">
-                    <button class="quick-link options-button" id="options-button" type="button">
-                        <span class='icon icon-menu'></span>
-                        Options
-                    </button>
+    <div class="main-page-content">
+        <header class="main-page-content-header">
+            <h1><?= $greeting ?>, <?= $user['first_name'] ?>!</h1>
+            <p>Here's the quick summary of quotes</p>
+        </header>
 
-                    <!-- Right panel -->
-                    <div class="sidebar-container" id="options-menu-items">
-                        <a href="/project" target="_blank" class='button quick-link add-project' title="Add new project">
-                            <span class='icon icon-add'></span>
-                            Add Project</a>
-                    </div>
-                </div>
+        <section class="active fade-in-up">
+            <div class="widget-table">
+                <table width="100%" class="sTable display nowrap" id='dashboard-approve-waiting-table' data-init="approvalWaiting">
+                    <thead>
+                        <tr>
+                            <th>Quote ID</th>
+                            <th>Project Name</th>
+                            <th>Arch Rep</th>
+                            <th>Customer</th>
+                            <th>Taker</th>
+                            <th>Segment</th>
+                            <th>Date</td>
+                            <th>Ship Required Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
 
-                <h1>Welcome Back, <span style="font-weight: 300;"><?= $user['name'] ?></span></h1>
-                <p>Here's the quick summary of quotes</p>
-            </header>
+        <section class="active fade-in-up">
+            <div class="widget-table">
+                <table width="100%" class="sTable display nowrap" id='dashboard-approve-approved-table' data-init="approvalApproved">
+                    <thead>
+                        <tr>
+                            <th>Quote ID</th>
+                            <th>Project Name</th>
+                            <th>Arch Rep</th>
+                            <th>Customer</th>
+                            <th>Taker</th>
+                            <th>Segment</th>
+                            <th>Quote Date</th>
+                            <th>Expire Date</th>
+                            <th>Ship Required Date</th>
+                            <th>Status</th>
+                            <th>P21 OE #</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
 
-            <section class="active fade-in-up">
-                <div class="widget-table">
-                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-waiting-table' data-init="approvalWaiting">
-                        <thead>
-                            <tr>
-                                <th>Quote ID</th>
-                                <th>Project Name</th>
-                                <th>Arch Rep</th>
-                                <th>Customer</th>
-                                <th>Taker</th>
-                                <th>Segment</th>
-                                <th>Date</td>
-                                <th>Ship Required Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-            </section>
-
-            <section class="active fade-in-up">
-                <div class="widget-table">
-                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-approved-table' data-init="approvalApproved">
-                        <thead>
-                            <tr>
-                                <th>Quote ID</th>
-                                <th>Project Name</th>
-                                <th>Arch Rep</th>
-                                <th>Customer</th>
-                                <th>Taker</th>
-                                <th>Segment</th>
-                                <th>Quote Date</th>
-                                <th>Expire Date</th>
-                                <th>Ship Required Date</th>
-                                <th>Status</th>
-                                <th>P21 OE #</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-            </section>
-
-            <section class="active fade-in-up">
-                <div class="widget-table">
-                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-disapproved-table' data-init="approvalDisapproved">
-                        <thead>
-                            <tr>
-                                <th>Quote ID</th>
-                                <th>Project Name</th>
-                                <th>Arch Rep</th>
-                                <th>Customer</th>
-                                <th>Taker</th>
-                                <th>Segment</th>
-                                <th>Quote Date</th>
-                                <th>Expire Date</th>
-                                <th>Ship Required Date</th>
-                                <th>Status</th>
-                                <th>Edit</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-            </section>
-        </div>
+        <section class="active fade-in-up">
+            <div class="widget-table">
+                <table width="100%" class="sTable display nowrap" id='dashboard-approve-disapproved-table' data-init="approvalDisapproved">
+                    <thead>
+                        <tr>
+                            <th>Quote ID</th>
+                            <th>Project Name</th>
+                            <th>Arch Rep</th>
+                            <th>Customer</th>
+                            <th>Taker</th>
+                            <th>Segment</th>
+                            <th>Quote Date</th>
+                            <th>Expire Date</th>
+                            <th>Ship Required Date</th>
+                            <th>Status</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
+    </div>
 
 <?php }
 ?>

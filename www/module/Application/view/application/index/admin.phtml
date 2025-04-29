@@ -1,6 +1,8 @@
 <?php
 
-$this->headTitle('Admin portal')->setSeparator(' - ')->setAutoEscape(false);
+$this->headTitle('Admin portal');
+echo $this->headTitle();
+
 $user = $this->user;
 
 $hour = date('H'); // 24-hour format of the current hour
@@ -17,23 +19,11 @@ if ($hour >= 5 && $hour < 12) {
 <!-- Title area -->
 <div class="main-page-content">
     <header class="main-page-content-header">
-        <h1><?= $greeting ?>, <?= $user['first_name'] ?>!</h1>
+        <h1>
+            <?= $greeting ?>, <?= $user['first_name'] ?>!
+        </h1>
         <p>Here's all projects and quotes</p>
     </header>
-
-    <div class="options-menu">
-        <button class="quick-link options-button" id="options-button" type="button">
-            <span class='icon icon-menu'></span>
-            <span class="options-button-text">Options</span>
-        </button>
-
-        <!-- Right panel -->
-        <div class="sidebar-container" id="options-menu-items">
-            <a href="/project" target="_blank" class='button quick-link add-project' title="Add new project">
-                <span class='icon icon-add'></span>
-                Add Project</a>
-        </div>
-    </div>
 
     <section class="fade-in-up" aria-labelledby="all_projects" id="section1" data-nav="All Projects">
         <div class="widget-table">
@@ -75,3 +65,7 @@ if ($hour >= 5 && $hour < 12) {
         </div>
     </section>
 </div>
+
+<script>
+    console.log(document.title)
+</script>

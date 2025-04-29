@@ -1,6 +1,8 @@
 <?php
 
-$this->headTitle('Project portal')->setSeparator(' - ')->setAutoEscape(false);
+$this->headTitle('Home portal');
+echo $this->headTitle();
+
 $user = $this->user;
 $company = DEFAULT_COMPANY;
 $ownTableCount = $this->ownTableCount;
@@ -26,20 +28,6 @@ if ($hour >= 5 && $hour < 12) {
         <h1><?= $greeting ?>, <?= $user['first_name'] ?>!</h1>
         <p>Here's the quick summary your projects and quotes.</p>
     </header>
-
-    <div class="options-menu">
-        <button class="quick-link options-button" id="options-button" type="button">
-            <span class='icon icon-menu'></span>
-            Options
-        </button>
-
-        <!-- Right panel -->
-        <div class="sidebar-container" id="options-menu-items">
-            <a href="/project" target="_blank" class='button quick-link add-project' title="Add new project">
-                <span class='icon icon-add'></span>
-                Add Project</a>
-        </div>
-    </div>
 
     <section class="fade-in-up" aria-labelledby="my_projects" id="section1" data-nav="My Projects">
         <div class="widget-table">
