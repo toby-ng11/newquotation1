@@ -50,7 +50,7 @@ export function runFadeInAnimation() {
       });
     },
     {
-      threshold: 0.3,
+      threshold: 0.1, // <-- Adjust this value to control when the animation starts
     }
   );
 

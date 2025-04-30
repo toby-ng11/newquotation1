@@ -1,4 +1,5 @@
 @use "../vars" as *;
+@use "./autocomplete";
 
 form {
 	label {
@@ -42,10 +43,6 @@ form {
 	textarea {
 		resize: vertical;
 		height: auto;
-	}
-
-	.ui-datepicker-append {
-		display: none;
 	}
 }
 

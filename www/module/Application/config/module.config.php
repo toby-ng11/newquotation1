@@ -153,6 +153,7 @@ return [
                     $container->get(Model\Project::class),
                     $container->get(Model\Quote::class),
                     $container->get(Model\Note::class),
+                    $container->get(Model\Architect::class)
                 );
             },
             Controller\SidebarController::class => function ($container) {

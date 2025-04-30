@@ -15,7 +15,7 @@ export function setupAutoComplete({
   let autocompleteList = document.createElement("ul");
   autocompleteList.classList.add("autocomplete-list");
   input.parentNode.style.position = "relative"; // Ensure positioning
-  input.parentNode.appendChild(autocompleteList);
+  document.body.appendChild(autocompleteList);
 
   let activeIndex = -1;
   let debounceTimer = null;
@@ -26,21 +26,18 @@ export function setupAutoComplete({
     debounceTimer = setTimeout(() => {
       const query = input.value.trim();
       activeIndex = -1;
-      autocompleteList.innerHTML = "";
+      //autocompleteList.innerHTML = "";
 
       if (query.length < minLength) {
-        input.classList.remove("loading");
         return;
       }
-
-      input.classList.add("loading");
 
       const url = `${fetchUrl}?${queryParamName}=${encodeURIComponent(query)}&${limitParamName}=10`;
 
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
-          input.classList.remove("loading");
+          autocompleteList.classList.add('visible');
           autocompleteList.innerHTML = "";
 
           if (!data.length) {
@@ -68,13 +65,14 @@ export function setupAutoComplete({
                   fn(item);
                 }
               });
+              autocompleteList.classList.remove('visible');
               autocompleteList.innerHTML = "";
             });
             autocompleteList.appendChild(listItem);
           });
+          positionList();
         })
         .catch((error) => {
-          input.classList.remove("loading");
           autocompleteList.innerHTML = "";
           console.error('Autocomplete fetch error:', error);
         });
@@ -109,12 +107,29 @@ export function setupAutoComplete({
     }
   });
 
+  window.addEventListener("scroll", () => {
+    if (document.activeElement === input) positionList();
+  }, true);
+
+  window.addEventListener("resize", () => {
+    if (document.activeElement === input) positionList();
+  });
+
   function updateActive(items) {
     items.forEach((item) => item.classList.remove("active"));
     if (activeIndex > -1 && items[activeIndex]) {
       items[activeIndex].classList.add("active");
       items[activeIndex].scrollIntoView({ block: "nearest" });
     }
+  }
+
+  function positionList() {
+    const rect = input.getBoundingClientRect();
+    autocompleteList.style.position = "absolute";
+    autocompleteList.style.top = `${rect.bottom + window.scrollY}px`;
+    autocompleteList.style.left = `${rect.left + window.scrollX}px`;
+    autocompleteList.style.width = `${rect.width}px`;
+    autocompleteList.style.zIndex = "10000";
   }
 
   function defaultRenderItem(item) {

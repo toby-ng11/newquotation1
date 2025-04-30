@@ -18,7 +18,7 @@ class CustomerController extends AbstractActionController
 
     public function indexAction()
     {
-        $pattern = $this->params()->fromQuery('term', null);
+        $pattern = $this->params()->fromQuery('search', null);
         $limit = $this->params()->fromQuery('limit', 10);
 
         if (empty($pattern)) {

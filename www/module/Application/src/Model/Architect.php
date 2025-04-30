@@ -121,4 +121,31 @@ class Architect
         $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
         return $result;
     }
+
+    public function fetchAllTable($admin, $user_id)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select('p2q_view_architect');
+
+        if (!$admin) {
+            $select->where(['architect_rep_id' => $user_id]);
+        }
+
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result;
+    }
+
+    public function fetchTopFiveTable($user_id)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select('p2q_view_architect_ranking')
+            ->where(['owner_id' => $user_id])
+            ->order('rank DESC')
+            ->limit(5);
+
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result;
+    }
 }

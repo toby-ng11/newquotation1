@@ -855,7 +855,7 @@ const tableConfigs = {
           className: "dt-head-center",
         },
         {
-          targets: [0, 2, 4, 5, 6, 7, 8, 9, 10],
+          targets: [0, 4, 5, 6, 7, 8, 9, 10],
           className: "dt-body-center",
         },
       ],
@@ -981,6 +981,120 @@ const tableConfigs = {
           return info;
         },
         bottomStart: "pageLength",
+      },
+    });
+  },
+  /* ------ ARCHITECT PORTAL ------ */
+  architectAll: () => {
+    $("#architect-all-table").DataTable({
+      ajax: {
+        url: "/index/architect/all",
+        dataSrc: "",
+      },
+      processing: true,
+      responsive: true,
+      //serverSide: true, // experimetal: server-side processing
+      columns: [
+        {
+          data: "architect_id",
+          render: function (data, type, row, meta) {
+            return (
+              "<a target='_blank' href='/architect/" +
+              row.architect_id +
+              "/edit'>" +
+              data +
+              "</a>"
+            );
+          },
+        },
+        {
+          data: "architect_name",
+        },
+        {
+          data: "architect_rep_id",
+        },
+        {
+          data: "architect_type_desc",
+        },
+        {
+          data: "class_id",
+        },
+        {
+          data: "date_added.date",
+          render: function (data) {
+            let date = new Date(data);
+            return date.toLocaleDateString();
+          },
+        },
+      ],
+      columnDefs: [
+        {
+          targets: "_all",
+          className: "dt-head-center",
+        },
+        {
+          targets: [0, 2, 3, 4, 5],
+          className: "dt-body-center",
+        },
+      ],
+      //"responsive": true,
+      order: [[0, "desc"]],
+      fixedColumns: {
+        start: 1,
+        end: 1,
+      },
+      scrollX: true,
+      layout: {
+        topStart: null,
+        topEnd: null,
+        bottomStart: "search",
+      },
+    });
+  },
+  architectTop5: () => {
+    $("#top-5-architect-table").DataTable({
+      ajax: {
+        url: "/index/architect/topfive",
+        dataSrc: "",
+      },
+      processing: true,
+      responsive: true,
+      //serverSide: true, // experimetal: server-side processing
+      columns: [
+        {
+          data: "rank",
+        },
+        {
+          data: "architect_name",
+          render: function (data, type, row, meta) {
+            return (
+              "<a target='_blank' href='/architect/" +
+              row.architect_id +
+              "/edit'>" +
+              data +
+              "</a>"
+            );
+          },
+        },
+      ],
+      columnDefs: [
+        {
+          targets: "_all",
+          className: "dt-head-center",
+        },
+        {
+          targets: [0],
+          className: "dt-body-center",
+        },
+      ],
+      //"responsive": true,
+      order: [[0, "desc"]],
+      scrollX: true,
+      layout: {
+        topStart: null,
+        topEnd: null,
+        bottomStart: null,
+        bottomEnd: null,
       },
     });
   },
@@ -1216,7 +1330,10 @@ const tableConfigs = {
           },
         },
         {
-          data: "project_name",
+          data: "customer_name",
+        },
+        {
+          data: "contact_full_name",
         },
         {
           data: "quote_date.date",
@@ -1250,16 +1367,16 @@ const tableConfigs = {
           },
         },
         {
-          data: "quote_status_id",
+          data: "quote_status",
           render: function (data) {
-            if (data == 4) {
+            if (data == 'Dissapproved') {
               return '<span class="disapproved red">Disapproved</span>';
-            } else if (data == 3) {
+            } else if (data == 'Approved') {
               return '<span class="approved green">Approved</span>';
-            } else if (data == 2) {
+            } else if (data == 'Waiting') {
               return '<span class="waiting orange">Waiting</span>';
             } else {
-              return "Not submitted";
+              return "Draft";
             }
           },
         },
@@ -1273,7 +1390,7 @@ const tableConfigs = {
           className: "dt-head-center",
         },
         {
-          targets: [0, 2, 3, 4, 5, 6],
+          targets: [0, 2, 3, 4, 5, 6, 7],
           className: "dt-body-center",
         },
       ],
@@ -1288,14 +1405,14 @@ const tableConfigs = {
 };
 
 export function initTables() {
-  $('.sTable').each(function () {
+  $(".sTable").each(function () {
     const $table = $(this);
-    const initType = $table.data('init');
+    const initType = $table.data("init");
 
     if (!initType || !(initType in tableConfigs)) {
       console.warn(`No DataTable config found for: ${initType}`);
       return;
-    } 
+    }
 
     // Destroy previous if needed
     if ($.fn.DataTable.isDataTable($table)) {

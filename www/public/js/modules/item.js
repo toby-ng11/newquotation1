@@ -2,6 +2,7 @@ import { $projectId, $sheetType } from "./init.js";
 import { itemTable } from "./tables.js";
 import { resetForm, disableButton } from "./utils.js";
 import { showFlashMessage } from "../api/flashmessage.js";
+import { setupAutoComplete } from "../api/autocomplete.js";
 
 let isEditItem = false;
 
@@ -13,6 +14,8 @@ const $uomDropdown = $("#uom");
 $uomDropdown.data("default-options", $uomDropdown.html());
 
 export function initItem() {
+  const uomDropdown = document.getElementById("uom");
+
   // Open Edit Dialog
   $(document).on("click", "a.item-edit", function (e) {
     e.preventDefault();
@@ -118,51 +121,32 @@ export function initItem() {
   });
 
   // Autocomplete for Item ID
-  if ($(".dialog #item_id").length) {
-    $(".dialog #item_id")
-      .autocomplete({
-        appendTo: "#dialog-item-form",
-        source: function (request, response) {
-          $.ajax({
-            url: "/item/index",
-            dataType: "json",
-            data: { term: request.term, limit: 10 },
-          })
-            .done((data) => response(data))
-            .fail((jqXHR, textStatus, errorThrown) => {
-              console.error(
-                "AJAX Error: ",
-                textStatus,
-                errorThrown,
-                jqXHR.responseText
-              );
-              response([]);
-            });
-        },
-        minLength: 2,
-        open: function () {
-          $("ui-autocomplete").css("z-index", 2001);
-        },
-        select: function (event, ui) {
-          if (ui.item && ui.item.item_id) {
-            $("#item_id").val(ui.item.item_id);
-            $("#item_input").val(ui.item.item_desc);
-            getoum(ui.item.item_id);
-            $("#uom").prop("disabled", false).removeClass("disabled");
+  if (document.querySelector(".dialog #item_id")) {
+    setupAutoComplete({
+      fieldName: ".dialog #item_id",
+      fetchUrl: "/item/index",
+      fillFields: [
+        { fieldSelector: "#item_id", itemKey: "item_id" },
+        { fieldSelector: "#item_input", itemKey: "item_desc" },
+      ],
+      minLength: 2,
+      queryParamName: "term",
+      limitParamName: "limit",
+      renderItem: (item) => `
+      <div class="autocomplete-item">
+        <strong>${item.item_id}</strong><br>
+        <span>${item.item_desc}</span>
+      </div>`,
+      extraSelectActions: [
+        (item) => {
+          if (item.item_id) {
+            getoum(item.item_id);
+            uomDropdown.disabled = false;
+            uomDropdown.classList.remove("disabled");
           }
-          return false;
         },
-      })
-      .autocomplete("instance")._renderItem = function (ul, item) {
-      return $("<li>")
-        .append(
-          $("<div>")
-            .addClass("autocomplete-item")
-            .append($("<strong>").text(item.item_id))
-            .append($("<span>").text(" - " + item.item_desc))
-        )
-        .appendTo(ul);
-    };
+      ],
+    });
   }
 
   // Fetch price when UOM changes

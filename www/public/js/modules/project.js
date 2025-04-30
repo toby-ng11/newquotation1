@@ -36,15 +36,18 @@ export function initProject() {
     contractorDetails.open = true;
 
   // Enable save button
-  $projectForm.addEventListener("change", () => {
-    document.querySelector("#form-btn-save-project").disabled = false;
-    setState({ unsave: true, lastChanged: "project" });
-  });
+  if (projectForm) {
+    projectForm.addEventListener("change", () => {
+      document.querySelector("#form-btn-save-project").disabled = false;
+      setState({ unsave: true, lastChanged: "project" });
+    });
+  }
 
   // Save edit
-  document
-    .querySelector("#form-btn-save-project")
-    .addEventListener("click", async (e) => {
+
+  const saveButton = document.getElementById("#form-btn-save-project");
+  if (saveButton) {
+    saveButton.addEventListener("click", async (e) => {
       if (!projectForm.checkValidity()) return;
       e.preventDefault();
       if (
@@ -80,6 +83,7 @@ export function initProject() {
         }
       }
     });
+  }
 
   // Delete project
   document.querySelectorAll(".delete_pro").forEach((button) => {
@@ -344,52 +348,54 @@ export function initProject() {
 
   /* ----------------------------- Contractor / Customer -------------------------------- */
 
-  function setupAutocomplete(selector, sourceUrl, selectCallback) {
-    if ($(selector).length) {
-      $(selector)
-        .autocomplete({
-          source: sourceUrl,
-          minLength: 2,
-          select: function (event, ui) {
-            selectCallback(ui.item);
-          },
-        })
-        .data("ui-autocomplete")._renderItem = function (ul, item) {
-        return $("<li>")
-          .data("item.autocomplete", item)
-          .append(
-            "<a>" +
-              (item.customer_id +
-                " - " +
-                item.company_id +
-                "<br>" +
-                item.customer_name) +
-              "</a>"
-          )
-          .appendTo(ul);
-      };
-    }
-  }
+  const contractorFields = [
+    {
+      fieldName: "#general_contractor_name",
+      targetPrefix: "general_contractor",
+    },
+    {
+      fieldName: "#awarded_contractor_name",
+      targetPrefix: "awarded_contractor",
+    },
+  ];
 
-  setupAutocomplete("#general_contractor_name", "/customer", function (item) {
-    getContractor(item.customer_id, "general_contractor");
-  });
-
-  setupAutocomplete("#awarded_contractor_name", "/customer", function (item) {
-    getContractor(item.customer_id, "awarded_contractor");
-  });
-
-  function getContractor(id, targetPrefix) {
-    $.ajax({
-      url: `/customer/${id}/fetchbyid`,
-      dataType: "json",
-      type: "get",
-      success: function (result) {
-        if (result) {
-          $("#" + targetPrefix + "_id").val(result.customer_id);
-          $("#" + targetPrefix + "_name").val(result.customer_name);
-        }
-      },
+  // Loop over both and initialize autocomplete
+  contractorFields.forEach(({ fieldName, targetPrefix }) => {
+    setupAutoComplete({
+      fieldName,
+      fetchUrl: "/customer",
+      fillFields: [],
+      minLength: 2,
+      queryParamName: "search",
+      limitParamName: "limit",
+      renderItem: (item) => `
+        <div class="autocomplete-item">
+          <strong>${item.customer_id} - ${item.company_id}</strong><br>
+          <span>${item.customer_name}</span>
+        </div>`,
+      extraSelectActions: [
+        (item) => {
+          if (item.customer_id) {
+            fetchAndFillContractor(item.customer_id, targetPrefix);
+          }
+        },
+      ],
     });
+  });
+
+  function fetchAndFillContractor(id, prefix) {
+    fetch(`/customer/${id}/fetchbyid`)
+      .then((res) => res.json())
+      .then((result) => {
+        if (result) {
+          const idField = document.getElementById(`${prefix}_id`);
+          const nameField = document.getElementById(`${prefix}_name`);
+          if (idField) idField.value = result.customer_id;
+          if (nameField) nameField.value = result.customer_name;
+        }
+      })
+      .catch((error) => {
+        console.error(`Failed to fetch contractor (${id}):`, error);
+      });
   }
 }

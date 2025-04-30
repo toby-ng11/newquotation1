@@ -1,4 +1,11 @@
-import { $projectId, $projectForm, $quoteForm, $sheetType, $quoteId } from "./init.js";
+import { setupAutoComplete } from "../api/autocomplete.js";
+import {
+  $projectId,
+  $projectForm,
+  $quoteForm,
+  $sheetType,
+  $quoteId,
+} from "./init.js";
 import { setState } from "./state.js";
 import { resetForm } from "./utils.js";
 import { disableButton } from "./utils.js";
@@ -120,7 +127,6 @@ export function initQuote() {
 
   /* --------------------------  MAKE QUOTE FUNCTION ---------------------------- */
 
-  
   //$contactFields.prop("readonly", true);
 
   $dialogMakeQuote.dialog({
@@ -173,102 +179,113 @@ export function initQuote() {
     $dialogMakeQuote.dialog("open");
   });
 
-  function initCustomerAutocomplete($section) {
-    $section
-      .find("input[id$='_customer_name']")
-      .autocomplete({
-        appendTo:
-          $section.data("type") === "dialog" ? "#dialog-make-quote-form" : null,
-        source: function (request, response) {
-          $.ajax({
-            url: "/customer",
-            dataType: "json",
-            data: { term: request.term, limit: 10 },
-          })
-            .done(response)
-            .fail(() => response([]));
+  function initCustomerAutocomplete(section) {
+    const input = section.querySelector("input[id$='_customer_name']");
+    const formType = section.dataset.type;
+
+    setupAutoComplete({
+      fieldName: `#${input.id}`,
+      fetchUrl: "/customer",
+      fillFields: [
+        { fieldSelector: `#${formType}_customer_id`, itemKey: "customer_id" },
+        {
+          fieldSelector: `#${formType}_customer_name`,
+          itemKey: "customer_name",
         },
-        minLength: 2,
-        select: function (event, ui) {
-          if (ui.item && ui.item.customer_id) {
-            // Populate all customer fields dynamically
-            [
-              "customer_id",
-              "customer_name",
-              "company_id",
-              "salesrep_full_name",
-            ].forEach((field) => {
-              $section
-                .find(`#${$section.data("type")}_${field}`)
-                .val(ui.item[field] || "");
-            });
-            getCustomerContacts(ui.item.customer_id, $section);
+        { fieldSelector: `#${formType}_company_id`, itemKey: "company_id" },
+        {
+          fieldSelector: `#${formType}_salesrep_full_name`,
+          itemKey: "salesrep_full_name",
+        },
+      ],
+      minLength: 2,
+      queryParamName: "search",
+      limitParamName: "limit",
+      renderItem: (item) =>
+        `<div>
+        <b>${item.customer_id}</b> - ${item.customer_name} - 
+        <small>${item.from_P21}</small>
+      </div>`,
+      extraSelectActions: [
+        (item) => {
+          if (item.customer_id) {
+            getCustomerContacts(item.customer_id, section);
           }
-          return false;
         },
-      })
-      .autocomplete("instance")._renderItem = function (ul, item) {
-      return $("<li>")
-        .append(
-          `<div><b>${item.customer_id}</b> - ${item.customer_name} - <small>${item.from_P21}</small></div>`
-        )
-        .appendTo(ul);
-    };
+      ],
+    });
   }
 
-  function getCustomerContacts(customer_id, $section) {
+  function getCustomerContacts(customer_id, section) {
     if (!customer_id) return;
-    $.ajax({
-      url: `/customer/${customer_id}/contacts`,
-      dataType: "json",
-    }).done((data) => {
-      const $contactDropdown = $section
-        .find("select[id$='_contact_name']")
-        .empty();
-      $.each(data, (i, item) => {
-        $contactDropdown.append(
-          `<option value="${item.contact_id}">${item.contact_full_name}</option>`
-        );
+  
+    fetch(`/customer/${customer_id}/contacts`)
+      .then((res) => res.json())
+      .then((data) => {
+        const contactSelect = section.querySelector("select[id$='_contact_name']");
+        if (!contactSelect) return;
+  
+        // Clear previous options
+        contactSelect.innerHTML = "";
+  
+        // Add new options
+        data.forEach((item) => {
+          const option = document.createElement("option");
+          option.value = item.contact_id;
+          option.textContent = item.contact_full_name;
+          contactSelect.appendChild(option);
+        });
+  
+        getContactInfo(section);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch contacts:", err);
       });
-      getContactInfo($section);
-    });
   }
 
-  function getContactInfo($section) {
-    const contactID = $section.find("select[id$='_contact_name']").val();
+  function getContactInfo(section) {
+    const contactSelect = section.querySelector("select[id$='_contact_name']");
+    const contactID = contactSelect?.value;
     if (!contactID) return;
-    $.ajax({
-      url: `/customer/${contactID}/contactinfo`,
-      dataType: "json",
-    }).done((data) => {
-      // Fill contact fields dynamically based on ID suffix
-      [
-        "contact_id",
-        "first_name",
-        "last_name",
-        "phys_address1",
-        "phys_address2",
-        "phys_city",
-        "phys_state",
-        "phys_postal_code",
-        "phys_country",
-        "central_phone_number",
-        "email_address",
-      ].forEach((field) => {
-        $section
-          .find(`#${$section.data("type")}_${field}`)
-          .val(data[field] || "");
+  
+    fetch(`/customer/${contactID}/contactinfo`)
+      .then((res) => res.json())
+      .then((data) => {
+        const type = section.dataset.type; // 'main' or 'dialog'
+        const fields = [
+          "contact_id",
+          "first_name",
+          "last_name",
+          "phys_address1",
+          "phys_address2",
+          "phys_city",
+          "phys_state",
+          "phys_postal_code",
+          "phys_country",
+          "central_phone_number",
+          "email_address",
+        ];
+  
+        fields.forEach((field) => {
+          const target = document.getElementById(`${type}_${field}`);
+          if (target) {
+            target.value = data[field] || "";
+          }
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to fetch contact info:", err);
       });
-    });
   }
 
   // Initialize both sections (main and dialog)
-  $(".customer-section").each(function () {
-    const $section = $(this);
-    initCustomerAutocomplete($section);
-    $section
-      .find("select[id$='_contact_name']")
-      .on("change", () => getContactInfo($section));
+  document.querySelectorAll(".customer-section").forEach((section) => {
+    initCustomerAutocomplete(section);
+
+    const contactSelect = section.querySelector("select[id$='_contact_name']");
+    if (contactSelect) {
+      contactSelect.addEventListener("change", () => getContactInfo(section));
+    }
   });
 
   function makeQuote() {

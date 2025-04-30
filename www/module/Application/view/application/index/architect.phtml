@@ -1,4 +1,146 @@
 <?php
 $this->headTitle('Architect portal');
 echo $this->headTitle();
+
+$user = $this->user;
+
+$hour = date('H');
+
+if ($hour >= 5 && $hour < 12) {
+    $greeting = "Good morning";
+} elseif ($hour >= 12 && $hour < 18) {
+    $greeting = "Good afternoon";
+} else {
+    $greeting = "Good evening";
+}
 ?>
+
+<div class="main-page-content">
+    <header class="main-page-content-header">
+        <h1>
+            <?= $greeting ?>, <?= $user['first_name'] ?>!
+        </h1>
+        <p>Here's the summary of your architects.</p>
+    </header>
+
+    <section class="features fade-in-up architect-page">
+        <div class="widget-information architect-dashboard row-1">
+            <a href="#" class="feature fade-in-up col-1">
+                <p class="widget-text-head">Total architect
+                </p>
+                <h2 class="widget-text-bold">57</h2>
+            </a>
+
+            <a href="#" class="feature fade-in-up col-2">
+                <p class="widget-text-head">Active projects
+                </p>
+                <h2 class="widget-text-bold">63</h2>
+            </a>
+
+            <a href="#" class="feature fade-in-up col-3">
+                <p class="widget-text-head">Pending quotes
+                </p>
+                <h2 class="widget-text-bold">48</h2>
+            </a>
+
+            <a href="#" class="feature fade-in-up col-4">
+                <p class="widget-text-head">Completed projects
+                </p>
+                <h2 class="widget-text-bold">15</h2>
+            </a>
+        </div>
+
+        <div class="widget-information architect-dashboard row-2">
+            <a href="#" class="feature fade-in-up col-1">
+                <p class="widget-text-head">
+                    Top 5 architects
+                </p>
+                <table cellpadding="0" cellspacing="0" width="100%" class="sTable wTable display nowrap" id="top-5-architect-table" data-init="architectTop5">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                </table>
+            </a>
+
+            <a href="#" class="feature fade-in-up col-2">
+                <p class="widget-text-head">Architect category
+                </p>
+                <canvas id="architectPieChart" width="100px" height="100px"></canvas>
+            </a>
+
+            <a href="#" class="feature fade-in-up col-3">
+                <p class="widget-text-head">Recent activities
+                </p>
+                <p>John Doe created a new Project #1024<br>
+                <span style="font:italic">(2 minutes ago)</span>
+                </p>
+                <div class="line"></div>
+                <p>Jane Smith updated Project #1023<br>
+                <span style="font:italic">(5 minutes ago)</span>
+                </p>
+            </a>
+        </div>
+
+        <div class="widget-table">
+            <div class="widget-header">
+                <div class="widget-title">
+                    <h2>Architects</h2>
+                </div>
+                <div class="widget-button">
+                    <button type="button" title="Add new architect" class="button action has-icon add-architect-button small" id="widget-btn-add-architect">
+                        <span class="button-wrap">
+                            <span class="icon icon-add"></span>
+                            Add Architect
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="line"></div>
+
+            <div class="widget-section">
+                <table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="architect-all-table" data-init="architectAll">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Rep ID</th>
+                            <th>Type</th>
+                            <th>Class ID</th>
+                            <th>Date added</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    const ctx = document.getElementById('architectPieChart').getContext('2d');
+    const architectChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Residential', 'Commercial', 'Industrial', 'Bank', 'School'],
+            datasets: [{
+                label: 'Architect',
+                data: [12, 8, 5, 7, 7], // adjust to your real data
+                backgroundColor: ['#336699', '#86BBD8', '#2F4858', '#9EE493', '#DAF7DC'],
+                borderColor: '#fff',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>

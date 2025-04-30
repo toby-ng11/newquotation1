@@ -7,7 +7,7 @@
 
 $centura-theme-light-widget-background: rgba(255, 255, 255, 0.6);
 $centura-theme-light-widget-hover: rgba(255, 255, 255, 0.8);
-$centura-theme-light-widget-box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+$centura-theme-light-widget-box-shadow:  0 4px 8px rgba(0, 0, 0, 0.05);
 $centura-theme-light-widget-icon-box-shadow: 0 5px 8px rgba(0,0,0,0.3);
 
 $centura-theme-dark-widget-background: rgba(255, 255, 255, 0.08);
@@ -47,6 +47,10 @@ $centura-theme-dark-widget-green-shadow: 0 5px 15x rgba(55, 255, 0, 0.451);
 
   --form-input-background:rgb(238, 238, 238);
   --form-input-background-hover:rgb(245, 245, 245);
+
+  --autocomplete-background:var(--widget-background-primary);
+  --autocomplete-background-hover:rgb(229, 229, 229);
+  --autocomplete-background-focus: rgb(183, 207, 247);
 
   --form-widget-section-background:#{$centura-theme-light-widget-background};
   --form-widget-section-background-hover:var(--form-input-background-hover);
@@ -285,6 +289,10 @@ $centura-theme-dark-widget-green-shadow: 0 5px 15x rgba(55, 255, 0, 0.451);
 
   --form-input-background:rgb(50, 50, 50);
   --form-input-background-hover:rgb(55, 55, 55);
+
+  --autocomplete-background:var(--widget-background-primary);
+  --autocomplete-background-hover:rgb(90, 90, 90);
+  --autocomplete-background-focus: rgb(93, 105, 127);
 
   --header-background-primary: var(--background-primary);
 

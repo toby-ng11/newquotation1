@@ -55,8 +55,8 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 		</header>
 
 		<section class="fade-in-up" aria-labelledby="widget-board" id="section1" data-nav="Widget Board">
-			<div class="widget-information">
-				<div class="widget-table dashboard">
+			<div class="widget-information quote-edit row-1">
+				<div class="widget-table dashboard" style="grid-row: 1 / 3;">
 					<div class="project-information project-name">
 						<h2><?= $project['project_name'] ?></h2>
 						<p><?= $project['project_address'] ?></p>
@@ -204,122 +204,124 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 
 					<div class="line"></div>
 
-					<div class="widget-section customer-section" data-type="main" id="main-customer-section">
-						<div class="widget-header">
-							<div class="widget-title">
-								<h3>Customer</h3>
+					<div class="customer-section" data-type="main" id="main-customer-section">
+						<div class="widget-section">
+							<div class="widget-header">
+								<div class="widget-title">
+									<h3>Customer</h3>
+								</div>
+								<div class="widget-button">
+									<?php if ($quoteStatusID != $approved) { ?>
+										<button type="button" class="button action has-icon new-customer small" id="add-new-customer">
+											<span class="button-wrap">
+												<span class="icon icon-add"></span>
+												New Customer
+											</span>
+										</button>
+										<button type="button" class="button action has-icon discard-customer small basic" style='display:none;' id="discard-new-customer">
+											<span class="button-wrap">
+												<span class="icon icon-undo"></span>
+												Discard Adding
+											</span>
+										</button>
+									<?php } ?>
+								</div>
 							</div>
-							<div class="widget-button">
-								<?php if ($quoteStatusID != $approved) { ?>
-									<button type="button" class="button action has-icon new-customer small" id="add_new_mode">
-										<span class="button-wrap">
-											<span class="icon icon-add"></span>
-											New Customer
-										</span>
-									</button>
-									<button type="button" class="button action has-icon discard-customer small basic" style='display:none;' id="discard_new_mode">
-										<span class="button-wrap">
-											<span class="icon icon-undo"></span>
-											Discard Adding
-										</span>
-									</button>
-								<?php } ?>
+							<div class="formRow">
+								<input type="hidden" id="main_customer_id" name="customer_id" value="<?= $customer['customer_id']  ?>" />
+								<input type="hidden" id="main_salesrep_id" name="salesrep_id" value="<?= $customer['salesrep_id'] ?>" />
+								<div class="oneTwo required-field">
+									<label for="main_customer_name">Customer</label>
+									<input id='main_customer_name' name='customer_name' type="text" value="<?= $customer['customer_name'] ?>" />
+								</div>
+
+								<div class="oneTwo">
+									<label for="main_company_id">Company ID</label>
+									<input type="text" name='company_id' id='main_company_id' value="<?= $customer['company_id'] ?>" readonly />
+								</div>
+
+								<div class="oneTwo">
+									<label for='main_salesrep_full_name'>Sales Representative</label>
+									<input id='main_salesrep_full_name' name='salesrep_full_name' type="text" value="<?= $customer['salesrep_full_name'] ?>" readonly />
+								</div>
+
+								<div class="oneTwo">
+									<label for="main_credit_term">Credit Terms</label>
+									<input id="main_credit_term" type="text" value="<?= $customer['terms_desc'] ?>" readonly />
+								</div>
 							</div>
 						</div>
-						<div class="formRow">
-							<input type="hidden" id="main_customer_id" name="customer_id" value="<?= $customer['customer_id']  ?>" />
-							<input type="hidden" id="main_salesrep_id" name="salesrep_id" value="<?= $customer['salesrep_id'] ?>" />
-							<div class="oneTwo required-field">
-								<label for="main_customer_name">Customer</label>
-								<input readonly id='main_customer_name' name='customer_name' type="text" value="<?= $customer['customer_name'] ?>" />
+
+						<div class="line"></div>
+
+						<div class="widget-section">
+							<h3>Contact</h3>
+							<div class="formRow">
+								<input type="hidden" id="main_contact_id" name="contact_id" value="<?= $contact['contact_id'] ?>" />
+								<div class="oneTwo required-field">
+									<label for="main_contact_name">Contact</label>
+									<select id='main_contact_name' class="validate[required]">
+										<option value=''>-- Please search for a customer first --</option>
+										<?php
+										foreach ($contactList as $c) { ?>
+											<option value="<?= $c['contact_id'] ?>" <?php if ($c['contact_id'] == $quote['contact_id']) echo 'selected' ?>><?= $c['contact_full_name'] ?></option>
+										<?php }
+										?>
+									</select>
+								</div>
+
+								<div class="oneTwo">
+									<label for="main_first_name">First Name</label>
+									<input readonly id='main_first_name' name='first_name' type="text" value="<?= $contact['first_name'] ?>">
+								</div>
+
+								<div class="oneTwo">
+									<label for="main_last_name">Last Name</label>
+									<input readonly id='main_last_name' name='last_name' type="text" value="<?= $contact['last_name'] ?>">
+								</div>
+
+								<div class="oneTwo">
+									<label for="main_phys_address1">Address 1</label>
+									<input readonly id='main_phys_address1' name='phys_address1' type="text" value="<?= $contact['phys_address1'] ?>" />
+								</div>
+
+								<div class="oneTwo">
+									<label for="main_phys_address2">Address 2</label>
+									<input readonly id='main_phys_address2' name='phys_address2' type="text" value="<?= $contact['phys_address2']  ?>">
+								</div>
+
+								<div class="oneTwo">
+									<label for="main_phys_city">City</label>
+									<input readonly id='main_phys_city' name='phys_city' type="text" value="<?= $contact['phys_city'] ?>">
+								</div>
+
+								<div class="oneTwo">
+									<label for="main_phys_state">Province</label>
+									<input readonly id='main_phys_state' name='phys_state' type="text" value="<?= $contact['phys_state'] ?>">
+								</div>
+
+								<div class="oneTwo">
+									<label for="main_phys_postal_code">Postal Code</label>
+									<input readonly id='main_phys_postal_code' name='phys_postal_code' type="text" value="<?= $contact['phys_postal_code'] ?>">
+								</div>
+
+								<div class="oneTwo">
+									<label for="main_phys_country">Country</label>
+									<input readonly id='main_phys_country' name='phys_country' type="text" value="<?= $contact['phys_country'] ?>">
+								</div>
+
+								<div class="oneTwo">
+									<label for="main_central_phone_number">Phone Number</label>
+									<input readonly id='main_central_phone_number' name='central_phone_number' type="text" class="maskPhoneExt" value="<?= $contact['central_phone_number'] ?>" />
+								</div>
+
+
+								<div class="oneTwo required-field">
+									<label for="main_email_address">Email</label>
+									<input readonly type="text" value="<?= $contact['email_address'] ?>" id='main_email_address' name='email_address'>
+								</div>
+
 							</div>
-
-							<div class="oneTwo">
-								<label for="main_company_id">Company ID</label>
-								<input type="text" name='company_id' id='main_company_id' value="<?= $customer['company_id'] ?>" readonly />
-							</div>
-
-							<div class="oneTwo">
-								<label for='main_salesrep_full_name'>Sales Representative</label>
-								<input id='main_salesrep_full_name' name='salesrep_full_name' type="text" value="<?= $customer['salesrep_full_name'] ?>" readonly />
-							</div>
-
-							<div class="oneTwo">
-								<label for="main_credit_term">Credit Terms</label>
-								<input id="main_credit_term" type="text" value="<?= $customer['terms_desc'] ?>" readonly />
-							</div>
-						</div>
-					</div>
-
-					<div class="line"></div>
-
-					<div class="widget-section">
-						<h3>Contact</h3>
-						<div class="formRow">
-							<input type="hidden" id="main_contact_id" name="contact_id" value="<?= $contact['contact_id'] ?>" />
-							<div class="oneTwo required-field">
-								<label for="main_contact_name">Contact</label>
-								<select id='main_contact_name' class="validate[required]">
-									<option value=''>-- Please search for a customer first --</option>
-									<?php
-									foreach ($contactList as $c) { ?>
-										<option value="<?= $c['contact_id'] ?>" <?php if ($c['contact_id'] == $quote['contact_id']) echo 'selected' ?>><?= $c['contact_full_name'] ?></option>
-									<?php }
-									?>
-								</select>
-							</div>
-
-							<div class="oneTwo">
-								<label for="main_first_name">First Name</label>
-								<input readonly id='main_first_name' name='first_name' type="text" value="<?= $contact['first_name'] ?>">
-							</div>
-
-							<div class="oneTwo">
-								<label for="main_last_name">Last Name</label>
-								<input readonly id='main_last_name' name='last_name' type="text" value="<?= $contact['last_name'] ?>">
-							</div>
-
-							<div class="oneTwo">
-								<label for="main_phys_address1">Address 1</label>
-								<input readonly id='main_phys_address1' name='phys_address1' type="text" value="<?= $contact['phys_address1'] ?>" />
-							</div>
-
-							<div class="oneTwo">
-								<label for="main_phys_address2">Address 2</label>
-								<input readonly id='main_phys_address2' name='phys_address2' type="text" value="<?= $contact['phys_address2']  ?>">
-							</div>
-
-							<div class="oneTwo">
-								<label for="main_phys_city">City</label>
-								<input readonly id='main_phys_city' name='phys_city' type="text" value="<?= $contact['phys_city'] ?>">
-							</div>
-
-							<div class="oneTwo">
-								<label for="main_phys_state">Province</label>
-								<input readonly id='main_phys_state' name='phys_state' type="text" value="<?= $contact['phys_state'] ?>">
-							</div>
-
-							<div class="oneTwo">
-								<label for="main_phys_postal_code">Postal Code</label>
-								<input readonly id='main_phys_postal_code' name='phys_postal_code' type="text" value="<?= $contact['phys_postal_code'] ?>">
-							</div>
-
-							<div class="oneTwo">
-								<label for="main_phys_country">Country</label>
-								<input readonly id='main_phys_country' name='phys_country' type="text" value="<?= $contact['phys_country'] ?>">
-							</div>
-
-							<div class="oneTwo">
-								<label for="main_central_phone_number">Phone Number</label>
-								<input readonly id='main_central_phone_number' name='central_phone_number' type="text" class="maskPhoneExt" value="<?= $contact['central_phone_number'] ?>" />
-							</div>
-
-
-							<div class="oneTwo required-field">
-								<label for="main_email_address">Email</label>
-								<input readonly type="text" value="<?= $contact['email_address'] ?>" id='main_email_address' name='email_address'>
-							</div>
-
 						</div>
 					</div>
 

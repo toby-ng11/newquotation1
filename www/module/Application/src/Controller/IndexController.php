@@ -9,7 +9,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
 use Application\Service\UserService;
-use Application\Model\{Project, Quote, Note};
+use Application\Model\{Architect, Project, Quote, Note};
 
 class IndexController extends AbstractActionController
 {
@@ -17,13 +17,15 @@ class IndexController extends AbstractActionController
     protected $project;
     protected $quote;
     protected $note;
+    protected $architect;
 
-    public function __construct(UserService $userService, Project $project, Quote $quote, Note $note)
+    public function __construct(UserService $userService, Project $project, Quote $quote, Note $note, Architect $architect)
     {
         $this->userService = $userService;
         $this->project = $project;
         $this->quote = $quote;
         $this->note = $note;
+        $this->architect = $architect;
     }
 
     public function indexAction()
@@ -59,12 +61,12 @@ class IndexController extends AbstractActionController
         $viewModel = new ViewModel([
             'user' => $this->userService->getCurrentUser(),
         ]);
-    
+
         // If HTMX request, skip layout
         if ($this->getRequest()->getHeader('HX-Request')) {
             $viewModel->setTerminal(true);
         }
-    
+
         return $viewModel;
     }
 
@@ -112,7 +114,7 @@ class IndexController extends AbstractActionController
         if ($this->getRequest()->getHeader('HX-Request')) {
             $viewModel->setTerminal(true);
         }
-    
+
         return $viewModel;
     }
 
@@ -156,6 +158,23 @@ class IndexController extends AbstractActionController
     public function architectAction()
     {
         $user = $this->userService->getCurrentUser();
+        $table = $this->params()->fromRoute('table', 'all');
+
+        $admin = false;
+        if ($user['sale_role'] === 'admin' || $user['approve_id'] !== null) {
+            $admin = true;
+        }
+
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            switch ($table) {
+                case 'all':
+                    $TableView = $this->architect->fetchAllTable($admin, $user['id']);
+                    return new JsonModel($TableView);
+                case 'topfive':
+                    $TableView = $this->architect->fetchTopFiveTable($user['id']);
+                    return new JsonModel($TableView);
+            }
+        }
 
         $viewModel =  new ViewModel([
             'user' => $user

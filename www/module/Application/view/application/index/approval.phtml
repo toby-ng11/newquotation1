@@ -34,14 +34,36 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
             <p>Here's the quick summary of quotes</p>
         </header>
 
-        <section class="active fade-in-up">
+        <section class="features fade-in-up approval-page">
+        <div class="widget-information approval-dashboard row-1">
+            <a href="#" class="feature fade-in-up col-1">
+                <p class="widget-text-head">Waiting for approval
+                </p>
+                <h2 class="widget-text-bold"><?= $waitingTableCount ?> <span class="widget-text-desc">quotes</span></h2>
+            </a>
+
+            <a href="#" class="feature fade-in-up col-2">
+                <p class="widget-text-head">Approved
+                </p>
+                <h2 class="widget-text-bold"><?= $approvedTableCount ?> <span class="widget-text-desc">quotes</span></h2>
+            </a>
+
+            <a href="#" class="feature fade-in-up col-3">
+                <p class="widget-text-head">Rejected
+                </p>
+                <h2 class="widget-text-bold"><?= $disapprovedTableCount ?> <span class="widget-text-desc">quotes</span></h2>
+            </a>
+        </div>
+        </section>
+
+        <section class="fade-in-up">
             <div class="widget-table">
                 <table width="100%" class="sTable display nowrap" id='dashboard-approve-waiting-table' data-init="approvalWaiting">
                     <thead>
                         <tr>
                             <th>Quote ID</th>
                             <th>Project Name</th>
-                            <th>Arch Rep</th>
+                            <th>Architect</th>
                             <th>Customer</th>
                             <th>Taker</th>
                             <th>Segment</th>
@@ -54,14 +76,14 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
             </div>
         </section>
 
-        <section class="active fade-in-up">
+        <section class="fade-in-up">
             <div class="widget-table">
                 <table width="100%" class="sTable display nowrap" id='dashboard-approve-approved-table' data-init="approvalApproved">
                     <thead>
                         <tr>
                             <th>Quote ID</th>
                             <th>Project Name</th>
-                            <th>Arch Rep</th>
+                            <th>Architect</th>
                             <th>Customer</th>
                             <th>Taker</th>
                             <th>Segment</th>
@@ -76,14 +98,14 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
             </div>
         </section>
 
-        <section class="active fade-in-up">
+        <section class="fade-in-up">
             <div class="widget-table">
                 <table width="100%" class="sTable display nowrap" id='dashboard-approve-disapproved-table' data-init="approvalDisapproved">
                     <thead>
                         <tr>
                             <th>Quote ID</th>
                             <th>Project Name</th>
-                            <th>Arch Rep</th>
+                            <th>Architect</th>
                             <th>Customer</th>
                             <th>Taker</th>
                             <th>Segment</th>

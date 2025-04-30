@@ -3,7 +3,7 @@
 namespace Application\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\View\Model\JsonModel;
+use Laminas\View\Model\{ViewModel, JsonModel};
 
 use Application\Model\{Architect, Specifier, Address};
 
@@ -31,6 +31,52 @@ class ArchitectController extends AbstractActionController
         $architect = $this->architect->fetchArchitectByPattern($pattern);
 
         return new JsonModel($architect);
+    }
+
+    public function editAction()
+    {
+        $architect_id = (int) $this->params()->fromRoute('id');
+
+        if (!$architect_id) {
+            return $this->redirect()->toRoute('index', ['action' => 'architect']);
+        }
+
+        $architect = $this->architect->fetchArchitectById($architect_id);
+
+        $request = $this->getRequest(); // for submit edit form
+
+        if ($request->isPost()) {
+            $data = $this->params()->fromPost();
+
+            $result = $this->architect->edit($data, $architect_id);
+
+            if ($result) {
+                $this->flashMessenger()->addSuccessMessage("Architect saved successfully!");
+
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonModel([
+                        'success' => (bool) $result,
+                        'message' => $result ? 'Architect saved successfully.' : 'Save failed. Please try again.',
+                        'redirect' => $this->url()->fromRoute('architect', [
+                            'action' => 'edit',
+                            'id' => $architect_id
+                        ])
+                    ]);
+                }
+
+                return $this->redirect()->toRoute('project', [
+                    'action' => 'edit',
+                    'id' => $architect_id
+                ]);
+            } else {
+                $this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
+                return $this->redirect()->toRoute('project', ['action' => 'index']);
+            }
+        }
+
+        return new ViewModel([
+            'id' => $architect_id
+        ]);
     }
 
     public function fetchfullAction() {
