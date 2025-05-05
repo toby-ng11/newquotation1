@@ -87,7 +87,7 @@ $sidebarTemplate = 'sidebar/default';
               hx-target="#content"
               hx-swap="innerHTML"
               hx-push-url="true"
-              @click.prevent="setActive($event); loadSidebar('/sidebar/home')"
+              @click.prevent="setActive($event); loadSidebar('/sidebar/architect')"
               @mouseenter="setHover($event)"
               @mouseleave="clearHover()"
               title="Architect Dashboard"
@@ -157,13 +157,27 @@ $sidebarTemplate = 'sidebar/default';
 
     <!-- Right panel -->
     <div class="sidebar-container" id="options-menu-items">
-      <?php 
+      <?php
       if ($controller == 'ProjectController' && $action == 'edit') {
         $sidebarTemplate = 'sidebar/project-edit';
       } elseif ($controller == 'QuoteController' && $action == 'edit') {
         $sidebarTemplate = 'sidebar/quote-edit';
+      } elseif ($controller == 'ArchitectController' && $action == 'edit') {
+        $sidebarTemplate = 'sidebar/architect-edit';
       } else {
-        $sidebarTemplate = 'sidebar/default';
+        switch ($action) {
+          case 'home':
+            $sidebarTemplate = 'sidebar/default';
+            break;
+          case 'architect':
+            $sidebarTemplate = 'sidebar/architect-dash';
+            break;
+          case 'approval':
+            $sidebarTemplate = 'sidebar/default';
+            break;
+          default:
+            $sidebarTemplate = 'sidebar/default';
+        }
       }
       echo $this->partial($sidebarTemplate);
       ?>

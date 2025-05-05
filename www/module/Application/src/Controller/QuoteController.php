@@ -170,7 +170,7 @@ class QuoteController extends AbstractActionController
                 return new JsonModel(['success' => $result]);
             }
 
-            return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
+            //return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
         } else {
             $this->flashMessenger()->addErrorMessage("Failed to delete quote. Please try again.");
             
@@ -178,7 +178,7 @@ class QuoteController extends AbstractActionController
                 return new JsonModel(['success' => $result]);
             }
 
-            return $this->redirect()->toRoute('quote', ['action' => 'edit', 'id' => $quote_id]);
+            //return $this->redirect()->toRoute('quote', ['action' => 'edit', 'id' => $quote_id]);
         }
     }
 

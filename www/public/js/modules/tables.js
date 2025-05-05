@@ -1,7 +1,12 @@
-import { $projectId, $sheetType } from "./init.js";
+/* global DataTable */
+
+import { $projectId, $sheetType, architectID } from "./init.js";
 
 let projectNoteTable;
 let itemTable;
+let architectProjectsTable;
+let architectAddressesTable;
+let architectSpecifiersTable;
 
 const tableConfigs = {
   /* ------ ADMIN PORTAL ------ */
@@ -767,10 +772,7 @@ const tableConfigs = {
       layout: {
         topStart: function () {
           let info = document.createElement("div");
-          info.innerHTML =
-            "<h2>Waiting for Approval</h2><p>" +
-            waitingTableCount +
-            " quotes waiting for approval</p>";
+          info.innerHTML = "<h2>Waiting for Approval</h2>";
           return info;
         },
         bottomStart: "pageLength",
@@ -868,8 +870,7 @@ const tableConfigs = {
       layout: {
         topStart: function () {
           let info = document.createElement("div");
-          info.innerHTML =
-            "<h2>Approved</h2><p>" + approvedTableCount + " approved quotes";
+          info.innerHTML = "<h2>Approved</h2>";
           return info;
         },
         bottomStart: "pageLength",
@@ -974,10 +975,7 @@ const tableConfigs = {
       layout: {
         topStart: function () {
           let info = document.createElement("div");
-          info.innerHTML =
-            "<h2>Disapproved</h2><p>" +
-            disapprovedTableCount +
-            " disapproved quotes";
+          info.innerHTML = "<h2>Disapproved</h2>";
           return info;
         },
         bottomStart: "pageLength",
@@ -986,7 +984,7 @@ const tableConfigs = {
   },
   /* ------ ARCHITECT PORTAL ------ */
   architectAll: () => {
-    $("#architect-all-table").DataTable({
+    new DataTable("#architect-all-table", {
       ajax: {
         url: "/index/architect/all",
         dataSrc: "",
@@ -1052,7 +1050,7 @@ const tableConfigs = {
     });
   },
   architectTop5: () => {
-    $("#top-5-architect-table").DataTable({
+    new DataTable("#top-5-architect-table", {
       ajax: {
         url: "/index/architect/topfive",
         dataSrc: "",
@@ -1369,11 +1367,11 @@ const tableConfigs = {
         {
           data: "quote_status",
           render: function (data) {
-            if (data == 'Dissapproved') {
+            if (data == "Dissapproved") {
               return '<span class="disapproved red">Disapproved</span>';
-            } else if (data == 'Approved') {
+            } else if (data == "Approved") {
               return '<span class="approved green">Approved</span>';
-            } else if (data == 'Waiting') {
+            } else if (data == "Waiting") {
               return '<span class="waiting orange">Waiting</span>';
             } else {
               return "Draft";
@@ -1402,6 +1400,151 @@ const tableConfigs = {
       },
     });
   },
+  /* ------ ARCHITECT EDIT ------ */
+  architectProjects: () => {
+    architectProjectsTable = new DataTable("#architect-projects-table", {
+      ajax: {
+        url: `/architect/${architectID}/projects`,
+        dataSrc: "",
+      },
+      processing: true,
+      responsive: true,
+      //serverSide: true, // experimetal: server-side processing
+      columns: [
+        {
+          data: "project_id",
+          render: function (data, type, row, meta) {
+            return (
+              "<a target='_blank' href='/project/" +
+              data +
+              "/edit'>" +
+              data +
+              "</a>"
+            );
+          },
+        },
+        {
+          data: "project_name",
+        },
+        {
+          data: "status_desc",
+        },
+      ],
+      columnDefs: [
+        {
+          targets: "_all",
+          className: "dt-head-center",
+        },
+        {
+          targets: [0, 2],
+          className: "dt-body-center",
+        },
+      ],
+      //"responsive": true,
+      order: [[0, "desc"]],
+      layout: {
+        topStart: null,
+        topEnd: null,
+        bottomStart: null,
+        bottomEnd: null,
+      },
+    });
+  },
+  architectAddresses: () => {
+    architectAddressesTable = new DataTable("#architect-addresses-table", {
+      ajax: {
+        url: `/architect/${architectID}/address`,
+        dataSrc: "",
+      },
+      processing: true,
+      responsive: true,
+      //serverSide: true, // experimetal: server-side processing
+      columns: [
+        {
+          data: "address_id",
+          render: function (data, type, row, meta) {
+            return (
+              "<a target='_blank' href='/architect/" +
+              data +
+              "/edit'>" +
+              data +
+              "</a>"
+            );
+          },
+        },
+        {
+          data: "name",
+        },
+      ],
+      columnDefs: [
+        {
+          targets: "_all",
+          className: "dt-head-center",
+        },
+        {
+          targets: [0],
+          className: "dt-body-center",
+        },
+      ],
+      //"responsive": true,
+      order: [[0, "desc"]],
+      layout: {
+        topStart: null,
+        topEnd: null,
+        bottomStart: null,
+        bottomEnd: null,
+      },
+    });
+  },
+  architectSpecifiers: () => {
+    architectSpecifiersTable = new DataTable("#architect-specifiers-table", {
+      ajax: {
+        url: `/architect/${architectID}/fetchspecs`,
+        dataSrc: "",
+      },
+      processing: true,
+      responsive: true,
+      //serverSide: true, // experimetal: server-side processing
+      columns: [
+        {
+          data: "specifier_id",
+          render: function (data, type, row, meta) {
+            return (
+              "<a target='_blank' href='/architect/" +
+              data +
+              "/edit'>" +
+              data +
+              "</a>"
+            );
+          },
+        },
+        {
+          data: "first_name",
+          render: function (data, type, row, meta) {
+            return `${data} ${row.last_name}`;
+          },
+        },
+      ],
+      columnDefs: [
+        {
+          targets: "_all",
+          className: "dt-head-center",
+        },
+        {
+          targets: [0],
+          className: "dt-body-center",
+        },
+      ],
+      //"responsive": true,
+      order: [[0, "desc"]],
+      layout: {
+        topStart: null,
+        topEnd: null,
+        bottomStart: null,
+        bottomEnd: null,
+      },
+    });
+  },
 };
 
 export function initTables() {
@@ -1424,4 +1567,10 @@ export function initTables() {
   });
 }
 
-export { projectNoteTable, itemTable };
+export {
+  projectNoteTable,
+  itemTable,
+  architectProjectsTable,
+  architectAddressesTable,
+  architectSpecifiersTable,
+};

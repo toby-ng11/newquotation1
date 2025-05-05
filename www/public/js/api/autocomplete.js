@@ -6,16 +6,25 @@ export function setupAutoComplete({
   extraSelectActions = [],
   minLength = 1,
   queryParamName = "pattern",
-  limitParamName = "limit"
+  limitParamName = "limit",
 }) {
   const input = document.querySelector(fieldName);
+  if (!input || input.classList.contains("no-autocomplete")) return;
 
-  if (!input) return;
+  const isOverlay = input.closest(".overlay-style");
+  //const isModal = input.closest(".modal-box");
+  const container = isOverlay;
 
-  let autocompleteList = document.createElement("ul");
-  autocompleteList.classList.add("autocomplete-list");
+  const autocompleteList = container
+    ? input.parentNode.querySelector(".autocomplete-list")
+    : document.createElement("ul");
+
+  if (!container) {
+    autocompleteList.classList.add("autocomplete-list");
+    document.body.appendChild(autocompleteList);
+  }
+
   input.parentNode.style.position = "relative"; // Ensure positioning
-  document.body.appendChild(autocompleteList);
 
   let activeIndex = -1;
   let debounceTimer = null;
@@ -32,13 +41,17 @@ export function setupAutoComplete({
         return;
       }
 
-      const url = `${fetchUrl}?${queryParamName}=${encodeURIComponent(query)}&${limitParamName}=10`;
+      const url = `${fetchUrl}?${queryParamName}=${encodeURIComponent(
+        query
+      )}&${limitParamName}=10`;
 
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
-          autocompleteList.classList.add('visible');
+          autocompleteList.classList.add("visible");
           autocompleteList.innerHTML = "";
+
+          if (container) container.classList.add("fly-up");
 
           if (!data.length) {
             const noResult = document.createElement("li");
@@ -60,13 +73,14 @@ export function setupAutoComplete({
                   targetField.value = item[itemKey];
                 }
               });
-              extraSelectActions.forEach(fn => {
+              extraSelectActions.forEach((fn) => {
                 if (typeof fn === "function") {
                   fn(item);
                 }
               });
-              autocompleteList.classList.remove('visible');
+              autocompleteList.classList.remove("visible");
               autocompleteList.innerHTML = "";
+              if (container) container.classList.remove("fly-up");
             });
             autocompleteList.appendChild(listItem);
           });
@@ -74,7 +88,7 @@ export function setupAutoComplete({
         })
         .catch((error) => {
           autocompleteList.innerHTML = "";
-          console.error('Autocomplete fetch error:', error);
+          console.error("Autocomplete fetch error:", error);
         });
     }, 300); // 300ms debounce
   });
@@ -98,18 +112,28 @@ export function setupAutoComplete({
       }
     } else if (e.key === "Escape") {
       autocompleteList.innerHTML = "";
+      if (container) container.classList.remove("fly-up");
     }
   });
 
   document.addEventListener("click", function (e) {
-    if (e.target !== input && !autocompleteList.contains(e.target)) {
+    if (
+      autocompleteList &&
+      e.target !== input &&
+      !autocompleteList.contains(e.target)
+    ) {
       autocompleteList.innerHTML = "";
+      if (container) container.classList.remove("fly-up");
     }
   });
 
-  window.addEventListener("scroll", () => {
-    if (document.activeElement === input) positionList();
-  }, true);
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (document.activeElement === input) positionList();
+    },
+    true
+  );
 
   window.addEventListener("resize", () => {
     if (document.activeElement === input) positionList();
@@ -124,12 +148,22 @@ export function setupAutoComplete({
   }
 
   function positionList() {
+    if (container) return; // no manual positioning needed
+
     const rect = input.getBoundingClientRect();
+    const isReversed = input.classList.contains("reverse-autocomplete");
+
     autocompleteList.style.position = "absolute";
-    autocompleteList.style.top = `${rect.bottom + window.scrollY}px`;
     autocompleteList.style.left = `${rect.left + window.scrollX}px`;
     autocompleteList.style.width = `${rect.width}px`;
     autocompleteList.style.zIndex = "10000";
+    if (isReversed) {
+      autocompleteList.style.top = `${
+        rect.top + window.scrollY - autocompleteList.offsetHeight
+      }px`;
+    } else {
+      autocompleteList.style.top = `${rect.bottom + window.scrollY}px`;
+    }
   }
 
   function defaultRenderItem(item) {

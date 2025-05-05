@@ -25,18 +25,25 @@ let $contactFields = $(
 $contactDropdown.data("default-options", $contactDropdown.html());
 
 export function initQuote() {
+  const quoteSaveBtn = document.getElementById("form-btn-save-quote");
+  const quoteForm = document.getElementById("quote-content");
   // Enable save button
-  $quoteForm.on("change", function () {
-    $("#form-btn-save-quote").prop("disabled", false);
-    setState({ unsave: true, lastChanged: "quote" });
-  });
-
+  if (quoteForm) {
+    quoteForm.addEventListener("change", () => {
+      quoteSaveBtn.disabled = false;
+      setState({ unsave: true, lastChanged: "project" });
+    });
+  }
   // Save edit
-  $("#form-btn-save-quote").on("click", function (e) {
-    e.preventDefault();
-    $quoteForm.trigger("submit");
-    setState({ unsave: false });
-  });
+  if (quoteSaveBtn) {
+    quoteSaveBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      const quoteForm = document.querySelector("form");
+      const submitEvent = new Event("submit", { cancelable: true });
+      quoteForm.dispatchEvent(submitEvent);
+      setState({ unsave: false });
+    });
+  }
 
   // Submit approval
   $(".quote-action-button").on("click", async function (e) {
@@ -92,7 +99,7 @@ export function initQuote() {
         });
 
         if (response.success) {
-          window.location.href = "/index/project";
+          window.location.href = "/index/home";
         } else {
           alert(response.message || "Failed to delete the quote.");
         }
@@ -218,16 +225,18 @@ export function initQuote() {
 
   function getCustomerContacts(customer_id, section) {
     if (!customer_id) return;
-  
+
     fetch(`/customer/${customer_id}/contacts`)
       .then((res) => res.json())
       .then((data) => {
-        const contactSelect = section.querySelector("select[id$='_contact_name']");
+        const contactSelect = section.querySelector(
+          "select[id$='_contact_name']"
+        );
         if (!contactSelect) return;
-  
+
         // Clear previous options
         contactSelect.innerHTML = "";
-  
+
         // Add new options
         data.forEach((item) => {
           const option = document.createElement("option");
@@ -235,7 +244,7 @@ export function initQuote() {
           option.textContent = item.contact_full_name;
           contactSelect.appendChild(option);
         });
-  
+
         getContactInfo(section);
       })
       .catch((err) => {
@@ -247,7 +256,7 @@ export function initQuote() {
     const contactSelect = section.querySelector("select[id$='_contact_name']");
     const contactID = contactSelect?.value;
     if (!contactID) return;
-  
+
     fetch(`/customer/${contactID}/contactinfo`)
       .then((res) => res.json())
       .then((data) => {
@@ -265,7 +274,7 @@ export function initQuote() {
           "central_phone_number",
           "email_address",
         ];
-  
+
         fields.forEach((field) => {
           const target = document.getElementById(`${type}_${field}`);
           if (target) {

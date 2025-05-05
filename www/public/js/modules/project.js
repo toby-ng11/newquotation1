@@ -47,40 +47,34 @@ export function initProject() {
 
   const saveButton = document.getElementById("#form-btn-save-project");
   if (saveButton) {
-    saveButton.addEventListener("click", async (e) => {
+    saveButton.addEventListener("click", async () => {
       if (!projectForm.checkValidity()) return;
-      e.preventDefault();
-      if (
-        window.jQuery &&
-        window.jQuery($projectForm).validationEngine("validate")
-      ) {
-        if (generalContractorInput.value.trim() === "")
-          document.querySelector("#general_contractor_id").value = "";
-        if (awardedContractorInput.value.trim() === "")
-          document.querySelector("#awarded_contractor_id").value = "";
+      if (generalContractorInput.value.trim() === "")
+        document.querySelector("#general_contractor_id").value = "";
+      if (awardedContractorInput.value.trim() === "")
+        document.querySelector("#awarded_contractor_id").value = "";
 
-        document.querySelector(".loading").style.display = "block";
-        setState({ unsave: false });
+      document.querySelector(".loading").style.display = "flex";
+      setState({ unsave: false });
 
-        try {
-          const response = await fetch($projectForm.action, {
-            method: $projectForm.method,
-            body: new URLSearchParams(new FormData($projectForm)),
-            headers: { Accept: "application/json" },
-          });
-          const data = await response.json();
+      try {
+        const response = await fetch($projectForm.action, {
+          method: $projectForm.method,
+          body: new URLSearchParams(new FormData($projectForm)),
+          headers: { Accept: "application/json" },
+        });
+        const data = await response.json();
 
-          if (data.success) {
-            window.location.href = data.redirect;
-          } else {
-            alert(data.message || "Failed to save project.");
-          }
-        } catch (error) {
-          console.error("Save failed:", error);
-          alert("An error occurred while saving the project.");
-        } finally {
-          document.querySelector(".loading").style.display = "none";
+        if (data.success) {
+          window.location.href = data.redirect;
+        } else {
+          alert(data.message || "Failed to save project.");
         }
+      } catch (error) {
+        console.error("Save failed:", error);
+        alert("An error occurred while saving the project.");
+      } finally {
+        document.querySelector(".loading").style.display = "none";
       }
     });
   }
@@ -90,13 +84,17 @@ export function initProject() {
     button.addEventListener("click", async () => {
       if (!confirm("Are you sure you want to delete this project?")) return;
 
-      document.querySelector(".loading").style.display = "block";
+      document.querySelector(".loading").style.display = "flex";
       try {
-        const response = await fetch(`/project/${$projectId}/delete`);
+        const response = await fetch(`/project/${$projectId}/delete`, {
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+          },
+        });
         const data = await response.json();
 
         if (data.success) {
-          window.location.href = "/index/project";
+          window.location.href = "/index/home";
         } else {
           alert(data.message || "Failed to delete the project.");
         }

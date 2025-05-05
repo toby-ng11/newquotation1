@@ -1,23 +1,38 @@
-export function resetForm($form) {
-  $form
-    .find(
-      "input:hidden, input:text, input:password, input:file, select, textarea"
+export function resetForm(form) {
+  if (!form) return;
+
+  // Clear common input types
+  form
+    .querySelectorAll(
+      "input[type='hidden'], input[type='text'], input[type='password'], input[type='file'], select, textarea"
     )
-    .val("")
-    .trigger("change");
-  $form
-    .find("input:radio, input:checkbox")
-    .prop("checked", false)
-    .prop("selected", false)
-    .trigger("change");
-  $form.find("select").each(function () {
-    let $select = $(this);
-    if ($select.data("default-options")) {
-      $select.html($select.data("default-options"));
+    .forEach((el) => {
+      el.value = "";
+      el.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+
+  // Uncheck checkboxes and radios
+  form
+    .querySelectorAll("input[type='checkbox'], input[type='radio']")
+    .forEach((el) => {
+      el.checked = false;
+      el.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+
+  // Reset selects with custom default options (if any)
+  form.querySelectorAll("select").forEach((select) => {
+    const defaultOptions = select.dataset.defaultOptions;
+    if (defaultOptions) {
+      select.innerHTML = defaultOptions;
     }
-    $select.prop("selectedIndex", 0).trigger("change");
+    select.selectedIndex = 0;
+    select.dispatchEvent(new Event("change", { bubbles: true }));
   });
-  $form.find("input, select, textarea").prop("disabled", false);
+
+  // Re-enable all inputs
+  form.querySelectorAll("input, select, textarea").forEach((el) => {
+    el.disabled = false;
+  });
 }
 
 // Utility function to enable/disable buttons
@@ -54,5 +69,5 @@ export function runFadeInAnimation() {
     }
   );
 
-  elements.forEach(el => observer.observe(el));
+  elements.forEach((el) => observer.observe(el));
 }
