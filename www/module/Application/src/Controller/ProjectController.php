@@ -74,32 +74,26 @@ class ProjectController extends AbstractActionController
 
             $project_id = $this->project->save($data);
 
-            // Handle AJAX request
-            if ($request->isXmlHttpRequest()) {
-                if ($project_id) {
-                    // Optional: also return the redirect URL
-                    $this->flashMessenger()->addSuccessMessage("Project created successfully!");
+            if ($project_id) {
+                if ($this->getRequest()->isXmlHttpRequest()) {
                     return new JsonModel([
                         'success' => true,
                         'message' => 'Project created successfully!',
-                        'redirect' => $this->url()->fromRoute('project', [
-                            'action' => 'edit',
-                            'id' => $project_id
-                        ])
-                    ]);
-                } else {
-                    return new JsonModel([
-                        'success' => false,
-                        'message' => 'Failed to create the project.'
                     ]);
                 }
-            }
-            if ($project_id) {
+                $this->flashMessenger()->addSuccessMessage("Project created successfully!");
                 return $this->redirect()->toRoute('project', [
                     'action' => 'edit',
                     'id' => $project_id
                 ]);
             } else {
+                if ($this->getRequest()->isXmlHttpRequest()) {
+                    return new JsonModel([
+                        'success' => false,
+                        'message' => 'Failed to create project. Please try again!',
+                    ]);
+                }
+                $this->flashMessenger()->addErrorMessage("Failed to create project. Please try again!");
                 return $this->redirect()->toRoute('project', ['action' => 'index']);
             }
         }
@@ -146,9 +140,9 @@ class ProjectController extends AbstractActionController
         $specifierList = $this->specifier->fetchSpecifiersByArchitect($project['architect_id']);
         $generalContractor = $this->customer->fetchCustomerById($project['general_contractor_id']);
         $awardedContractor = $this->customer->fetchCustomerById($project['awarded_contractor_id']);
-        
+
         $this->layout()->setVariable('id', $project_id); //for sidebar
-        
+
         $owner = false;
 
         if ($user['id'] === $project['shared_id'] || $user['id'] === $project['owner_id'] || $user['sale_role'] === 'admin' || $user['approve_id'] !== null) {
@@ -167,8 +161,8 @@ class ProjectController extends AbstractActionController
 
                 if ($request->isXmlHttpRequest()) {
                     return new JsonModel([
-                        'success' => (bool) $result,
-                        'message' => $result ? 'Project saved successfully.' : 'Save failed. Please try again.',
+                        'success' => true,
+                        'message' => 'Project saved successfully.',
                         'redirect' => $this->url()->fromRoute('project', [
                             'action' => 'edit',
                             'id' => $project_id
@@ -181,8 +175,18 @@ class ProjectController extends AbstractActionController
                     'id' => $project_id
                 ]);
             } else {
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonModel([
+                        'success' => false,
+                        'message' => 'Save failed. Please try again.',
+                        'redirect' => $this->url()->fromRoute('project', [
+                            'action' => 'edit',
+                            'id' => $project_id
+                        ])
+                    ]);
+                }
                 $this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
-                return $this->redirect()->toRoute('project', ['action' => 'index']);
+                return $this->redirect()->toRoute('project', ['action' => 'edit', 'id' => $project_id]);
             }
         }
 
@@ -224,10 +228,10 @@ class ProjectController extends AbstractActionController
                 return new JsonModel(['success' => $result]);
             }
 
-            return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
+            //return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
         } else {
             $this->flashMessenger()->addErrorMessage("Delete failed. Please try again.");
-            return $this->redirect()->toRoute('project', ['action' => 'edit', 'id' => $project_id]);
+            //return $this->redirect()->toRoute('project', ['action' => 'edit', 'id' => $project_id]);
         }
     }
 
@@ -278,7 +282,7 @@ class ProjectController extends AbstractActionController
         $response->setStatusCode(200);
         $headers = $response->getHeaders();
         $headers->addHeaderLine('Content-Type', 'application/pdf');
-        $headers->addHeaderLine('Content-Disposition', 'attachment; filename="' . $project['project_name'] .'.pdf"');
+        $headers->addHeaderLine('Content-Disposition', 'attachment; filename="' . $project['project_name'] . '.pdf"');
         $headers->addHeaderLine('Content-Length', strlen($pdfContent));
 
         return $response;

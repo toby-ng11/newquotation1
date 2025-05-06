@@ -31,24 +31,24 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
     <div class="main-page-content">
         <header class="main-page-content-header">
             <h1><?= $greeting ?>, <?= $user['first_name'] ?>!</h1>
-            <p>Here's the quick summary of quotes</p>
+            <p>Here's the quick summary of approval status.</p>
         </header>
 
         <section class="features fade-in-up approval-page">
         <div class="widget-information approval-dashboard row-1">
-            <a href="#" class="feature fade-in-up col-1">
+            <a href="#waiting-table-section" class="widget-link feature fade-in-up col-1">
                 <p class="widget-text-head">Waiting for approval
                 </p>
                 <h2 class="widget-text-bold"><?= $waitingTableCount ?> <span class="widget-text-desc">quotes</span></h2>
             </a>
 
-            <a href="#" class="feature fade-in-up col-2">
+            <a href="#approved-table-section" class="widget-link feature fade-in-up col-2">
                 <p class="widget-text-head">Approved
                 </p>
                 <h2 class="widget-text-bold"><?= $approvedTableCount ?> <span class="widget-text-desc">quotes</span></h2>
             </a>
 
-            <a href="#" class="feature fade-in-up col-3">
+            <a href="#disapproved-table-section" class="widget-link feature fade-in-up col-3">
                 <p class="widget-text-head">Rejected
                 </p>
                 <h2 class="widget-text-bold"><?= $disapprovedTableCount ?> <span class="widget-text-desc">quotes</span></h2>
@@ -56,7 +56,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
         </div>
         </section>
 
-        <section class="fade-in-up">
+        <section class="fade-in-up" id="waiting-table-section">
             <div class="widget-table">
                 <table width="100%" class="sTable display nowrap" id='dashboard-approve-waiting-table' data-init="approvalWaiting">
                     <thead>
@@ -76,7 +76,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
             </div>
         </section>
 
-        <section class="fade-in-up">
+        <section class="fade-in-up" id="approved-table-section">
             <div class="widget-table">
                 <table width="100%" class="sTable display nowrap" id='dashboard-approve-approved-table' data-init="approvalApproved">
                     <thead>
@@ -98,7 +98,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
             </div>
         </section>
 
-        <section class="fade-in-up">
+        <section class="fade-in-up" id="disapproved-table-section">
             <div class="widget-table">
                 <table width="100%" class="sTable display nowrap" id='dashboard-approve-disapproved-table' data-init="approvalDisapproved">
                     <thead>
@@ -123,9 +123,3 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 
 <?php }
 ?>
-
-<script>
-    window.waitingTableCount = <?= $waitingTableCount ?>;
-    window.approvedTableCount = <?= $approvedTableCount ?>;
-    window.disapprovedTableCount = <?= $disapprovedTableCount ?>;
-</script>

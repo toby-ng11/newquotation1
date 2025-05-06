@@ -1,0 +1,333 @@
+<?php
+$user = $this->user;
+$locations = $this->locations;
+$projectStatus = $this->projectStatus;
+$marketSegment = $this->marketSegment;
+$architect = $this->architect;
+$architectID = $architect['architect_id'];
+$this->headTitle('Edit Architect: ' . $architectID . ' - ' . $architect['architect_name']);
+echo $this->headTitle();
+$address = $this->address;
+$specifier = $this->specifier;
+$company = $this->company;
+$addressList = $this->addressList;
+$specifierList = $this->specifierList;
+?>
+
+<div class="main-page-content">
+    <header class="main-page-content-header">
+        <h1>Edit Architect</h1>
+        <p>Editting <?= $architectID ?> - <?= $architect['architect_name'] ?></p>
+    </header>
+
+    <section class="features fade-in-up architect-edit-page">
+        <input type="hidden" id="owner_id" value='<?= $user['id'] ?>' />
+        <div class="row-1">
+            <div class="widget-table">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <h2>Architect</h2>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="widget-section">
+                    <form action="/architect/<?= $architectID ?>/edit" method="post" class="form" id='architect-form' data-save-btn="#form-btn-save-architect" data-form="#architectForm">
+                        <div class="formRow">
+                            <div class="oneTwo">
+                                <label for="architect_name">Architect Name</label>
+                                <input type='text' name="architect_name" id='architect_name' class="no-autocomplete"
+                                    original-title="Search by ID or Name" value='<?= $architect['architect_name']
+                                                                                        ?? '' ?>' />
+                                <input type="hidden" name='architect_id' id='architect_id' value='<?= $architect['architect_id'] ?? '' ?>' />
+                            </div>
+
+                            <div class="oneTwo">
+                                <label for="architect_company_id">Company</label>
+                                <select id="architect_company_id" name="architect_company_id">
+                                    <?php foreach ($company as $l) { ?>
+                                        <option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] === ($architect['company_id'] ?? DEFAULT_COMPANY)) echo 'selected' ?>>
+                                            <?= $l['company_name'] ?>
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="oneTwo">
+                                <label for="architect_rep_id">Architect Representative</label>
+                                <input type="text" id="architect_rep_id" name="architect_rep_id"
+                                    value='<?= $architect['architect_rep_id'] ?? '' ?>' />
+                            </div>
+
+                            <div class="oneTwo">
+                                <label for="architect_type_id">Architect Type</label>
+                                <select id="architect_type_id" name="architect_type_id">
+                                    <option value="">-- Choose architect type --</option>
+                                    <?php foreach ($this->architectType as $a) { ?>
+                                        <option value="<?= $a['architect_type_id'] ?>" <?= ($a['architect_type_id'] === ($architect['architect_type_id'] ?? '')) ? 'selected' : '' ?>><?= $a['architect_type_desc'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="oneTwo">
+                                <label for="architect_class_id">Architect Class</label>
+                                <input type="text" id="architect_class_id" name="architect_class_id"
+                                    value='<?= $architect['class_id'] ?? '' ?>'>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="line"></div>
+                <div class="widget-footer">
+                    <div class="widget-footer-button">
+                        <button disabled id="form-btn-save-architect" type="submit" title="Save architect information"
+                            class="button action save-architect-button small">
+                            <span class="button-wrap">
+                                <span class="icon icon-save"></span>
+                                Save
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="widget-table">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <h2>Projects</h2>
+                    </div>
+                    <div class="widget-button">
+                        <button type="button" title="Add new project for this architect"
+                            class="button action has-icon add-project-button small" id="architect-edit-add-project">
+                            <span class="button-wrap">
+                                <span class="icon icon-add"></span>
+                                New Project
+                            </span>
+                        </button>
+                        <a href="/architect/<?= $architectID ?>/projects?export=excel"
+                            class="button action has-icon export-item-button small"
+                            title="Export all projects for this architect">
+                            <span class="button-wrap">
+                                <span class="icon icon-export"></span>
+                                Export
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="architect-projects-table" data-init="architectProjects">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div class="widget-table">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <h2>Addresses</h2>
+                    </div>
+                    <div class="widget-button">
+                        <button type="button" title="Add new address"
+                            class="button action has-icon add-item-button small" id="architect-edit-add-address">
+                            <span class="button-wrap">
+                                <span class="icon icon-add"></span>
+                                New Address
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="line"></div>
+                <table cellpadding="0" cellspacing="0" width="100%" class="sTable wTable display nowrap" id="architect-addresses-table" data-init="architectAddresses">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div class="widget-table">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <h2>Specifiers</h2>
+                    </div>
+                    <div class="widget-button">
+                        <button type="button" title="Add new specifier"
+                            class="button action has-icon add-item-button small" id="architect-edit-add-specifier">
+                            <span class="button-wrap">
+                                <span class="icon icon-add"></span>
+                                New Specifier
+                            </span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="line"></div>
+                <table cellpadding="0" cellspacing="0" width="100%" class="sTable wTable display nowrap" id="architect-specifiers-table" data-init="architectSpecifiers">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+
+        </div>
+    </section>
+
+    <div
+        x-data="projectModal()"
+        x-init="
+    document.getElementById('architect-edit-add-project')
+      .addEventListener('click', () => open = true);
+  "
+        x-effect="if (!open) closeModal()">
+
+        <!-- Modal Overlay -->
+        <div
+            x-show="open"
+            class="modal-overlay"
+            x-transition
+            @keydown.escape.window="open = false"
+            style="display: none;">
+            <!-- Modal Box -->
+            <div
+                class="modal-box"
+                @click.away="open = false"
+                x-transition>
+                <h2>New Project</h2>
+                <div class="line"></div>
+                <div class="modal-content">
+                    <form id="architect-edit-project-form" @submit.prevent="submitForm">
+                        <h3>Project</h3>
+                        <div class="form-grid">
+                            <div class="form-field required-field">
+                                <label for="project_name">Project Name</label>
+                                <input required type="text" id='project_name' name='project_name' />
+                            </div>
+
+                            <div class="form-field required-field">
+                                <label for='project_address'>Project Location</label>
+                                <input required id='project_address' name='project_address' type="text" />
+                            </div>
+
+                            <div class="form-field">
+                                <label for="location_id">Centura Location</label>
+                                <select name="location_id" id="location_id">
+                                    <?php foreach ($locations as $l) { ?>
+                                        <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] === DEFAULT_LOCATION_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="status">Project Stage</label>
+                                <select required name="status" id='status'>
+                                    <option value="">-- Select stage --</option>
+                                    <?php foreach ($projectStatus as $s) { ?>
+                                        <option value="<?= $s['status_id'] ?>"><?= $s['status_desc'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="market_segment_id">Project Segment</label>
+                                <select required name="market_segment_id" id='market_segment_id'>
+                                    <option value="">-- Choose market segment --</option>
+                                    <?php foreach ($marketSegment as $s) { ?>
+                                        <option value="<?= $s['market_segment_id'] ?>"><?= $s['market_segment_desc'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="reed">REED ID</label>
+                                <input type="text" name='reed' original-title="REED Format" id='reed' />
+                            </div>
+
+                            <div class="form-field">
+                                <label for="due_date">Tender Due Date</label>
+                                <input readonly type="text" id="due_date" name='due_date' class="flatpickr" placeholder="Due date" />
+                            </div>
+
+                            <div class="form-field">
+                                <label for="require_date">Required Date</label>
+                                <input readonly type="text" id="require_date" name='require_date' class="flatpickr" placeholder="Required date" />
+                            </div>
+
+                            <?php if ($user['approve_id'] != null) : ?>
+                                <div class="form-field">
+                                    <label for="shared_id">Share Worksheet</label>
+                                    <input type="text" id="shared_id" name="shared_id" placeholder="Share this project with other salesrep" />
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="line"></div>
+                        <h3>Address & Specifier</h3>
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label for="address_id">Address List</label>
+                                <select name='address_id' id='address_id'>
+                                    <?php
+                                    if (!empty($addressList)):
+                                        foreach ($addressList as $a): ?>
+                                            <option value="<?= $a['address_id'] ?>">
+                                                <?= $a['name'] ?>
+                                            </option>
+                                    <?php endforeach;
+                                    endif;
+                                    ?>
+                                </select>
+                            </div>
+
+                            <div class="form-field">
+                                <label for="specifier_id">Specifier</label>
+                                <select name='specifier_id' id='specifier_id'>
+                                    <?php
+                                    if (!empty($specifierList)):
+                                        foreach ($specifierList as $spec): ?>
+                                            <option value="<?= $spec['specifier_id'] ?>">
+                                                <?= $spec['first_name'] . ' ' . $spec['last_name'] ?>
+                                            </option>
+                                    <?php endforeach;
+                                    endif;
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="line"></div>
+                        <h3>Contractors</h3>
+
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label for="general_contractor_name">General Contractor</label>
+                                <input type="text" id="general_contractor_name" name="general_contractor_name" class='reverse-autocomplete' placeholder="Add general contractor" original-title="Type Company Name" />
+                                <input type="hidden" id="general_contractor_id" name="general_contractor_id" />
+                            </div>
+
+                            <div class="form-field">
+                                <label for="awarded_contractor_name">Awarded Contractor</label>
+                                <input id="awarded_contractor_name" name="awarded_contractor_name" type="text" class='reverse-autocomplete' placeholder="Add awarded contractor" original-title="Type Company Name" />
+                                <input id="awarded_contractor_id" name="awarded_contractor_id" type="hidden" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="line"></div>
+                <div class="modal-actions">
+                    <button type="button" @click="closeModal()">Cancel</button>
+                    <button type="submit" form="architect-edit-project-form">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

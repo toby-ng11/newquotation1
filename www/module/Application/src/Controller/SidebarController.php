@@ -24,7 +24,7 @@ class SidebarController extends AbstractActionController
 
     public function architectAction()
     {
-        return (new ViewModel())->setTemplate('sidebar/default')->setTerminal(true);
+        return (new ViewModel())->setTemplate('sidebar/architect-dash')->setTerminal(true);
     }
 
     public function projectEditAction()

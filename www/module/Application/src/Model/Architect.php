@@ -104,17 +104,22 @@ class Architect
         return $result;
     }
 
-    public function fetchArchitectByPattern($pattern, $limit = 10, $company = DEFAULT_COMPANY)
+    public function fetchArchitectByPattern($admin, $pattern, $user_id, $limit = 10, $company = DEFAULT_COMPANY)
     {
         $sql = new Sql($this->adapter);
         $select = $sql->select('architect')  // can use TableGateway instead
             ->where(['company_id' => $company])
-            ->where(['delete_flag' => 'N'])
-            ->limit($limit);
+            ->where(['delete_flag' => 'N']);
+
+        if (!$admin) {
+            $select->where(['architect_rep_id' => $user_id]);
+        }
 
         $select->where->nest()->like('architect_id', $pattern . '%')
             ->or
             ->like('architect_name', $pattern . '%')->unnest();
+
+        $select->limit($limit);
 
         $selectString = $sql->buildSqlString($select);
         //error_log($selectString);
@@ -143,6 +148,18 @@ class Architect
             ->where(['owner_id' => $user_id])
             ->order('rank DESC')
             ->limit(5);
+
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result;
+    }
+
+    public function fetchProjectsByArchitect($id)
+    {
+        $sql = new Sql($this->adapter);
+
+        $select = $sql->select('p2q_view_project')
+            ->where(['architect_id' => $id]);
 
         $selectString = $sql->buildSqlString($select);
         $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);

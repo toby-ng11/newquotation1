@@ -199,9 +199,12 @@ return [
             },
             Controller\ArchitectController::class => function ($container) {
                 return new Controller\ArchitectController(
+                    $container->get(Service\UserService::class),
                     $container->get(Model\Architect::class),
                     $container->get(Model\Address::class),
-                    $container->get(Model\Specifier::class)
+                    $container->get(Model\Specifier::class),
+                    $container->get(Model\Location::class),
+                    $container->get(Model\Project::class)
                 );
             },
             Controller\ItemController::class => function ($container) {

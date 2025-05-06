@@ -8,19 +8,22 @@ use Laminas\Db\Sql\Sql;
 use Exception;
 use Laminas\Db\TableGateway\TableGateway;
 
-class Address {
+class Address
+{
     protected $adapter;
     protected $address;
 
-    public function __construct(Adapter $adapter, TableGateway $address) {
+    public function __construct(Adapter $adapter, TableGateway $address)
+    {
         $this->adapter = $adapter;
         $this->address = $address;
     }
 
-    public function add($data, $architectID) {
+    public function add($data, $architectID)
+    {
         if (!$data || !$architectID) {
-			return  false;
-		}
+            return  false;
+        }
 
         $info = [
             'architect_id'          => $architectID,
@@ -47,10 +50,11 @@ class Address {
         }
     }
 
-    public function edit($data, $id) {
+    public function edit($data, $id)
+    {
         if (!$data || !$id) {
-			return  false;
-		}
+            return  false;
+        }
 
         $info = [
             //'architect_id'          => $architectID,
@@ -76,10 +80,11 @@ class Address {
         }
     }
 
-    public function addSpecifierAddress($data) {
+    public function addSpecifierAddress($data)
+    {
         if ($data == null) {
-			return  false;
-		}
+            return  false;
+        }
 
         $info = [
             'name'                  => trim($data['specifier_first_name']) . ' ' . trim($data['specifier_last_name']),
@@ -105,19 +110,20 @@ class Address {
         $select = $sql->select('p2q_view_address')
             ->where(['architect_id' => $id]);
 
-            $selectString = $sql->buildSqlString($select);
-            $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
-            return $result;
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result;
     }
 
-    public function fetchAddressesById($id) {
+    public function fetchAddressesById($id)
+    {
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('p2q_view_address')
             ->where(['address_id' => $id]);
 
-            $selectString = $sql->buildSqlString($select);
-            $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
-            return $result->current();
+        $selectString = $sql->buildSqlString($select);
+        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        return $result->current();
     }
 }
