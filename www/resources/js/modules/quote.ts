@@ -1,14 +1,14 @@
-import { setupAutoComplete } from "../api/autocomplete.js";
+import { setupAutoComplete } from "../api/autocomplete";
 import {
   $projectId,
   $projectForm,
   $quoteForm,
   $sheetType,
   $quoteId,
-} from "./init.js";
-import { setState } from "./state.js";
-import { resetForm } from "./utils.js";
-import { disableButton } from "./utils.js";
+} from "./init";
+import { setState } from "./state";
+import { resetForm } from "./utils";
+import { disableButton } from "./utils";
 
 const $makeQuoteForm = $("#dialog-make-quote-form");
 export const $dialogMakeQuote = $("#dialog-make-quote");

@@ -1,6 +1,6 @@
-import { setupAutoComplete } from "../api/autocomplete.js";
-import { $projectId, $projectForm, projectForm } from "./init.js";
-import { setState } from "./state.js";
+import { setupAutoComplete } from "../api/autocomplete";
+import { $projectId, $projectForm, projectForm } from "./init";
+import { setState } from "./state";
 
 export function initProject() {
   const architectDetails = document.querySelector("#architect-details");
