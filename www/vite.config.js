@@ -8,9 +8,9 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        p2q: path.resolve(__dirname, "resources/js/p2q.js"),
-        p2qInit: path.resolve(__dirname, "resources/js/p2q-init.js"),
-        home: path.resolve(__dirname, "resources/js/home.js"),
+        p2q: path.resolve(__dirname, "resources/js/p2q.ts"),
+        p2qInit: path.resolve(__dirname, "resources/js/p2q-init.ts"),
+        home: path.resolve(__dirname, "resources/js/home.ts"),
       },
       output: {
         entryFileNames: "[name].js",

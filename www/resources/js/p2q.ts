@@ -1,12 +1,12 @@
-import { initTables } from "./modules/tables.js";
-import { initItem } from "./modules/item.js";
-import { initNote } from "./modules/note.js";
-import { initFlatpickr, runFadeInAnimation } from "./modules/utils.js";
-import { initProject } from "./modules/project.js";
-import { initQuote, $dialogMakeQuote } from "./modules/quote.js";
-import { initSearchBox } from "./api/searchbox.js";
-import { scrollOffset } from "./modules/scroll-offset.js";
-import { initArchitect } from "./modules/architect.js";
+import { initTables } from "./modules/tables";
+import { initItem } from "./modules/item";
+import { initNote } from "./modules/note";
+import { initFlatpickr, runFadeInAnimation } from "./modules/utils";
+import { initProject } from "./modules/project";
+import { initQuote, $dialogMakeQuote } from "./modules/quote";
+import { initSearchBox } from "./api/searchbox";
+import { scrollOffset } from "./modules/scroll-offset";
+import { initArchitect } from "./modules/architect";
 
 document.addEventListener("DOMContentLoaded", () => {
   scrollOffset();

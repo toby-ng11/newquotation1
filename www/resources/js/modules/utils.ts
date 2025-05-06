@@ -1,3 +1,5 @@
+import flatpickr from "flatpickr";
+
 export function resetForm(form) {
   if (!form) return;
 

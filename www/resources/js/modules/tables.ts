@@ -1,6 +1,5 @@
-/* global DataTable */
-
-import { $projectId, $sheetType, architectID } from "./init.js";
+import { $projectId, $sheetType, architectID } from "./init";
+import DataTable from "datatables.net-dt";
 
 let projectNoteTable;
 let itemTable;
@@ -1204,7 +1203,7 @@ const tableConfigs = {
     });
   },
   item: () => {
-    itemTable = $("#item-table").DataTable({
+    itemTable = new DataTable("#item-table",{
       ajax: {
         url: "/item/table",
         data: {

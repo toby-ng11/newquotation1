@@ -1,4 +1,4 @@
-import { getState, subscribe } from "./state.js";
+import { getState, subscribe } from "./state";
 
 window.onbeforeunload = function () {
   const { unsave, lastChanged } = getState();

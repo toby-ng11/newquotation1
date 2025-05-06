@@ -1,7 +1,8 @@
-import { $projectId } from "./init.js";
-import { projectNoteTable } from "./tables.js";
-import { resetForm, disableButton } from "./utils.js";
+import { $projectId } from "./init";
+import { projectNoteTable } from "./tables";
+import { resetForm, disableButton } from "./utils";
 import { showFlashMessage } from "../api/flashmessage.js";
+import flatpickr from "flatpickr";
 
 const $noteForm = $("#dialog-note-form");
 const $dialogNote = $("#dialog-message");
