@@ -25,652 +25,692 @@ $projectRequiredDate = $project['require_date'];
 
 
 <!-- Main content wrapper -->
-	<div class="main-page-content">
+<div class="main-page-content">
 
-		<header class="main-page-content-header">
-			<h1>Edit Project</h1>
-		</header>
+	<header class="main-page-content-header">
+		<h1>Edit Project</h1>
+	</header>
 
-		<!-- Form -->
+	<!-- Form -->
 
-		<section class="fade-in-up" aria-labelledby="project-information" id="section1" data-nav="Project Information">
-			<form action="/project/<?= $projectID ?>/edit" method="post" class="form" id='project_content' data-save-btn="#form-btn-save-project" data-form="#projectForm">
-				<div class="widget-table">
-					<!--<div class="widget-button">
+	<section class="fade-in-up" aria-labelledby="project-information" id="section1" data-nav="Project Information">
+		<form action="/project/<?= $projectID ?>/edit" method="post" class="form" id='project_content' data-save-btn="#form-btn-save-project" data-form="#projectForm">
+			<div class="widget-table">
+				<!--<div class="widget-button">
 						<div class="widget-pin">
 							<input type="checkbox" id="project-pin" name="project-pin">
 							<label for="project-pin">Pin project</label>
 						</div>
 					</div>-->
-					<div class="widget-header">
-						<div class="widget-title">
-							<h2>Project Information</h2>
-						</div>
+				<div class="widget-header">
+					<div class="widget-title">
+						<h2>Project Information</h2>
 					</div>
-					<div class="line"></div>
-					<div class="widget-section">
-						<div class="formRow">
-							<input type="hidden" id='project_id' value='<?= $projectID ?>'>
-							<input type="hidden" id="user_session_id" name='user_session_id' value='<?= $user['id']
-																									?>'>
-							<input type="hidden" id='create_date' name='create_date'
-								value='<?= $projectCreateDate?->format('Y-m-d') ?? '' ?>' />
+				</div>
+				<div class="line"></div>
+				<div class="widget-section">
+					<div class="formRow">
+						<input type="hidden" id='project_id' value='<?= $projectID ?>'>
+						<input type="hidden" id="user_session_id" name='user_session_id' value='<?= $user['id']
+																								?>'>
+						<input type="hidden" id='create_date' name='create_date'
+							value='<?= $projectCreateDate?->format('Y-m-d') ?? '' ?>' />
 
-							<div class="oneTwo required-field">
-								<label for="project_name">Project Name</label>
-								<input type="text" id='project_name' class="validate[required]"
-									placeholder="Project Name" name='project_name'
-									value="<?= $project['project_name'] ?>" />
-							</div>
+						<div class="oneTwo required-field">
+							<label for="project_name">Project Name</label>
+							<input type="text" id='project_name' class="validate[required]"
+								placeholder="Project Name" name='project_name'
+								value="<?= $project['project_name'] ?>" />
+						</div>
 
-							<div class="oneTwo required-field">
-								<label for="project_address">Project Location</label>
-								<input type="text" name='project_address' id="project_address"
-									class="validate[required]" value='<?= $project['centura_location_id'] ?>' />
-							</div>
+						<div class="oneTwo required-field">
+							<label for="project_address">Project Location</label>
+							<input type="text" name='project_address' id="project_address"
+								class="validate[required]" value='<?= $project['centura_location_id'] ?>' />
+						</div>
 
-							<div class="oneTwo">
-								<label for="location_id">Centura Location</label>
-								<select name="location_id" id="location_id">
-									<?php foreach ($location as $l) { ?>
-										<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $project['centura_location_id']) echo 'selected' ?>>
-											<?= $l['branch_description'] ?>
-										</option>
-									<?php } ?>
-								</select>
-							</div>
+						<div class="oneTwo">
+							<label for="location_id">Centura Location</label>
+							<select name="location_id" id="location_id">
+								<?php foreach ($location as $l) { ?>
+									<option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] == $project['centura_location_id']) echo 'selected' ?>>
+										<?= $l['branch_description'] ?>
+									</option>
+								<?php } ?>
+							</select>
+						</div>
 
-							<div class="oneTwo required-field">
-								<label for="status">Project Stage</label>
-								<select name="status" id="status" class="validate[required]">
-									<option value="">-- Select Status --</option>
-									<?php foreach ($status as $s) { ?>
-										<option value="<?= $s['status_id'] ?>" <?php if ($s['status_id'] == $project['status']) echo 'selected' ?>>
-											<?= $s['status_desc'] ?>
-										</option>
-									<?php } ?>
-								</select>
-							</div>
+						<div class="oneTwo required-field">
+							<label for="status">Project Stage</label>
+							<select name="status" id="status" class="validate[required]">
+								<option value="">-- Select Status --</option>
+								<?php foreach ($status as $s) { ?>
+									<option value="<?= $s['status_id'] ?>" <?php if ($s['status_id'] == $project['status']) echo 'selected' ?>>
+										<?= $s['status_desc'] ?>
+									</option>
+								<?php } ?>
+							</select>
+						</div>
 
-							<div class="oneTwo required-field">
-								<label for='market_segment_id'>Project Segment</label>
-								<select name="market_segment_id" id='market_segment_id' class="validate[required]">
-									<option value="">-- Choose Segment --</option>
-									<?php foreach ($marketSegment as $s) { ?>
-										<option value="<?= $s['market_segment_id'] ?>" <?php if ($s['market_segment_id'] == $project['market_segment_id']) echo 'selected' ?>>
-											<?= $s['market_segment_desc'] ?>
-										</option>
-									<?php } ?>
-								</select>
-							</div>
+						<div class="oneTwo required-field">
+							<label for='market_segment_id'>Project Segment</label>
+							<select name="market_segment_id" id='market_segment_id' class="validate[required]">
+								<option value="">-- Choose Segment --</option>
+								<?php foreach ($marketSegment as $s) { ?>
+									<option value="<?= $s['market_segment_id'] ?>" <?php if ($s['market_segment_id'] == $project['market_segment_id']) echo 'selected' ?>>
+										<?= $s['market_segment_desc'] ?>
+									</option>
+								<?php } ?>
+							</select>
+						</div>
 
+						<div class="oneTwo form-worksheet-owner">
+							<label for="owner_id">Worksheet Owner</label>
+							<input id="owner_id" name="owner_id" type="text" value='<?= $project['owner_id'] ?>'
+								readonly />
+						</div>
+
+						<div class="oneTwo">
+							<label for="reed">REED ID</label>
+							<input type="text" name="reed" id="reed" value="<?= $project['reed'] ?>" />
+						</div>
+
+						<div class="oneTwo">
+							<label for="due_date">Tender Due Date</label>
+							<input id="due_date" type="text" name='due_date' class="flatpickr"
+								value='<?= $projectDueDate?->format('Y-m-d') ?? '' ?>' />
+						</div>
+
+						<div class="oneTwo">
+							<label for='required_date'>Required Date</label>
+							<input id='required_date' type="text" name='required_date' class="flatpickr"
+								value='<?= $projectRequiredDate?->format('Y-m-d') ?>' />
+						</div>
+
+						<?php if ($user['approve_id'] != null) { ?>
 							<div class="oneTwo form-worksheet-owner">
-								<label for="owner_id">Worksheet Owner</label>
-								<input id="owner_id" name="owner_id" type="text" value='<?= $project['owner_id'] ?>'
-									readonly />
+								<label for="shared_id">Share Worksheet</label>
+								<input id="shared_id" name="shared_id" type="text" value='<?= $project['shared_id'] ?>' />
 							</div>
+						<?php } else { ?>
+							<input type="hidden" id="shared_id" name="shared_id" value='<?= $project['shared_id'] ?>' />
+						<?php } ?>
 
-							<div class="oneTwo">
-								<label for="reed">REED ID</label>
-								<input type="text" name="reed" id="reed" value="<?= $project['reed'] ?>" />
-							</div>
-
-							<div class="oneTwo">
-								<label for="due_date">Tender Due Date</label>
-								<input id="due_date" type="text" name='due_date' class="flatpickr"
-									value='<?= $projectDueDate?->format('Y-m-d') ?? '' ?>' />
-							</div>
-
-							<div class="oneTwo">
-								<label for='required_date'>Required Date</label>
-								<input id='required_date' type="text" name='required_date' class="flatpickr"
-									value='<?= $projectRequiredDate?->format('Y-m-d') ?>' />
-							</div>
-
-							<?php if ($user['approve_id'] != null) { ?>
-								<div class="oneTwo form-worksheet-owner">
-									<label for="shared_id">Share Worksheet</label>
-									<input id="shared_id" name="shared_id" type="text" value='<?= $project['shared_id'] ?>' />
-								</div>
-							<?php } else { ?>
-								<input type="hidden" id="shared_id" name="shared_id" value='<?= $project['shared_id'] ?>' />
-							<?php } ?>
-
-							<div class="oneTwo">
-								<label for="project_id_ext">Project ID</label>
-								<input id="project_id_ext" type="text" name='project_id_ext'
-									value="<?= $project['project_id_ext'] ?>" readonly />
-							</div>
+						<div class="oneTwo">
+							<label for="project_id_ext">Project ID</label>
+							<input id="project_id_ext" type="text" name='project_id_ext'
+								value="<?= $project['project_id_ext'] ?>" readonly />
 						</div>
 					</div>
+				</div>
 
-					<div class="line"></div>
+				<div class="line"></div>
 
-					<details id="architect-details">
-						<summary>Architect & Specifier</summary>
-						<div class="widget-section">
-							<div class="widget-header">
-								<div class="widget-title">
-									<h4>Architect</h4>
-								</div>
-								<div class="widget-button">
-									<button type="button" title="Add new architect"
-										class="button action has-icon add-item-button small" id="add_architect">
-										<span class="button-wrap">
-											<span class="icon icon-add"></span>
-											New Architect
-										</span>
-									</button>
-								</div>
+				<details id="architect-details">
+					<summary>Architect & Specifier</summary>
+					<div class="widget-section">
+						<div class="widget-header">
+							<div class="widget-title">
+								<h4>Architect</h4>
 							</div>
-
-							<div class="formRow">
-								<div class="oneTwo">
-									<label for="architect_name">Architect Name</label>
-									<input type='text' name="architect_name" id='architect_name' class="tipN"
-										original-title="Search by ID or Name" value='<?= $architect['architect_name']
-																							?? '' ?>' />
-									<input type="hidden" name='architect_id' id='architect_id' value='<?= $architect['architect_id'] ?? '' ?>' />
-								</div>
-
-								<div class="oneTwo">
-									<label for="architect_company_id">Company</label>
-									<select id="architect_company_id" name="architect_company_id">
-										<?php foreach ($company as $l) { ?>
-											<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] === ($architect['company_id'] ?? DEFAULT_COMPANY)) echo 'selected' ?>>
-												<?= $l['company_name'] ?>
-											</option>
-										<?php } ?>
-									</select>
-								</div>
-
-								<div class="oneTwo">
-									<label for="architect_rep_id">Architect Representative</label>
-									<input type="text" id="architect_rep_id" name="architect_rep_id"
-										value='<?= $architect['architect_rep_id'] ?? '' ?>' />
-								</div>
-
-								<div class="oneTwo">
-									<label for="architect_type_id">Architect Type</label>
-									<select id="architect_type_id" name="architect_type_id">
-										<option value="">-- Choose architect type --</option>
-										<?php foreach ($this->architectType as $a) { ?>
-											<option value="<?= $a['architect_type_id'] ?>" <?= ($a['architect_type_id'] === ($architect['architect_type_id'] ?? '')) ? 'selected' : '' ?>><?= $a['architect_type_desc'] ?></option>
-										<?php } ?>
-									</select>
-								</div>
-
-								<div class="oneTwo">
-									<label for="architect_class_id">Architect Class</label>
-									<input type="text" id="architect_class_id" name="architect_class_id"
-										value='<?= $architect['class_id'] ?? '' ?>'>
-								</div>
-							</div>
-						</div>
-
-						<div class="line"></div>
-
-						<div class="widget-section">
-							<h4>Address</h4>
-							<div class="formRow">
-								<input type="hidden" name='address_id' id='address_id' value="<?= $address['address_id'] ?? '' ?>">
-								<div class="oneTwo ">
-									<label for="address_list">Address List</label>
-									<select name='address_list' id='address_list'>
-										<?php
-										if (!empty($addressList)):
-											foreach ($addressList as $a): ?>
-												<option value="<?= $a['address_id'] ?>" <?= ($a['address_id'] === $project['architect_address_id']) ? 'selected' : '' ?>>
-													<?= $a['name'] ?>
-												</option>
-										<?php endforeach;
-										endif;
-										?>
-										<option value="new">+ Add New Address</option>
-									</select>
-								</div>
-
-								<div class="oneTwo ">
-									<label for="address_name">Address Nickname</label>
-									<input type='text' name="address_name" id='address_name'
-										value='<?= $address['name'] ?? '' ?>'>
-								</div>
-
-								<div class="oneTwo">
-									<label for="phys_address1">Address 1</label>
-									<input type='text' name="phys_address1" id='phys_address1'
-										value='<?= $address['phys_address1'] ?? '' ?>' />
-								</div>
-
-								<div class="oneTwo">
-									<label for="phys_address2">Address 2</label>
-									<input type='text' name="phys_address2" id='phys_address2'
-										value='<?= $address['phys_address2'] ?? '' ?>' placeholder="Optional" />
-								</div>
-
-								<div class="oneTwo">
-									<label for="phys_city">City</label>
-									<input type='text' name="phys_city" id='phys_city' value='<?= $address['phys_city'] ?? '' ?>' placeholder="Optional" />
-								</div>
-
-								<div class="oneTwo">
-									<label for="phys_state">Province</label>
-									<input type='text' name="phys_state" id='phys_state'
-										value='<?= $address['phys_state'] ?? '' ?>' placeholder="Optional" />
-								</div>
-
-								<div class="oneTwo">
-									<label for="phys_postal_code">Postal Code</label>
-									<input type='text' name="phys_postal_code" id='phys_postal_code'
-										value='<?= $address['phys_postal_code'] ?? '' ?>' placeholder="Optional" />
-								</div>
-
-								<div class="oneTwo">
-									<label for="phys_country">Country</label>
-									<input type='text' name="phys_country" id='phys_country'
-										value='<?= $address['phys_country'] ?? '' ?>' placeholder="Optional" />
-								</div>
-
-								<div class="oneTwo">
-									<label for="central_phone_number">Company Phone Number</label>
-									<input id='central_phone_number' name='central_phone_number' type="tel"
-										class="maskPhone" value='<?= $address['central_phone_number'] ?? '' ?>'
-										placeholder="(123) 456-7890" />
-								</div>
-
-								<div class="oneTwo">
-									<label for="email_address">Email</label>
-									<input type="text" value="" id='email_address' name='email_address'
-										value='<?= $address['email_address'] ?? '' ?>' placeholder="Optional">
-								</div>
-
-								<div class="oneTwo">
-									<label for="url">URL</label>
-									<input type="url" value="" id='url' name='url' value='<?= $address['url'] ?? '' ?>' placeholder="Optional">
-								</div>
-							</div>
-						</div>
-
-						<div class="line"></div>
-
-						<div class="widget-section">
-							<h4>Specifier</h4>
-							<div class="formRow">
-								<input type="hidden" id='specifier_id' name="specifier_id" value='<?= $project['specifier_id'] ?>' />
-								<input type="hidden" id='specifier_address_id' name="specifier_address_id"
-									value='<?= $specifier['address_id'] ?? '' ?>' />
-								<div class="oneTwo ">
-									<label for="specifier_name">Specifier</label>
-									<select name='specifier_name' id='specifier_name'>
-										<?php
-										if (!empty($specifierList)):
-											foreach ($specifierList as $spec): ?>
-												<option value="<?= $spec['specifier_id'] ?>" <?= ($spec['specifier_id'] === $project['specifier_id']) ? 'selected' : '' ?>>
-													<?= $spec['first_name'] . ' ' . $spec['last_name'] ?>
-												</option>
-										<?php endforeach;
-										endif;
-										?>
-										<option value="new">+ Add New Specifier</option>
-									</select>
-								</div>
-
-								<div class="oneTwo ">
-									<label for="specifier_first_name">First Name</label>
-									<input type='text' id='specifier_first_name' name="specifier_first_name"
-										class="tipN" value='<?= $specifier['first_name'] ?? '' ?>' />
-								</div>
-
-								<div class="oneTwo ">
-									<label for="specifier_last_name">Last Name</label>
-									<input type='text' id='specifier_last_name' name="specifier_last_name"
-										placeholder="Optional" value='<?= $specifier['last_name'] ?? '' ?>' />
-								</div>
-
-								<div class="oneTwo ">
-									<label for="specifier_job_title">Job Title</label>
-									<input type='text' id='specifier_job_title' name="specifier_job_title"
-										class="tipN" placeholder="Optional" value='<?= $specifier['job_title'] ?? '' ?>' />
-								</div>
-
-								<div class="oneTwo ">
-									<label for="specifier_phone_number">Phone Number</label>
-									<input type='tel' id='specifier_phone_number' name="specifier_phone_number"
-										class="maskPhone" placeholder="(123) 456-7890" value='<?= $specifier['central_phone_number'] ?? '' ?>' />
-								</div>
-
-								<div class="oneTwo ">
-									<label for="specifier_email">Email</label>
-									<input type='text' id='specifier_email' name="specifier_email" class="tipN"
-										placeholder="Optional" value='<?= $specifier['email_address'] ?? '' ?>' />
-								</div>
-							</div>
-						</div>
-					</details>
-
-					<div class="line"></div>
-
-					<details id="contractor-details">
-						<summary>Contractor</summary>
-						<div class="widget-section">
-							<div class="formRow">
-								<div class="oneTwo">
-									<label for="general_contractor_name">General Contractor</label>
-									<input type="text" id="general_contractor_name" name="general_contractor_name"
-										placeholder="Add general contractor" value='<?php if (!empty($generalContractor)) {
-																						echo $generalContractor['customer_name'] . ' - ' .
-																							$generalContractor['company_id'];
-																					} ?>' />
-									<input type="hidden" id="general_contractor_id" name="general_contractor_id"
-										value="<?= $project['general_contractor_id'] ?>" />
-								</div>
-
-								<div class="oneTwo">
-									<label for="awarded_contractor_name">Awarded Contractor</label>
-									<input type="text" id="awarded_contractor_name" name="awarded_contractor_name"
-										placeholder="Add awarded contractor" value='<?php if (!empty($awardedContractor)) {
-																						echo $awardedContractor['customer_name'] . ' - ' .
-																							$awardedContractor['company_id'];
-																					} ?>' />
-									<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id'
-										value="<?= $project['awarded_contractor_id'] ?>">
-								</div>
-							</div>
-						</div>
-					</details>
-
-					<?php if ($owner) { ?>
-
-						<div class="line"></div>
-
-						<div class="widget-footer">
-							<div class="widget-footer-button">
-								<button disabled id="form-btn-save-project" type="button" title="Save project information"
-									class="button action save-project-button small">
+							<div class="widget-button">
+								<button type="button" title="Add new architect"
+									class="button action has-icon add-item-button small" id="add_architect">
 									<span class="button-wrap">
-										<span class="icon icon-save"></span>
-										Save
+										<span class="icon icon-add"></span>
+										New Architect
 									</span>
 								</button>
 							</div>
 						</div>
+
+						<div class="formRow">
+							<div class="oneTwo">
+								<label for="architect_name">Architect Name</label>
+								<input type='text' name="architect_name" id='architect_name' class="tipN"
+									original-title="Search by ID or Name" value='<?= $architect['architect_name']
+																						?? '' ?>' />
+								<input type="hidden" name='architect_id' id='architect_id' value='<?= $architect['architect_id'] ?? '' ?>' />
+							</div>
+
+							<div class="oneTwo">
+								<label for="architect_company_id">Company</label>
+								<select id="architect_company_id" name="architect_company_id">
+									<?php foreach ($company as $l) { ?>
+										<option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] === ($architect['company_id'] ?? DEFAULT_COMPANY)) echo 'selected' ?>>
+											<?= $l['company_name'] ?>
+										</option>
+									<?php } ?>
+								</select>
+							</div>
+
+							<div class="oneTwo">
+								<label for="architect_rep_id">Architect Representative</label>
+								<input type="text" id="architect_rep_id" name="architect_rep_id"
+									value='<?= $architect['architect_rep_id'] ?? '' ?>' />
+							</div>
+
+							<div class="oneTwo">
+								<label for="architect_type_id">Architect Type</label>
+								<select id="architect_type_id" name="architect_type_id">
+									<option value="">-- Choose architect type --</option>
+									<?php foreach ($this->architectType as $a) { ?>
+										<option value="<?= $a['architect_type_id'] ?>" <?= ($a['architect_type_id'] === ($architect['architect_type_id'] ?? '')) ? 'selected' : '' ?>><?= $a['architect_type_desc'] ?></option>
+									<?php } ?>
+								</select>
+							</div>
+
+							<div class="oneTwo">
+								<label for="architect_class_id">Architect Class</label>
+								<input type="text" id="architect_class_id" name="architect_class_id"
+									value='<?= $architect['class_id'] ?? '' ?>'>
+							</div>
+						</div>
+					</div>
+
+					<div class="line"></div>
+
+					<div class="widget-section">
+						<h4>Address</h4>
+						<div class="formRow">
+							<input type="hidden" name='address_id' id='address_id' value="<?= $address['address_id'] ?? '' ?>">
+							<div class="oneTwo ">
+								<label for="address_list">Address List</label>
+								<select name='address_list' id='address_list'>
+									<?php
+									if (!empty($addressList)):
+										foreach ($addressList as $a): ?>
+											<option value="<?= $a['address_id'] ?>" <?= ($a['address_id'] === $project['architect_address_id']) ? 'selected' : '' ?>>
+												<?= $a['name'] ?>
+											</option>
+									<?php endforeach;
+									endif;
+									?>
+									<option value="new">+ Add New Address</option>
+								</select>
+							</div>
+
+							<div class="oneTwo ">
+								<label for="address_name">Address Nickname</label>
+								<input type='text' name="address_name" id='address_name'
+									value='<?= $address['name'] ?? '' ?>'>
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_address1">Address 1</label>
+								<input type='text' name="phys_address1" id='phys_address1'
+									value='<?= $address['phys_address1'] ?? '' ?>' />
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_address2">Address 2</label>
+								<input type='text' name="phys_address2" id='phys_address2'
+									value='<?= $address['phys_address2'] ?? '' ?>' placeholder="Optional" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_city">City</label>
+								<input type='text' name="phys_city" id='phys_city' value='<?= $address['phys_city'] ?? '' ?>' placeholder="Optional" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_state">Province</label>
+								<input type='text' name="phys_state" id='phys_state'
+									value='<?= $address['phys_state'] ?? '' ?>' placeholder="Optional" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_postal_code">Postal Code</label>
+								<input type='text' name="phys_postal_code" id='phys_postal_code'
+									value='<?= $address['phys_postal_code'] ?? '' ?>' placeholder="Optional" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="phys_country">Country</label>
+								<input type='text' name="phys_country" id='phys_country'
+									value='<?= $address['phys_country'] ?? '' ?>' placeholder="Optional" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="central_phone_number">Company Phone Number</label>
+								<input id='central_phone_number' name='central_phone_number' type="tel"
+									class="maskPhone" value='<?= $address['central_phone_number'] ?? '' ?>'
+									placeholder="(123) 456-7890" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="email_address">Email</label>
+								<input type="text" value="" id='email_address' name='email_address'
+									value='<?= $address['email_address'] ?? '' ?>' placeholder="Optional">
+							</div>
+
+							<div class="oneTwo">
+								<label for="url">URL</label>
+								<input type="url" value="" id='url' name='url' value='<?= $address['url'] ?? '' ?>' placeholder="Optional">
+							</div>
+						</div>
+					</div>
+
+					<div class="line"></div>
+
+					<div class="widget-section">
+						<h4>Specifier</h4>
+						<div class="formRow">
+							<input type="hidden" id='specifier_id' name="specifier_id" value='<?= $project['specifier_id'] ?>' />
+							<input type="hidden" id='specifier_address_id' name="specifier_address_id"
+								value='<?= $specifier['address_id'] ?? '' ?>' />
+							<div class="oneTwo ">
+								<label for="specifier_name">Specifier</label>
+								<select name='specifier_name' id='specifier_name'>
+									<?php
+									if (!empty($specifierList)):
+										foreach ($specifierList as $spec): ?>
+											<option value="<?= $spec['specifier_id'] ?>" <?= ($spec['specifier_id'] === $project['specifier_id']) ? 'selected' : '' ?>>
+												<?= $spec['first_name'] . ' ' . $spec['last_name'] ?>
+											</option>
+									<?php endforeach;
+									endif;
+									?>
+									<option value="new">+ Add New Specifier</option>
+								</select>
+							</div>
+
+							<div class="oneTwo ">
+								<label for="specifier_first_name">First Name</label>
+								<input type='text' id='specifier_first_name' name="specifier_first_name"
+									class="tipN" value='<?= $specifier['first_name'] ?? '' ?>' />
+							</div>
+
+							<div class="oneTwo ">
+								<label for="specifier_last_name">Last Name</label>
+								<input type='text' id='specifier_last_name' name="specifier_last_name"
+									placeholder="Optional" value='<?= $specifier['last_name'] ?? '' ?>' />
+							</div>
+
+							<div class="oneTwo ">
+								<label for="specifier_job_title">Job Title</label>
+								<input type='text' id='specifier_job_title' name="specifier_job_title"
+									class="tipN" placeholder="Optional" value='<?= $specifier['job_title'] ?? '' ?>' />
+							</div>
+
+							<div class="oneTwo ">
+								<label for="specifier_phone_number">Phone Number</label>
+								<input type='tel' id='specifier_phone_number' name="specifier_phone_number"
+									class="maskPhone" placeholder="(123) 456-7890" value='<?= $specifier['central_phone_number'] ?? '' ?>' />
+							</div>
+
+							<div class="oneTwo ">
+								<label for="specifier_email">Email</label>
+								<input type='text' id='specifier_email' name="specifier_email" class="tipN"
+									placeholder="Optional" value='<?= $specifier['email_address'] ?? '' ?>' />
+							</div>
+						</div>
+					</div>
+				</details>
+
+				<div class="line"></div>
+
+				<details id="contractor-details">
+					<summary>Contractor</summary>
+					<div class="widget-section">
+						<div class="formRow">
+							<div class="oneTwo">
+								<label for="general_contractor_name">General Contractor</label>
+								<input type="text" id="general_contractor_name" name="general_contractor_name"
+									placeholder="Add general contractor" value='<?php if (!empty($generalContractor)) {
+																					echo $generalContractor['customer_name'] . ' - ' .
+																						$generalContractor['company_id'];
+																				} ?>' />
+								<input type="hidden" id="general_contractor_id" name="general_contractor_id"
+									value="<?= $project['general_contractor_id'] ?>" />
+							</div>
+
+							<div class="oneTwo">
+								<label for="awarded_contractor_name">Awarded Contractor</label>
+								<input type="text" id="awarded_contractor_name" name="awarded_contractor_name"
+									placeholder="Add awarded contractor" value='<?php if (!empty($awardedContractor)) {
+																					echo $awardedContractor['customer_name'] . ' - ' .
+																						$awardedContractor['company_id'];
+																				} ?>' />
+								<input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id'
+									value="<?= $project['awarded_contractor_id'] ?>">
+							</div>
+						</div>
+					</div>
+				</details>
+
+				<?php if ($owner) { ?>
+
+					<div class="line"></div>
+
+					<div class="widget-footer">
+						<div class="widget-footer-button">
+							<button disabled id="form-btn-save-project" type="button" title="Save project information"
+								class="button action save-project-button small">
+								<span class="button-wrap">
+									<span class="icon icon-save"></span>
+									Save
+								</span>
+							</button>
+						</div>
+					</div>
+				<?php } ?>
+			</div>
+		</form>
+	</section>
+
+	<section class="fade-in-up" aria-labelledby="quoted-items" id="section2" data-nav="Quoted Items">
+		<div class="widget-table">
+			<div class="widget-header">
+				<div class="widget-title">
+					<h2>Items</h2>
+				</div>
+				<div class="widget-button">
+					<?php if ($owner) { ?>
+						<button type="button" title="Add new item" class="button action has-icon add-item-button small"
+							id="widget-btn-add-item">
+							<span class="button-wrap">
+								<span class="icon icon-add"></span>
+								Add Item
+							</span>
+						</button>
 					<?php } ?>
 				</div>
-			</form>
-		</section>
-
-		<section class="fade-in-up" aria-labelledby="quoted-items" id="section2" data-nav="Quoted Items">
-			<div class="widget-table">
-				<div class="widget-header">
-					<div class="widget-title">
-						<h2>Items</h2>
-					</div>
-					<div class="widget-button">
-						<?php if ($owner) { ?>
-							<button type="button" title="Add new item" class="button action has-icon add-item-button small"
-								id="widget-btn-add-item">
-								<span class="button-wrap">
-									<span class="icon icon-add"></span>
-									Add Item
-								</span>
-							</button>
-						<?php } ?>
-					</div>
-				</div>
-
-				<div class="line"></div>
-
-				<div class="widget-section">
-					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" 
-						id="item-table" data-init="item">
-						<thead>
-							<tr>
-								<th>Item</th>
-								<th>Quality</th>
-								<th>Unit Price</th>
-								<th>UOM</th>
-								<th>Total Price</th>
-								<th>Note</th>
-								<th>Options</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
 			</div>
-		</section>
 
-		<section class="fade-in-up" aria-labelledby="project-log" id="section3" data-nav="Project Log">
-			<div class="widget-table">
-				<div class="widget-header">
-					<div class="widget-title">
-						<h2>Project Log</h2>
-					</div>
-					<div class="widget-button">
-						<?php if ($owner) { ?>
-							<button type="button" title="Add new log" class="button action has-icon add-log-button small"
-								id="widget-btn-add-note">
-								<span class="button-wrap">
-									<span class="icon icon-add"></span>
-									Add log
-								</span>
-							</button>
-						<?php } ?>
-					</div>
-				</div>
+			<div class="line"></div>
 
-				<div class="line"></div>
-
-				<div class="widget-section">
-					<table cellpadding="0" cellspacing="0" width="100%" class="sTable display" id='note-table' data-init="projectNote">
-						<thead>
-							<tr>
-								<th>Date Add</th>
-								<th>Note</th>
-								<th>Next Action</th>
-								<th>Reminder Time</th>
-								<th>Author</th>
-								<th class="action">Options</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
+			<div class="widget-section">
+				<table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap"
+					id="item-table" data-init="item">
+					<thead>
+						<tr>
+							<th>Item</th>
+							<th>Quality</th>
+							<th>Unit Price</th>
+							<th>UOM</th>
+							<th>Total Price</th>
+							<th>Note</th>
+							<th>Options</th>
+						</tr>
+					</thead>
+				</table>
 			</div>
-		</section>
-
-		<section class="fade-in-up" aria-labelledby="quote-by-project" id="section4" data-nav="Quote by this project">
-			<div class="widget-table">
-				<div class="widget-header">
-					<div class="widget-title">
-						<h2>Project Quotes</h2>
-					</div>
-					<div class="widget-button">
-						<?php if ($owner) { ?>
-							<button type="button" title="Add new quote"
-								class="button action has-icon add-quote-button small" id="widget-btn-add-quote">
-								<span class="button-wrap">
-									<span class="icon icon-add"></span>
-									Make Quote
-								</span>
-							</button>
-						<?php } ?>
-					</div>
-				</div>
-
-				<div class="line"></div>
-
-				<div class="widget-section">
-					<table width="100%" class="sTable display" id='project-quote-table' data-init="projectQuote">
-						<thead>
-							<tr>
-								<th>Quote ID</th>
-								<th>Customer</th>
-								<th>Contact</th>
-								<th>Quote Date</th>
-								<th>Expire Date</th>
-								<th>Ship Required Date</th>
-								<th>Approve Status</th>
-								<th>P21 Order ID</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			</div>
-		</section>
-
-		<div id="dialog-item" title="Add Item">
-			<form action="" class="dialog" id='dialog-item-form'>
-				<div class="dialog-form">
-					<div class="oneTwo required-field">
-						<label for="item_id">Item ID</label>
-						<input type="hidden" name="item_uid" id='item_uid'>
-						<input type="text" id="item_id" name='item_id' class="validate[required]"
-							placeholder="Search by ID or name">
-					</div>
-
-					<div class="oneTwo required-field">
-						<label for='uom'>Unit Of Measure</label>
-						<select name="uom" id='uom' class="validate[required]">
-							<option value=''>-- Search for item first --</option>
-						</select>
-					</div>
-
-					<div class="oneTwo required-field">
-						<label for='unit_price'>Price ($)</label>
-						<input type="text" class="validate[required,custom[number]]" name="unit_price" id='unit_price'
-							placeholder="*You can override the price" />
-					</div>
-
-					<div class="oneTwo required-field">
-						<label for='quantity'>Quantity</label>
-						<input type="text" name="quantity" id='quantity' class="validate[required,custom[number]]" />
-					</div>
-
-					<div class="oneTwo dialog-note">
-						<label for='note'>Note</label>
-						<textarea rows="8" name='note' id='note' maxlength="255"
-							class="validate[maxSize[255]]"></textarea>
-						<input type="hidden" id="is_edit" value='0' />
-					</div>
-				</div>
-			</form>
 		</div>
+	</section>
 
-		<div id="dialog-message" title="Add Log">
-			<form action="" class="dialog" id='dialog-note-form'>
-				<div class="dialog-form">
-					<input type="hidden" name="note_id" id='note_id' />
-					<div class="oneTwo dialog-note">
-						<label for="note_title">Title</label>
-						<textarea rows="2" name='note_title' id='note_title' placeholder="Title"></textarea>
-					</div>
-
-					<div class="oneTwo required-field dialog-note">
-						<label for="project_note">Content</label>
-						<textarea rows="8" name='project_note' id='project_note' class="validate[required]"
-							placeholder="Log content"></textarea>
-					</div>
-
-					<div class="oneTwo dialog-note">
-						<label for="next_action">Follow Up Note</label>
-						<textarea rows="3" name="next_action" id='next_action'
-							placeholder="Can be left empty. Follow up message will be sent via email if the follow up date is set."></textarea>
-					</div>
-
-					<div class="oneTwo dialog-note">
-						<label for='follow_up_date'>Follow Up Date & Time</label>
-						<input type="text" name='follow_up_date' id='follow_up_date'
-							placeholder="Select date and time..." readonly>
-					</div>
+	<section class="fade-in-up" aria-labelledby="project-log" id="section3" data-nav="Project Log">
+		<div class="widget-table">
+			<div class="widget-header">
+				<div class="widget-title">
+					<h2>Project Log</h2>
 				</div>
-			</form>
+				<div class="widget-button">
+					<?php if ($owner) { ?>
+						<button type="button" title="Add new log" class="button action has-icon add-log-button small"
+							id="widget-btn-add-note">
+							<span class="button-wrap">
+								<span class="icon icon-add"></span>
+								Add log
+							</span>
+						</button>
+					<?php } ?>
+				</div>
+			</div>
+
+			<div class="line"></div>
+
+			<div class="widget-section">
+				<table cellpadding="0" cellspacing="0" width="100%" class="sTable display" id='note-table' data-init="projectNote">
+					<thead>
+						<tr>
+							<th>Date Add</th>
+							<th>Note</th>
+							<th>Next Action</th>
+							<th>Reminder Time</th>
+							<th>Author</th>
+							<th class="action">Options</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
 		</div>
+	</section>
 
-		<div id="dialog-make-quote" title="Add Customer">
-			<form action="" class="dialog customer-section" data-type="dialog" id='dialog-make-quote-form'>
-				<h3>Customer</h3>
-				<div class="dialog-form-3">
-					<input type="hidden" id="dialog_customer_id" name="customer_id" value="">
-					<div class="oneTwo required-field">
-						<label for="dialog_customer_name">Customer</label>
-						<input type="text" value="" id="dialog_customer_name" class='tipN validate[required]' placeholder="Search by ID or name">
-					</div>
+	<section class="fade-in-up" aria-labelledby="quote-by-project" id="section4" data-nav="Quote by this project">
+		<div class="widget-table">
+			<div class="widget-header">
+				<div class="widget-title">
+					<h2>Project Quotes</h2>
+				</div>
+				<div class="widget-button">
+					<?php if ($owner) { ?>
+						<button type="button" title="Add new quote"
+							class="button action has-icon add-quote-button small" id="widget-btn-add-quote">
+							<span class="button-wrap">
+								<span class="icon icon-add"></span>
+								Make Quote
+							</span>
+						</button>
+					<?php } ?>
+				</div>
+			</div>
 
-					<div class="oneTwo">
-						<label for="dialog_company_id">Company ID</label>
-						<input id="dialog_company_id" type="text">
-					</div>
+			<div class="line"></div>
 
-					<div class="oneTwo">
-						<label for="dialog_salesrep_full_name">Sales Representative</label>
-						<input id="dialog_salesrep_full_name" type="text">
-					</div>
+			<div class="widget-section">
+				<table width="100%" class="sTable display" id='project-quote-table' data-init="projectQuote">
+					<thead>
+						<tr>
+							<th>Quote ID</th>
+							<th>Customer</th>
+							<th>Contact</th>
+							<th>Quote Date</th>
+							<th>Expire Date</th>
+							<th>Ship Required Date</th>
+							<th>Approve Status</th>
+							<th>P21 Order ID</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</section>
+
+	<div id="dialog-item" title="Add Item">
+		<form action="" class="dialog" id='dialog-item-form'>
+			<div class="dialog-form">
+				<div class="oneTwo required-field">
+					<label for="item_id">Item ID</label>
+					<input type="hidden" name="item_uid" id='item_uid'>
+					<input type="text" id="item_id" name='item_id' class="validate[required]"
+						placeholder="Search by ID or name">
 				</div>
 
+				<div class="oneTwo required-field">
+					<label for='uom'>Unit Of Measure</label>
+					<select name="uom" id='uom' class="validate[required]">
+						<option value=''>-- Search for item first --</option>
+					</select>
+				</div>
+
+				<div class="oneTwo required-field">
+					<label for='unit_price'>Price ($)</label>
+					<input type="text" class="validate[required,custom[number]]" name="unit_price" id='unit_price'
+						placeholder="*You can override the price" />
+				</div>
+
+				<div class="oneTwo required-field">
+					<label for='quantity'>Quantity</label>
+					<input type="text" name="quantity" id='quantity' class="validate[required,custom[number]]" />
+				</div>
+
+				<div class="oneTwo dialog-note">
+					<label for='note'>Note</label>
+					<textarea rows="8" name='note' id='note' maxlength="255"
+						class="validate[maxSize[255]]"></textarea>
+					<input type="hidden" id="is_edit" value='0' />
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div
+		x-data="noteModal()"
+		x-init="
+    document.getElementById('widget-btn-add-note')
+      .addEventListener('click', () => open = true);
+  "
+		x-effect="if (!open) closeModal()">
+
+		<!-- Modal Overlay -->
+		<div
+			x-show="open"
+			class="modal-overlay"
+			x-transition
+			@keydown.escape.window="open = false"
+			style="display: none;">
+			<!-- Modal Box -->
+			<div
+				class="modal-box"
+				@click.away="open = false"
+				x-transition>
+				<h2>Add Note</h2>
 				<div class="line"></div>
+				<div class="modal-content">
+					<form id="dialog-note-form" @submit.prevent="submitForm">
+						<div class="note-form-content">
+							<div class="col-1">
+								<h3>Note</h3>
+								<div class="form-field">
+									<label for="note_title">Title</label>
+									<input type="text" name='note_title' id='note_title' placeholder="Title"></input>
+								</div>
 
-				<h3>Contact</h3>
-				<div class="dialog-form-3">
-					<input type="hidden" id="dialog_contact_id" name="contact_id" value="">
-					<div class="oneTwo required-field">
-						<label for="dialog_contact_name">Contact</label>
-						<select id="dialog_contact_name" class="validate[required]">
-							<option value=''>-- Please search for a customer first --</option>
-						</select>
-					</div>
+								<div class="form-field required-field">
+									<label for="project_note">Content</label>
+									<textarea required rows="12" name='project_note' id='project_note' class="validate[required]"
+										placeholder="Log content"></textarea>
+								</div>
 
-					<div class="oneTwo">
-						<label for="dialog_first_name">First Name</label>
-						<input type="text" id="dialog_first_name">
-					</div>
+							</div>
 
-					<div class="oneTwo">
-						<label for="dialog_last_name">Last Name</label>
-						<input type="text" id="dialog_last_name">
-					</div>
+							<div class="grid-verticle-line"></div>
 
-					<div class="oneTwo">
-						<label for="dialog_phys_address1">Address 1</label>
-						<input type="text" id="dialog_phys_address1">
-					</div>
+							<div class="col-2">
+								<h3>Reminder</h3>
 
-					<div class="oneTwo">
-						<label for="dialog_phys_address2">Address 2</label>
-						<input type="text" id="dialog_phys_address2">
-					</div>
+								<div class="form-field">
+									<label for="next_action">Follow Up Note</label>
+									<textarea rows="11" name="next_action" id='next_action'
+										placeholder="Can be left empty. Follow up message will be sent via email if the follow up date is set."></textarea>
+								</div>
 
-					<div class="oneTwo">
-						<label for="dialog_phys_city">City</label>
-						<input type="text" id="dialog_phys_city">
-					</div>
+								<div class="form-field">
+									<label for='follow_up_date'>Follow Up Date & Time</label>
+									<input type="text" class="flatpickr-time" name='follow_up_date' id='follow_up_date'
+										placeholder="Select date and time..." readonly>
+								</div>
 
-					<div class="oneTwo">
-						<label for="dialog_phys_state">Province</label>
-						<input type="text" id="dialog_phys_state">
-					</div>
-
-					<div class="oneTwo">
-						<label for="dialog_phys_postal_code">Postal Code</label>
-						<input type="text" id="dialog_phys_postal_code">
-					</div>
-
-					<div class="oneTwo">
-						<label for="dialog_phys_country">Country</label>
-						<input type="text" id="dialog_phys_country">
-					</div>
-
-					<div class="oneTwo">
-						<label for="dialog_central_phone_number">Phone Number</label>
-						<input type="text" id="dialog_central_phone_number" class="maskPhoneExt">
-					</div>
-
-					<div class="oneTwo">
-						<label for="dialog_email_address">Email</label>
-						<input type="text" id="dialog_email_address">
-					</div>
+							</div>
+						</div>
+					</form>
 				</div>
-			</form>
+				<div class="line"></div>
+				<div class="modal-actions">
+					<button type="button" @click="closeModal()">Cancel</button>
+					<button type="submit" form="architect-edit-project-form">Save</button>
+				</div>
+			</div>
 		</div>
 	</div>
+
+	<div id="dialog-make-quote" title="Add Customer">
+		<form action="" class="dialog customer-section" data-type="dialog" id='dialog-make-quote-form'>
+			<h3>Customer</h3>
+			<div class="dialog-form-3">
+				<input type="hidden" id="dialog_customer_id" name="customer_id" value="">
+				<div class="oneTwo required-field">
+					<label for="dialog_customer_name">Customer</label>
+					<input type="text" value="" id="dialog_customer_name" class='tipN validate[required]' placeholder="Search by ID or name">
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_company_id">Company ID</label>
+					<input id="dialog_company_id" type="text">
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_salesrep_full_name">Sales Representative</label>
+					<input id="dialog_salesrep_full_name" type="text">
+				</div>
+			</div>
+
+			<div class="line"></div>
+
+			<h3>Contact</h3>
+			<div class="dialog-form-3">
+				<input type="hidden" id="dialog_contact_id" name="contact_id" value="">
+				<div class="oneTwo required-field">
+					<label for="dialog_contact_name">Contact</label>
+					<select id="dialog_contact_name" class="validate[required]">
+						<option value=''>-- Please search for a customer first --</option>
+					</select>
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_first_name">First Name</label>
+					<input type="text" id="dialog_first_name">
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_last_name">Last Name</label>
+					<input type="text" id="dialog_last_name">
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_phys_address1">Address 1</label>
+					<input type="text" id="dialog_phys_address1">
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_phys_address2">Address 2</label>
+					<input type="text" id="dialog_phys_address2">
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_phys_city">City</label>
+					<input type="text" id="dialog_phys_city">
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_phys_state">Province</label>
+					<input type="text" id="dialog_phys_state">
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_phys_postal_code">Postal Code</label>
+					<input type="text" id="dialog_phys_postal_code">
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_phys_country">Country</label>
+					<input type="text" id="dialog_phys_country">
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_central_phone_number">Phone Number</label>
+					<input type="text" id="dialog_central_phone_number" class="maskPhoneExt">
+				</div>
+
+				<div class="oneTwo">
+					<label for="dialog_email_address">Email</label>
+					<input type="text" id="dialog_email_address">
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
 
 
 <script type="text/javascript">

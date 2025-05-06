@@ -256,12 +256,12 @@ $specifierList = $this->specifierList;
 
                             <div class="form-field">
                                 <label for="due_date">Tender Due Date</label>
-                                <input readonly type="text" id="due_date" name='due_date' class="flatpickr" placeholder="Due date" />
+                                <input readonly type="text" id="due_date" name='due_date' class="flatpickr" placeholder="Will be set to today if left blank" />
                             </div>
 
                             <div class="form-field">
                                 <label for="require_date">Required Date</label>
-                                <input readonly type="text" id="require_date" name='require_date' class="flatpickr" placeholder="Required date" />
+                                <input readonly type="text" id="require_date" name='require_date' class="flatpickr" placeholder="Will be set to today if left blank" />
                             </div>
 
                             <?php if ($user['approve_id'] != null) : ?>
@@ -276,7 +276,8 @@ $specifierList = $this->specifierList;
                         <div class="form-grid">
                             <div class="form-field">
                                 <label for="address_id">Address List</label>
-                                <select name='address_id' id='address_id'>
+                                <select name='address_id' id='address_id' required>
+                                    <option value="">-- Select an address --</option>
                                     <?php
                                     if (!empty($addressList)):
                                         foreach ($addressList as $a): ?>
@@ -292,6 +293,7 @@ $specifierList = $this->specifierList;
                             <div class="form-field">
                                 <label for="specifier_id">Specifier</label>
                                 <select name='specifier_id' id='specifier_id'>
+                                <option value="">-- Select an specifier --</option>
                                     <?php
                                     if (!empty($specifierList)):
                                         foreach ($specifierList as $spec): ?>

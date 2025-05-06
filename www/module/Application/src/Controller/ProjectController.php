@@ -157,36 +157,17 @@ class ProjectController extends AbstractActionController
             $result = $this->project->edit($data, $project_id);
 
             if ($result) {
-                $this->flashMessenger()->addSuccessMessage("Project saved successfully!");
-
-                if ($request->isXmlHttpRequest()) {
-                    return new JsonModel([
-                        'success' => true,
-                        'message' => 'Project saved successfully.',
-                        'redirect' => $this->url()->fromRoute('project', [
-                            'action' => 'edit',
-                            'id' => $project_id
-                        ])
-                    ]);
-                }
-
-                return $this->redirect()->toRoute('project', [
-                    'action' => 'edit',
-                    'id' => $project_id
+                $this->flashMessenger()->addSuccessMessage("Project saved!");
+                return new JsonModel([
+                    'success' => true,
+                    'message' => 'Project saved!',
                 ]);
             } else {
-                if ($request->isXmlHttpRequest()) {
-                    return new JsonModel([
-                        'success' => false,
-                        'message' => 'Save failed. Please try again.',
-                        'redirect' => $this->url()->fromRoute('project', [
-                            'action' => 'edit',
-                            'id' => $project_id
-                        ])
-                    ]);
-                }
                 $this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
-                return $this->redirect()->toRoute('project', ['action' => 'edit', 'id' => $project_id]);
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Save failed. Please try again.',
+                ]);
             }
         }
 

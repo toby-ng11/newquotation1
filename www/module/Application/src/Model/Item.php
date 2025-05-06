@@ -260,7 +260,7 @@ class Item
                         'location_id' => $location,
                         'project_id' => $project_id
                     ])
-                    ->order('item_uid DESC');
+                    ->order('item_uid ASC');
                 break;
             case 'quote':
                 $select = $sql->select('p2q_view_quote_items')
@@ -268,7 +268,7 @@ class Item
                         'location_id' => $location,
                         'quote_id' => $project_id
                     ])
-                    ->order('item_uid DESC');
+                    ->order('item_uid ASC');
                 break;
             default:
                 return false;
