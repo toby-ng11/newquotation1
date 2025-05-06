@@ -3,6 +3,7 @@ import { projectNoteTable } from "./tables";
 import { resetForm, disableButton } from "./utils";
 import { showFlashMessage } from "../api/flashmessage.js";
 import flatpickr from "flatpickr";
+import 'jquery-ui/ui/widgets/dialog.js';
 
 const $noteForm = $("#dialog-note-form");
 const $dialogNote = $("#dialog-message");

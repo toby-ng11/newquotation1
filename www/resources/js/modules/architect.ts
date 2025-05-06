@@ -9,7 +9,7 @@ export function initArchitect() {
   const architectForm = document.getElementById("architect-form");
   const architectFormSaveBtn = document.getElementById(
     "form-btn-save-architect"
-  );
+  ) as HTMLButtonElement;
 
   // Enable save button on change
   if (architectForm) {

@@ -1,14 +1,13 @@
 import { setupAutoComplete } from "../api/autocomplete";
 import {
   $projectId,
-  $projectForm,
-  $quoteForm,
   $sheetType,
   $quoteId,
 } from "./init";
 import { setState } from "./state";
 import { resetForm } from "./utils";
 import { disableButton } from "./utils";
+import 'jquery-ui/ui/widgets/dialog.js';
 
 const $makeQuoteForm = $("#dialog-make-quote-form");
 export const $dialogMakeQuote = $("#dialog-make-quote");
@@ -25,8 +24,8 @@ let $contactFields = $(
 $contactDropdown.data("default-options", $contactDropdown.html());
 
 export function initQuote() {
-  const quoteSaveBtn = document.getElementById("form-btn-save-quote");
-  const quoteForm = document.getElementById("quote-content");
+  const quoteSaveBtn = document.getElementById("form-btn-save-quote") as HTMLInputElement;
+  const quoteForm = document.getElementById("quote-content") as HTMLFormElement;
   // Enable save button
   if (quoteForm) {
     quoteForm.addEventListener("change", () => {
@@ -38,7 +37,6 @@ export function initQuote() {
   if (quoteSaveBtn) {
     quoteSaveBtn.addEventListener("click", function (e) {
       e.preventDefault();
-      const quoteForm = document.querySelector("form");
       const submitEvent = new Event("submit", { cancelable: true });
       quoteForm.dispatchEvent(submitEvent);
       setState({ unsave: false });

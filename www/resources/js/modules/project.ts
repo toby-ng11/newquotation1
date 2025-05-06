@@ -1,5 +1,5 @@
 import { setupAutoComplete } from "../api/autocomplete";
-import { $projectId, $projectForm, projectForm } from "./init";
+import { $projectId, projectForm } from "./init";
 import { setState } from "./state";
 
 export function initProject() {
@@ -57,11 +57,14 @@ export function initProject() {
       document.querySelector(".loading").style.display = "flex";
       setState({ unsave: false });
 
+      const formData = new FormData(projectForm);
+        const action = projectForm.getAttribute("action");
+        const method = projectForm.getAttribute("method");
+
       try {
-        const response = await fetch($projectForm.action, {
-          method: $projectForm.method,
-          body: new URLSearchParams(new FormData($projectForm)),
-          headers: { Accept: "application/json" },
+        const response = await fetch(action, {
+          method: method,
+          body: formData,
         });
         const data = await response.json();
 

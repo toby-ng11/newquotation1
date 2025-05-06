@@ -1,9 +1,11 @@
 import { $projectId, $sheetType } from "./init";
 import { itemTable } from "./tables";
 import { resetForm, disableButton } from "./utils";
-import { showFlashMessage } from "../api/flashmessage.js";
-import { setupAutoComplete } from "../api/autocomplete.js";
+import { showFlashMessage } from "../api/flashmessage";
+import { setupAutoComplete } from "../api/autocomplete";
 import $ from 'jquery';
+import "jquery-ui";
+import 'jquery-ui/ui/widgets/dialog.js';
 
 let isEditItem = false;
 
