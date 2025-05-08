@@ -5,9 +5,7 @@ namespace Application\Model;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\{Sql, Expression, Select};
-
-use Application\Model\{Architect, Specifier};
-
+use Psr\Container\ContainerInterface;
 use Exception;
 
 class Project
@@ -15,24 +13,33 @@ class Project
     protected $adapter;
     protected $project;
     protected $p2q_view_project;
-    protected $architect;
-    protected $address;
-    protected $specifier;
+    protected $container;
 
     public function __construct(
         Adapter $adapter,
         TableGateway $project,
         TableGateway $p2q_view_project,
-        Architect $architect,
-        Address $address,
-        Specifier $specifier
+        ContainerInterface $container
     ) {
         $this->adapter = $adapter;
         $this->project = $project;
         $this->p2q_view_project = $p2q_view_project;
-        $this->architect = $architect;
-        $this->address = $address;
-        $this->specifier = $specifier;
+        $this->container = $container;
+    }
+
+    public function getArchitect()
+    {
+        return $this->container->get(Architect::class);
+    }
+
+    public function getAddress()
+    {
+        return $this->container->get(Address::class);
+    }
+
+    public function getSpecifier()
+    {
+        return $this->container->get(Specifier::class);
     }
 
     public function save($data)
@@ -60,7 +67,7 @@ class Project
         ];
 
         $info['architect_id'] = empty($data['architect_id']) && !empty($data['architect_name'])
-            ? $this->architect->add($data)
+            ? $this->getArchitect()->add($data)
             : $data['architect_id'];
 
         if (empty($data['address_id']) && array_filter(array_intersect_key($data, array_flip([
@@ -75,13 +82,13 @@ class Project
             'email_address',
             'url'
         ])))) {
-            $info['architect_address_id'] = $this->address->add($data, $info['architect_id']);
+            $info['architect_address_id'] = $this->getAddress()->add($data, $info['architect_id']);
         } else {
             $info['architect_address_id'] = $data['address_id'] ?? null;
         }
 
         $info['specifier_id'] = empty($data['specifier_id']) && !empty($data['specifier_name'])
-            ? $this->specifier->add($data, $info['architect_id'])
+            ? $this->getSpecifier()->add($data, $info['architect_id'])
             : $data['specifier_id'] ?? null;
 
         try {
@@ -127,11 +134,11 @@ class Project
         ];
 
         if (empty($data['architect_id']) && !empty($data['architect_name'])) {
-            $info['architect_id'] = $this->architect->add($data);
+            $info['architect_id'] = $this->getArchitect()->add($data);
         }
 
         if (!empty($data['architect_id'])) {
-            $info['architect_id'] = $this->architect->edit($data, $data['architect_id']);
+            $info['architect_id'] = $this->getArchitect()->edit($data, $data['architect_id']);
         }
 
         if (empty($data['address_id']) && array_filter(array_intersect_key($data, array_flip([
@@ -146,20 +153,20 @@ class Project
             'email_address',
             'url'
         ])))) {
-            $info['architect_address_id'] = $this->address->add($data, $info['architect_id']);
+            $info['architect_address_id'] = $this->getAddress()->add($data, $info['architect_id']);
         }
         if (!empty($data['address_id'])) {
-            $info['architect_address_id'] = $this->address->edit($data, $data['address_id']);
+            $info['architect_address_id'] = $this->getAddress()->edit($data, $data['address_id']);
         } else {
             $info['architect_address_id'] = null;
         }
 
         if (empty($data['specifier_id']) && !empty($data['specifier_first_name'])) {
-            $info['specifier_id'] = $this->specifier->add($data, $info['architect_id']);
+            $info['specifier_id'] = $this->getSpecifier()->add($data, $info['architect_id']);
         }
 
         if (!empty($data['specifier_id'])) {
-            $info['specifier_id'] = $this->specifier->edit($data, $data['specifier_id']);
+            $info['specifier_id'] = $this->getSpecifier()->edit($data, $data['specifier_id']);
         } else {
             $info['specifier_id'] = null;
         }
@@ -184,6 +191,22 @@ class Project
             return true;
         } catch (Exception $e) {
             error_log("Project/delete:Database Delete Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function clearAddressAndSpecifierByArchitect($architect_id)
+    {
+        if (!$architect_id) return false;
+
+        try {
+            $this->project->update(
+                ['architect_address_id' => null, 'specifier_id' => null],
+                ['architect_id' => $architect_id]
+            );
+            return true;
+        } catch (Exception $e) {
+            error_log("Project/nullify: DB update error for architect $architect_id: " . $e->getMessage());
             return false;
         }
     }

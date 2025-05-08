@@ -80,6 +80,21 @@ class Address
         }
     }
 
+    public function delete($id)
+    {
+        if (!$id) {
+            return  false;
+        }
+
+        try {
+            $this->address->update(['delete_flag' => 'Y'], ['address_id' => $id]);
+            return $id;
+        } catch (Exception $e) {
+            error_log("Address\delete: Database Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function addSpecifierAddress($data)
     {
         if ($data == null) {

@@ -2,30 +2,41 @@
 
 namespace Application\Model;
 
-use Laminas\Db\TableGateway\TableGatewayInterface;
-use Laminas\Db\Sql\Select;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\{Sql, Expression};
-use Exception;
-
-use Application\Model\Address;
-use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
+use Psr\Container\ContainerInterface;
+use Exception;
 
 class Architect
 {
     protected $adapter;
-    protected $address;
     protected $architect;
+    protected $container;
 
     public function __construct(
         Adapter $adapter,
         TableGateway $architect,
-        Address $address
+        ContainerInterface $container
     ) {
         $this->adapter = $adapter;
-        $this->address = $address;
         $this->architect = $architect;
+        $this->container = $container;
+    }
+
+    public function getProject()
+    {
+        return $this->container->get(Project::class);
+    }
+
+    public function getAddress()
+    {
+        return $this->container->get(Address::class);
+    }
+
+    public function getSpecifier()
+    {
+        return $this->container->get(Specifier::class);
     }
 
     public function add($data)
@@ -79,12 +90,39 @@ class Architect
         }
     }
 
+    public function delete($id)
+    {
+        if (!$id) {
+            return false;
+        }
+
+        $this->getProject()->clearAddressAndSpecifierByArchitect($id);
+        $addresses = $this->getAddress()->fetchAddressesByArchitect($id);
+        $specifiers = $this->getSpecifier()->fetchSpecifiersByArchitect($id);
+
+        foreach ($addresses as $a) {
+            $this->getAddress()->delete($a['address_id']);
+        }
+
+        foreach ($specifiers as $s) {
+            $this->getSpecifier()->delete($s['specifier_id']);
+        }
+
+        try {
+            $this->architect->update(['delete_flag' => 'Y'], ['architect_id' => $id]);
+            return $id;
+        } catch (Exception $e) {
+            error_log("Architect\delete: Database Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function fetchArchitectById($id, $company = DEFAULT_COMPANY)
     {
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('architect')
-            ->where(['company_id' => $company, 'architect_id' => $id]);
+            ->where(['company_id' => $company, 'architect_id' => $id, 'delete_flag' => 'N']);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();

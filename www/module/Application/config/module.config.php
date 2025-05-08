@@ -273,7 +273,7 @@ return [
                 return new Model\Architect(
                     $dbAdapter,
                     new TableGateway('architect', $dbAdapter),
-                    $container->get(Model\Address::class)
+                    $container
                 );
             },
             Model\Specifier::class => function ($container) {
@@ -305,9 +305,7 @@ return [
                     $dbAdapter,
                     new TableGateway('project', $dbAdapter),
                     new TableGateway('p2q_view_project', $dbAdapter),
-                    $container->get(Model\Architect::class),
-                    $container->get(Model\Address::class),
-                    $container->get(Model\Specifier::class)
+                    $container
                 );
             },
             Model\Quote::class => function ($container) {

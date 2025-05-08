@@ -83,6 +83,21 @@ class Specifier {
         }
     }
 
+    public function delete($id)
+    {
+        if (!$id) {
+            return  false;
+        }
+
+        try {
+            $this->specifier->update(['delete_flag' => 'Y'], ['specifier_id' => $id]);
+            return $id;
+        } catch (Exception $e) {
+            error_log("Specifier\delete: Database Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     public function fetchSpecifiersByArchitect($architect_id) {
         if (!$architect_id) {
             return false;

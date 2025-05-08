@@ -1,4 +1,6 @@
-<?php echo $this->doctype();
+<?php
+error_log("Loading layout at " . date('H:i:s')); 
+echo $this->doctype();
 $user = $this->userHelper();
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="light">

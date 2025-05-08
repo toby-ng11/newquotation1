@@ -73,7 +73,7 @@ class QuoteController extends AbstractActionController
         $data = $this->params()->fromPost();
 
         $quote_id = $this->quote->create($data);
-        
+
         if ($quote_id) {
             $this->flashMessenger()->addSuccessMessage("Quote created successfully!");
             return new JsonModel([
@@ -93,8 +93,12 @@ class QuoteController extends AbstractActionController
     {
         $quote_id = $this->params()->fromRoute('id');
 
-        $user = $this->userService->getCurrentUser();
         $quote = $this->quote->fetchById($quote_id);
+        if (!$quote || $quote['delete_flag'] === 'Y') {
+            $this->flashMessenger()->addErrorMessage("This quote is deleted.");
+            return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
+        }
+        $user = $this->userService->getCurrentUser();
         $project = $this->project->fetchById($quote['project_id']);
         $quoteType = $this->quote->fetchQuoteType();
         $customer = $this->customer->fetchCustomerByContact($quote['contact_id']);
@@ -173,7 +177,7 @@ class QuoteController extends AbstractActionController
             //return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
         } else {
             $this->flashMessenger()->addErrorMessage("Failed to delete quote. Please try again.");
-            
+
             if ($this->getRequest()->isXmlHttpRequest()) {
                 return new JsonModel(['success' => $result]);
             }
@@ -292,7 +296,7 @@ class QuoteController extends AbstractActionController
         $headers->addHeaderLine('Content-Length', strlen($pdfContent));
 
         return $response;
-        
+
 
         //return new ViewModel($data);
 

@@ -126,8 +126,12 @@ class ProjectController extends AbstractActionController
             return $this->redirect()->toRoute('project');
         }
 
-        $user = $this->userService->getCurrentUser();
         $project = $this->project->fetchById($project_id);
+        if (!$project || $project['delete_flag'] === 'Y') {
+            $this->flashMessenger()->addErrorMessage("This project is deleted.");
+            return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
+        }
+        $user = $this->userService->getCurrentUser();
         $location = $this->location->fetchAllBranches();
         $company = $this->location->fetchAllCompanies();
         $status = $this->project->fetchProjectStatus();

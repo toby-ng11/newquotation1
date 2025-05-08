@@ -73,6 +73,34 @@ export function initArchitect() {
       },
     ],
   });
+
+  // Delete architect
+  document.querySelectorAll(".delete-architect-button").forEach((button) => {
+    button.addEventListener("click", async () => {
+      if (!confirm("Are you sure you want to delete this architect? This will delete all associate addresses and specifiers.")) return;
+
+      document.querySelector(".loading").style.display = "flex";
+      try {
+        const response = await fetch(`/architect/${architectID}/delete`, {
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+          },
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          window.location.href = "/index/architect";
+        } else {
+          showFlashMessage(data.message || data.success);
+        }
+      } catch (error) {
+        console.error("Delete failed:", error);
+        alert("Error occurred while deleting the architect.");
+      } finally {
+        document.querySelector(".loading").style.display = "none";
+      }
+    });
+  });
 }
 
 export function projectModal() {
