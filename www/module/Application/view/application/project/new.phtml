@@ -38,7 +38,7 @@ $user = $this->user;
                 <label for="location_id">Centura Location</label>
                 <select name="location_id" id="location_id">
                   <?php foreach ($this->locations as $l) { ?>
-                    <option value="<?= $l['location_id'] ?>" <?php if ($l['location_id'] === DEFAULT_LOCATION_ID) echo 'selected' ?>><?= $l['branch_description'] ?></option>
+                    <option value="<?= $this->escapeHtml($l['location_id']) ?>" <?php if ($l['location_id'] === DEFAULT_LOCATION_ID) echo 'selected' ?>><?= $this->escapeHtml($l['branch_description']) ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -48,7 +48,7 @@ $user = $this->user;
                 <select required name="status" id='status'>
                   <option value="">-- Select stage --</option>
                   <?php foreach ($this->status as $s) { ?>
-                    <option value="<?= $s['status_id'] ?>"><?= $s['status_desc'] ?></option>
+                    <option value="<?= $this->escapeHtml($s['status_id']) ?>"><?= $this->escapeHtml($s['status_desc']) ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -58,14 +58,14 @@ $user = $this->user;
                 <select required name="market_segment_id" id='market_segment_id'>
                   <option value="">-- Choose market segment --</option>
                   <?php foreach ($this->seg as $s) { ?>
-                    <option value="<?= $s['market_segment_id'] ?>"><?= $s['market_segment_desc'] ?></option>
+                    <option value="<?= $this->escapeHtml($s['market_segment_id']) ?>"><?= $this->escapeHtml($s['market_segment_desc']) ?></option>
                   <?php } ?>
                 </select>
               </div>
 
               <div class="oneTwo">
                 <label for="owner_id">Worksheet Owner</label>
-                <input type="text" id="owner_id" name="owner_id" value='<?= $user['id'] ?>' readonly />
+                <input type="text" id="owner_id" name="owner_id" value='<?= $this->escapeHtml($this->escapeHtml($user['id'])) ?>' readonly />
               </div>
 
               <div class="oneTwo">
@@ -111,14 +111,14 @@ $user = $this->user;
                   <label for="architect_company_id">Company</label>
                   <select id="architect_company_id" name="architect_company_id">
                     <?php foreach ($this->company as $l) { ?>
-                      <option value="<?= $l['company_id'] ?>" <?php if ($l['company_id'] === DEFAULT_COMPANY) echo 'selected' ?>><?= $l['company_name'] ?></option>
+                      <option value="<?= $this->escapeHtml($l['company_id']) ?>" <?php if ($l['company_id'] === DEFAULT_COMPANY) echo 'selected' ?>><?= $this->escapeHtml($l['company_name']) ?></option>
                     <?php } ?>
                   </select>
                 </div>
 
                 <div class="oneTwo">
                   <label for="architect_rep_id">Architect Representative</label>
-                  <input type="text" id="architect_rep_id" name="architect_rep_id" value='<?= $user['id'] ?>' readonly />
+                  <input type="text" id="architect_rep_id" name="architect_rep_id" value='<?= $this->escapeHtml($user['id']) ?>' readonly />
                 </div>
 
                 <div class="oneTwo">
@@ -126,7 +126,7 @@ $user = $this->user;
                   <select id="architect_type_id" name="architect_type_id">
                     <option value="">-- Choose architect type --</option>
                     <?php foreach ($this->architectType as $l) { ?>
-                      <option value="<?= $l['architect_type_id'] ?>"><?= $l['architect_type_desc'] ?></option>
+                      <option value="<?= $this->escapeHtml($l['architect_type_id']) ?>"><?= $this->escapeHtml($l['architect_type_desc']) ?></option>
                     <?php } ?>
                   </select>
                 </div>

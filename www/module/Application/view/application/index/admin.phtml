@@ -20,7 +20,7 @@ if ($hour >= 5 && $hour < 12) {
 <div class="main-page-content">
     <header class="main-page-content-header">
         <h1>
-            <?= $greeting ?>, <?= $user['first_name'] ?>!
+            <?= $this->escapeHtml($greeting) ?>, <?= $this->escapeHtml($user['first_name']) ?>!
         </h1>
         <p>Here's all projects and quotes</p>
     </header>

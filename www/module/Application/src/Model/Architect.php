@@ -9,6 +9,7 @@ use Laminas\Db\Sql\{Sql, Expression};
 use Exception;
 
 use Application\Model\Address;
+use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 
 class Architect
@@ -85,10 +86,9 @@ class Architect
         $select = $sql->select('architect')
             ->where(['company_id' => $company, 'architect_id' => $id]);
 
-        $selectString = $sql->buildSqlString($select);
-        //error_log($selectString);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
-        return $result->current();
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
+        return $result;
     }
 
     public function fetchArchitectType()
@@ -119,11 +119,10 @@ class Architect
             ->or
             ->like('architect_name', $pattern . '%')->unnest();
 
-        $select->limit($limit);
+        $select->limit($limit)->offset(0);
 
-        $selectString = $sql->buildSqlString($select);
-        //error_log($selectString);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -136,9 +135,25 @@ class Architect
             $select->where(['architect_rep_id' => $user_id]);
         }
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
+    }
+
+    public function countAllArchitects($admin, $user_id)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->from('p2q_view_architect')
+            ->columns(['total' => new Expression('COUNT(*)')]);
+
+        if (!$admin) {
+            $select->where(['architect_rep_id' => $user_id]);
+        }
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
+        return $result['total'] ?? 0;
     }
 
     public function fetchTopFiveTable($user_id)
@@ -146,11 +161,11 @@ class Architect
         $sql = new Sql($this->adapter);
         $select = $sql->select('p2q_view_architect_ranking')
             ->where(['owner_id' => $user_id])
-            ->order('rank DESC')
-            ->limit(5);
+            ->order('total_projects DESC')
+            ->limit(5)->offset(0);
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -161,8 +176,8 @@ class Architect
         $select = $sql->select('p2q_view_project')
             ->where(['architect_id' => $id]);
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 }

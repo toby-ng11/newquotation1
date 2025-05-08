@@ -30,7 +30,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
     <!-- Main page -->
     <div class="main-page-content">
         <header class="main-page-content-header">
-            <h1><?= $greeting ?>, <?= $user['first_name'] ?>!</h1>
+            <h1><?= $this->escapeHtml($greeting) ?>, <?= $this->escapeHtml($user['first_name']) ?>!</h1>
             <p>Here's the quick summary of approval status.</p>
         </header>
 
@@ -39,19 +39,19 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
             <a href="#waiting-table-section" class="widget-link feature fade-in-up col-1">
                 <p class="widget-text-head">Waiting for approval
                 </p>
-                <h2 class="widget-text-bold"><?= $waitingTableCount ?> <span class="widget-text-desc">quotes</span></h2>
+                <h2 class="widget-text-bold"><?= $this->escapeHtml($waitingTableCount) ?> <span class="widget-text-desc">quotes</span></h2>
             </a>
 
             <a href="#approved-table-section" class="widget-link feature fade-in-up col-2">
                 <p class="widget-text-head">Approved
                 </p>
-                <h2 class="widget-text-bold"><?= $approvedTableCount ?> <span class="widget-text-desc">quotes</span></h2>
+                <h2 class="widget-text-bold"><?= $this->escapeHtml($approvedTableCount) ?> <span class="widget-text-desc">quotes</span></h2>
             </a>
 
             <a href="#disapproved-table-section" class="widget-link feature fade-in-up col-3">
                 <p class="widget-text-head">Rejected
                 </p>
-                <h2 class="widget-text-bold"><?= $disapprovedTableCount ?> <span class="widget-text-desc">quotes</span></h2>
+                <h2 class="widget-text-bold"><?= $this->escapeHtml($disapprovedTableCount) ?> <span class="widget-text-desc">quotes</span></h2>
             </a>
         </div>
         </section>

@@ -129,7 +129,7 @@ class Project
         if (empty($data['architect_id']) && !empty($data['architect_name'])) {
             $info['architect_id'] = $this->architect->add($data);
         }
-        
+
         if (!empty($data['architect_id'])) {
             $info['architect_id'] = $this->architect->edit($data, $data['architect_id']);
         }
@@ -211,8 +211,8 @@ class Project
             ->where(['owner_id' => $user_id])
             ->order('project_id DESC');
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -257,8 +257,8 @@ class Project
         $select->where->notEqualTo('owner_id', $user_id);
         $select->order('project_id DESC');
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -288,8 +288,8 @@ class Project
             ])
             ->order('status_desc ASC');
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -303,8 +303,8 @@ class Project
             ])
             ->order('market_segment_desc ASC');
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -321,8 +321,8 @@ class Project
             ])
             ->order('quote_id DESC');
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -341,5 +341,22 @@ class Project
         $result = $statement->execute()->current();
 
         return $result ? (int)$result['total'] : 0;
+    }
+
+    public function countAllCompleteProjects($admin, $user_id)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->from('p2q_view_project')
+            ->columns(['total' => new Expression('COUNT(*)')])
+            ->where(['status' => 11]);
+
+        if (!$admin) {
+            $select->where(['architect_rep_id' => $user_id]);
+        }
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
+        return $result['total'] ?? 0;
     }
 }

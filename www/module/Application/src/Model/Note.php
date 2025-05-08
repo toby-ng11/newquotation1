@@ -106,8 +106,8 @@ class Note
                 'project_id' => $id
             ]);
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -129,8 +129,8 @@ class Note
                 'owner_id' => $user_id
             ]);
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 

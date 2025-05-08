@@ -1063,11 +1063,8 @@ const tableConfigs = {
       //serverSide: true, // experimetal: server-side processing
       columns: [
         {
-          data: "rank",
-        },
-        {
           data: "architect_name",
-          render: function (data, type, row, meta) {
+          render: function (data, type, row) {
             return (
               "<a target='_blank' href='/architect/" +
               row.architect_id +
@@ -1076,6 +1073,9 @@ const tableConfigs = {
               "</a>"
             );
           },
+        },
+        {
+          data: "total_projects",
         },
       ],
       columnDefs: [
@@ -1089,7 +1089,10 @@ const tableConfigs = {
         },
       ],
       //"responsive": true,
-      order: [[0, "desc"]],
+      order: {
+        name: "total_projects",
+        dir: "desc",
+      },
       scrollX: true,
       layout: {
         topStart: null,

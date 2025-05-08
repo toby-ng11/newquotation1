@@ -172,10 +172,10 @@ class Item
                     ->unnest();
             })
             ->order('item_id ASC')
-            ->limit($limit);
+            ->limit($limit)->offset(0);
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -210,9 +210,9 @@ class Item
             ])
             ->order('default_selling_unit DESC');
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
-        return $result;
+            $statement = $sql->prepareStatementForSqlObject($select);
+            $result = $statement->execute();
+            return $result;
     }
 
     public function fetchItemPrice($item_id, $uom, $fromP21, $sheetType = '', $location = DEFAULT_LOCATION_ID)
@@ -244,8 +244,8 @@ class Item
             }
         }
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result->current();
     }
 
@@ -274,8 +274,8 @@ class Item
                 return false;
         }
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 

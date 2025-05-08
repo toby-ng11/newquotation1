@@ -30,9 +30,9 @@ class Customer
         $select = $sql->select('P21_customers_x_address')
             ->where(['customer_id' => $id]);
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
-        return $result->current();
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
+        return $result;
     }
 
     public function fetchCustomerByPattern($pattern, $limit = 10, $company = DEFAULT_COMPANY)
@@ -48,10 +48,10 @@ class Customer
                     ->unnest();
             })
             ->order('customer_id ASC')
-            ->limit($limit);
+            ->limit($limit)->offset(0);
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 

@@ -177,7 +177,9 @@ class IndexController extends AbstractActionController
         }
 
         $viewModel =  new ViewModel([
-            'user' => $user
+            'user' => $user,
+            'totalArchitects' => $this->architect->countAllArchitects($admin, $user['id']),
+            'totalCompleteProjects' => $this->project->countAllCompleteProjects($admin, $user['id']),
         ]);
 
         // If HTMX request, skip layout

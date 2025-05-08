@@ -110,8 +110,8 @@ class Address
         $select = $sql->select('p2q_view_address')
             ->where(['architect_id' => $id]);
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -122,8 +122,8 @@ class Address
         $select = $sql->select('p2q_view_address')
             ->where(['address_id' => $id]);
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
-        return $result->current();
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
+        return $result;
     }
 }

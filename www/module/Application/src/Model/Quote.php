@@ -245,8 +245,8 @@ class Quote
                 return false;
         }
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -295,8 +295,8 @@ class Quote
         $select = $sql->select('quote_type')
             ->order('type_desc ASC');
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+            $statement = $sql->prepareStatementForSqlObject($select);
+            $result = $statement->execute();
         return $result;
     }
 
@@ -308,8 +308,8 @@ class Quote
             ->where(['delete_flag' => 'N'])
             ->order('lead_time_desc asc');
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+            $statement = $sql->prepareStatementForSqlObject($select);
+            $result = $statement->execute();
         return $result;
     }
 }

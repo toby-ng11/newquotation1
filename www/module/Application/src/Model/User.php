@@ -28,16 +28,18 @@ class User
     {
         $sql = new Sql($this->adapter, 'P21_Users');
         $select = $sql->select()
-            ->columns(['id', 'name'])
-            ->where(function($where) use ($pattern) {
-                $where->like('id', $pattern . '%')
-                      ->or
-                      ->like('name', $pattern . '%');
-            })
-            ->limit($limit);
+            ->columns(['id', 'name']);
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $select->where->nest()
+            ->like('id', $pattern . '%')
+            ->or
+            ->like('name', $pattern . '%')
+            ->unnest();
+
+        $select->limit($limit)->offset(0);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -49,13 +51,13 @@ class User
             ->where(['default_company' => $company]);
 
         $select->where->nest()
-        ->like('role', '%Sales%')->or
-        ->like('role', '%Manager%')->or
-        ->like('role', '%Accounts Receivable%')
-        ->unnest();
+            ->like('role', '%Sales%')->or
+            ->like('role', '%Manager%')->or
+            ->like('role', '%Accounts Receivable%')
+            ->unnest();
 
-        $selectString = $sql->buildSqlString($select);
-        $result = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 }
