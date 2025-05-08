@@ -4,7 +4,7 @@ namespace Application\Model;
 
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\TableGateway\TableGateway;
-use Laminas\Db\Sql\{Sql, Expression};
+use Laminas\Db\Sql\{Sql, Expression, Select};
 
 use Application\Model\{Architect, Specifier};
 
@@ -195,7 +195,7 @@ class Project
 
     public function fetchAllViews()
     {
-        return $this->p2q_view_project->select()->toArray();
+        return $this->p2q_view_project->select();
     }
 
     public function fetchById($id)

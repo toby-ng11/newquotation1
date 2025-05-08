@@ -21,16 +21,19 @@ const tableConfigs = {
       //serverSide: true, // experimetal: server-side processing
       columns: [
         {
-          data: "project_id_ext",
-          render: function (data, type, row, meta) {
+          data: "project_id",
+          render: function (data) {
             return (
               "<a target='_blank' href='/project/" +
-              row.project_id +
+              data +
               "/edit'>" +
               data +
               "</a>"
             );
           },
+        },
+        {
+          data: "project_id_ext",
         },
         {
           data: "project_name",
@@ -73,7 +76,7 @@ const tableConfigs = {
         },
         {
           data: "project_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               '<a target="_blank" href="/project/' +
               data +
@@ -88,7 +91,7 @@ const tableConfigs = {
           className: "dt-head-center",
         },
         {
-          targets: [0, 2, 3, 4, 5, 7, 8],
+          targets: [0, 1, 3, 4, 5, 6, 8, 9],
           className: "dt-body-center",
         },
       ],
@@ -785,13 +788,13 @@ const tableConfigs = {
         url: "/index/approval/approved",
         dataSrc: "",
       },
-      responsive: true,
+      //responsive: true,
       processing: true,
       //serverSide: true,
       columns: [
         {
           data: "quote_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/quote/" +
               data +
@@ -1100,10 +1103,7 @@ const tableConfigs = {
   projectNote: () => {
     projectNoteTable = $("#note-table").DataTable({
       ajax: {
-        url: "/note/table",
-        data: {
-          id: $projectId,
-        },
+        url: `/project/${$projectId}/note`,
         dataSrc: "",
       },
       processing: true,
@@ -1146,12 +1146,16 @@ const tableConfigs = {
         },
         {
           data: "follow_up_date.date",
-          render: function (data) {
+          render: function (data, type, row) {
+            const isSent = row.notified_flag === "Y";
             if (!data) {
-              return "<p><b>--</b></p>";
+              return "--";
             }
-            let date = new Date(data);
-            return "<p><b>" + date.toLocaleString("en-CA") + "</b></p>";
+            let date = new Date(data).toLocaleString("en-CA");
+            if (isSent) {
+              return `<span title="Reminder already sent">${date} <span class="tag tag-sent">Sent</span></span>`;
+            }
+            return date;
           },
         },
         {
@@ -1166,23 +1170,32 @@ const tableConfigs = {
         },
         {
           data: "project_note_id",
-          render: function (data) {
-            if (isOwner) {
-              return (
-                '<div class="row-button">' +
-                '<a title="Edit this note" class="note-edit" href="/note/fetch?id=' +
-                data +
-                '">' +
-                '<span class="button-wrap">' +
-                '<span class="icon icon-edit"></span>' +
-                "</span></a>" +
-                '<a title="Delete this note" class="note_delete" target="_blank" href="/note/delete?note_id=' +
-                data +
-                '"><span class="button-wrap"><span class="icon icon-delete"></span></span></a></div>'
-              );
-            } else {
-              return null;
+          render: function (data, type, row) {
+            if (!isOwner) return null;
+
+            const isSent = row.notified_flag === "Y";
+            const buttons = [];
+
+            if (!isSent) {
+              buttons.push(`
+                <a href="#" title="Edit this note" class="note-edit" data-id="${data}">
+                  <span class="button-wrap">
+                    <span class="icon icon-edit"></span>
+                  </span>
+                </a>
+              `);
             }
+
+            // Always show delete
+            buttons.push(`
+              <a href="#" title="Delete this note" class="note-delete" data-id="${data}">
+                <span class="button-wrap">
+                  <span class="icon icon-delete"></span>
+                </span>
+              </a>
+            `);
+
+            return `<div class="row-button">${buttons.join("")}</div>`;
           },
         },
       ],
@@ -1214,7 +1227,7 @@ const tableConfigs = {
         dataSrc: "",
       },
       processing: true,
-      responsive: true,
+      //responsive: true,
       columns: [
         {
           data: "item_id",

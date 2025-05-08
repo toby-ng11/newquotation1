@@ -34,14 +34,9 @@ class Module implements ConfigProviderInterface
         $name = str_replace(['CENTURA\\', 'centura\\'], '', $_SERVER['REMOTE_USER'] ?? '');
         $user = $userModel->fetchsalebyid($name);
 
-        $default_company = $_GET['company'] ?? $user['default_company'];
+        $default_company = $_GET['company'] ?? ($user['default_company'] ?? null);
         $company = $locationModel->fetchLocationIdFromCompany($default_company);
-        $location_id = $company['location_id'] ?? $user['default_location_id'];
-
-        // Define SITEURL
-        if (!defined('SITEURL')) {
-            define('SITEURL', $_SERVER['HTTP_HOST'] ?? 'localhost');
-        }
+        $location_id = $company['location_id'] ?? ($user['default_location_id'] ?? null);
 
         define("DEFAULT_COMPANY", $default_company);
         define("DEFAULT_LOCATION_ID", $location_id);

@@ -133,9 +133,10 @@ return [
             'note' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route'    => '/note[/:action]',
+                    'route'    => '/note[/:id[/:action]]',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => Controller\NoteController::class,
@@ -336,6 +337,26 @@ return [
                     $container->get(Service\UserService::class),
                     new TableGateway('project_note', $dbAdapter)
                 );
+            },
+            Service\MailerService::class => function ($container) {
+                $config = $container->get('config');
+                $twig = $container->get(\Twig\Environment::class);
+
+                return new Service\MailerService(
+                    $config['mailer']['dsn'],
+                    $config['mailer']['from'],
+                    $twig,
+                );
+            },
+            \Twig\Environment::class => function ($container) {
+                $loader = new \Twig\Loader\FilesystemLoader([
+                   'C:\inetpub\wwwroot\newquotation\www\module\Application\view\email',
+                ]);
+                $twig = new \Twig\Environment($loader, [
+                    'cache' => false, // Set a writable path like '/data/cache/twig' in production
+                    'auto_reload' => true,
+                ]);
+                return $twig;
             }
         ],
     ],

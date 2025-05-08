@@ -15,6 +15,7 @@ $uomDropdown.data("default-options", $uomDropdown.html());
 
 export function initItem() {
   const uomDropdown = document.getElementById("uom");
+  const itemForm = document.getElementById("dialog-item-form");
 
   // Open Edit Dialog
   $(document).on("click", "a.item-edit", function (e) {
@@ -79,7 +80,7 @@ export function initItem() {
     //minHeight: 600,
     open: function () {
       // fade in background
-      resetForm($itemForm);
+      resetForm(itemForm);
       $(".ui-widget-overlay").hide().fadeIn().css("z-index", 1000);
       $(".ui-dialog").css("z-index", 2000);
     },

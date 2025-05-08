@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .box {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 6px;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: gray;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h2 style="color:#1a73e8;">Follow-Up Reminder</h2>
+        <p><strong>Note Title:</strong> {{ note_title }}</p>
+        <p><strong>Project Note:</strong><br>{{ project_note|nl2br }}</p>
+
+        {% if next_action %}
+        <p><strong>Follow-Up Message:</strong><br>{{ next_action|nl2br }}</p>
+        {% endif %}
+
+        <p>
+            <a href="{{ project_link }}" style="color: #1a73e8; font-weight: bold;">
+                ➜ View Project in Quote System
+            </a>
+        </p>
+    </div>
+
+    <p class="footer">
+        Sent automatically by the P2Q System on {{ now|date('Y-m-d H:i') }}.
+    </p>
+</body>
+
+</html>

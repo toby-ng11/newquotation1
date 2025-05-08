@@ -17,16 +17,19 @@ class NoteController extends AbstractActionController
         $this->note = $note;
     }
 
-    public function tableAction()
+    public function indexAction()
     {
         $request = $this->getRequest();
-        if ($request->isXmlHttpRequest()) {
-            $id = $this->params()->fromQuery('id');
-            $noteTable = $this->note->fetchDataTables($id);
-            $view = new JsonModel($noteTable);
-            return $view;
+
+        if ($request->isPost()) {
+            return $this->forward()->dispatch(NoteController::class, [
+                'action' => 'add',
+            ]);
         }
-        return $this->getResponse()->setStatusCode(404);
+
+        return $this->forward()->dispatch(NoteController::class, [
+            'action' => 'new',
+        ]);
     }
 
     public function addAction()
@@ -74,12 +77,19 @@ class NoteController extends AbstractActionController
     public function editAction()
     {
         $request = $this->getRequest();
+        $id = $this->params()->fromRoute('id');
+
+        if (!$id) {
+            return new JsonModel([
+                'success' => false,
+                'message' => 'Missing note ID.'
+            ]);
+        }
 
         if ($request->isPost()) {
-            $id = $this->params()->fromPost('note_id', null);
             $data = $this->params()->fromPost();
 
-            if (!$id || empty($data['project_note'])) {
+            if (empty($data['project_note'])) {
                 return new JsonModel([
                     'success' => false,
                     'message' => 'Missing required fields.'
@@ -101,28 +111,62 @@ class NoteController extends AbstractActionController
                     'error' => $e->getMessage()
                 ]);
             }
+        } else {
+            try {
+                $note = $this->note->fetchNote($id);
+
+                if (!$note) {
+                    return new JsonModel([
+                        'success' => false,
+                        'message' => 'Note not found.'
+                    ]);
+                }
+
+                return new JsonModel([
+                    'success' => true,
+                    'note' => [
+                        'note_title' => $note['note_title'],
+                        'project_note' => $note['project_note'],
+                        'next_action' => $note['next_action'],
+                        'follow_up_date' => $note['follow_up_date'],
+                    ],
+                ]);
+            } catch (\Exception $e) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Error loading note.',
+                    'error' => $e->getMessage()
+                ]);
+            }
         }
     }
 
     public function deleteAction()
     {
-        $note_id = $this->params()->fromQuery('note_id', null);
+        $note_id = $this->params()->fromRoute('id', null);
+        $request = $this->getRequest();
 
-        if (!$note_id) {
+        if (!$note_id || !$request->isXmlHttpRequest()) {
             return new JsonModel([
                 'success' => false,
-                'message' => 'Missing note ID.'
+                'message' => 'Invalid request.',
             ]);
         }
 
         try {
             $result = $this->note->delete($note_id);
 
-            return new JsonModel([
-                'success' => true,
-                'message' => 'Note deleted!',
-                'item_id' => $result
-            ]);
+            if ($result) {
+                return new JsonModel([
+                    'success' => true,
+                    'message' => 'Note deleted successfully.',
+                ]);
+            } else {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Failed to delete note.',
+                ]);
+            }
         } catch (Exception $e) {
             return new JsonModel([
                 'success' => false,

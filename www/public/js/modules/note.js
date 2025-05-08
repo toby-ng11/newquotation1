@@ -9,10 +9,7 @@ const $dialogBtnAddNote = $("#note-form-btn-add");
 
 let isEditnote = false;
 
-let follow_up_date = flatpickr("#dialog-note-form #follow_up_date", {
-  enableTime: true,
-  dateFormat: "Y-m-d H:i",
-});
+let follow_up_date = document.getElementById("follow_up_date");
 
 export function initNote() {
   $("#dialog-message").dialog({
@@ -62,44 +59,15 @@ export function initNote() {
     ],
   });
 
-  $(document).on("click", ".note-edit", function (e) {
-    e.preventDefault();
-
-    isEditnote = true;
-
-    $dialogNote.dialog("option", "title", "Edit Log");
-    $dialogNote.dialog("open");
-    $dialogBtnAddNote.text("Save Changes");
-
-    $.ajax({
-      url: $(this).attr("href"),
-      type: "GET",
-      dataType: "json",
-    })
-      .done((response) => {
-        if (response.success && response.data) {
-          const data = response.data;
-          $("#dialog-note-form #note_id").val(data["project_note_id"] || "");
-          $("#dialog-note-form #note_title").val(data["note_title"] || "");
-          $("#dialog-note-form #project_note").val(data["project_note"] || "");
-          $("#dialog-note-form #next_action").val(data["next_action"] || "");
-          if (data["follow_up_date"]) {
-            follow_up_date.setDate(data["follow_up_date"]["date"]);
-          } else {
-            follow_up_date.clear();
-          }
-        } else {
-          alert(response.message || "Failed to fetch note data.");
-        }
-      })
-      .fail((jqXHR, textStatus, errorThrown) => {
-        console.error(
-          "Error fetch note data:",
-          textStatus,
-          errorThrown,
-          jqXHR.responseText
-        );
-      });
+  document.addEventListener("click", function (e) {
+    if (e.target.closest(".note-edit")) {
+      e.preventDefault();
+      const noteId = e.target.closest(".note-edit").dataset.id;
+  
+      if (window.noteModalComponent && noteId) {
+        window.noteModalComponent.editNote(noteId);
+      }
+    }
   });
 
   $("#widget-btn-add-note").on("click", function () {
@@ -161,22 +129,106 @@ export function initNote() {
       .always(() => disableButton($dialogBtnAddNote, false));
   }
 
-  $(document).on("click", ".note_delete", function (e) {
-    e.preventDefault();
-    if (confirm("Are you sure you want to delete this log?")) {
-      $.ajax({
-        url: $(this).attr("href"),
-        type: "get",
-      })
-        .done(() => projectNoteTable.ajax.reload())
-        .fail((jqXHR, textStatus, errorThrown) => {
-          console.error(
-            "Error deleting item:",
-            textStatus,
-            errorThrown,
-            jqXHR.responseText
-          );
+  // Delete note
+  document.addEventListener("click", async function (e) {
+    const deleteBtn = e.target.closest(".note-delete");
+  
+    if (deleteBtn) {
+      e.preventDefault();
+      const noteId = deleteBtn.dataset.id;
+      if (!noteId) return;
+  
+      const confirmed = confirm("Are you sure you want to delete this note?");
+      if (!confirmed) return;
+  
+      try {
+        const response = await fetch(`/note/${noteId}/delete`, {
+          method: "POST",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+          },
         });
+  
+        const data = await response.json();
+  
+        if (data.success) {
+          showFlashMessage(data.message, data.success);
+          projectNoteTable.ajax.reload();
+        } else {
+          showFlashMessage(data.message || data.success);
+        }
+      } catch (err) {
+        alert("Error deleting note.");
+        console.error(err);
+      }
     }
   });
+}
+
+export function noteModal() {
+  const form = document.getElementById("dialog-note-form");
+  return {
+    open: false,
+    async submitForm() {
+      const formData = new FormData(form);
+      formData.append("project_id", $projectId);
+
+      const noteId = form.note_id.value;
+      const isEditing = !!noteId;
+
+      try {
+        const response = await fetch(isEditing ? `/note/${noteId}/edit` : "/note", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+          },
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showFlashMessage(data.message, data.success);
+          projectNoteTable.ajax.reload();
+          resetForm();
+          this.open = false;
+        } else {
+          showFlashMessage(data.message, data.success);
+        }
+      } catch (err) {
+        alert("Error submitting form.");
+        console.error(err);
+      }
+    },
+    async editNote(noteId) {
+      try {
+        const response = await fetch(`/note/${noteId}/edit`, {
+          headers: { "X-Requested-With": "XMLHttpRequest" },
+        });
+        const data = await response.json();
+
+        if (data && data.note) {
+          form.note_title.value = data.note.note_title;
+          form.project_note.value = data.note.project_note;
+          form.next_action.value = data.note.next_action || "";
+
+          const followUpDataInput = document.getElementById("follow_up_date")._flatpickr;
+          if (followUpDataInput && data.note.follow_up_date) followUpDataInput.setDate(data.note.follow_up_date.date);
+
+          form.note_id.value = noteId;
+
+          this.open = true;
+        } else {
+          alert("Note not found.");
+        }
+      } catch (error) {
+        console.error("Error loading note:", error);
+        alert("Failed to load note.");
+      }
+    },
+    closeModal() {
+      resetForm(form);
+      this.open = false;
+    },
+  };
 }
