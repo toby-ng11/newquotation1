@@ -161,7 +161,7 @@ class IndexController extends AbstractActionController
         $table = $this->params()->fromRoute('table', 'all');
 
         $admin = false;
-        if ($user['sale_role'] === 'admin' || $user['approve_id'] !== null) {
+        if ($user['p2q_system_role'] === 'admin' || $user['approve_id'] !== null) {
             $admin = true;
         }
 

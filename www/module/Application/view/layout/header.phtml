@@ -39,7 +39,7 @@ $sidebarTemplate = 'sidebar/default';
 
       <nav class="main-nav" id="leftSide">
         <ul id="menu" class="nav nav-wrapper" x-data="navUnderline()" x-init="init">
-          <?php if ($this->escapeHtml($user['sale_role']) == 'admin') { ?>
+          <?php if ($this->escapeHtml($user['p2q_system_role']) == 'admin') { ?>
             <li class="top-level-entry-container">
               <a href="/index/admin"
                 hx-get="/index/admin"

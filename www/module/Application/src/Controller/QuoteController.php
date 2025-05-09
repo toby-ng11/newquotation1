@@ -116,7 +116,7 @@ class QuoteController extends AbstractActionController
         $this->layout()->setVariable('waitingApprove', Quote::WAITING_APPROVAL);
         $this->layout()->setVariable('disapproved', Quote::DISAPPROVED);
 
-        if ($user['sale_role'] === 'admin' || $user['approve_id'] !== null) {
+        if ($user['p2q_system_role'] === 'admin' || $user['approve_id'] !== null) {
             $admin = true;
         }
 

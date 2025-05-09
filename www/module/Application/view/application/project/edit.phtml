@@ -1,5 +1,6 @@
 <?php
 $owner = $this->owner;
+$admin = $this->admin;
 $project = $this->project;
 $user = $this->user;
 $architect = $this->architect;
@@ -485,7 +486,7 @@ $projectRequiredDate = $project['require_date'];
 					<h2>Project Quotes</h2>
 				</div>
 				<div class="widget-button">
-					<?php if ($owner) { ?>
+					<?php if ($owner and $admin) { ?>
 						<button type="button" title="Add new quote"
 							class="button action has-icon add-quote-button small" id="widget-btn-add-quote">
 							<span class="button-wrap">

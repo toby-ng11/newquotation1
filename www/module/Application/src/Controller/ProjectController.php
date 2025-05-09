@@ -154,8 +154,13 @@ class ProjectController extends AbstractActionController
 
         $owner = false;
 
-        if ($user['id'] === $project['shared_id'] || $user['id'] === $project['owner_id'] || $user['sale_role'] === 'admin' || $user['approve_id'] !== null) {
+        if ($user['id'] == $project['shared_id'] || $user['id'] == $project['owner_id'] || $user['p2q_system_role'] == 'admin' || $user['approve_id'] !== null) {
             $owner = true;
+        }
+
+        $admin = false;
+        if ($user['p2q_system_role'] === 'admin' || $user['approve_id'] !== null) {
+            $admin = true;
         }
 
         $request = $this->getRequest(); // for submit edit form
@@ -208,6 +213,7 @@ class ProjectController extends AbstractActionController
             'status' => $status,
             'marketSegment' => $marketSegment,
             'owner' => $owner,
+            'admin' => $admin,
             'architect' => $architect,
             'address' => $address,
             'specifier' => $specifier,

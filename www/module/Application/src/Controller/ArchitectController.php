@@ -40,7 +40,7 @@ class ArchitectController extends AbstractActionController
         $pattern = $this->params()->fromQuery('search', '');
         $user = $this->userService->getCurrentUser();
         $admin = false;
-        if ($user['sale_role'] === 'admin' || $user['approve_id'] !== null) {
+        if ($user['p2q_system_role'] === 'admin' || $user['approve_id'] !== null) {
             $admin = true;
         }
 
