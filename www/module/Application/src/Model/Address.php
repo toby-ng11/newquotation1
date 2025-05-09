@@ -34,7 +34,7 @@ class Address
             'phys_state'            => trim($data['phys_state']),
             'phys_postal_code'      => trim($data['phys_postal_code']),
             'phys_country'          => trim($data['phys_country']),
-            'central_phone_number'  => $data['central_phone_number'],
+            'central_phone_number'  => trim($data['central_phone_number']),
             'delete_flag'           => 'N',
             'email_address'         => trim($data['email_address']),
             'url'                   => trim($data['url'])
@@ -114,6 +114,27 @@ class Address
             return $newAdressId;
         } catch (Exception $e) {
             error_log("Address\addSpecifierAddress:Database Insert Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function editSpecifierAddress($data, $id)
+    {
+        if (!$data || !$id) {
+            return  false;
+        }
+
+        $info = [
+            'name'                  => trim($data['specifier_first_name']) . ' ' . trim($data['specifier_last_name']),
+            'central_phone_number'  => trim($data['specifier_phone_number']),
+            'email_address'         => trim($data['specifier_email']),
+        ];
+
+        try {
+            $this->address->update($info, ['address_id' => $id]);
+            return $id;
+        } catch (Exception $e) {
+            error_log("Address\editSpecifierAddress: Database Update Error: " . $e->getMessage());
             return false;
         }
     }

@@ -139,6 +139,11 @@ class ProjectController extends AbstractActionController
         $architect = $this->architect->fetchArchitectById($project['architect_id']);
         $address = $this->address->fetchAddressesById($project['architect_address_id']);
         $specifier = $this->specifier->fetchSpecifierById($project['specifier_id']);
+        $specifierAddress = null;
+
+        if ($specifier && !empty($specifier['address_id'])) {
+            $specifierAddress = $this->address->fetchAddressesById($specifier['address_id']);
+        }
         $architectType = $this->architect->fetchArchitectType();
         $addressList = $this->address->fetchAddressesByArchitect($project['architect_id']);
         $specifierList = $this->specifier->fetchSpecifiersByArchitect($project['architect_id']);
@@ -206,6 +211,7 @@ class ProjectController extends AbstractActionController
             'architect' => $architect,
             'address' => $address,
             'specifier' => $specifier,
+            'specifierAddress' => $specifierAddress,
             'architectType' => $architectType,
             'specifierList' => $specifierList,
             'addressList' => $addressList,

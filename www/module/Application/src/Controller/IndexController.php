@@ -180,6 +180,7 @@ class IndexController extends AbstractActionController
             'user' => $user,
             'totalArchitects' => $this->architect->countAllArchitects($admin, $user['id']),
             'totalCompleteProjects' => $this->project->countAllCompleteProjects($admin, $user['id']),
+            'totalActiveProjects' => $this->project->countActiveProjects($admin, $user['id']),
         ]);
 
         // If HTMX request, skip layout

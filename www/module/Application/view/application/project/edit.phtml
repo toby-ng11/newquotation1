@@ -5,6 +5,7 @@ $user = $this->user;
 $architect = $this->architect;
 $address = $this->address;
 $specifier = $this->specifier;
+$specifierAddress = $this->specifierAddress;
 $location = $this->location;
 $company = $this->company;
 $status = $this->status;
@@ -280,13 +281,13 @@ $projectRequiredDate = $project['require_date'];
 
 							<div class="oneTwo">
 								<label for="email_address">Email</label>
-								<input type="text" value="" id='email_address' name='email_address'
+								<input type="text" id='email_address' name='email_address'
 									value="<?= $this->escapeHtml($address['email_address'] ?? '') ?>" placeholder="Optional">
 							</div>
 
 							<div class="oneTwo">
 								<label for="url">URL</label>
-								<input type="url" value="" id='url' name='url' value="<?= $this->escapeHtml($address['url'] ?? '') ?>" placeholder="Optional">
+								<input type="url" id='url' name='url' value="<?= $this->escapeHtml($address['url'] ?? '') ?>" placeholder="Optional">
 							</div>
 						</div>
 					</div>
@@ -342,7 +343,7 @@ $projectRequiredDate = $project['require_date'];
 							<div class="oneTwo ">
 								<label for="specifier_email">Email</label>
 								<input type='text' id='specifier_email' name="specifier_email" class="tipN"
-									placeholder="Optional" value="<?= $this->escapeHtml($specifier['email_address'] ?? '') ?>" />
+									placeholder="Optional" value="<?= $this->escapeHtml($specifierAddress['email_address'] ?? '') ?>" />
 							</div>
 						</div>
 					</div>
@@ -385,7 +386,7 @@ $projectRequiredDate = $project['require_date'];
 
 					<div class="widget-footer">
 						<div class="widget-footer-button">
-							<button disabled id="form-btn-save-project" type="button" title="Save project information"
+							<button disabled id="form-btn-save-project" type="submit" form="project_content" title="Save project information"
 								class="button action save-project-button small">
 								<span class="button-wrap">
 									<span class="icon icon-save"></span>

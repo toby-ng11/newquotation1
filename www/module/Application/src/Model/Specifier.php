@@ -1,31 +1,44 @@
 <?php
 namespace Application\Model;
 
+use Application\Service\UserService;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\{Sql, Expression};
 use Exception;
 
-use Application\Model\Address;
 use Laminas\Db\TableGateway\TableGateway;
+use Psr\Container\ContainerInterface;
 
 class Specifier {
     protected $adapter;
-    protected $address;
     protected $specifier;
+    protected $container;
 
     public function __construct(
         Adapter $adapter,
         TableGateway $specifier,
-        Address $address) {
+        ContainerInterface $container) {
         $this->adapter = $adapter;
-        $this->address = $address;
         $this->specifier = $specifier;
+        $this->container = $container;
+    }
+
+    public function getAddress()
+    {
+        return $this->container->get(Address::class);
+    }
+
+    public function getUserSerive()
+    {
+        return $this->container->get(UserService::class);
     }
 
     public function add($data, $architect_id) {
         if (!$data || !$architect_id) {
 			return  false;
 		}
+
+        $user = $this->getUserSerive()->getCurrentUser();
 
         $info = [
             'first_name'        => trim($data['specifier_first_name']),
@@ -34,19 +47,19 @@ class Specifier {
             'architect_id'      => $architect_id,
             'delete_flag'       => 'N',
             'date_added'        => new Expression('GETDATE()'),
-            'added_by'          => $data['owner_id']
+            'added_by'          => $user['id'],
         ];
 
         if(empty($data['specifier_address_id'])) {
-            $info['address_id'] = $this->address->addSpecifierAddress($data);
+            $info['address_id'] = $this->getAddress()->addSpecifierAddress($data);
         } else {
             $info['address_id'] = $data['specifier_address_id'];
         }
 
         try {
             $this->specifier->insert($info);
-            $newAdressId = $this->specifier->getLastInsertValue();
-            return $newAdressId;
+            $newSpecId = $this->specifier->getLastInsertValue();
+            return $newSpecId;
         } catch (Exception $e) {
             error_log("Specifer\add:Database Insert Error: " . $e->getMessage());
             return false;
@@ -69,9 +82,9 @@ class Specifier {
         ];
 
         if(empty($data['specifier_address_id'])) {
-            $info['address_id'] = $this->address->addSpecifierAddress($data);
+            $info['address_id'] = $this->getAddress()->addSpecifierAddress($data);
         } else {
-            $info['address_id'] = $this->address->edit($data, $data['specifier_address_id']);
+            $info['address_id'] = $this->getAddress()->editSpecifierAddress($data, $data['specifier_address_id']);
         }
 
         try {

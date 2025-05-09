@@ -2,6 +2,7 @@
 
 namespace Application\Model;
 
+use Application\Service\UserService;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\{Sql, Expression};
 use Laminas\Db\TableGateway\TableGateway;
@@ -39,21 +40,33 @@ class Architect
         return $this->container->get(Specifier::class);
     }
 
+    public function getUserService()
+    {
+        return $this->container->get(UserService::class);
+    }
+
     public function add($data)
     {
         if (!$data) {
             return  false;
         }
 
+        $user = $this->getUserService()->getCurrentUser();
+
         $info = [
             'architect_name'    => trim($data['architect_name']),
             'company_id'        => trim($data['architect_company_id']),
-            'architect_rep_id'  => trim($data['architect_rep_id']),
             'architect_type_id' => $data['architect_type_id'] ?? null,
             'class_id'          => trim($data['architect_class_id']),
             'delete_flag'       => 'N',
             'date_added'        => new Expression('GETDATE()')
         ];
+
+        if (empty(trim($data['architect_rep_id']))) {
+            $info['architect_rep_id'] = $user['id'];
+        } else {
+            $info['architect_rep_id'] = trim($data['architect_rep_id']);
+        }
 
         try {
             $this->architect->insert($info);
@@ -71,15 +84,22 @@ class Architect
             return false;
         }
 
+        $user = $this->getUserService()->getCurrentUser();
+
         $info = [
             'architect_name'    => trim($data['architect_name']),
             //'company_id'      => $data['architect_company_id'],
-            'architect_rep_id'  => trim($data['architect_rep_id']),
             'architect_type_id' => $data['architect_type_id'] ?? null,
             'class_id'          => trim($data['architect_class_id']),
             //'delete_flag'     => 'N',
             //'date_added'      => new Expression('GETDATE()')
         ];
+
+        if (empty(trim($data['architect_rep_id']))) {
+            $info['architect_rep_id'] = $user['id'];
+        } else {
+            $info['architect_rep_id'] = trim($data['architect_rep_id']);
+        }
 
         try {
             $this->architect->update($info, ['architect_id' => $id]);

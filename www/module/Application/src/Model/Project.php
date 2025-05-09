@@ -66,9 +66,13 @@ class Project
             'due_date'              => !empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()')
         ];
 
-        $info['architect_id'] = empty($data['architect_id']) && !empty($data['architect_name'])
-            ? $this->getArchitect()->add($data)
-            : $data['architect_id'];
+        if (empty($data['architect_id']) && !empty($data['architect_name'])) {
+            $info['architect_id'] = $this->getArchitect()->add($data);
+        } else if (!empty($data['architect_id'])) {
+            $info['architect_id'] = $this->getArchitect()->edit($data, $data['architect_id']);
+        } else {
+            $info['architect_id'] = null;
+        }
 
         if (empty($data['address_id']) && array_filter(array_intersect_key($data, array_flip([
             'address_name',
@@ -83,13 +87,19 @@ class Project
             'url'
         ])))) {
             $info['architect_address_id'] = $this->getAddress()->add($data, $info['architect_id']);
+        } else if (!empty($data['address_id'])) {
+            $info['architect_address_id'] = $this->getAddress()->edit($data, $data['address_id']);
         } else {
-            $info['architect_address_id'] = $data['address_id'] ?? null;
+            $info['architect_address_id'] = null;
         }
 
-        $info['specifier_id'] = empty($data['specifier_id']) && !empty($data['specifier_name'])
-            ? $this->getSpecifier()->add($data, $info['architect_id'])
-            : $data['specifier_id'] ?? null;
+        if (empty($data['specifier_id']) && !empty($data['specifier_first_name'])) {
+            $info['specifier_id'] = $this->getSpecifier()->add($data, $info['architect_id']);
+        } else if (!empty($data['specifier_id'])) {
+            $info['specifier_id'] = $this->getSpecifier()->edit($data, $data['specifier_id']);
+        } else {
+            $info['specifier_id'] = null;
+        }
 
         try {
             $this->project->insert($info);
@@ -135,10 +145,10 @@ class Project
 
         if (empty($data['architect_id']) && !empty($data['architect_name'])) {
             $info['architect_id'] = $this->getArchitect()->add($data);
-        }
-
-        if (!empty($data['architect_id'])) {
+        } else if (!empty($data['architect_id'])) {
             $info['architect_id'] = $this->getArchitect()->edit($data, $data['architect_id']);
+        } else {
+            $info['architect_id'] = null;
         }
 
         if (empty($data['address_id']) && array_filter(array_intersect_key($data, array_flip([
@@ -154,8 +164,7 @@ class Project
             'url'
         ])))) {
             $info['architect_address_id'] = $this->getAddress()->add($data, $info['architect_id']);
-        }
-        if (!empty($data['address_id'])) {
+        } else if (!empty($data['address_id'])) {
             $info['architect_address_id'] = $this->getAddress()->edit($data, $data['address_id']);
         } else {
             $info['architect_address_id'] = null;
@@ -163,9 +172,7 @@ class Project
 
         if (empty($data['specifier_id']) && !empty($data['specifier_first_name'])) {
             $info['specifier_id'] = $this->getSpecifier()->add($data, $info['architect_id']);
-        }
-
-        if (!empty($data['specifier_id'])) {
+        } else if (!empty($data['specifier_id'])) {
             $info['specifier_id'] = $this->getSpecifier()->edit($data, $data['specifier_id']);
         } else {
             $info['specifier_id'] = null;
@@ -373,6 +380,23 @@ class Project
         $select->from('p2q_view_project')
             ->columns(['total' => new Expression('COUNT(*)')])
             ->where(['status' => 11]);
+
+        if (!$admin) {
+            $select->where(['architect_rep_id' => $user_id]);
+        }
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
+        return $result['total'] ?? 0;
+    }
+
+    public function countActiveProjects($admin, $user_id)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->from('p2q_view_project')
+            ->columns(['total' => new Expression('COUNT(*)')])
+            ->where(["status not in (11, 13, 14)"]);
 
         if (!$admin) {
             $select->where(['architect_rep_id' => $user_id]);

@@ -281,7 +281,7 @@ return [
                 return new Model\Specifier(
                     $dbAdapter,
                     new TableGateway('specifier', $dbAdapter),
-                    $container->get(Model\Address::class)
+                    $container,
                 );
             },
             Model\Address::class => function ($container) {

@@ -61,7 +61,7 @@ export function initProject() {
         const response = await fetch($projectForm.action, {
           method: $projectForm.method,
           body: new URLSearchParams(new FormData($projectForm)),
-          headers: { Accept: "application/json" },
+          headers: { "X-Requested-With": "XMLHttpRequest", },
         });
         const data = await response.json();
 

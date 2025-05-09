@@ -8,6 +8,7 @@ import { initNote } from "./pages/note.js";
 import { initProject } from "./pages/project.js";
 import { initQuote, $dialogMakeQuote } from "./pages/quote.js";
 import { initArchitect } from "./pages/architect.js";
+import { initCharts } from "./components/ui/chart/chart.js";
 
 initAlpine();
 
@@ -21,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initProject();
   initQuote();
   initArchitect();
+  initCharts();
   runFadeInAnimation();
 
   // Make quote from table
@@ -52,6 +54,7 @@ document.body.addEventListener("htmx:afterSwap", function (e) {
   }
   if (e.target.id === "content") {
     initTables();
+    initCharts();
     setTimeout(runFadeInAnimation, 50);
   }
 });

@@ -224,7 +224,7 @@ const tableConfigs = {
         dataSrc: "",
       },
       processing: true,
-      responsive: true,
+      //responsive: true,
       columns: [
         {
           data: "project_id_ext",
@@ -250,7 +250,10 @@ const tableConfigs = {
           data: "market_segment_desc",
         },
         {
-          data: "specifier_name",
+          data: "architect_name",
+        },
+        {
+          data: "quote_count",
         },
         {
           data: "create_date.date",
@@ -293,7 +296,7 @@ const tableConfigs = {
           className: "dt-head-center",
         },
         {
-          targets: [0, 2, 3, 5, 6, 7],
+          targets: [0, 2, 3, 5, 6, 7, 8],
           className: "dt-body-center",
         },
       ],
@@ -324,7 +327,7 @@ const tableConfigs = {
         url: "/index/home/assigned",
         dataSrc: "",
       },
-      responsive: true,
+      //responsive: true,
       columns: [
         {
           data: "project_id_ext",
@@ -350,7 +353,10 @@ const tableConfigs = {
           data: "market_segment_desc",
         },
         {
-          data: "specifier_name",
+          data: "architect_name",
+        },
+        {
+          data: "quote_count",
         },
         {
           data: "create_date.date",
@@ -393,7 +399,7 @@ const tableConfigs = {
           className: "dt-head-center",
         },
         {
-          targets: [0, 2, 3, 5, 6, 7],
+          targets: [0, 2, 3, 5, 6, 7, 8],
           className: "dt-body-center",
         },
       ],
@@ -424,7 +430,7 @@ const tableConfigs = {
         url: "/index/home/other",
         dataSrc: "",
       },
-      responsive: true,
+      //responsive: true,
       columns: [
         {
           data: "project_id_ext",
@@ -451,7 +457,10 @@ const tableConfigs = {
           data: "market_segment_desc",
         },
         {
-          data: "specifier_name",
+          data: "architect_name",
+        },
+        {
+          data: "quote_count",
         },
         {
           data: "create_date.date",
@@ -475,6 +484,9 @@ const tableConfigs = {
           },
         },
         {
+          data: "status_desc",
+        },
+        {
           data: "project_id",
           render: function (data, type, row, meta) {
             return (
@@ -491,7 +503,7 @@ const tableConfigs = {
           className: "dt-head-center",
         },
         {
-          targets: [0, 2, 3, 4, 6, 7],
+          targets: [0, 2, 3, 4, 6, 7, 8],
           className: "dt-body-center",
         },
       ],
@@ -502,7 +514,7 @@ const tableConfigs = {
       },
       fixedColumns: {
         start: 1,
-        end: 1,
+        end: 2,
       },
       scrollX: true,
       layout: {
@@ -1021,6 +1033,12 @@ const tableConfigs = {
           data: "class_id",
         },
         {
+          data: "project_count",
+        },
+        {
+          data: "quote_count",
+        },
+        {
           data: "date_added.date",
           render: function (data) {
             let date = new Date(data);
@@ -1034,7 +1052,7 @@ const tableConfigs = {
           className: "dt-head-center",
         },
         {
-          targets: [0, 2, 3, 4, 5],
+          targets: [0, 2, 3, 4, 5, 6],
           className: "dt-body-center",
         },
       ],
@@ -1424,7 +1442,6 @@ const tableConfigs = {
         dataSrc: "",
       },
       processing: true,
-      responsive: true,
       //serverSide: true, // experimetal: server-side processing
       columns: [
         {
@@ -1443,6 +1460,9 @@ const tableConfigs = {
           data: "project_name",
         },
         {
+          data: "quote_count",
+        },
+        {
           data: "status_desc",
         },
       ],
@@ -1456,7 +1476,11 @@ const tableConfigs = {
           className: "dt-body-center",
         },
       ],
-      //"responsive": true,
+      scrollX: true,
+      fixedColumns: {
+        start: 1,
+        end: 2,
+      },
       order: [[0, "desc"]],
       layout: {
         topStart: null,
