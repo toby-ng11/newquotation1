@@ -1,12 +1,15 @@
-import { initTables } from "./modules/tables.js";
-import { initItem } from "./modules/item.js";
-import { initNote } from "./modules/note.js";
-import { initFlatpickr, runFadeInAnimation } from "./modules/utils.js";
-import { initProject } from "./modules/project.js";
-import { initQuote, $dialogMakeQuote } from "./modules/quote.js";
-import { initSearchBox } from "./api/searchbox.js";
-import { scrollOffset } from "./modules/scroll-offset.js";
-import { initArchitect } from "./modules/architect.js";
+import { initAlpine } from "./components/Alpine/p2q-init.js";
+import { initTables } from "./components/ui/table/tables.js";
+import { initFlatpickr, runFadeInAnimation } from "./components/utils.js";
+import { initSearchBox } from "./components/ui/searchbox/searchbox.js";
+import { scrollOffset } from "./components/scroll-offset.js";
+import { initItem } from "./pages/item.js";
+import { initNote } from "./pages/note.js";
+import { initProject } from "./pages/project.js";
+import { initQuote, $dialogMakeQuote } from "./pages/quote.js";
+import { initArchitect } from "./pages/architect.js";
+
+initAlpine();
 
 document.addEventListener("DOMContentLoaded", () => {
   scrollOffset();

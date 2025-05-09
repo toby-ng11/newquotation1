@@ -1,8 +1,8 @@
-import { $projectId, $sheetType } from "./init.js";
-import { itemTable } from "./tables.js";
-import { resetForm, disableButton } from "./utils.js";
-import { showFlashMessage } from "../api/flashmessage.js";
-import { setupAutoComplete } from "../api/autocomplete.js";
+import { $projectId, $sheetType } from "../components/init.js";
+import { itemTable } from "../components/ui/table/tables.js";
+import { resetForm, disableButton } from "../components/utils.js";
+import { showFlashMessage } from "../components/flashmessage.js";
+import { setupAutoComplete } from "../components/autocomplete.js";
 
 let isEditItem = false;
 

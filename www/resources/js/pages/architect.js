@@ -1,9 +1,7 @@
-import { setupAutoComplete } from "../api/autocomplete.js";
-import { showFlashMessage } from "../api/flashmessage.js";
-import { architectID } from "./init.js";
-import { setState } from "./state.js";
-import { architectProjectsTable } from "./tables.js";
-import { resetForm } from "./utils.js";
+import { setupAutoComplete } from "../components/autocomplete.js";
+import { showFlashMessage } from "../components/flashmessage.js";
+import { architectID } from "../components/init.js";
+import { setState } from "../components/state.js";
 
 export function initArchitect() {
   const architectForm = document.getElementById("architect-form");
@@ -101,54 +99,4 @@ export function initArchitect() {
       }
     });
   });
-}
-
-export function projectModal() {
-  return {
-    open: false,
-    projectName: "",
-    projectDescription: "",
-    architectId: architectID,
-    async submitForm() {
-      const form = document.getElementById("architect-edit-project-form");
-      const formData = new FormData(form);
-
-      const ownerInput = document.getElementById("owner_id");
-      if (ownerInput) {
-        formData.append("owner_id", ownerInput.value);
-      }
-      formData.append("architect_id", this.architectId);
-
-      try {
-        const response = await fetch("/project", {
-          method: "POST",
-          body: formData,
-          headers: {
-            "X-Requested-With": "XMLHttpRequest",
-          },
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          showFlashMessage(data.message, data.success);
-          architectProjectsTable.ajax.reload();
-          resetForm();
-          this.open = false;
-        } else {
-          showFlashMessage(data.message, data.success);
-        }
-      } catch (err) {
-        alert("Error submitting form.");
-        console.error(err);
-      }
-    },
-    closeModal() {
-      const form = document.getElementById("architect-edit-project-form");
-      resetForm(form);
-      this.projectName = "";
-      this.projectDescription = "";
-      this.open = false;
-    },
-  };
 }

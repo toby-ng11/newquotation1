@@ -1,6 +1,6 @@
 /* global DataTable */
 
-import { $projectId, $sheetType, architectID } from "./init.js";
+import { $projectId, $sheetType, architectID } from "../../init.js";
 
 let projectNoteTable;
 let itemTable;
