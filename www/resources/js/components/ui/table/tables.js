@@ -1,5 +1,5 @@
 import DataTable from "datatables.net-dt";
-import { $projectId, $sheetType, architectID } from "../../init.js";
+import { projectID, sheetType, architectID } from "../../init.js";
 
 let projectNoteTable;
 let itemTable;
@@ -1123,7 +1123,7 @@ const tableConfigs = {
   projectNote: () => {
     projectNoteTable = new DataTable("#note-table", {
       ajax: {
-        url: `/project/${$projectId}/note`,
+        url: `/project/${projectID}/note`,
         dataSrc: "",
       },
       processing: true,
@@ -1241,8 +1241,8 @@ const tableConfigs = {
       ajax: {
         url: "/item/table",
         data: {
-          id: $projectId,
-          type: $sheetType,
+          id: projectID,
+          type: sheetType,
         },
         dataSrc: "",
       },
@@ -1298,7 +1298,7 @@ const tableConfigs = {
               '<a title="Edit this item" class="item-edit" href="/item/fetch?uid=' +
               data +
               "&type=" +
-              $sheetType +
+              sheetType +
               '">' +
               '<span class="button-wrap">' +
               '<span class="icon icon-edit"></span>' +
@@ -1306,7 +1306,7 @@ const tableConfigs = {
               '<a title="Delete this item" class="item_delete" href="/item/delete?uid=' +
               data +
               "&type=" +
-              $sheetType +
+              sheetType +
               '">' +
               '<span class="button-wrap">' +
               '<span class="icon icon-delete"></span>' +
@@ -1342,7 +1342,7 @@ const tableConfigs = {
   projectQuote: () => {
     new DataTable("#project-quote-table", {
       ajax: {
-        url: `/project/${$projectId}/quotetable`,
+        url: `/project/${projectID}/quotetable`,
         dataSrc: "",
       },
       processing: true,

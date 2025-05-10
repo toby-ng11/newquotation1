@@ -1,6 +1,6 @@
 import { setupAutoComplete } from "../components/autocomplete.js";
 import { showFlashMessage } from "../components/flashmessage.js";
-import { $projectId, projectForm } from "../components/init.js";
+import { projectID, projectForm } from "../components/init.js";
 import { setState } from "../components/state.js";
 
 export function initProject() {
@@ -89,7 +89,7 @@ export function initProject() {
 
       document.querySelector(".loading").style.display = "flex";
       try {
-        const response = await fetch(`/project/${$projectId}/delete`, {
+        const response = await fetch(`/project/${projectID}/delete`, {
           headers: {
             "X-Requested-With": "XMLHttpRequest",
           },

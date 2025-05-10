@@ -1,32 +1,37 @@
 import { setupAutoComplete } from "../components/autocomplete.js";
 import { disableButton } from "../components/DisableButton.js";
+import { showFlashMessage } from "../components/flashmessage.js";
 import {
-  $projectId,
-  $quoteForm,
-  $sheetType,
-  $quoteId,
+  projectID,
+  quoteForm,
+  sheetType,
+  quoteID,
+  projectForm,
 } from "../components/init.js";
+import { hideLoading, showLoading } from "../components/LoadingOverlay.js";
 import { setState } from "../components/state.js";
 import { resetForm } from "../components/utils.js";
 
 const $makeQuoteForm = $("#dialog-make-quote-form");
 const makeQuoteForm = document.getElementById("dialog-make-quote-form");
 export const $dialogMakeQuote = $("#dialog-make-quote");
-const $dialogBtnAddCustomer = $("#customer-form-btn-add");
+const dialogBtnAddCustomer = document.getElementById("customer-form-btn-add");
 
 let $customerFields = $(
   "#customer_id, #customer_name, #company_id, #salesrep_full_name"
 );
-let $contactDropdown = $("#contact_name");
+
 let $contactFields = $(
   "#contact_id, #first_name, #last_name, #phys_address1, #phys_address2, #phys_city, #phys_state, #phys_postal_code, #phys_country, #central_phone_number, #email_address"
 );
 
-$contactDropdown.data("default-options", $contactDropdown.html());
+const contactDropdown = document.getElementById("contact_name");
+if (contactDropdown) {
+  contactDropdown.dataset.defaultOptions = contactDropdown.innerHTML;
+}
 
 export function initQuote() {
   const quoteSaveBtn = document.getElementById("form-btn-save-quote");
-  const quoteForm = document.getElementById("quote-content");
   // Enable save button
   if (quoteForm) {
     quoteForm.addEventListener("change", () => {
@@ -46,91 +51,150 @@ export function initQuote() {
   }
 
   // Submit approval
-  $(".quote-action-button").on("click", async function (e) {
-    e.preventDefault();
+  document.querySelectorAll(".quote-action-button").forEach((button) => {
+    button.addEventListener("click", async function (e) {
+      e.preventDefault();
 
-    const $button = $(this);
-    const action = $button.data("action");
-    const label = $button.data("label")?.toLowerCase();
+      const action = button.dataset.action;
+      const label = button.dataset.label?.toLowerCase();
 
-    if (!action) return;
+      if (!action) return;
 
-    // Only validate for 'submit' and 'approve' actions
-    const requiresValidation = ["submit", "approve", "submit-approve"].includes(
-      action
-    );
-    if (requiresValidation && !$quoteForm.validationEngine("validate")) return;
-
-    if (!confirm(`You are about to ${label} this quote. Continue?`)) return;
-
-    $button.prop("disabled", true);
-    setState({ unsave: false });
-    let formData = $quoteForm.serialize();
-    $(".loading").show();
-
-    try {
-      const response = await $.post(`/quote/${$quoteId}/${action}`, formData);
-
-      if (response.success) {
-        window.scrollTo(0, 0);
-        location.reload();
-      } else {
-        alert(response.message || `Failed to ${label} the quote.`);
+      // Only validate for 'submit' and 'approve' actions
+      const requiresValidation = [
+        "submit",
+        "approve",
+        "submit-approve",
+      ].includes(action);
+      if (requiresValidation && !quoteForm.checkValidity()) {
+        quoteForm.reportValidity();
+        return;
       }
-    } catch (error) {
-      console.error(`Submit failed:`, error);
-      alert(`Error occurred while trying to ${label} the quote.`);
-    } finally {
-      $(".loading").hide();
-      setTimeout(() => $button.prop("disabled", false), 1000); // Prevents spam clicking
-    }
-  });
 
-  $(".delete_quote").on("click", async function (e) {
-    e.preventDefault();
-    if (confirm("Are you sure you want to delete this quote?") == true) {
+      if (!confirm(`You are about to ${label} this quote. Continue?`)) return;
+
+      button.disabled = true;
       setState({ unsave: false });
-      $(".loading").show();
+      const formData = new FormData(quoteForm);
+      const formBody = new URLSearchParams(formData).toString();
+
+      showLoading();
+
       try {
-        const response = await $.ajax({
-          url: `/quote/${$quoteId}/delete`,
-          type: "GET",
-          dataType: "json",
+        const response = await fetch(`/quote/${quoteID}/${action}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "X-Requested-With": "XMLHttpRequest",
+          },
+          body: formBody,
         });
 
-        if (response.success) {
-          window.location.href = "/index/home";
+        const result = await response.json();
+
+        if (result.success) {
+          window.scrollTo(0, 0);
+          location.reload();
         } else {
-          alert(response.message || "Failed to delete the quote.");
+          showFlashMessage(
+            `Failed to ${label} the quote. Error: ${result.message}`,
+            false
+          );
         }
       } catch (error) {
-        console.error("Delete failed:", error);
-        alert("Error occurred while deleting the quote.");
+        showFlashMessage(
+          `Error occurred while trying to ${label} the quote. Error: ${error.message}`,
+          false
+        );
       } finally {
-        $(".loading").hide();
+        hideLoading();
+        setTimeout(() => (button.disabled = false), 1000);
       }
-    }
+    });
   });
 
-  $("a.quote-edit-again").on("click", function (e) {
-    if (
-      confirm("You are about to edit this approved quote. Continue?") == true
-    ) {
-      e.preventDefault();
-      $(".loading").show();
-      $.ajax({
-        url: `/quote/${$quoteId}/edit`,
-        type: "get",
-        success: function (data) {
-          //$('#status').html('<div class="nNote nInformation hideit"><p><strong>INFORMATION: </strong>You Need submit again after edit</p></div>');
-          location.reload();
-        },
+  const deleteButtons = document.querySelectorAll(".delete_quote");
+  if (deleteButtons.length > 0) {
+    deleteButtons.forEach((button) => {
+      button.addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        const confirmed = confirm(
+          "Are you sure you want to delete this quote?"
+        );
+        if (!confirmed) return;
+
+        setState({ unsave: false });
+        showLoading();
+
+        try {
+          const res = await fetch(`/quote/${quoteID}/delete`, {
+            method: "GET",
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+          });
+
+          const response = await res.json();
+
+          if (response.success) {
+            window.location.href = "/index/home";
+          } else {
+            showFlashMessage(
+              `Failed to delete the quote. Error: ${response.message}`,
+              false
+            );
+          }
+        } catch (error) {
+          showFlashMessage(
+            `Error occurred while trying to delete the quote. Error: ${error.message}`,
+            false
+          );
+        } finally {
+          hideLoading();
+        }
       });
-      $(".loading").hide();
-    } else {
+    });
+  }
+
+  const editAgainLink = document.querySelector("a.quote-edit-again");
+  if (editAgainLink) {
+    editAgainLink.addEventListener("click", async (e) => {
+      const confirmed = confirm(
+        "You are about to edit this approved quote. Continue?"
+      );
+      if (!confirmed) {
+        e.preventDefault();
+        return;
+      }
+
       e.preventDefault();
-    }
-  });
+      showLoading();
+
+      try {
+        const response = await fetch(`/quote/${quoteID}/edit`, {
+          method: "GET",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+          },
+        });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        showFlashMessage("Changes saved! Reloading...", true);
+
+        // Wait briefly so user sees the message
+        setTimeout(() => location.reload(), 1500);
+      } catch (error) {
+        showFlashMessage(
+          `Failed to edit quote. Error: ${error.message}`,
+          false
+        );
+      } finally {
+        hideLoading();
+      }
+    });
+  }
 
   /* --------------------------  MAKE QUOTE FUNCTION ---------------------------- */
 
@@ -161,10 +225,10 @@ export function initQuote() {
         text: "Make Quote",
         click: function () {
           if ($makeQuoteForm.validationEngine("validate")) {
-            disableButton($dialogBtnAddCustomer, true);
+            disableButton(dialogBtnAddCustomer, true);
             makeQuote();
             $(this).dialog("close");
-            setTimeout(() => disableButton($dialogBtnAddCustomer, false), 1000);
+            setTimeout(() => disableButton(dialogBtnAddCustomer, false), 1000);
           }
         },
         "aria-label": "Make Quote",
@@ -223,68 +287,68 @@ export function initQuote() {
     });
   }
 
-  function getCustomerContacts(customer_id, section) {
-    if (!customer_id) return;
+  async function getCustomerContacts(customer_id, section) {
+    if (!customer_id || !section) return;
 
-    fetch(`/customer/${customer_id}/contacts`)
-      .then((res) => res.json())
-      .then((data) => {
-        const contactSelect = section.querySelector(
-          "select[id$='_contact_name']"
-        );
-        if (!contactSelect) return;
+    try {
+      const res = await fetch(`/customer/${customer_id}/contacts`);
+      if (!res.ok) throw new Error(`Server returned ${res.status}`);
+      const data = await res.json();
 
-        // Clear previous options
-        contactSelect.innerHTML = "";
+      const contactSelect = section.querySelector(
+        "select[id$='_contact_name']"
+      );
+      if (!contactSelect) return;
 
-        // Add new options
-        data.forEach((item) => {
-          const option = document.createElement("option");
-          option.value = item.contact_id;
-          option.textContent = item.contact_full_name;
-          contactSelect.appendChild(option);
-        });
+      contactSelect.innerHTML = "";
 
-        getContactInfo(section);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch contacts:", err);
+      data.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.contact_id;
+        option.textContent = item.contact_full_name;
+        contactSelect.appendChild(option);
       });
+
+      getContactInfo(section);
+    } catch (err) {
+      showFlashMessage(`Failed to fetch contacts: ${err.message}`, false);
+    }
   }
 
-  function getContactInfo(section) {
+  async function getContactInfo(section) {
     const contactSelect = section.querySelector("select[id$='_contact_name']");
     const contactID = contactSelect?.value;
-    if (!contactID) return;
+    if (!contactID || !section) return;
 
-    fetch(`/customer/${contactID}/contactinfo`)
-      .then((res) => res.json())
-      .then((data) => {
-        const type = section.dataset.type; // 'main' or 'dialog'
-        const fields = [
-          "contact_id",
-          "first_name",
-          "last_name",
-          "phys_address1",
-          "phys_address2",
-          "phys_city",
-          "phys_state",
-          "phys_postal_code",
-          "phys_country",
-          "central_phone_number",
-          "email_address",
-        ];
+    try {
+      const res = await fetch(`/customer/${contactID}/contactinfo`);
+      if (!res.ok) throw new Error(`Server returned ${res.status}`);
+      const data = await res.json();
 
-        fields.forEach((field) => {
-          const target = document.getElementById(`${type}_${field}`);
-          if (target) {
-            target.value = data[field] || "";
-          }
-        });
-      })
-      .catch((err) => {
-        console.error("Failed to fetch contact info:", err);
+      const type = section.dataset.type;
+      const fields = [
+        "contact_id",
+        "first_name",
+        "last_name",
+        "phys_address1",
+        "phys_address2",
+        "phys_city",
+        "phys_state",
+        "phys_postal_code",
+        "phys_country",
+        "central_phone_number",
+        "email_address",
+      ];
+
+      fields.forEach((field) => {
+        const input = document.getElementById(`${type}_${field}`);
+        if (input) {
+          input.value = data[field] || "";
+        }
       });
+    } catch (err) {
+      showFlashMessage(`Failed to fetch contact info: ${err.message}`, false);
+    }
   }
 
   // Initialize both sections (main and dialog)
@@ -297,58 +361,55 @@ export function initQuote() {
     }
   });
 
-  function makeQuote() {
-    disableButton($dialogBtnAddCustomer, true);
+  async function makeQuote() {
+    disableButton(dialogBtnAddCustomer, true);
 
-    let contactID = $("#dialog_contact_id").val();
-    let formData = "";
-    if ($sheetType === "project") {
+    const contactID = document.getElementById("dialog_contact_id")?.value || "";
+    let formData = new URLSearchParams();
+
+    if (sheetType === "project") {
       // if make quote from project page
-      formData =
-        $projectForm.serialize() +
-        "&contact_id=" +
-        encodeURIComponent(contactID) +
-        "&project_id=" +
-        encodeURIComponent($projectId);
-    }
-
-    if ($sheetType === "quote") {
-      // if make quote from quote page
-      formData =
-        "&contact_id=" +
-        encodeURIComponent(contactID) +
-        "&project_id=" +
-        encodeURIComponent($("#project_id").val());
-    }
-
-    $(".loading").show();
-
-    $.ajax({
-      url: "/quote",
-      type: "post",
-      data: formData,
-      contentType: "application/x-www-form-urlencoded",
-      dataType: "json",
-    })
-      .done((response) => {
-        if (response.success && response.quote_id) {
-          window.location.href = `/quote/${response.quote_id}/edit`;
-        } else {
-          alert(response.message || "Failed to make quote. Please try again.");
+      if (projectForm) {
+        const form = new FormData(projectForm);
+        for (const [key, value] of form.entries()) {
+          formData.append(key, value);
         }
-      })
-      .fail((jqXHR, textStatus, errorThrown) => {
-        console.error(
-          "Error making quote:",
-          textStatus,
-          errorThrown,
-          jqXHR.responseText
-        );
-        alert("Failed to make quote. Please try again.");
-      })
-      .always(() => {
-        disableButton($dialogBtnAddCustomer, false);
-        $(".loading").hide();
+      }
+      formData.append("contact_id", contactID);
+      formData.append("project_id", projectID);
+    }
+
+    if (sheetType === "quote") {
+      // if make quote from quote page
+      const projectIdInput = document.getElementById("project_id")?.value || "";
+      formData.append("contact_id", contactID);
+      formData.append("project_id", projectIdInput);
+    }
+
+    document.querySelector(".loading").style.display = "flex";
+
+    try {
+      const response = await fetch("/quote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: formData.toString(),
       });
+
+      const result = await response.json();
+
+      if (result.success && result.quote_id) {
+        window.location.href = `/quote/${result.quote_id}/edit`;
+      } else {
+        alert(result.message || "Failed to make quote. Please try again.");
+      }
+    } catch (error) {
+      showFlashMessage(`Error making quote: ${error.message}`, false);
+    } finally {
+      disableButton(dialogBtnAddCustomer, false);
+      document.querySelector(".loading").style.display = "none";
+    }
   }
 }

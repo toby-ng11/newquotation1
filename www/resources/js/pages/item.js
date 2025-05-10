@@ -1,4 +1,4 @@
-import { $projectId, $sheetType } from "../components/init.js";
+import { projectID, sheetType } from "../components/init.js";
 import { itemTable } from "../components/ui/table/tables.js";
 import { resetForm } from "../components/utils.js";
 import { showFlashMessage } from "../components/flashmessage.js";
@@ -9,7 +9,7 @@ let isEditItem = false;
 
 const $dialogItem = $("#dialog-item");
 const $itemForm = $("#dialog-item-form");
-const $dialogBtnAddItem = $("#item-form-btn-add");
+const dialogBtnAddItem = document.getElementById("item-form-btn-add");
 const $uomDropdown = $("#uom");
 
 $uomDropdown.data("default-options", $uomDropdown.html());
@@ -98,7 +98,7 @@ export function initItem() {
         text: "Save",
         click: function () {
           if ($itemForm.validationEngine("validate")) {
-            disableButton($dialogBtnAddItem, true);
+            disableButton(dialogBtnAddItem, true);
             if (!isEditItem) {
               additem();
             } else {
@@ -106,7 +106,7 @@ export function initItem() {
             }
             $(this).dialog("close");
             //resetForm($itemForm);
-            setTimeout(() => disableButton($dialogBtnAddItem, false), 1000);
+            setTimeout(() => disableButton(dialogBtnAddItem, false), 1000);
           }
         },
         "aria-label": "Add Item",
@@ -182,7 +182,7 @@ export function initItem() {
         });
 
         if (isEditItem) {
-          getQuotedPrice(item_uid, $sheetType);
+          getQuotedPrice(item_uid, sheetType);
         } else {
           getP21Price(item_id, old_uom || $("#uom").val(), old_price);
         }
@@ -225,13 +225,13 @@ export function initItem() {
 
   // Add Item Function
   function additem() {
-    disableButton($dialogBtnAddItem, true);
+    disableButton(dialogBtnAddItem, true);
     let formData =
       $itemForm.serialize() +
       "&project_id=" +
-      encodeURIComponent($projectId) +
+      encodeURIComponent(projectID) +
       "&type=" +
-      encodeURIComponent($sheetType);
+      encodeURIComponent(sheetType);
 
     $.ajax({
       url: "/item/add",
@@ -252,14 +252,14 @@ export function initItem() {
         );
         alert("Failed to add item. Please try again.");
       })
-      .always(() => disableButton($dialogBtnAddItem, false));
+      .always(() => disableButton(dialogBtnAddItem, false));
   }
 
   // Edit Item Function
   function edititem() {
-    disableButton($dialogBtnAddItem, true);
+    disableButton(dialogBtnAddItem, true);
     let formData =
-      $itemForm.serialize() + "&type=" + encodeURIComponent($sheetType);
+      $itemForm.serialize() + "&type=" + encodeURIComponent(sheetType);
     $.ajax({
       url: "/item/edit",
       type: "post",
@@ -279,7 +279,7 @@ export function initItem() {
         );
         alert("Failed to edit item. Please try again.");
       })
-      .always(() => disableButton($dialogBtnAddItem, false));
+      .always(() => disableButton(dialogBtnAddItem, false));
   }
 
   // Handle Item Delete

@@ -1,4 +1,4 @@
-import { $projectId } from "../components/init.js";
+import { projectID } from "../components/init.js";
 import { projectNoteTable } from "../components/ui/table/tables.js";
 import { resetForm } from "../components/utils.js";
 import { showFlashMessage } from "../components/flashmessage.js";
@@ -6,7 +6,7 @@ import { disableButton } from "../components/DisableButton.js";
 
 const $noteForm = $("#dialog-note-form");
 const $dialogNote = $("#dialog-message");
-const $dialogBtnAddNote = $("#note-form-btn-add");
+const dialogBtnAddNote = document.getElementById("note-form-btn-add");
 
 let isEditnote = false;
 
@@ -42,7 +42,7 @@ export function initNote() {
               editnote();
             }
             $(this).dialog("close");
-            setTimeout(() => disableButton($dialogBtnAddNote, false), 1000);
+            setTimeout(() => disableButton(dialogBtnAddNote, false), 1000);
           }
         },
         "aria-label": "Add Log",
@@ -73,13 +73,13 @@ export function initNote() {
     isEditnote = false;
     $dialogNote.dialog("option", "title", "Add Log");
     $dialogNote.dialog("open");
-    $dialogBtnAddNote.text("Add Note");
+    dialogBtnAddNote.text("Add Note");
   });
 
   function addnote() {
-    disableButton($dialogBtnAddNote, true);
+    disableButton(dialogBtnAddNote, true);
     let formData =
-      $noteForm.serialize() + "&project_id=" + encodeURIComponent($projectId);
+      $noteForm.serialize() + "&project_id=" + encodeURIComponent(projectID);
     $.ajax({
       url: "/note/add",
       type: "post",
@@ -99,11 +99,11 @@ export function initNote() {
         );
         alert("Failed to add note. Please try again.");
       })
-      .always(() => disableButton($dialogBtnAddNote, false));
+      .always(() => disableButton(dialogBtnAddNote, false));
   }
 
   function editnote() {
-    disableButton($dialogBtnAddNote, true);
+    disableButton(dialogBtnAddNote, true);
     let formData = $noteForm.serialize();
 
     $.ajax({
@@ -125,7 +125,7 @@ export function initNote() {
         );
         alert("Failed to edit note. Please try again.");
       })
-      .always(() => disableButton($dialogBtnAddNote, false));
+      .always(() => disableButton(dialogBtnAddNote, false));
   }
 
   // Delete note
