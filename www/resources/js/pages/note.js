@@ -1,7 +1,8 @@
 import { $projectId } from "../components/init.js";
 import { projectNoteTable } from "../components/ui/table/tables.js";
-import { resetForm, disableButton } from "../components/utils.js";
+import { resetForm } from "../components/utils.js";
 import { showFlashMessage } from "../components/flashmessage.js";
+import { disableButton } from "../components/DisableButton.js";
 
 const $noteForm = $("#dialog-note-form");
 const $dialogNote = $("#dialog-message");

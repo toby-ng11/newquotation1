@@ -1,6 +1,7 @@
 import { initAlpine } from "./components/Alpine/p2q-init.js";
+import { initFlatpickr } from "./components/ui/calendar/flatpickr.js";
 import { initTables } from "./components/ui/table/tables.js";
-import { initFlatpickr, runFadeInAnimation } from "./components/utils.js";
+import { runFadeInAnimation } from "./components/FadeInAnimation.js";
 import { initSearchBox } from "./components/ui/searchbox/searchbox.js";
 import { scrollOffset } from "./components/scroll-offset.js";
 import { initItem } from "./pages/item.js";

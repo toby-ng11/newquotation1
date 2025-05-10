@@ -1,8 +1,9 @@
 import { $projectId, $sheetType } from "../components/init.js";
 import { itemTable } from "../components/ui/table/tables.js";
-import { resetForm, disableButton } from "../components/utils.js";
+import { resetForm } from "../components/utils.js";
 import { showFlashMessage } from "../components/flashmessage.js";
 import { setupAutoComplete } from "../components/autocomplete.js";
+import { disableButton } from "../components/DisableButton.js";
 
 let isEditItem = false;
 
