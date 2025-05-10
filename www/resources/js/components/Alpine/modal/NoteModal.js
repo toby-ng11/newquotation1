@@ -7,6 +7,7 @@ export function noteModal() {
   const form = document.getElementById("dialog-note-form");
   return {
     open: false,
+    // Save note
     async submitForm() {
       const formData = new FormData(form);
       formData.append("project_id", $projectId);
@@ -41,6 +42,7 @@ export function noteModal() {
         console.error(err);
       }
     },
+    // Edit note
     async editNote(noteId) {
       try {
         const response = await fetch(`/note/${noteId}/edit`, {

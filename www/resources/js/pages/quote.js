@@ -1,4 +1,5 @@
 import { setupAutoComplete } from "../components/autocomplete.js";
+import { disableButton } from "../components/DisableButton.js";
 import {
   $projectId,
   $projectForm,
@@ -7,7 +8,7 @@ import {
   $quoteId,
 } from "../components/init.js";
 import { setState } from "../components/state.js";
-import { resetForm, disableButton } from "../components/utils.js";
+import { resetForm } from "../components/utils.js";
 
 const $makeQuoteForm = $("#dialog-make-quote-form");
 export const $dialogMakeQuote = $("#dialog-make-quote");
