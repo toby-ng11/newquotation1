@@ -1,5 +1,6 @@
 import { setupAutoComplete } from "../components/autocomplete.js";
-import { $projectId, $projectForm, projectForm } from "../components/init.js";
+import { showFlashMessage } from "../components/flashmessage.js";
+import { $projectId, projectForm } from "../components/init.js";
 import { setState } from "../components/state.js";
 
 export function initProject() {
@@ -47,7 +48,8 @@ export function initProject() {
 
   const saveButton = document.getElementById("#form-btn-save-project");
   if (saveButton) {
-    saveButton.addEventListener("click", async () => {
+    saveButton.addEventListener("click", async (e) => {
+      e.preventDefault();
       if (!projectForm.checkValidity()) return;
       if (generalContractorInput.value.trim() === "")
         document.querySelector("#general_contractor_id").value = "";
@@ -56,12 +58,13 @@ export function initProject() {
 
       document.querySelector(".loading").style.display = "flex";
       setState({ unsave: false });
+      const formData = FormData(projectForm);
 
       try {
-        const response = await fetch($projectForm.action, {
-          method: $projectForm.method,
-          body: new URLSearchParams(new FormData($projectForm)),
-          headers: { "X-Requested-With": "XMLHttpRequest", },
+        const response = await fetch(projectForm.getAttribute("action"), {
+          method: projectForm.getAttribute("method"),
+          body: formData,
+          headers: { "X-Requested-With": "XMLHttpRequest" },
         });
         const data = await response.json();
 
@@ -109,34 +112,36 @@ export function initProject() {
 
   /* ----------------------------- Architect / Specifier -------------------------------- */
 
-  let architectFields = $(
-    "#architect_name, #architect_id, #architect_company_id, #architect_rep_id, " +
-      "#architect_type_id, #architect_class_id"
+  let architectFields = document.querySelectorAll(
+    "#architect_name, #architect_id, #architect_company_id, #architect_rep_id,#architect_type_id, #architect_class_id"
   );
 
-  let addressDropdown = $("#address_list");
-  let addressFields = $(
-    "#address_id, #address_name, #phys_address1, " +
-      "#phys_address2, #phys_city, #phys_state, #phys_postal_code, #phys_country, " +
-      "#central_phone_number, #email_address, #url"
+  let addressDropdown = document.getElementById("address_list");
+  let addressFields = document.querySelectorAll(
+    "#address_id, #address_name, #phys_address1, #phys_address2, #phys_city, #phys_state, #phys_postal_code, #phys_country, #central_phone_number, #email_address, #url"
   );
 
-  let specifierDropdown = $("#specifier_name");
-  let specifierFields = $(
-    "#specifier_id, #specifier_address_id, #specifier_first_name, #specifier_last_name, " +
-      "#specifier_job_title, #specifier_phone_number, #specifier_email"
+  let specifierDropdown = document.getElementById("specifier_name");
+  let specifierFields = document.querySelectorAll(
+    "#specifier_id, #specifier_address_id, #specifier_first_name, #specifier_last_name, #specifier_job_title, #specifier_phone_number, #specifier_email"
   );
 
-  $("#add_architect").on("click", function () {
-    [architectFields, addressFields, specifierFields].forEach((field) =>
-      field.val("").prop("readonly", false)
-    );
-    [addressDropdown, specifierDropdown].forEach((dropdown) =>
-      dropdown.html(
-        '<option value="">-- Please search for an architect first --</option>'
-      )
-    );
-  });
+  const addArchitectProjectEditBtn = document.getElementById(
+    "add-architect-project-edit"
+  );
+  if (addArchitectProjectEditBtn) {
+    addArchitectProjectEditBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      [architectFields, addressFields, specifierFields].forEach(
+        (field) => (field.readOnly = false)
+      );
+      [addressDropdown, specifierDropdown].forEach(
+        (dropdown) =>
+          (dropdown.innerHTML =
+            '<option value="">-- Please search for an architect first --</option>')
+      );
+    });
+  }
 
   setupAutoComplete({
     fieldName: "#architect_name",
@@ -161,188 +166,196 @@ export function initProject() {
     ],
   });
 
-  function getArchitectById(id) {
+  async function getArchitectById(id) {
     if (!id) return;
-    $.ajax({
-      url: `/architect/${id}/fetchfull`,
-      dataType: "json",
-      type: "get",
-    })
-      .done(function (architect) {
-        if (architect) {
-          architectFields.each(function () {
-            let fieldName = $(this).attr("id");
-            $(this).val(architect[fieldName] || "");
-            $("#architect_company_id").val(architect.company_id);
-            $("#architect_name").prop("readonly", false);
-          });
-        } else {
-          // Clear fields if no architect found
-          architectFields.val("").prop("readonly", false);
-          console.warn("No architect data found for ID:", id);
-        }
-      })
-      .fail(function (jqXHR, textStatus, errorThrown) {
-        console.error(
-          "Error fetching architect details:",
-          textStatus,
-          errorThrown
-        );
-      });
-  }
 
-  function getAddress(id) {
-    if (!id) return;
-    $.ajax({
-      url: `/architect/${id}/address`,
-      dataType: "json",
-      type: "get",
-    })
-      .done(function (address) {
-        addressDropdown.empty();
-        if (!address || address.length === 0) {
-          addressDropdown.html(
-            '<option value="">No addresses found, please add.</option>'
-          );
-          addressFields.val("").prop("readonly", false);
-          return;
-        } else {
-          $.each(address, function (i, item) {
-            addressDropdown.append(
-              '<option value="' +
-                item.address_id +
-                '">' +
-                item.name +
-                "</option>"
-            );
-          });
-          addressDropdown.append(
-            '<option value="new">+ Add New Address</option>'
-          );
-          addressDropdown.prop("selectedIndex", 0);
-          getAddressInfo();
-        }
-      })
-      .fail(function (jqXHR, textStatus, errorThrown) {
-        console.error("Error fetching address:", textStatus, errorThrown);
-      });
-  }
+    try {
+      const response = await fetch(`/architect/${id}/fetchfull`);
+      if (!response.ok) throw new Error("Something happened. Please try again");
 
-  function getSpecifier(id) {
-    if (!id) return;
-    $.ajax({
-      url: `/architect/${id}/fetchspecs`,
-      dataType: "json",
-      type: "get",
-    })
-      .done(function (specifiers) {
-        specifierDropdown.empty();
-        if (!specifiers || specifiers.length === 0) {
-          $("#specifier_name").html(
-            '<option value="">No specifiers found, please add.</option>'
-          );
-          specifierFields.val("").prop("readonly", false);
-          return;
-        } else {
-          $.each(specifiers, function (i, item) {
-            specifierDropdown.append(
-              '<option value="' +
-                item.specifier_id +
-                '">' +
-                item.first_name +
-                " " +
-                item.last_name +
-                "</option>"
-            );
-          });
-          specifierDropdown.append(
-            '<option value="new">+ Add New Specifier</option>'
-          );
-          specifierDropdown.prop("selectedIndex", 0);
-          getSpecifierInfo();
-        }
-      })
-      .fail(function (jqXHR, textStatus, errorThrown) {
-        console.error("Error fetching specifier:", textStatus, errorThrown);
-      });
-  }
+      const architect = await response.json();
 
-  $("#specifier_name").on("change", function () {
-    if ($(this).val() === "new") {
-      // for add new specifier
-      specifierFields.val("");
-      specifierFields.prop("readonly", false);
-    } else {
-      getSpecifierInfo();
+      if (architect) {
+        architectFields.forEach((field) => {
+          const fieldName = field.id;
+          field.value = architect[fieldName] || "";
+        });
+
+        const companyField = document.getElementById("architect_company_id");
+        if (companyField) companyField.value = architect.company_id || "";
+
+        const nameField = document.getElementById("architect_name");
+        if (nameField) nameField.readOnly = false;
+      } else {
+        // Clear fields if no architect found
+        architectFields.forEach((field) => {
+          field.value = "";
+          field.readOnly = false;
+        });
+        showFlashMessage(`No architect found for this ${id}`, false);
+      }
+    } catch (error) {
+      showFlashMessage(error, false);
     }
-  });
-
-  $("#address_list").on("change", function () {
-    if ($(this).val() === "new") {
-      // for add new specifier
-      addressFields.val("");
-      addressFields.prop("readonly", false);
-    } else {
-      getAddressInfo();
-    }
-  });
-
-  function getSpecifierInfo() {
-    let specifierId = $("#specifier_name").val();
-    if (!specifierId || specifierId === "new") return;
-    $.ajax({
-      url: `/architect/${specifierId}/specinfo`,
-      dataType: "json",
-      type: "get",
-    })
-      .done(function (specifier) {
-        if (specifier) {
-          specifierFields.each(function () {
-            let fieldName = $(this).attr("id");
-            $(this).val(specifier[fieldName] || "");
-            $("#specifier_address_id").val(specifier.address_id);
-            $("#specifier_first_name").val(specifier.first_name);
-            $("#specifier_last_name").val(specifier.last_name);
-            $("#specifier_job_title").val(specifier.job_title);
-            $("#specifier_phone_number").val(specifier.central_phone_number);
-            $("#specifier_email").val(specifier.email_address);
-          });
-        }
-      })
-      .fail(function (jqXHR, textStatus, errorThrown) {
-        console.error(
-          "Error fetching specifier details:",
-          textStatus,
-          errorThrown
-        );
-      });
   }
 
-  function getAddressInfo() {
-    let addressID = $("#address_list").val();
+  async function getAddress(id) {
+    if (!id) return;
+
+    try {
+      const response = await fetch(`/architect/${id}/address`);
+      if (!response.ok) throw new Error("Something happened. Please try again");
+
+      const addresses = await response.json();
+
+      if (addresses) {
+        addressDropdown.innerHTML = "";
+        if (!addresses || addresses.length === 0) {
+          addressDropdown.innerHTML = `<option value="">No addresses found, please add.</option>`;
+          addressFields.forEach((field) => {
+            field.value = "";
+            field.readOnly = false;
+          });
+          return;
+        }
+
+        addresses.forEach((item) => {
+          const option = document.createElement("option");
+          option.value = item.address_id;
+          option.textContent = item.name;
+          addressDropdown.appendChild(option);
+        });
+
+        const newOption = document.createElement("option");
+        newOption.value = "new";
+        newOption.textContent = "+ Add New Address";
+        addressDropdown.appendChild(newOption);
+
+        addressDropdown.selectedIndex = 0;
+        getAddressInfo(addressDropdown);
+      }
+    } catch (error) {
+      showFlashMessage(error, false);
+    }
+  }
+
+  async function getAddressInfo(dropdown) {
+    const addressID = dropdown.value;
     if (!addressID || addressID === "new") return;
-    $.ajax({
-      url: `/architect/${addressID}/addressinfo`,
-      dataType: "json",
-      type: "get",
-    })
-      .done(function (address) {
-        if (address) {
-          addressFields.each(function () {
-            let fieldName = $(this).attr("id");
-            $(this).val(address[fieldName] || "");
-            $("#address_name").val(address.name);
-          });
-        }
-      })
-      .fail(function (jqXHR, textStatus, errorThrown) {
-        console.error(
-          "Error fetching specifier details:",
-          textStatus,
-          errorThrown
-        );
-      });
+
+    try {
+      const response = await fetch(`/architect/${addressID}/addressinfo`);
+      if (!response.ok) throw new Error("Something happened. Please try again");
+
+      const address = await response.json();
+      if (address) {
+        addressFields.forEach((field) => {
+          const fieldName = field.id;
+          field.value = address[fieldName] || "";
+        });
+        const addressNickname = document.getElementById("address_name");
+        if (addressNickname) addressNickname.value = address.name || "";
+      }
+    } catch (error) {
+      showFlashMessage(error, false);
+    }
   }
+
+  async function getSpecifier(id) {
+    if (!id) return;
+
+    try {
+      const response = await fetch(`/architect/${id}/fetchspecs`);
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      const specifiers = await response.json();
+
+      specifierDropdown.innerHTML = "";
+
+      if (!specifiers || specifiers.length === 0) {
+        specifierDropdown.innerHTML =
+          '<option value="">No specifiers found, please add.</option>';
+
+        specifierFields.forEach((field) => {
+          field.value = "";
+          field.readOnly = false;
+        });
+
+        return;
+      }
+
+      specifiers.forEach((item) => {
+        const option = document.createElement("option");
+        option.value = item.specifier_id;
+        option.textContent = `${item.first_name} ${item.last_name}`;
+        specifierDropdown.appendChild(option);
+      });
+
+      const newOption = document.createElement("option");
+      newOption.value = "new";
+      newOption.textContent = "+ Add New Specifier";
+      specifierDropdown.appendChild(newOption);
+
+      specifierDropdown.selectedIndex = 0;
+      getSpecifierInfo(specifierDropdown);
+    } catch (error) {
+      showFlashMessage(error, false);
+    }
+  }
+
+  async function getSpecifierInfo(dropdown) {
+    const specifierId = dropdown.value;
+    if (!specifierId || specifierId === "new") return;
+
+    try {
+      const response = await fetch(`/architect/${specifierId}/specinfo`);
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      const specifier = await response.json();
+
+      if (specifier) {
+        const fieldMap = {
+          specifier_id: "specifier_id",
+          specifier_address_id: "address_id",
+          specifier_first_name: "first_name",
+          specifier_last_name: "last_name",
+          specifier_job_title: "job_title",
+          specifier_phone_number: "central_phone_number",
+          specifier_email: "email_address",
+        };
+
+        Object.entries(fieldMap).forEach(([fieldId, dataKey]) => {
+          const field = document.getElementById(fieldId);
+          if (field) field.value = specifier[dataKey] || "";
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching specifier details:", error);
+    }
+  }
+
+  specifierDropdown.addEventListener("change", function () {
+    if (this.value === "new") {
+      specifierFields.forEach((field) => {
+        field.value = "";
+        field.readOnly = false;
+      });
+    } else {
+      getSpecifierInfo(specifierDropdown);
+    }
+  });
+
+  addressDropdown.addEventListener("change", function () {
+    if (this.value === "new") {
+      // Clear and unlock fields for adding a new address
+      addressFields.forEach((field) => {
+        field.value = "";
+        field.readOnly = false;
+      });
+    } else {
+      getAddressInfo(addressDropdown);
+    }
+  });
 
   /* ----------------------------- Contractor / Customer -------------------------------- */
 
@@ -381,19 +394,26 @@ export function initProject() {
     });
   });
 
-  function fetchAndFillContractor(id, prefix) {
-    fetch(`/customer/${id}/fetchbyid`)
-      .then((res) => res.json())
-      .then((result) => {
-        if (result) {
-          const idField = document.getElementById(`${prefix}_id`);
-          const nameField = document.getElementById(`${prefix}_name`);
-          if (idField) idField.value = result.customer_id;
-          if (nameField) nameField.value = result.customer_name;
-        }
-      })
-      .catch((error) => {
-        console.error(`Failed to fetch contractor (${id}):`, error);
-      });
+  async function fetchAndFillContractor(id, prefix) {
+    if (!id || !prefix) return;
+    try {
+      const response = await fetch(`/customer/${id}/fetchbyid`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const result = await response.json();
+
+      if (result) {
+        const idField = document.getElementById(`${prefix}_id`);
+        const nameField = document.getElementById(`${prefix}_name`);
+
+        if (idField) idField.value = result.customer_id || "";
+        if (nameField) nameField.value = result.customer_name || "";
+      }
+    } catch (error) {
+      showFlashMessage(
+        `Failed to fetch contractor (${id}): ${error.message}`,
+        false
+      );
+    }
   }
 }

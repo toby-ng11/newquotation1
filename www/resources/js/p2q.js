@@ -1,3 +1,4 @@
+import { InitTheme } from "./components/ui/theme/Theme.js";
 import { initAlpine } from "./components/Alpine/p2q-init.js";
 import { initFlatpickr } from "./components/ui/calendar/flatpickr.js";
 import { initTables } from "./components/ui/table/tables.js";
@@ -10,10 +11,13 @@ import { initProject } from "./pages/project.js";
 import { initQuote, $dialogMakeQuote } from "./pages/quote.js";
 import { initArchitect } from "./pages/architect.js";
 import { initCharts } from "./components/ui/chart/chart.js";
+import { initUserMenu } from "./components/ui/NavUser.js";
 
 initAlpine();
 
 document.addEventListener("DOMContentLoaded", () => {
+  InitTheme();
+  initUserMenu();
   scrollOffset();
   initSearchBox();
   initTables();
