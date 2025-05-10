@@ -1,5 +1,4 @@
-/* global DataTable */
-
+import DataTable from "datatables.net-dt";
 import { $projectId, $sheetType, architectID } from "../../init.js";
 
 let projectNoteTable;
@@ -11,7 +10,7 @@ let architectSpecifiersTable;
 const tableConfigs = {
   /* ------ ADMIN PORTAL ------ */
   adminProject: () => {
-    $("#admin-project-table").DataTable({
+    new DataTable("#admin-project-table", {
       ajax: {
         url: "/index/admin/project?view=true",
         dataSrc: "",
@@ -113,7 +112,7 @@ const tableConfigs = {
     });
   },
   adminQuote: () => {
-    $("#admin-quote-table").DataTable({
+    new DataTable("#admin-quote-table", {
       ajax: {
         url: "/index/admin/quote?view=true",
         dataSrc: "",
@@ -124,7 +123,7 @@ const tableConfigs = {
       columns: [
         {
           data: "quote_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/quote/" +
               data +
@@ -217,7 +216,7 @@ const tableConfigs = {
   },
   /* ------ HOME PORTAL ------ */
   homeOwnProject: () => {
-    $("#dashboard-home-own-table").DataTable({
+    new DataTable("#dashboard-home-own-table", {
       //select: true,
       ajax: {
         url: "/index/home/own?view=true",
@@ -228,7 +227,7 @@ const tableConfigs = {
       columns: [
         {
           data: "project_id_ext",
-          render: function (data, type, row, meta) {
+          render: function (data, type, row) {
             return (
               "<a target='_blank' href='/project/" +
               row.project_id +
@@ -281,7 +280,7 @@ const tableConfigs = {
         },
         {
           data: "project_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/project/" +
               data +
@@ -321,7 +320,7 @@ const tableConfigs = {
     });
   },
   homeSharedProject: () => {
-    $("#dashboard-home-assigned-table").DataTable({
+    new DataTable("#dashboard-home-assigned-table", {
       //select: true,
       ajax: {
         url: "/index/home/assigned",
@@ -331,7 +330,7 @@ const tableConfigs = {
       columns: [
         {
           data: "project_id_ext",
-          render: function (data, type, row, meta) {
+          render: function (data, type, row) {
             {
               return (
                 "<a target='_blank' href='/project/" +
@@ -384,7 +383,7 @@ const tableConfigs = {
         },
         {
           data: "project_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/project/" +
               data +
@@ -425,7 +424,7 @@ const tableConfigs = {
     });
   },
   homeOtherProject: () => {
-    $("#dashboard-home-other-table").DataTable({
+    new DataTable("#dashboard-home-other-table", {
       ajax: {
         url: "/index/home/other",
         dataSrc: "",
@@ -434,7 +433,7 @@ const tableConfigs = {
       columns: [
         {
           data: "project_id_ext",
-          render: function (data, type, row, meta) {
+          render: function (data, type, row) {
             return (
               "<a target='_blank' href='/project/" +
               row.project_id +
@@ -488,7 +487,7 @@ const tableConfigs = {
         },
         {
           data: "project_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/project/" +
               data +
@@ -531,7 +530,7 @@ const tableConfigs = {
     });
   },
   homeQuote: () => {
-    $("#dashboard-home-quote-table").DataTable({
+    new DataTable("#dashboard-home-quote-table", {
       ajax: {
         url: "/index/home/quote",
         dataSrc: "",
@@ -542,7 +541,7 @@ const tableConfigs = {
       columns: [
         {
           data: "quote_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/quote/" +
               data +
@@ -554,7 +553,7 @@ const tableConfigs = {
         },
         {
           data: "project_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/project/" +
               data +
@@ -646,7 +645,7 @@ const tableConfigs = {
     });
   },
   homeNote: () => {
-    $("#dashboard-home-note-table").DataTable({
+    new DataTable("#dashboard-home-note-table", {
       ajax: {
         url: "/index/home/note",
         dataSrc: "",
@@ -663,7 +662,7 @@ const tableConfigs = {
         },
         {
           data: "project_id",
-          render: function (data, type, row, meta) {
+          render: function (data, type, row) {
             {
               return (
                 "<a target='_blank' href='/project/" +
@@ -714,7 +713,7 @@ const tableConfigs = {
   },
   /* ------ APPROVAL PORTAL ------ */
   approvalWaiting: () => {
-    $("#dashboard-approve-waiting-table").DataTable({
+    new DataTable("#dashboard-approve-waiting-table", {
       ajax: {
         url: "/index/approval/waiting",
         dataSrc: "",
@@ -725,7 +724,7 @@ const tableConfigs = {
       columns: [
         {
           data: "quote_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/quote/" +
               data +
@@ -795,7 +794,7 @@ const tableConfigs = {
     });
   },
   approvalApproved: () => {
-    $("#dashboard-approve-approved-table").DataTable({
+    new DataTable("#dashboard-approve-approved-table", {
       ajax: {
         url: "/index/approval/approved",
         dataSrc: "",
@@ -893,7 +892,7 @@ const tableConfigs = {
     });
   },
   approvalDisapproved: () => {
-    $("#dashboard-approve-disapproved-table").DataTable({
+    new DataTable("#dashboard-approve-disapproved-table", {
       ajax: {
         url: "/index/approval/disapproved",
         dataSrc: "",
@@ -904,7 +903,7 @@ const tableConfigs = {
       columns: [
         {
           data: "quote_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/quote/" +
               data +
@@ -962,7 +961,7 @@ const tableConfigs = {
         },
         {
           data: "quote_id",
-          render: function (data, type, row, meta) {
+          render: function (data, type, row) {
             return (
               "<a target='_blank' href='/quote/edit/id/" +
               row.quote_id +
@@ -1010,7 +1009,7 @@ const tableConfigs = {
       columns: [
         {
           data: "architect_id",
-          render: function (data, type, row, meta) {
+          render: function (data, type, row) {
             return (
               "<a target='_blank' href='/architect/" +
               row.architect_id +
@@ -1122,7 +1121,7 @@ const tableConfigs = {
   },
   /* ------ PROJECT + QUOTE EDIT ------ */
   projectNote: () => {
-    projectNoteTable = $("#note-table").DataTable({
+    projectNoteTable = new DataTable("#note-table", {
       ajax: {
         url: `/project/${$projectId}/note`,
         dataSrc: "",
@@ -1139,7 +1138,7 @@ const tableConfigs = {
         },
         {
           data: "note_title",
-          render: function (data, type, row, meta) {
+          render: function (data, type, row) {
             if (data == "") {
               let formattedText = row.project_note.replace(
                 /(?:\r\n|\r|\n)/g,
@@ -1238,7 +1237,7 @@ const tableConfigs = {
     });
   },
   item: () => {
-    itemTable = $("#item-table").DataTable({
+    itemTable = new DataTable("#item-table", {
       ajax: {
         url: "/item/table",
         data: {
@@ -1252,7 +1251,7 @@ const tableConfigs = {
       columns: [
         {
           data: "item_id",
-          render: function (data, type, row, meta) {
+          render: function (data, type, row) {
             return (
               '<b class="item-name">' + data + "</b>" + "<br>" + row.item_desc
             );
@@ -1341,7 +1340,7 @@ const tableConfigs = {
     });
   },
   projectQuote: () => {
-    $("#project-quote-table").DataTable({
+    new DataTable("#project-quote-table", {
       ajax: {
         url: `/project/${$projectId}/quotetable`,
         dataSrc: "",
@@ -1351,7 +1350,7 @@ const tableConfigs = {
       columns: [
         {
           data: "quote_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/quote/" +
               data +
@@ -1446,7 +1445,7 @@ const tableConfigs = {
       columns: [
         {
           data: "project_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/project/" +
               data +
@@ -1502,7 +1501,7 @@ const tableConfigs = {
       columns: [
         {
           data: "address_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/architect/" +
               data +
@@ -1548,7 +1547,7 @@ const tableConfigs = {
       columns: [
         {
           data: "specifier_id",
-          render: function (data, type, row, meta) {
+          render: function (data) {
             return (
               "<a target='_blank' href='/architect/" +
               data +
@@ -1560,7 +1559,7 @@ const tableConfigs = {
         },
         {
           data: "first_name",
-          render: function (data, type, row, meta) {
+          render: function (data, type, row) {
             return `${data} ${row.last_name}`;
           },
         },
@@ -1588,22 +1587,22 @@ const tableConfigs = {
 };
 
 export function initTables() {
-  $(".sTable").each(function () {
-    const $table = $(this);
-    const initType = $table.data("init");
+  const tables = document.querySelectorAll(".sTable");
+  tables.forEach(table => {
+    const initType = table.dataset.init;
 
     if (!initType || !(initType in tableConfigs)) {
       console.warn(`No DataTable config found for: ${initType}`);
       return;
     }
 
-    // Destroy previous if needed
-    if ($.fn.DataTable.isDataTable($table)) {
-      $table.DataTable().destroy();
+    // Destroy previous instance if exists (vanilla)
+    if (table._DT_Instance) {
+      table._DT_Instance.destroy();
     }
 
-    // Call the matching config
-    tableConfigs[initType]();
+    // Initialize and store instance on element
+    table._DT_Instance = tableConfigs[initType](table);
   });
 }
 

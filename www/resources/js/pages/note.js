@@ -10,8 +10,6 @@ const $dialogBtnAddNote = $("#note-form-btn-add");
 
 let isEditnote = false;
 
-let follow_up_date = document.getElementById("follow_up_date");
-
 export function initNote() {
   $("#dialog-message").dialog({
     autoOpen: false,

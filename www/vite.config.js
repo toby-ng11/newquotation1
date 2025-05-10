@@ -8,11 +8,10 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        home: path.resolve(__dirname, 'resources/js/home.js'),
         main: path.resolve(__dirname, 'resources/js/p2q.js'),
       },
       output: {
-        entryFileNames: '[name].js', // keep it clean
+        entryFileNames: '[name].js',
       },
     },
   },

@@ -2,7 +2,6 @@ import { setupAutoComplete } from "../components/autocomplete.js";
 import { disableButton } from "../components/DisableButton.js";
 import {
   $projectId,
-  $projectForm,
   $quoteForm,
   $sheetType,
   $quoteId,
