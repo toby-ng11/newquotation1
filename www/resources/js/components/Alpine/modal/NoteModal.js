@@ -1,4 +1,4 @@
-import { $projectId } from "../../init.js";
+import { projectID } from "../../init.js";
 import { showFlashMessage } from "../../flashmessage.js";
 import { projectNoteTable } from "../../ui/table/tables.js";
 import { resetForm } from "../../utils.js";
@@ -10,7 +10,7 @@ export function noteModal() {
     // Save note
     async submitForm() {
       const formData = new FormData(form);
-      formData.append("project_id", $projectId);
+      formData.append("project_id", projectID);
 
       const noteId = form.note_id.value;
       const isEditing = !!noteId;

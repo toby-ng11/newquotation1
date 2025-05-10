@@ -12,11 +12,13 @@ import { initQuote, $dialogMakeQuote } from "./pages/quote.js";
 import { initArchitect } from "./pages/architect.js";
 import { initCharts } from "./components/ui/chart/chart.js";
 import { initUserMenu } from "./components/ui/NavUser.js";
+import { showLoadedFlashMessage } from "./components/flashmessage.js";
 
 initAlpine();
 
 document.addEventListener("DOMContentLoaded", () => {
   InitTheme();
+  showLoadedFlashMessage();
   initUserMenu();
   scrollOffset();
   initSearchBox();
@@ -51,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
 document.body.addEventListener("htmx:afterSwap", function (e) {
   // only re-init if content is replaced in #content or similar
   scrollOffset();
+  showLoadedFlashMessage();
   if (
     e.target.querySelector("#search-overlay") ||
     e.target.querySelector(".search-architect-button")

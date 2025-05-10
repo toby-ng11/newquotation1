@@ -1,3 +1,5 @@
-export function disableButton($button, state) {
-  $button.prop("disabled", state);
+export function disableButton(button, state) {
+  if (button instanceof HTMLElement) {
+    button.disabled = state;
+  }
 }

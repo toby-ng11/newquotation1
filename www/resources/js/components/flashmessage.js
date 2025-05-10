@@ -20,8 +20,7 @@ export function showFlashMessage(message, success = true) {
   }, 4000);
 }
 
-// Auto-show existing flash messages on page load
-document.addEventListener("DOMContentLoaded", () => {
+export function showLoadedFlashMessage() {
   const flash = document.querySelector(".flash-message");
   if (flash) {
     setTimeout(() => {
@@ -34,4 +33,4 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => flash.remove(), 500);
     }, 4000);
   }
-});
+}
