@@ -1,18 +1,25 @@
 import { setupAutoComplete } from "../components/autocomplete.js";
 import { showFlashMessage } from "../components/flashmessage.js";
 import { projectID, projectForm } from "../components/init.js";
+import { hideLoading, showLoading } from "../components/LoadingOverlay.js";
+import { initAutoSave } from "../components/pageload.js";
 import { setState } from "../components/state.js";
 
+const architectDetails = document.querySelector("#architect-details");
+const architectNameInput = document.querySelector("#architect_name");
+const contractorDetails = document.querySelector("#contractor-details");
+const generalContractorInput = document.querySelector(
+  "#general_contractor_name"
+);
+const awardedContractorInput = document.querySelector(
+  "#awarded_contractor_name"
+);
+
 export function initProject() {
-  const architectDetails = document.querySelector("#architect-details");
-  const architectNameInput = document.querySelector("#architect_name");
-  const contractorDetails = document.querySelector("#contractor-details");
-  const generalContractorInput = document.querySelector(
-    "#general_contractor_name"
-  );
-  const awardedContractorInput = document.querySelector(
-    "#awarded_contractor_name"
-  );
+
+  if (projectForm) {
+    initAutoSave(projectForm, saveProject);
+  }
 
   // Autocomplete for shared_id
   setupAutoComplete({
@@ -50,35 +57,7 @@ export function initProject() {
   if (saveButton) {
     saveButton.addEventListener("click", async (e) => {
       e.preventDefault();
-      if (!projectForm.checkValidity()) return;
-      if (generalContractorInput.value.trim() === "")
-        document.querySelector("#general_contractor_id").value = "";
-      if (awardedContractorInput.value.trim() === "")
-        document.querySelector("#awarded_contractor_id").value = "";
-
-      document.querySelector(".loading").style.display = "flex";
-      setState({ unsave: false });
-      const formData = FormData(projectForm);
-
-      try {
-        const response = await fetch(projectForm.getAttribute("action"), {
-          method: projectForm.getAttribute("method"),
-          body: formData,
-          headers: { "X-Requested-With": "XMLHttpRequest" },
-        });
-        const data = await response.json();
-
-        if (data.success) {
-          window.location.href = data.redirect;
-        } else {
-          alert(data.message || "Failed to save project.");
-        }
-      } catch (error) {
-        console.error("Save failed:", error);
-        alert("An error occurred while saving the project.");
-      } finally {
-        document.querySelector(".loading").style.display = "none";
-      }
+      saveProject();
     });
   }
 
@@ -415,5 +394,37 @@ export function initProject() {
         false
       );
     }
+  }
+}
+
+export async function saveProject() {
+  if (!projectForm.checkValidity()) return;
+  if (generalContractorInput.value.trim() === "")
+    document.querySelector("#general_contractor_id").value = "";
+  if (awardedContractorInput.value.trim() === "")
+    document.querySelector("#awarded_contractor_id").value = "";
+
+  showLoading();
+  setState({ unsave: false });
+  const formData = FormData(projectForm);
+
+  try {
+    const response = await fetch(projectForm.getAttribute("action"), {
+      method: projectForm.getAttribute("method"),
+      body: formData,
+      headers: { "X-Requested-With": "XMLHttpRequest" },
+    });
+    const data = await response.json();
+
+    if (data.success) {
+      window.location.href = data.redirect;
+    } else {
+      alert(data.message || "Failed to save project.");
+    }
+  } catch (error) {
+    console.error("Save failed:", error);
+    alert("An error occurred while saving the project.");
+  } finally {
+    hideLoading();
   }
 }

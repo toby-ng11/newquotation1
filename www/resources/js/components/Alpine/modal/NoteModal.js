@@ -3,6 +3,55 @@ import { showFlashMessage } from "../../flashmessage.js";
 import { projectNoteTable } from "../../ui/table/tables.js";
 import { resetForm } from "../../utils.js";
 
+export function initNote() {
+  // Edit button 
+  document.addEventListener("click", function (e) {
+    if (e.target.closest(".note-edit")) {
+      e.preventDefault();
+      const noteId = e.target.closest(".note-edit").dataset.id;
+
+      if (window.noteModalComponent && noteId) {
+        window.noteModalComponent.editNote(noteId);
+      }
+    }
+  });
+
+  // Delete button
+  document.addEventListener("click", async function (e) {
+    const deleteBtn = e.target.closest(".note-delete");
+
+    if (deleteBtn) {
+      e.preventDefault();
+      const noteId = deleteBtn.dataset.id;
+      if (!noteId) return;
+
+      const confirmed = confirm("Are you sure you want to delete this note?");
+      if (!confirmed) return;
+
+      try {
+        const response = await fetch(`/note/${noteId}/delete`, {
+          method: "POST",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+          },
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showFlashMessage(data.message, data.success);
+          projectNoteTable.ajax.reload();
+        } else {
+          showFlashMessage(data.message || data.success);
+        }
+      } catch (err) {
+        alert("Error deleting note.");
+        console.error(err);
+      }
+    }
+  });
+}
+
 export function noteModal() {
   const form = document.getElementById("dialog-note-form");
   return {

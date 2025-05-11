@@ -6,13 +6,13 @@ import { runFadeInAnimation } from "./components/FadeInAnimation.js";
 import { initSearchBox } from "./components/ui/searchbox/searchbox.js";
 import { scrollOffset } from "./components/scroll-offset.js";
 import { initItem } from "./pages/item.js";
-import { initNote } from "./pages/note.js";
 import { initProject } from "./pages/project.js";
 import { initQuote, $dialogMakeQuote } from "./pages/quote.js";
 import { initArchitect } from "./pages/architect.js";
 import { initCharts } from "./components/ui/chart/chart.js";
 import { initUserMenu } from "./components/ui/NavUser.js";
 import { showLoadedFlashMessage } from "./components/flashmessage.js";
+import { initNote } from "./components/Alpine/modal/NoteModal.js";
 
 initAlpine();
 
