@@ -1,3 +1,7 @@
+function defaultRenderItem(item) {
+  return `<div><strong>${item.id}</strong><br>${item.name}</div>`;
+}
+
 export function setupAutoComplete({
   fieldName,
   fetchUrl,
@@ -164,9 +168,5 @@ export function setupAutoComplete({
     } else {
       autocompleteList.style.top = `${rect.bottom + window.scrollY}px`;
     }
-  }
-
-  function defaultRenderItem(item) {
-    return `<div><strong>${item.id}</strong><br>${item.name}</div>`;
   }
 }

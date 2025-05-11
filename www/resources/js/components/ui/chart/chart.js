@@ -1,3 +1,5 @@
+import { Chart } from "chart.js";
+
 export function initCharts() {
   const architectPieChart = document.getElementById("architectPieChart");
   if (architectPieChart) {

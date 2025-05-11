@@ -1,4 +1,4 @@
-import Alpine from "https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/module.esm.js";
+import Alpine from 'alpinejs';
 import { navUnderline } from "./ui/nav-underline.js";
 import { loadingState } from "./lib/loading-state.js";
 import { projectModal } from "./modal/ProjectModal.js";

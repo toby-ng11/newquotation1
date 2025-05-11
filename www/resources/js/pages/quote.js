@@ -9,6 +9,7 @@ import {
   projectForm,
 } from "../components/init.js";
 import { hideLoading, showLoading } from "../components/LoadingOverlay.js";
+import { initAutoSave } from "../components/pageload.js";
 import { setState } from "../components/state.js";
 import { resetForm } from "../components/utils.js";
 
@@ -16,12 +17,13 @@ const $makeQuoteForm = $("#dialog-make-quote-form");
 const makeQuoteForm = document.getElementById("dialog-make-quote-form");
 export const $dialogMakeQuote = $("#dialog-make-quote");
 const dialogBtnAddCustomer = document.getElementById("customer-form-btn-add");
+const quoteSaveBtn = document.getElementById("form-btn-save-quote");
 
-let $customerFields = $(
+let $customerFields = document.querySelectorAll(
   "#customer_id, #customer_name, #company_id, #salesrep_full_name"
 );
 
-let $contactFields = $(
+let $contactFields = document.querySelectorAll(
   "#contact_id, #first_name, #last_name, #phys_address1, #phys_address2, #phys_city, #phys_state, #phys_postal_code, #phys_country, #central_phone_number, #email_address"
 );
 
@@ -31,9 +33,11 @@ if (contactDropdown) {
 }
 
 export function initQuote() {
-  const quoteSaveBtn = document.getElementById("form-btn-save-quote");
+  
   // Enable save button
   if (quoteForm) {
+    initAutoSave(quoteForm, () => saveQuoteWithAction("save"));
+
     quoteForm.addEventListener("change", () => {
       quoteSaveBtn.disabled = false;
       setState({ unsave: true, lastChanged: "project" });
@@ -74,42 +78,8 @@ export function initQuote() {
       if (!confirm(`You are about to ${label} this quote. Continue?`)) return;
 
       button.disabled = true;
-      setState({ unsave: false });
-      const formData = new FormData(quoteForm);
-      const formBody = new URLSearchParams(formData).toString();
-
-      showLoading();
-
-      try {
-        const response = await fetch(`/quote/${quoteID}/${action}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-Requested-With": "XMLHttpRequest",
-          },
-          body: formBody,
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          window.scrollTo(0, 0);
-          location.reload();
-        } else {
-          showFlashMessage(
-            `Failed to ${label} the quote. Error: ${result.message}`,
-            false
-          );
-        }
-      } catch (error) {
-        showFlashMessage(
-          `Error occurred while trying to ${label} the quote. Error: ${error.message}`,
-          false
-        );
-      } finally {
-        hideLoading();
-        setTimeout(() => (button.disabled = false), 1000);
-      }
+      await saveQuoteWithAction(action, label);
+      setTimeout(() => (button.disabled = false), 1000);
     });
   });
 
@@ -411,5 +381,59 @@ export function initQuote() {
       disableButton(dialogBtnAddCustomer, false);
       document.querySelector(".loading").style.display = "none";
     }
+  }
+}
+
+export async function saveQuoteWithAction(action, label = action) {
+  if (!action) return;
+
+  if (!quoteForm.checkValidity()) {
+    quoteForm.reportValidity();
+    return;
+  }
+
+  setState({ unsave: false });
+
+  const formData = new FormData(quoteForm);
+  const formBody = new URLSearchParams(formData).toString();
+
+  showLoading();
+
+  try {
+    const response = await fetch(`/quote/${quoteID}/${action}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+      body: formBody,
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      if (
+        action === "submit" ||
+        action === "approve" ||
+        action === "submit-approve"
+      ) {
+        window.scrollTo(0, 0);
+        location.reload();
+      } else {
+        showFlashMessage("Quote saved automatically.", true);
+      }
+    } else {
+      showFlashMessage(
+        `Failed to ${label} the quote. Error: ${result.message}`,
+        false
+      );
+    }
+  } catch (error) {
+    showFlashMessage(
+      `Error while trying to ${label} the quote. ${error.message}`,
+      false
+    );
+  } finally {
+    hideLoading();
   }
 }
