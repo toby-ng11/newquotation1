@@ -22,7 +22,7 @@ subscribe((state) => {
   console.log("State changed:", state);
 });
 
-export function initAutoSave(formElement, saveCallback, delay = 3000) {
+export function initAutoSave(formElement, saveCallback, delay = 5000) {
   if (!formElement || typeof saveCallback !== "function") return;
 
   let autoSaveTimer;

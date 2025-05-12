@@ -53,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
 document.body.addEventListener("htmx:afterSwap", function (e) {
   // only re-init if content is replaced in #content or similar
   scrollOffset();
-  showLoadedFlashMessage();
   if (
     e.target.querySelector("#search-overlay") ||
     e.target.querySelector(".search-architect-button")

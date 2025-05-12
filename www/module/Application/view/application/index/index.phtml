@@ -8,7 +8,7 @@ $user = $this->user;
     </section>
 
     <section class="features welcome-page fade-in-up">
-        <?php if ($this->escapeHtml($user['sale_role']) == 'admin'): ?>
+        <?php if ($this->escapeHtml($user['p2q_system_role']) == 'admin'): ?>
             <a href="/index/admin" class="feature fade-in-up">
                 <h3>Admin Dashboard</h3>
                 <p>Gain full control over user roles, permissions, and platform settings through the Admin Portal.</p>

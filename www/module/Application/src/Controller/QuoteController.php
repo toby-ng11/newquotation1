@@ -78,7 +78,7 @@ class QuoteController extends AbstractActionController
             $this->flashMessenger()->addSuccessMessage("Quote created successfully!");
             return new JsonModel([
                 'success' => true,
-                'quote_id' => $quote_id
+                'quote_id' => $quote_id,
             ]);
         } else {
             $this->flashMessenger()->addErrorMessage("Create quote failed. Please try again.");
@@ -186,7 +186,7 @@ class QuoteController extends AbstractActionController
         }
     }
 
-    private function updateQuoteStatus($quote_id, $action, $successMsg, $autoSave = false)
+    private function updateQuoteStatus($quote_id, $action, $successMsg)
     {
         if (!$quote_id) {
             return new JsonModel(['success' => false, 'message' => 'Invalid quote ID']);
@@ -202,26 +202,39 @@ class QuoteController extends AbstractActionController
         }
 
         if ($result) {
-            if (!$autoSave) {
-                $this->flashMessenger()->addSuccessMessage($successMsg);
+            if ($request->isXmlHttpRequest()) {
+                $isAutoSave = $this->getRequest()->getHeader('X-Auto-Save')?->getFieldValue() === 'true';
+                if (!$isAutoSave) {
+                    $this->flashMessenger()->addSuccessMessage($successMsg);
+                }
+                return new JsonModel([
+                    'success' => $result,
+                    'message' => $result ? $successMsg : 'Failed to update quote.',
+                    'redirect' => $this->url()->fromRoute('quote', [
+                        'action' => 'edit',
+                        'id' => $quote_id
+                    ])
+                ]);
             }
         } else {
-            $this->flashMessenger()->addErrorMessage("Failed to update quote status. Please try again.");
+            if ($request->isXmlHttpRequest()) {
+                $this->flashMessenger()->addErrorMessage("Failed to update quote status. Please try again.");
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Save failed. Please try again.',
+                    'redirect' => $this->url()->fromRoute('quote', [
+                        'action' => 'edit',
+                        'id' => $quote_id
+                    ])
+                ]);
+            }
         }
-
-        if ($request->isXmlHttpRequest()) {
-            return new JsonModel([
-                'success' => $result,
-                'message' => $result ? $successMsg : 'Failed to update quote.'
-            ]);
-        }
-
         return $this->redirect()->toRoute('quote', ['action' => 'edit', 'id' => $quote_id]);
     }
 
     public function saveAction()
     {
-        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_SAVE, null, true);
+        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_SAVE, 'Quote saved!');
     }
 
     public function submitAction()

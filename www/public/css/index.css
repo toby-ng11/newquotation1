@@ -9384,24 +9384,35 @@ u {
 }
 #js-flash-container {
   position: fixed;
-  top: 2rem;
+  top: 3rem;
   right: 2rem;
   z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-end;
 }
 
 .flash-message {
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
-  z-index: 9999;
   width: 500px;
+  margin: 0;
   opacity: 0;
   padding: 1rem 2rem;
   text-align: left;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease, margin 0.4s ease, max-height 0.4s ease, padding 0.4s ease;
+  max-height: 200px;
+  transform: translateY(-10px);
 }
 .flash-message.show {
   opacity: 1;
+  transform: translateY(0);
+}
+.flash-message.hide {
+  opacity: 0;
+  transform: translateY(-10px);
+  margin: 0;
+  padding: 0;
+  max-height: 0;
 }
 .flash-message.success {
   background-color: #e6f4ea;

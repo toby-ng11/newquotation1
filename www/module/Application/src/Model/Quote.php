@@ -138,6 +138,7 @@ class Quote
             'ship_required_date' => $data['ship_required_date'] ?? null,
             'price_approve_id'   => $data['price_approve_id'] ?? null,
             'lead_time_id'       => $data['lead_time_id'] ?? null,
+            'note'               => $data['note'],
         ];
 
         if (array_key_exists('request_action', $data)) {

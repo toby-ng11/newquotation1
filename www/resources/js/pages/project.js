@@ -18,7 +18,7 @@ const awardedContractorInput = document.querySelector(
 const saveButton = document.getElementById("form-btn-save-project");
 
 export function initProject() {
-  if (projectForm) {
+  if (projectForm && projectForm.dataset.page === "edit") {
     initAutoSave(projectForm, () => saveProject(true));
   }
 
@@ -54,10 +54,6 @@ export function initProject() {
 
   // Save edit
   if (saveButton) {
-    saveButton.addEventListener("click", async (e) => {
-      e.preventDefault();
-      saveProject();
-    });
     saveButton.addEventListener("click", async (e) => {
       e.preventDefault();
       saveProject();
@@ -404,7 +400,10 @@ export function initProject() {
 }
 
 export async function saveProject(isAutoSave = false) {
-  if (!projectForm.checkValidity()) return;
+  if (!projectForm.checkValidity()) {
+    projectForm.reportValidity();
+    return;
+  }
   if (generalContractorInput.value.trim() === "")
     document.querySelector("#general_contractor_id").value = "";
   if (awardedContractorInput.value.trim() === "")
@@ -420,7 +419,10 @@ export async function saveProject(isAutoSave = false) {
     const response = await fetch(projectForm.getAttribute("action"), {
       method: projectForm.getAttribute("method"),
       body: formData,
-      headers: { "X-Requested-With": "XMLHttpRequest" },
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        "X-Auto-Save": isAutoSave ? "true" : "false",
+      },
     });
     const data = await response.json();
 
@@ -430,17 +432,16 @@ export async function saveProject(isAutoSave = false) {
         disableButton(saveButton, true);
       } else {
         window.location.href = data.redirect;
-        showFlashMessage("Project saved.", true);
       }
     } else {
-      alert(data.message || "Failed to save project.");
+      window.location.href = data.redirect;
     }
   } catch (error) {
     console.error("Save failed:", error);
     alert("An error occurred while saving the project.");
   } finally {
     if (!isAutoSave) {
-    hideLoading();
-  }
+      hideLoading();
+    }
   }
 }

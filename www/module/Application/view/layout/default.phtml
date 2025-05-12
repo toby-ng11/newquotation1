@@ -68,23 +68,23 @@
 <body x-data="loadingState" hx-ext="head-support">
     <div id="root">
 
-        <div id="js-flash-container"></div>
+        <div id="js-flash-container">
+            <?php if ($this->flashMessenger()->hasSuccessMessages()): ?>
+                <div class="flash-message widget-table success">
+                    <?php foreach ($this->flashMessenger()->getSuccessMessages() as $message): ?>
+                        <p><?= $this->escapeHtml($message) ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
 
-        <?php if ($this->flashMessenger()->hasSuccessMessages()): ?>
-            <div class="flash-message widget-table success">
-                <?php foreach ($this->flashMessenger()->getSuccessMessages() as $message): ?>
-                    <p><?= $this->escapeHtml($message) ?></p>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($this->flashMessenger()->hasErrorMessages()): ?>
-            <div class="flash-message widget-table error">
-                <?php foreach ($this->flashMessenger()->getErrorMessages() as $message): ?>
-                    <p><?= $this->escapeHtml($message) ?></p>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+            <?php if ($this->flashMessenger()->hasErrorMessages()): ?>
+                <div class="flash-message widget-table error">
+                    <?php foreach ($this->flashMessenger()->getErrorMessages() as $message): ?>
+                        <p><?= $this->escapeHtml($message) ?></p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
 
         <div class="page-wrapper category-html document-page">
 

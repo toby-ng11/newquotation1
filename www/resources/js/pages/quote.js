@@ -410,6 +410,7 @@ export async function saveQuoteWithAction(
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         "X-Requested-With": "XMLHttpRequest",
+        "X-Auto-Save": isAutoSave ? "true" : "false",
       },
       body: formBody,
     });
@@ -417,16 +418,15 @@ export async function saveQuoteWithAction(
     const result = await response.json();
 
     if (result.success) {
-      if (
-        action === "submit" ||
-        action === "approve" ||
-        action === "submit-approve"
-      ) {
-        window.scrollTo(0, 0);
-        location.reload();
+      if (action === "save") {
+        if (isAutoSave) {
+          showFlashMessage("Quote saved automatically.", true);
+          disableButton(quoteSaveBtn, true);
+        } else {
+          window.location.href = result.redirect;
+        }
       } else {
-        showFlashMessage("Quote saved automatically.", true);
-        disableButton(quoteSaveBtn, true);
+        window.location.href = result.redirect;
       }
     } else {
       showFlashMessage(

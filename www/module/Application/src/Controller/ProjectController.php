@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Application\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\Mvc\Plugin\FlashMessenger;
 use Laminas\Http\Response\Stream;
 use Laminas\View\Model\{ViewModel, JsonModel};
 
@@ -76,25 +75,29 @@ class ProjectController extends AbstractActionController
 
             if ($project_id) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
+                    $this->flashMessenger()->addSuccessMessage("Project created successfully!");
                     return new JsonModel([
                         'success' => true,
                         'message' => 'Project created successfully!',
+                        'redirect' => $this->url()->fromRoute('project', [
+                            'action' => 'edit',
+                            'id' => $project_id
+                        ])
                     ]);
                 }
-                $this->flashMessenger()->addSuccessMessage("Project created successfully!");
                 return $this->redirect()->toRoute('project', [
                     'action' => 'edit',
                     'id' => $project_id
                 ]);
             } else {
                 if ($this->getRequest()->isXmlHttpRequest()) {
+                    $this->flashMessenger()->addErrorMessage("Failed to create project. Please try again!");
                     return new JsonModel([
                         'success' => false,
                         'message' => 'Failed to create project. Please try again!',
+                        'redirect' => $this->url()->fromRoute('project', ['action' => 'index'])
                     ]);
                 }
-                $this->flashMessenger()->addErrorMessage("Failed to create project. Please try again!");
-                return $this->redirect()->toRoute('project', ['action' => 'index']);
             }
         }
     }
@@ -171,9 +174,13 @@ class ProjectController extends AbstractActionController
             $result = $this->project->edit($data, $project_id);
 
             if ($result) {
-                //$this->flashMessenger()->addSuccessMessage("Project saved successfully!");
-
                 if ($request->isXmlHttpRequest()) {
+                    $isAutoSave = $this->getRequest()->getHeader('X-Auto-Save')?->getFieldValue() === 'true';
+
+                    if (!$isAutoSave) {
+                        $this->flashMessenger()->addSuccessMessage("Project saved successfully!");
+                    }
+
                     return new JsonModel([
                         'success' => true,
                         'message' => 'Project saved successfully.',

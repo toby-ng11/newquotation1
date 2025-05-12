@@ -14,23 +14,25 @@ export function showFlashMessage(message, success = true) {
   flash.classList.add("show");
 
   setTimeout(() => {
-    flash.style.opacity = "0";
-    flash.style.transform = "translateY(-10px)";
+    flash.classList.remove("show");
+    flash.classList.add("hide");
     setTimeout(() => flash.remove(), 500); // match fade-out duration
   }, 4000);
 }
 
 export function showLoadedFlashMessage() {
-  const flash = document.querySelector(".flash-message");
-  if (flash) {
-    setTimeout(() => {
-      flash.classList.add("show");
-    }, 300);
+  const flashes = document.querySelectorAll(".flash-message");
+  if (flashes) {
+    flashes.forEach((flash) => {
+      setTimeout(() => {
+        flash.classList.add("show");
+      }, 300);
 
-    setTimeout(() => {
-      flash.style.opacity = "0";
-      flash.style.transform = "translateY(-10px)";
-      setTimeout(() => flash.remove(), 500);
-    }, 4000);
+      setTimeout(() => {
+        flash.classList.remove("show");
+        flash.classList.add("hide");
+        setTimeout(() => flash.remove(), 500);
+      }, 4300); // 300ms delay + 4s display
+    });
   }
 }
