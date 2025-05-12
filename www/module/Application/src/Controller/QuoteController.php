@@ -186,7 +186,7 @@ class QuoteController extends AbstractActionController
         }
     }
 
-    private function updateQuoteStatus($quote_id, $action, $successMsg)
+    private function updateQuoteStatus($quote_id, $action, $successMsg, $autoSave = false)
     {
         if (!$quote_id) {
             return new JsonModel(['success' => false, 'message' => 'Invalid quote ID']);
@@ -202,7 +202,9 @@ class QuoteController extends AbstractActionController
         }
 
         if ($result) {
-            $this->flashMessenger()->addSuccessMessage($successMsg);
+            if (!$autoSave) {
+                $this->flashMessenger()->addSuccessMessage($successMsg);
+            }
         } else {
             $this->flashMessenger()->addErrorMessage("Failed to update quote status. Please try again.");
         }
@@ -219,7 +221,7 @@ class QuoteController extends AbstractActionController
 
     public function saveAction()
     {
-        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_SAVE, 'Quote saved!');
+        return $this->updateQuoteStatus((int) $this->params()->fromRoute('id'), QuoteController::ACTION_SAVE, null, true);
     }
 
     public function submitAction()

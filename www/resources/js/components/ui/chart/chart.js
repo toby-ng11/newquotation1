@@ -1,4 +1,6 @@
-import { Chart } from "chart.js";
+import { Chart, PieController, ArcElement, Legend } from "chart.js";
+
+Chart.register(PieController, ArcElement, Legend);
 
 export function initCharts() {
   const architectPieChart = document.getElementById("architectPieChart");

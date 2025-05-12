@@ -9,6 +9,7 @@ let isEditItem = false;
 
 const $dialogItem = $("#dialog-item");
 const $itemForm = $("#dialog-item-form");
+const $dialogBtnAddItem = $("item-form-btn-add");
 const dialogBtnAddItem = document.getElementById("item-form-btn-add");
 const $uomDropdown = $("#uom");
 

@@ -1,8 +1,5 @@
 import { setupAutoComplete } from "../components/autocomplete.js";
-import { showFlashMessage } from "../components/flashmessage.js";
-import { projectID, projectForm } from "../components/init.js";
-import { hideLoading, showLoading } from "../components/LoadingOverlay.js";
-import { initAutoSave } from "../components/pageload.js";
+import { disableButton } from "../components/DisableButton.js";
 import { showFlashMessage } from "../components/flashmessage.js";
 import { projectID, projectForm } from "../components/init.js";
 import { hideLoading, showLoading } from "../components/LoadingOverlay.js";
@@ -18,26 +15,11 @@ const generalContractorInput = document.querySelector(
 const awardedContractorInput = document.querySelector(
   "#awarded_contractor_name"
 );
+const saveButton = document.getElementById("form-btn-save-project");
 
 export function initProject() {
-
   if (projectForm) {
-    initAutoSave(projectForm, saveProject);
-  }
-const architectDetails = document.querySelector("#architect-details");
-const architectNameInput = document.querySelector("#architect_name");
-const contractorDetails = document.querySelector("#contractor-details");
-const generalContractorInput = document.querySelector(
-  "#general_contractor_name"
-);
-const awardedContractorInput = document.querySelector(
-  "#awarded_contractor_name"
-);
-
-export function initProject() {
-
-  if (projectForm) {
-    initAutoSave(projectForm, saveProject);
+    initAutoSave(projectForm, () => saveProject(true));
   }
 
   // Autocomplete for shared_id
@@ -71,12 +53,11 @@ export function initProject() {
   }
 
   // Save edit
-
-  const saveButton = document.getElementById("#form-btn-save-project");
   if (saveButton) {
     saveButton.addEventListener("click", async (e) => {
       e.preventDefault();
       saveProject();
+    });
     saveButton.addEventListener("click", async (e) => {
       e.preventDefault();
       saveProject();
@@ -90,7 +71,6 @@ export function initProject() {
 
       document.querySelector(".loading").style.display = "flex";
       try {
-        const response = await fetch(`/project/${projectID}/delete`, {
         const response = await fetch(`/project/${projectID}/delete`, {
           headers: {
             "X-Requested-With": "XMLHttpRequest",
@@ -116,13 +96,8 @@ export function initProject() {
 
   let architectFields = document.querySelectorAll(
     "#architect_name, #architect_id, #architect_company_id, #architect_rep_id,#architect_type_id, #architect_class_id"
-  let architectFields = document.querySelectorAll(
-    "#architect_name, #architect_id, #architect_company_id, #architect_rep_id,#architect_type_id, #architect_class_id"
   );
 
-  let addressDropdown = document.getElementById("address_list");
-  let addressFields = document.querySelectorAll(
-    "#address_id, #address_name, #phys_address1, #phys_address2, #phys_city, #phys_state, #phys_postal_code, #phys_country, #central_phone_number, #email_address, #url"
   let addressDropdown = document.getElementById("address_list");
   let addressFields = document.querySelectorAll(
     "#address_id, #address_name, #phys_address1, #phys_address2, #phys_city, #phys_state, #phys_postal_code, #phys_country, #central_phone_number, #email_address, #url"
@@ -131,27 +106,8 @@ export function initProject() {
   let specifierDropdown = document.getElementById("specifier_name");
   let specifierFields = document.querySelectorAll(
     "#specifier_id, #specifier_address_id, #specifier_first_name, #specifier_last_name, #specifier_job_title, #specifier_phone_number, #specifier_email"
-  let specifierDropdown = document.getElementById("specifier_name");
-  let specifierFields = document.querySelectorAll(
-    "#specifier_id, #specifier_address_id, #specifier_first_name, #specifier_last_name, #specifier_job_title, #specifier_phone_number, #specifier_email"
   );
 
-  const addArchitectProjectEditBtn = document.getElementById(
-    "add-architect-project-edit"
-  );
-  if (addArchitectProjectEditBtn) {
-    addArchitectProjectEditBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      [architectFields, addressFields, specifierFields].forEach(
-        (field) => (field.readOnly = false)
-      );
-      [addressDropdown, specifierDropdown].forEach(
-        (dropdown) =>
-          (dropdown.innerHTML =
-            '<option value="">-- Please search for an architect first --</option>')
-      );
-    });
-  }
   const addArchitectProjectEditBtn = document.getElementById(
     "add-architect-project-edit"
   );
@@ -193,7 +149,6 @@ export function initProject() {
   });
 
   async function getArchitectById(id) {
-  async function getArchitectById(id) {
     if (!id) return;
 
     try {
@@ -227,55 +182,7 @@ export function initProject() {
   }
 
   async function getAddress(id) {
-
-    try {
-      const response = await fetch(`/architect/${id}/fetchfull`);
-      if (!response.ok) throw new Error("Something happened. Please try again");
-
-      const architect = await response.json();
-
-      if (architect) {
-        architectFields.forEach((field) => {
-          const fieldName = field.id;
-          field.value = architect[fieldName] || "";
-        });
-
-        const companyField = document.getElementById("architect_company_id");
-        if (companyField) companyField.value = architect.company_id || "";
-
-        const nameField = document.getElementById("architect_name");
-        if (nameField) nameField.readOnly = false;
-      } else {
-        // Clear fields if no architect found
-        architectFields.forEach((field) => {
-          field.value = "";
-          field.readOnly = false;
-        });
-        showFlashMessage(`No architect found for this ${id}`, false);
-      }
-    } catch (error) {
-      showFlashMessage(error, false);
-    }
-  }
-
-  async function getAddress(id) {
     if (!id) return;
-
-    try {
-      const response = await fetch(`/architect/${id}/address`);
-      if (!response.ok) throw new Error("Something happened. Please try again");
-
-      const addresses = await response.json();
-
-      if (addresses) {
-        addressDropdown.innerHTML = "";
-        if (!addresses || addresses.length === 0) {
-          addressDropdown.innerHTML = `<option value="">No addresses found, please add.</option>`;
-          addressFields.forEach((field) => {
-            field.value = "";
-            field.readOnly = false;
-          });
-
     try {
       const response = await fetch(`/architect/${id}/address`);
       if (!response.ok) throw new Error("Something happened. Please try again");
@@ -291,51 +198,6 @@ export function initProject() {
             field.readOnly = false;
           });
           return;
-        }
-
-        addresses.forEach((item) => {
-          const option = document.createElement("option");
-          option.value = item.address_id;
-          option.textContent = item.name;
-          addressDropdown.appendChild(option);
-        });
-
-        const newOption = document.createElement("option");
-        newOption.value = "new";
-        newOption.textContent = "+ Add New Address";
-        addressDropdown.appendChild(newOption);
-
-        addressDropdown.selectedIndex = 0;
-        getAddressInfo(addressDropdown);
-      }
-    } catch (error) {
-      showFlashMessage(error, false);
-    }
-  }
-
-  async function getAddressInfo(dropdown) {
-    const addressID = dropdown.value;
-    if (!addressID || addressID === "new") return;
-
-    try {
-      const response = await fetch(`/architect/${addressID}/addressinfo`);
-      if (!response.ok) throw new Error("Something happened. Please try again");
-
-      const address = await response.json();
-      if (address) {
-        addressFields.forEach((field) => {
-          const fieldName = field.id;
-          field.value = address[fieldName] || "";
-        });
-        const addressNickname = document.getElementById("address_name");
-        if (addressNickname) addressNickname.value = address.name || "";
-      }
-    } catch (error) {
-      showFlashMessage(error, false);
-    }
-  }
-
-  async function getSpecifier(id) {
         }
 
         addresses.forEach((item) => {
@@ -465,7 +327,7 @@ export function initProject() {
       }
     });
   }
-  
+
   if (addressDropdown) {
     addressDropdown.addEventListener("change", function () {
       if (this.value === "new") {
@@ -541,69 +403,18 @@ export function initProject() {
   }
 }
 
-export async function saveProject() {
+export async function saveProject(isAutoSave = false) {
   if (!projectForm.checkValidity()) return;
   if (generalContractorInput.value.trim() === "")
     document.querySelector("#general_contractor_id").value = "";
   if (awardedContractorInput.value.trim() === "")
     document.querySelector("#awarded_contractor_id").value = "";
 
-  showLoading();
-  setState({ unsave: false });
-  const formData = FormData(projectForm);
-
-  try {
-    const response = await fetch(projectForm.getAttribute("action"), {
-      method: projectForm.getAttribute("method"),
-      body: formData,
-      headers: { "X-Requested-With": "XMLHttpRequest" },
-    });
-    const data = await response.json();
-
-    if (data.success) {
-      window.location.href = data.redirect;
-    } else {
-      alert(data.message || "Failed to save project.");
-    }
-  } catch (error) {
-    console.error("Save failed:", error);
-    alert("An error occurred while saving the project.");
-  } finally {
-    hideLoading();
-  async function fetchAndFillContractor(id, prefix) {
-    if (!id || !prefix) return;
-    try {
-      const response = await fetch(`/customer/${id}/fetchbyid`);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-      const result = await response.json();
-
-      if (result) {
-        const idField = document.getElementById(`${prefix}_id`);
-        const nameField = document.getElementById(`${prefix}_name`);
-
-        if (idField) idField.value = result.customer_id || "";
-        if (nameField) nameField.value = result.customer_name || "";
-      }
-    } catch (error) {
-      showFlashMessage(
-        `Failed to fetch contractor (${id}): ${error.message}`,
-        false
-      );
-    }
+  if (!isAutoSave) {
+    showLoading();
   }
-}
-
-export async function saveProject() {
-  if (!projectForm.checkValidity()) return;
-  if (generalContractorInput.value.trim() === "")
-    document.querySelector("#general_contractor_id").value = "";
-  if (awardedContractorInput.value.trim() === "")
-    document.querySelector("#awarded_contractor_id").value = "";
-
-  showLoading();
   setState({ unsave: false });
-  const formData = FormData(projectForm);
+  const formData = new FormData(projectForm);
 
   try {
     const response = await fetch(projectForm.getAttribute("action"), {
@@ -614,7 +425,13 @@ export async function saveProject() {
     const data = await response.json();
 
     if (data.success) {
-      window.location.href = data.redirect;
+      if (isAutoSave) {
+        showFlashMessage("Changes auto-saved.", true);
+        disableButton(saveButton, true);
+      } else {
+        window.location.href = data.redirect;
+        showFlashMessage("Project saved.", true);
+      }
     } else {
       alert(data.message || "Failed to save project.");
     }
@@ -622,6 +439,8 @@ export async function saveProject() {
     console.error("Save failed:", error);
     alert("An error occurred while saving the project.");
   } finally {
+    if (!isAutoSave) {
     hideLoading();
+  }
   }
 }

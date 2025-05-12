@@ -171,7 +171,7 @@ class ProjectController extends AbstractActionController
             $result = $this->project->edit($data, $project_id);
 
             if ($result) {
-                $this->flashMessenger()->addSuccessMessage("Project saved successfully!");
+                //$this->flashMessenger()->addSuccessMessage("Project saved successfully!");
 
                 if ($request->isXmlHttpRequest()) {
                     return new JsonModel([

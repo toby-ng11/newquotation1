@@ -33,10 +33,9 @@ if (contactDropdown) {
 }
 
 export function initQuote() {
-  
   // Enable save button
   if (quoteForm) {
-    initAutoSave(quoteForm, () => saveQuoteWithAction("save"));
+    initAutoSave(quoteForm, () => saveQuoteWithAction("save", true));
 
     quoteForm.addEventListener("change", () => {
       quoteSaveBtn.disabled = false;
@@ -384,7 +383,11 @@ export function initQuote() {
   }
 }
 
-export async function saveQuoteWithAction(action, label = action) {
+export async function saveQuoteWithAction(
+  action,
+  isAutoSave = false,
+  label = action
+) {
   if (!action) return;
 
   if (!quoteForm.checkValidity()) {
@@ -397,7 +400,9 @@ export async function saveQuoteWithAction(action, label = action) {
   const formData = new FormData(quoteForm);
   const formBody = new URLSearchParams(formData).toString();
 
-  showLoading();
+  if (!isAutoSave) {
+    showLoading();
+  }
 
   try {
     const response = await fetch(`/quote/${quoteID}/${action}`, {
@@ -421,6 +426,7 @@ export async function saveQuoteWithAction(action, label = action) {
         location.reload();
       } else {
         showFlashMessage("Quote saved automatically.", true);
+        disableButton(quoteSaveBtn, true);
       }
     } else {
       showFlashMessage(
@@ -434,6 +440,8 @@ export async function saveQuoteWithAction(action, label = action) {
       false
     );
   } finally {
-    hideLoading();
+    if (!isAutoSave) {
+      hideLoading();
+    }
   }
 }
