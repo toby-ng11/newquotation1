@@ -334,28 +334,32 @@ export function initProject() {
     }
   }
 
-  specifierDropdown.addEventListener("change", function () {
-    if (this.value === "new") {
-      specifierFields.forEach((field) => {
-        field.value = "";
-        field.readOnly = false;
-      });
-    } else {
-      getSpecifierInfo(specifierDropdown);
-    }
-  });
-
-  addressDropdown.addEventListener("change", function () {
-    if (this.value === "new") {
-      // Clear and unlock fields for adding a new address
-      addressFields.forEach((field) => {
-        field.value = "";
-        field.readOnly = false;
-      });
-    } else {
-      getAddressInfo(addressDropdown);
-    }
-  });
+  if (specifierDropdown) {
+    specifierDropdown.addEventListener("change", function () {
+      if (this.value === "new") {
+        specifierFields.forEach((field) => {
+          field.value = "";
+          field.readOnly = false;
+        });
+      } else {
+        getSpecifierInfo(specifierDropdown);
+      }
+    });
+  }
+  
+  if (addressDropdown) {
+    addressDropdown.addEventListener("change", function () {
+      if (this.value === "new") {
+        // Clear and unlock fields for adding a new address
+        addressFields.forEach((field) => {
+          field.value = "";
+          field.readOnly = false;
+        });
+      } else {
+        getAddressInfo(addressDropdown);
+      }
+    });
+  }
 
   /* ----------------------------- Contractor / Customer -------------------------------- */
 

@@ -10,6 +10,7 @@ import { setState } from "../components/state.js";
 import { resetForm } from "../components/utils.js";
 
 const $makeQuoteForm = $("#dialog-make-quote-form");
+const makeQuoteForm = document.getElementById("dialog-make-quote-form");
 export const $dialogMakeQuote = $("#dialog-make-quote");
 const $dialogBtnAddCustomer = $("#customer-form-btn-add");
 
@@ -143,7 +144,7 @@ export function initQuote() {
     height: 650,
     open: function () {
       // fade in background
-      resetForm($makeQuoteForm);
+      resetForm(makeQuoteForm);
       $(".ui-widget-overlay").hide().fadeIn().css("z-index", 1000);
       $(".ui-dialog").css("z-index", 2000);
     },

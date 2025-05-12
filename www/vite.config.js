@@ -5,6 +5,7 @@ export default defineConfig({
   root: 'resources/js', // Your source code directory
   build: {
     outDir: '../../public/build/assets', // Where to output compiled files
+    sourcemap: true,
     emptyOutDir: true,
     rollupOptions: {
       input: {
