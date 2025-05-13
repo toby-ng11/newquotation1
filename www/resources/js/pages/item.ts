@@ -1,9 +1,9 @@
-import { projectID, sheetType } from "../components/init";
-import { itemTable } from "../components/ui/table/tables";
-import { resetForm } from "../components/utils";
-import { showFlashMessage } from "../components/flashmessage";
-import { setupAutoComplete } from "../components/autocomplete";
-import { disableButton } from "../components/DisableButton";
+import { projectID, sheetType } from "@/components/init";
+import { itemTable } from "@/components/ui/table/tables";
+import { resetForm } from "@/components/utils";
+import { showFlashMessage } from "@/components/flashmessage";
+import { setupAutoComplete } from "@/components/autocomplete";
+import { disableButton } from "@/components/DisableButton";
 
 let isEditItem = false;
 

@@ -1,10 +1,10 @@
-import { setupAutoComplete } from "../components/autocomplete.js";
-import { disableButton } from "../components/DisableButton.js";
-import { showFlashMessage } from "../components/flashmessage.js";
-import { projectID, projectForm } from "../components/init.js";
-import { hideLoading, showLoading } from "../components/LoadingOverlay.js";
-import { initAutoSave } from "../components/pageload.js";
-import { setState } from "../components/state.js";
+import { setupAutoComplete } from "@/components/autocomplete";
+import { disableButton } from "@/components/DisableButton";
+import { showFlashMessage } from "@/components/flashmessage";
+import { projectID, projectForm } from "@/components/init.js";
+import { hideLoading, showLoading } from "@/components/LoadingOverlay";
+import { initAutoSave } from "@/components/AutoSave";
+import { setState } from "@/components/state";
 
 const architectDetails = document.querySelector(
   "#architect-details"

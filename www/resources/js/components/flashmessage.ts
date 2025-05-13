@@ -1,4 +1,4 @@
-export function showFlashMessage(message, success = true) {
+export function showFlashMessage(message: string, success = true) {
   const type = success ? "success" : "error";
   const flash = document.createElement("div");
   flash.className = `flash-message widget-table ${type}`;

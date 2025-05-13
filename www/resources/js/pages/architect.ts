@@ -1,13 +1,14 @@
-import { setupAutoComplete } from "../components/autocomplete";
-import { showFlashMessage } from "../components/flashmessage";
-import { architectID } from "../components/init";
-import { setState } from "../components/state";
+import { hideLoading, showLoading } from "@/components/LoadingOverlay";
+import { setupAutoComplete } from "@/components/autocomplete";
+import { showFlashMessage } from "@/components/flashmessage";
+import { architectID } from "@/components/init";
+import { setState } from "@/components/state";
 
 export function initArchitect() {
-  const architectForm = document.getElementById("architect-form");
+  const architectForm = document.getElementById("architect-form") as HTMLFormElement;
   const architectFormSaveBtn = document.getElementById(
     "form-btn-save-architect"
-  );
+  ) as HTMLButtonElement;
 
   // Enable save button on change
   if (architectForm) {
@@ -21,12 +22,12 @@ export function initArchitect() {
   if (architectFormSaveBtn) {
     architectFormSaveBtn.addEventListener("click", async function (e) {
       e.preventDefault();
-      document.querySelector(".loading").style.display = "flex";
+      showLoading();
 
       try {
         const formData = new FormData(architectForm);
-        const action = architectForm.getAttribute("action");
-        const method = architectForm.getAttribute("method");
+        const action = architectForm.getAttribute("action") as RequestInfo | URL;
+        const method = architectForm.getAttribute("method") as string | undefined;
 
         const response = await fetch(action, {
           method: method,
@@ -45,7 +46,7 @@ export function initArchitect() {
       } catch (error) {
         console.error("Error submitting form:", error);
       } finally {
-        document.querySelector(".loading").style.display = "none";
+        hideLoading();
       }
     });
   }

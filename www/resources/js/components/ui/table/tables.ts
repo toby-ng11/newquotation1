@@ -1,6 +1,9 @@
 import DataTable, { Api } from "datatables.net-dt";
-import 'datatables.net-responsive-dt';
-import 'datatables.net-fixedcolumns-dt';
+import "datatables.net-responsive-dt";
+import "datatables.net-fixedcolumns-dt";
+import "datatables.net-dt/css/dataTables.dataTables.min.css";
+import "datatables.net-responsive-dt/css/responsive.dataTables.min.css"
+import "datatables.net-fixedcolumns-dt/css/fixedcolumns.dataTables.min.css"
 
 import { projectID, sheetType, architectID } from "../../init";
 
@@ -419,7 +422,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
         topStart: function () {
           let info = document.createElement("div");
           info.innerHTML =
-            "<h2>Shared Projects</h2>" + window.assignTableCount + " shared projects";
+            "<h2>Shared Projects</h2>" +
+            window.assignTableCount +
+            " shared projects";
           return info;
         },
         bottomStart: "pageLength",
@@ -640,7 +645,8 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
       layout: {
         topStart: function () {
           let info = document.createElement("div");
-          info.innerHTML = "<h2>My Quotes</h2>" + window.quoteTableCount + " quotes";
+          info.innerHTML =
+            "<h2>My Quotes</h2>" + window.quoteTableCount + " quotes";
           return info;
         },
         bottomStart: "pageLength",
@@ -1035,17 +1041,17 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
           data: "class_id",
         },
         {
-          data: "project_count",
-        },
-        {
-          data: "quote_count",
-        },
-        {
           data: "date_added.date",
           render: function (data) {
             let date = new Date(data);
             return date.toLocaleDateString();
           },
+        },
+        {
+          data: "project_count",
+        },
+        {
+          data: "quote_count",
         },
       ],
       columnDefs: [
@@ -1054,7 +1060,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
           className: "dt-head-center",
         },
         {
-          targets: [0, 2, 3, 4, 5, 6],
+          targets: [0, 2, 3, 4, 5, 6, 7],
           className: "dt-body-center",
         },
       ],
@@ -1062,7 +1068,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
       order: [[0, "desc"]],
       fixedColumns: {
         start: 1,
-        end: 1,
+        end: 2,
       },
       scrollX: true,
       layout: {
@@ -1124,7 +1130,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
   },
   /* ------ PROJECT + QUOTE EDIT ------ */
   projectNote: () => {
-    return projectNoteTable = new DataTable("#note-table", {
+    return (projectNoteTable = new DataTable("#note-table", {
       ajax: {
         url: `/project/${projectID}/note`,
         dataSrc: "",
@@ -1237,10 +1243,10 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
       fixedColumns: {
         end: 1,
       },
-    });
+    }));
   },
   item: () => {
-    return itemTable = new DataTable("#item-table", {
+    return (itemTable = new DataTable("#item-table", {
       ajax: {
         url: "/item/table",
         data: {
@@ -1340,7 +1346,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
         end: 1,
       },
       //rowReorder: true
-    });
+    }));
   },
   projectQuote: () => {
     return new DataTable("#project-quote-table", {
@@ -1438,154 +1444,163 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
   },
   /* ------ ARCHITECT EDIT ------ */
   architectProjects: () => {
-    return architectProjectsTable = new DataTable("#architect-projects-table", {
-      ajax: {
-        url: `/architect/${architectID}/projects`,
-        dataSrc: "",
-      },
-      processing: true,
-      //serverSide: true, // experimetal: server-side processing
-      columns: [
-        {
-          data: "project_id",
-          render: function (data) {
-            return (
-              "<a target='_blank' href='/project/" +
-              data +
-              "/edit'>" +
-              data +
-              "</a>"
-            );
+    return (architectProjectsTable = new DataTable(
+      "#architect-projects-table",
+      {
+        ajax: {
+          url: `/architect/${architectID}/projects`,
+          dataSrc: "",
+        },
+        processing: true,
+        //serverSide: true, // experimetal: server-side processing
+        columns: [
+          {
+            data: "project_id",
+            render: function (data) {
+              return (
+                "<a target='_blank' href='/project/" +
+                data +
+                "/edit'>" +
+                data +
+                "</a>"
+              );
+            },
           },
+          {
+            data: "project_name",
+          },
+          {
+            data: "quote_count",
+          },
+          {
+            data: "status_desc",
+          },
+        ],
+        columnDefs: [
+          {
+            targets: "_all",
+            className: "dt-head-center",
+          },
+          {
+            targets: [0, 2],
+            className: "dt-body-center",
+          },
+        ],
+        scrollX: true,
+        fixedColumns: {
+          start: 1,
+          end: 2,
         },
-        {
-          data: "project_name",
+        order: [[0, "desc"]],
+        layout: {
+          topStart: null,
+          topEnd: null,
+          bottomStart: null,
+          bottomEnd: null,
         },
-        {
-          data: "quote_count",
-        },
-        {
-          data: "status_desc",
-        },
-      ],
-      columnDefs: [
-        {
-          targets: "_all",
-          className: "dt-head-center",
-        },
-        {
-          targets: [0, 2],
-          className: "dt-body-center",
-        },
-      ],
-      scrollX: true,
-      fixedColumns: {
-        start: 1,
-        end: 2,
-      },
-      order: [[0, "desc"]],
-      layout: {
-        topStart: null,
-        topEnd: null,
-        bottomStart: null,
-        bottomEnd: null,
-      },
-    });
+      }
+    ));
   },
   architectAddresses: () => {
-    return architectAddressesTable = new DataTable("#architect-addresses-table", {
-      ajax: {
-        url: `/architect/${architectID}/address`,
-        dataSrc: "",
-      },
-      processing: true,
-      responsive: true,
-      //serverSide: true, // experimetal: server-side processing
-      columns: [
-        {
-          data: "address_id",
-          render: function (data) {
-            return (
-              "<a target='_blank' href='/architect/" +
-              data +
-              "/edit'>" +
-              data +
-              "</a>"
-            );
+    return (architectAddressesTable = new DataTable(
+      "#architect-addresses-table",
+      {
+        ajax: {
+          url: `/architect/${architectID}/address`,
+          dataSrc: "",
+        },
+        processing: true,
+        responsive: true,
+        //serverSide: true, // experimetal: server-side processing
+        columns: [
+          {
+            data: "address_id",
+            render: function (data) {
+              return (
+                "<a target='_blank' href='/architect/" +
+                data +
+                "/edit'>" +
+                data +
+                "</a>"
+              );
+            },
           },
+          {
+            data: "name",
+          },
+        ],
+        columnDefs: [
+          {
+            targets: "_all",
+            className: "dt-head-center",
+          },
+          {
+            targets: [0],
+            className: "dt-body-center",
+          },
+        ],
+        //"responsive": true,
+        order: [[0, "desc"]],
+        layout: {
+          topStart: null,
+          topEnd: null,
+          bottomStart: null,
+          bottomEnd: null,
         },
-        {
-          data: "name",
-        },
-      ],
-      columnDefs: [
-        {
-          targets: "_all",
-          className: "dt-head-center",
-        },
-        {
-          targets: [0],
-          className: "dt-body-center",
-        },
-      ],
-      //"responsive": true,
-      order: [[0, "desc"]],
-      layout: {
-        topStart: null,
-        topEnd: null,
-        bottomStart: null,
-        bottomEnd: null,
-      },
-    });
+      }
+    ));
   },
   architectSpecifiers: () => {
-    return architectSpecifiersTable = new DataTable("#architect-specifiers-table", {
-      ajax: {
-        url: `/architect/${architectID}/fetchspecs`,
-        dataSrc: "",
-      },
-      processing: true,
-      responsive: true,
-      //serverSide: true, // experimetal: server-side processing
-      columns: [
-        {
-          data: "specifier_id",
-          render: function (data) {
-            return (
-              "<a target='_blank' href='/architect/" +
-              data +
-              "/edit'>" +
-              data +
-              "</a>"
-            );
+    return (architectSpecifiersTable = new DataTable(
+      "#architect-specifiers-table",
+      {
+        ajax: {
+          url: `/architect/${architectID}/fetchspecs`,
+          dataSrc: "",
+        },
+        processing: true,
+        responsive: true,
+        //serverSide: true, // experimetal: server-side processing
+        columns: [
+          {
+            data: "specifier_id",
+            render: function (data) {
+              return (
+                "<a target='_blank' href='/architect/" +
+                data +
+                "/edit'>" +
+                data +
+                "</a>"
+              );
+            },
           },
-        },
-        {
-          data: "first_name",
-          render: function (data, type, row) {
-            return `${data} ${row.last_name}`;
+          {
+            data: "first_name",
+            render: function (data, type, row) {
+              return `${data} ${row.last_name}`;
+            },
           },
+        ],
+        columnDefs: [
+          {
+            targets: "_all",
+            className: "dt-head-center",
+          },
+          {
+            targets: [0],
+            className: "dt-body-center",
+          },
+        ],
+        //"responsive": true,
+        order: [[0, "desc"]],
+        layout: {
+          topStart: null,
+          topEnd: null,
+          bottomStart: null,
+          bottomEnd: null,
         },
-      ],
-      columnDefs: [
-        {
-          targets: "_all",
-          className: "dt-head-center",
-        },
-        {
-          targets: [0],
-          className: "dt-body-center",
-        },
-      ],
-      //"responsive": true,
-      order: [[0, "desc"]],
-      layout: {
-        topStart: null,
-        topEnd: null,
-        bottomStart: null,
-        bottomEnd: null,
-      },
-    });
+      }
+    ));
   },
 };
 

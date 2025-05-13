@@ -1,23 +1,29 @@
-import { setupAutoComplete } from "../components/autocomplete";
-import { disableButton } from "../components/DisableButton";
-import { showFlashMessage } from "../components/flashmessage";
+import { setupAutoComplete } from "@/components/autocomplete";
+import { disableButton } from "@/components/DisableButton";
+import { showFlashMessage } from "@/components/flashmessage";
 import {
   projectID,
   quoteForm,
   sheetType,
   quoteID,
   projectForm,
-} from "../components/init.js";
-import { hideLoading, showLoading } from "../components/LoadingOverlay.js";
-import { initAutoSave } from "../components/pageload.js";
-import { setState } from "../components/state.js";
-import { resetForm } from "../components/utils.js";
+} from "@/components/init";
+import { hideLoading, showLoading } from "@/components/LoadingOverlay";
+import { initAutoSave } from "@/components/AutoSave";
+import { setState } from "@/components/state";
+import { resetForm } from "@/components/utils";
 
 const $makeQuoteForm = $("#dialog-make-quote-form");
-const makeQuoteForm = document.getElementById("dialog-make-quote-form");
+const makeQuoteForm = document.getElementById(
+  "dialog-make-quote-form"
+) as HTMLFormElement;
 export const $dialogMakeQuote = $("#dialog-make-quote");
-const dialogBtnAddCustomer = document.getElementById("customer-form-btn-add");
-const quoteSaveBtn = document.getElementById("form-btn-save-quote");
+const dialogBtnAddCustomer = document.getElementById(
+  "customer-form-btn-add"
+) as HTMLButtonElement;
+const quoteSaveBtn = document.getElementById(
+  "form-btn-save-quote"
+) as HTMLButtonElement;
 
 let $customerFields = document.querySelectorAll(
   "#customer_id, #customer_name, #company_id, #salesrep_full_name"
@@ -27,7 +33,9 @@ let $contactFields = document.querySelectorAll(
   "#contact_id, #first_name, #last_name, #phys_address1, #phys_address2, #phys_city, #phys_state, #phys_postal_code, #phys_country, #central_phone_number, #email_address"
 );
 
-const contactDropdown = document.getElementById("contact_name");
+const contactDropdown = document.getElementById(
+  "contact_name"
+) as HTMLSelectElement;
 if (contactDropdown) {
   contactDropdown.dataset.defaultOptions = contactDropdown.innerHTML;
 }
@@ -46,7 +54,7 @@ export function initQuote() {
   if (quoteSaveBtn) {
     quoteSaveBtn.addEventListener("click", function (e) {
       e.preventDefault();
-      const quoteForm = document.querySelector("form");
+      const quoteForm = document.querySelector("form") as HTMLFormElement;
       const submitEvent = new Event("submit", { cancelable: true });
       quoteForm.dispatchEvent(submitEvent);
       setState({ unsave: false });
@@ -77,7 +85,7 @@ export function initQuote() {
       if (!confirm(`You are about to ${label} this quote. Continue?`)) return;
 
       button.disabled = true;
-      await saveQuoteWithAction(action, label);
+      await saveQuoteWithAction(action, false, label);
       setTimeout(() => (button.disabled = false), 1000);
     });
   });
@@ -194,6 +202,9 @@ export function initQuote() {
         text: "Make Quote",
         click: function () {
           if ($makeQuoteForm.validationEngine("validate")) {
+            const dialogBtnAddCustomer = document.getElementById(
+              "customer-form-btn-add"
+            ) as HTMLButtonElement;
             disableButton(dialogBtnAddCustomer, true);
             makeQuote();
             $(this).dialog("close");
@@ -331,6 +342,9 @@ export function initQuote() {
   });
 
   async function makeQuote() {
+    const dialogBtnAddCustomer = document.getElementById(
+      "customer-form-btn-add"
+    ) as HTMLButtonElement;
     disableButton(dialogBtnAddCustomer, true);
 
     const contactID = document.getElementById("dialog_contact_id")?.value || "";
@@ -355,7 +369,7 @@ export function initQuote() {
       formData.append("project_id", projectIdInput);
     }
 
-    document.querySelector(".loading").style.display = "flex";
+    showLoading();
 
     try {
       const response = await fetch("/quote", {
@@ -378,7 +392,7 @@ export function initQuote() {
       showFlashMessage(`Error making quote: ${error.message}`, false);
     } finally {
       disableButton(dialogBtnAddCustomer, false);
-      document.querySelector(".loading").style.display = "none";
+      hideLoading();
     }
   }
 }
@@ -418,13 +432,9 @@ export async function saveQuoteWithAction(
     const result = await response.json();
 
     if (result.success) {
-      if (action === "save") {
-        if (isAutoSave) {
-          showFlashMessage("Quote saved automatically.", true);
-          disableButton(quoteSaveBtn, true);
-        } else {
-          window.location.href = result.redirect;
-        }
+      if (isAutoSave) {
+        showFlashMessage("Quote saved automatically.", true);
+        disableButton(quoteSaveBtn, true);
       } else {
         window.location.href = result.redirect;
       }

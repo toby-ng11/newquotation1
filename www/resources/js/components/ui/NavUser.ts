@@ -1,10 +1,14 @@
 export function initUserMenu() {
-  const menu = document.querySelector(".top-navigation");
-  const menuBtn = document.querySelector(".main-menu-toggle");
-  const menuBtnIcon = document.querySelector(".main-menu-toggle .icon");
+  const menu = document.querySelector(".top-navigation") as HTMLElement;
+  const menuBtn = document.querySelector(
+    ".main-menu-toggle"
+  ) as HTMLButtonElement;
+  const menuBtnIcon = document.querySelector(
+    ".main-menu-toggle .icon"
+  ) as HTMLSpanElement;
   const menuBtnText = document.querySelector(
     ".main-menu-toggle .visually-hidden"
-  );
+  ) as HTMLSpanElement;
 
   if (menuBtn) {
     menuBtn.addEventListener("click", toggleMainMenu);
@@ -30,7 +34,12 @@ export function initUserMenu() {
     }
   }
 
-  function updateButtonAttributes(title, ariaExpanded, iconClass, buttonText) {
+  function updateButtonAttributes(
+    title: string,
+    ariaExpanded: string,
+    iconClass: string,
+    buttonText: string
+  ) {
     menuBtn.setAttribute("title", title);
     menuBtn.setAttribute("aria-label", title);
     menuBtn.setAttribute("aria-expanded", ariaExpanded);
@@ -39,8 +48,10 @@ export function initUserMenu() {
     menuBtnText.textContent = buttonText;
   }
 
-  const userBtn = document.getElementById("centura-account-button");
-  const userMenu = document.getElementById("centura-account");
+  const userBtn = document.getElementById(
+    "centura-account-button"
+  ) as HTMLButtonElement;
+  const userMenu = document.getElementById("centura-account") as HTMLElement;
 
   userBtn.addEventListener("click", () => {
     const isExpanded = userBtn.getAttribute("aria-expanded") === "true";
@@ -50,8 +61,9 @@ export function initUserMenu() {
   });
 
   // Optional: Close menu when clicking outside
-  document.addEventListener("click", (e) => {
-    if (!userMenu.contains(e.target) && !userBtn.contains(e.target)) {
+  document.addEventListener("click", (e: Event) => {
+    const target = e.target as HTMLElement;
+    if (!userMenu.contains(target) && !userBtn.contains(target)) {
       userMenu.style.display = "none";
       userBtn.setAttribute("aria-expanded", "false");
     }

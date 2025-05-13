@@ -29,7 +29,7 @@ if ($hour >= 5 && $hour < 12) {
         <p>Here's the quick summary your projects and quotes.</p>
     </header>
 
-    <section class="fade-in-up" aria-labelledby="my_projects" id="section1" data-nav="My Projects">
+    <section class="fade-in-up" aria-labelledby="my_projects" id="project-dashboard-own-project-section" data-nav="My Projects">
         <div class="widget-table">
             <table width="100%" class="sTable display nowrap" id='dashboard-home-own-table' data-init="homeOwnProject">
                 <thead>
@@ -50,7 +50,7 @@ if ($hour >= 5 && $hour < 12) {
         </div>
     </section>
 
-    <section class="fade-in-up" aria-labelledby="assigned_projects" id="section2" data-nav="Assigned Projects">
+    <section class="fade-in-up" aria-labelledby="assigned_projects" id="project-dashboard-assigned-project-section" data-nav="Assigned Projects">
         <div class="widget-table">
             <table width="100%" class="sTable display nowrap" id='dashboard-home-assigned-table' data-init="homeSharedProject">
                 <thead>
@@ -72,7 +72,7 @@ if ($hour >= 5 && $hour < 12) {
     </section>
 
     <?php if ($user['approve_id'] != null) { ?>
-        <section class="fade-in-up" aria-labelledby="other_projects" id="section3" data-nav="Other Projects">
+        <section class="fade-in-up" aria-labelledby="other_projects" id="project-dashboard-other-project-section" data-nav="Other Projects">
             <div class="widget-table">
                 <table width="100%" class="sTable display nowrap" id='dashboard-home-other-table' data-init="homeOtherProject">
                     <thead>
@@ -95,7 +95,7 @@ if ($hour >= 5 && $hour < 12) {
         </section>
     <?php } ?>
 
-    <section class="fade-in-up" aria-labelledby="my_quotes" <?php if ($user['approve_id'] != null) { ?> id="section4" <?php } else { ?> id="section3" <?php } ?> data-nav="My Quotes">
+    <section class="fade-in-up" aria-labelledby="my_quotes" id="project-dashboard-quote-section" data-nav="My Quotes">
         <div class="widget-table">
             <table width="100%" class="sTable display nowrap" id='dashboard-home-quote-table' data-init="homeQuote">
                 <thead>
@@ -115,7 +115,7 @@ if ($hour >= 5 && $hour < 12) {
         </div>
     </section>
 
-    <section class="fade-in-up" aria-labelledby="follow_up_logs" <?php if ($user['approve_id'] != null) { ?> id="section5" <?php } else { ?> id="section4" <?php } ?> data-nav="Follow Up Logs">
+    <section class="fade-in-up" aria-labelledby="follow_up_logs" id="project-dashboard-note-section" data-nav="Follow Up Logs">
         <div class="widget-table">
             <table width="100%" class="sTable display" id='dashboard-home-note-table' data-init="homeNote">
                 <thead>

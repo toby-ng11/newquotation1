@@ -3,7 +3,7 @@ import { Chart, PieController, ArcElement, Legend } from "chart.js";
 Chart.register(PieController, ArcElement, Legend);
 
 export function initCharts() {
-  const architectPieChart = document.getElementById("architectPieChart");
+  const architectPieChart = document.getElementById("architectPieChart") as HTMLCanvasElement;
   if (architectPieChart) {
     const ctx = architectPieChart.getContext("2d");
     const architectChart = new Chart(ctx, {

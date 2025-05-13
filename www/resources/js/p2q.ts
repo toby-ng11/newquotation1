@@ -1,19 +1,19 @@
-import { InitTheme } from "./components/ui/theme/Theme";
-import { initAlpine } from "./components/Alpine/p2q-init";
-import { initFlatpickr } from "./components/ui/calendar/flatpickr";
-import { initTables } from "./components/ui/table/tables";
-import { runFadeInAnimation } from "./components/FadeInAnimation";
-import { initSearchBox } from "./components/ui/searchbox/searchbox";
-import { scrollOffset } from "./components/scroll-offset";
-import { initItem } from "./pages/item";
-import { initProject } from "./pages/project";
-import { initQuote, $dialogMakeQuote } from "./pages/quote";
-import { initArchitect } from "./pages/architect";
-import { initCharts } from "./components/ui/chart/chart";
-import { initUserMenu } from "./components/ui/NavUser";
-import { showLoadedFlashMessage } from "./components/flashmessage";
-import { initNote } from "./components/Alpine/modal/NoteModal";
-import { initSidebarToggle } from "./components/SideBar";
+import { InitTheme } from "@/components/ui/theme/Theme";
+import { initAlpine } from "@/components/Alpine/p2q-init";
+import { initFlatpickr } from "@/components/ui/calendar/flatpickr";
+import { initTables } from "@/components/ui/table/tables";
+import { runFadeInAnimation } from "@/components/FadeInAnimation";
+import { initSearchBox } from "@/components/ui/searchbox/searchbox";
+import { scrollOffset } from "@/components/scroll-offset";
+import { initItem } from "@/pages/item";
+import { initProject } from "@/pages/project";
+import { initQuote, $dialogMakeQuote } from "@/pages/quote";
+import { initArchitect } from "@/pages/architect";
+import { initCharts } from "@/components/ui/chart/chart";
+import { initUserMenu } from "@/components/ui/NavUser";
+import { showLoadedFlashMessage } from "@/components/flashmessage";
+import { initNote } from "@/components/Alpine/modal/NoteModal";
+import { initSidebarToggle } from "@/components/SideBar";
 
 initAlpine();
 

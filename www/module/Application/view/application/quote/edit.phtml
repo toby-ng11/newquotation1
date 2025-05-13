@@ -54,9 +54,9 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 			<h1>Edit Quote</h1>
 		</header>
 
-		<section class="fade-in-up" aria-labelledby="widget-board" id="section1" data-nav="Widget Board">
+		<section class="features fade-in-up" aria-labelledby="widget-board">
 			<div class="widget-information quote-edit row-1">
-				<div class="widget-table dashboard" style="grid-row: 1 / 3;">
+				<div class="widget-table feature fade-in-up dashboard" style="grid-row: 1 / 3;">
 					<div class="project-information project-name">
 						<h2><?= $this->escapeHtml($project['project_name']) ?></h2>
 						<p><?= $this->escapeHtml($project['project_address']) ?></p>
@@ -68,7 +68,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 					</div>
 				</div>
 
-				<div class="widget-table dashboard">
+				<div class="widget-table feature fade-in-up dashboard">
 					<div class="project-information">
 						<p>P21 Order ID</p>
 						<h2><?php if ($oeID != "") {
@@ -79,14 +79,14 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 					</div>
 				</div>
 
-				<div class="widget-table dashboard">
+				<div class="widget-table feature fade-in-up dashboard">
 					<div class="project-information">
 						<p>Project status</p>
 						<h2><?= $this->escapeHtml($project['status_desc']) ?></h2>
 					</div>
 				</div>
 
-				<div class="widget-table dashboard">
+				<div class="widget-table feature fade-in-up dashboard">
 					<div class="project-information">
 						<p>Taker</p>
 						<h2><?= $quote['taker'] ?? "";
@@ -98,7 +98,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 				if ($quoteStatusID != 0 and strcmp($quote['delete_flag'], "N") == 0) {
 					switch ($quoteStatusID) {
 						case $approved: ?>
-							<div class="widget-table dashboard quote-status status-approved">
+							<div class="widget-table feature fade-in-up dashboard quote-status status-approved">
 								<div class="project-information">
 									<p>Quote status</p>
 									<h2>Approved</h2>
@@ -107,7 +107,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 						<?php break;
 
 						case $waitingApprove: ?>
-							<div class="widget-table dashboard quote-status status-waiting">
+							<div class="widget-table feature fade-in-up dashboard quote-status status-waiting">
 								<div class="project-information">
 									<p>Quote status</p>
 									<h2>Waiting for approval</h2>
@@ -116,7 +116,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 						<?php break;
 
 						case $disapproved: ?>
-							<div class="widget-table dashboard quote-status status-disapproved">
+							<div class="widget-table feature fade-in-up dashboard quote-status status-disapproved">
 								<div class="project-information">
 									<p>Quote status</p>
 									<h2>Disapproved</h2>
@@ -125,16 +125,16 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 						<?php break;
 
 						default: ?>
-							<div class="widget-table dashboard quote-status status-notsubmitted">
+							<div class="widget-table feature fade-in-up dashboard quote-status status-notsubmitted">
 								<div class="project-information">
 									<p>Quote status</p>
-									<h2>Not submitted</h2>
+									<h2>Draft</h2>
 								</div>
 							</div>
 					<?php break;
 					}
 				} else {  ?>
-					<div class="widget-table dashboard quote-status status-disapproved">
+					<div class="widget-table feature fade-in-up dashboard quote-status status-disapproved">
 						<div class="project-information">
 							<p>Quote status</p>
 							<h2>Deleted</h2>
@@ -145,7 +145,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 		</section>
 
 		<!-- Form -->
-		<section class="fade-in-up" aria-labelledby="quote-detail" id="section2" data-nav="Quote Details">
+		<section class="fade-in-up" aria-labelledby="quote-detail">
 			<form action="/quote/<?= $this->escapeHtml($quoteID) ?>/edit" method='post' class="form" id="quote-content" data-save-btn="#form-btn-save-quote" data-form="#quoteForm">
 				<div class="widget-table" id="customer_info">
 					<div class="widget-header">
@@ -469,7 +469,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 			</form>
 		</section>
 
-		<section class="fade-in-up" aria-labelledby="items" id="section3" data-nav="Items">
+		<section class="fade-in-up" aria-labelledby="items">
 			<div class="widget-table">
 				<div class="widget-header">
 					<div class="widget-title">

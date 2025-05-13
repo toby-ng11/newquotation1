@@ -1,5 +1,21 @@
-function defaultRenderItem(item) {
+function defaultRenderItem(item: Record<string, any>) {
   return `<div><strong>${item.id}</strong><br>${item.name}</div>`;
+}
+
+interface AutoCompleteFieldMap {
+  fieldSelector: string;
+  itemKey: string;
+}
+
+interface SetupAutoCompleteOptions {
+  fieldName: string;
+  fetchUrl: string;
+  fillFields?: AutoCompleteFieldMap[];
+  renderItem?: (item: Record<string, any>) => string;
+  extraSelectActions?: ((item: Record<string, any>) => void)[];
+  minLength?: number;
+  queryParamName?: string;
+  limitParamName?: string;
 }
 
 export function setupAutoComplete({
@@ -11,27 +27,33 @@ export function setupAutoComplete({
   minLength = 1,
   queryParamName = "pattern",
   limitParamName = "limit",
-}) {
-  const input = document.querySelector(fieldName);
+}: SetupAutoCompleteOptions) {
+  const input = document.querySelector(fieldName) as HTMLInputElement;
   if (!input || input.classList.contains("no-autocomplete")) return;
 
   const isOverlay = input.closest(".overlay-style");
   //const isModal = input.closest(".modal-box");
   const container = isOverlay;
 
-  const autocompleteList = container
-    ? input.parentNode.querySelector(".autocomplete-list")
-    : document.createElement("ul");
+  const parent = input.parentNode as HTMLElement | null;
+  if (!parent) return;
 
-  if (!container) {
+  let autocompleteList: HTMLElement;
+
+  if (container) {
+    const existingList = parent.querySelector(".autocomplete-list");
+    if (!existingList) return;
+    autocompleteList = existingList as HTMLElement;
+  } else {
+    autocompleteList = document.createElement("ul");
     autocompleteList.classList.add("autocomplete-list");
     document.body.appendChild(autocompleteList);
   }
 
-  input.parentNode.style.position = "relative"; // Ensure positioning
+  parent.style.position = "relative"; // Ensure positioning
 
   let activeIndex = -1;
-  let debounceTimer = null;
+  let debounceTimer: ReturnType<typeof setTimeout> | undefined = undefined;
 
   input.addEventListener("input", function () {
     clearTimeout(debounceTimer);
@@ -65,18 +87,21 @@ export function setupAutoComplete({
             return;
           }
 
-          data.forEach((item, index) => {
+          data.forEach((item: Record<string, any>, index: string) => {
             const listItem = document.createElement("li");
             listItem.innerHTML = renderItem(item);
             listItem.setAttribute("data-index", index);
             listItem.addEventListener("click", function () {
               // Fill fields
-              fillFields.forEach(({ fieldSelector, itemKey }) => {
-                const targetField = document.querySelector(fieldSelector);
-                if (targetField && item[itemKey] !== undefined) {
-                  targetField.value = item[itemKey];
+              fillFields.forEach(
+                ({ fieldSelector, itemKey }: AutoCompleteFieldMap) => {
+                  const targetField =
+                    document.querySelector<HTMLInputElement>(fieldSelector);
+                  if (targetField && item[itemKey] !== undefined) {
+                    targetField.value = item[itemKey];
+                  }
                 }
-              });
+              );
               extraSelectActions.forEach((fn) => {
                 if (typeof fn === "function") {
                   fn(item);
@@ -97,8 +122,10 @@ export function setupAutoComplete({
     }, 300); // 300ms debounce
   });
 
-  input.addEventListener("keydown", function (e) {
-    const items = autocompleteList.querySelectorAll("li:not(.no-result)");
+  input.addEventListener("keydown", function (e: KeyboardEvent) {
+    const items = autocompleteList.querySelectorAll(
+      "li:not(.no-result)"
+    ) as NodeListOf<HTMLLIElement>;
     if (!items.length) return;
 
     if (e.key === "ArrowDown") {
@@ -120,11 +147,12 @@ export function setupAutoComplete({
     }
   });
 
-  document.addEventListener("click", function (e) {
+  document.addEventListener("click", function (e: Event) {
+    const target = e.target as HTMLElement;
     if (
       autocompleteList &&
       e.target !== input &&
-      !autocompleteList.contains(e.target)
+      !autocompleteList.contains(target)
     ) {
       autocompleteList.innerHTML = "";
       if (container) container.classList.remove("fly-up");
@@ -143,7 +171,7 @@ export function setupAutoComplete({
     if (document.activeElement === input) positionList();
   });
 
-  function updateActive(items) {
+  function updateActive(items: NodeListOf<HTMLLIElement>) {
     items.forEach((item) => item.classList.remove("active"));
     if (activeIndex > -1 && items[activeIndex]) {
       items[activeIndex].classList.add("active");

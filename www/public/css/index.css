@@ -6561,6 +6561,11 @@ input[readonly], input[disabled] {
   margin: 0;
 }
 
+.dt-container .dt-layout-row {
+  display: flex;
+  flex-direction: row;
+}
+
 .footer {
   background-color: var(--background-secondary);
   padding: 2rem 1rem;
