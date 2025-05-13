@@ -8,5 +8,6 @@ declare global {
     quoteTableCount: number;
     noteTableCount: number;
     isOwner: boolean;
+    openCreateArchitectModal: any;
   }
 }
