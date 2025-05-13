@@ -13,13 +13,13 @@ import { initCharts } from "./components/ui/chart/chart";
 import { initUserMenu } from "./components/ui/NavUser";
 import { showLoadedFlashMessage } from "./components/flashmessage";
 import { initNote } from "./components/Alpine/modal/NoteModal";
-
-
+import { initSidebarToggle } from "./components/SideBar";
 
 initAlpine();
 
 document.addEventListener("DOMContentLoaded", () => {
   InitTheme();
+  initSidebarToggle();
   showLoadedFlashMessage();
   initUserMenu();
   scrollOffset();
@@ -52,18 +52,26 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-document.body.addEventListener("htmx:afterSwap", function (e) {
+document.body.addEventListener("htmx:afterSwap", function (e: Event) {
+  const target = e.target as HTMLElement;
   // only re-init if content is replaced in #content or similar
   scrollOffset();
+  if (target.querySelector("#options-button")) {
+    initSidebarToggle();
+  }
   if (
-    e.target.querySelector("#search-overlay") ||
-    e.target.querySelector(".search-architect-button")
+    target.querySelector("#search-overlay") ||
+    target.querySelector(".search-architect-button")
   ) {
     initSearchBox();
   }
-  if (e.target.id === "content") {
-    initTables();
-    initCharts();
+  if (target.id === "content") {
     setTimeout(runFadeInAnimation, 50);
+  }
+  if (target.querySelector(".sTable")) {
+    initTables();
+  }
+  if (target.querySelector(".chart")) {
+    initCharts();
   }
 });

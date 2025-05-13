@@ -6,16 +6,29 @@ import { hideLoading, showLoading } from "../components/LoadingOverlay.js";
 import { initAutoSave } from "../components/pageload.js";
 import { setState } from "../components/state.js";
 
-const architectDetails = document.querySelector("#architect-details");
-const architectNameInput = document.querySelector("#architect_name");
-const contractorDetails = document.querySelector("#contractor-details");
+const architectDetails = document.querySelector(
+  "#architect-details"
+) as HTMLDetailsElement;
+
+const architectNameInput = document.querySelector(
+  "#architect_name"
+) as HTMLInputElement;
+
+const contractorDetails = document.querySelector(
+  "#contractor-details"
+) as HTMLDetailsElement;
+
 const generalContractorInput = document.querySelector(
   "#general_contractor_name"
-);
+) as HTMLInputElement;
+
 const awardedContractorInput = document.querySelector(
   "#awarded_contractor_name"
-);
-const saveButton = document.getElementById("form-btn-save-project");
+) as HTMLInputElement;
+
+const saveButton = document.getElementById(
+  "form-btn-save-project"
+) as HTMLButtonElement;
 
 export function initProject() {
   if (projectForm && projectForm.dataset.page === "edit") {

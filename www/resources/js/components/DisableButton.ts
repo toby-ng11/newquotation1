@@ -1,5 +1,3 @@
-export function disableButton(button, state) {
-  if (button instanceof HTMLElement) {
-    button.disabled = state;
-  }
+export function disableButton(button: HTMLButtonElement, state: boolean) {
+  button.disabled = state;
 }

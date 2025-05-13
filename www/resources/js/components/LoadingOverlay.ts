@@ -1,7 +1,9 @@
+const loadingOverlay = document.querySelector(".loading") as HTMLElement;
+
 export function showLoading() {
-  document.querySelector(".loading").style.display = "flex";
+  loadingOverlay.style.display = "flex";
 }
 
 export function hideLoading() {
-  document.querySelector(".loading").style.display = "none";
+  loadingOverlay.style.display = "none";
 }
