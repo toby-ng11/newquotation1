@@ -1,5 +1,5 @@
-import { showFlashMessage } from "./flashmessage.js";
-import { getState, setState, subscribe } from "./state.js";
+import { showFlashMessage } from "./flashmessage";
+import { getState, setState, subscribe } from "./state";
 
 window.onbeforeunload = function () {
   const { unsave, lastChanged } = getState();

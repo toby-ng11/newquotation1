@@ -1,16 +1,19 @@
-import DataTable from "datatables.net-dt";
-import { projectID, sheetType, architectID } from "../../init.js";
+import DataTable, { Api } from "datatables.net-dt";
+import 'datatables.net-responsive-dt';
+import 'datatables.net-fixedcolumns-dt';
 
-let projectNoteTable;
-let itemTable;
-let architectProjectsTable;
-let architectAddressesTable;
-let architectSpecifiersTable;
+import { projectID, sheetType, architectID } from "../../init";
 
-const tableConfigs = {
+let projectNoteTable: Api<any>;
+let itemTable: Api<any>;
+let architectProjectsTable: Api<any>;
+let architectAddressesTable: Api<any>;
+let architectSpecifiersTable: Api<any>;
+
+const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
   /* ------ ADMIN PORTAL ------ */
-  adminProject: () => {
-    new DataTable("#admin-project-table", {
+  adminProject: (el) => {
+    return new DataTable(el, {
       ajax: {
         url: "/index/admin/project?view=true",
         dataSrc: "",
@@ -111,8 +114,8 @@ const tableConfigs = {
       },
     });
   },
-  adminQuote: () => {
-    new DataTable("#admin-quote-table", {
+  adminQuote: (el) => {
+    return new DataTable("#admin-quote-table", {
       ajax: {
         url: "/index/admin/quote?view=true",
         dataSrc: "",
@@ -216,7 +219,7 @@ const tableConfigs = {
   },
   /* ------ HOME PORTAL ------ */
   homeOwnProject: () => {
-    new DataTable("#dashboard-home-own-table", {
+    return new DataTable("#dashboard-home-own-table", {
       //select: true,
       ajax: {
         url: "/index/home/own?view=true",
@@ -312,7 +315,7 @@ const tableConfigs = {
         topStart: function () {
           let info = document.createElement("div");
           info.innerHTML =
-            "<h2>My Projects</h2><p>" + ownTableCount + " projects";
+            "<h2>My Projects</h2><p>" + window.ownTableCount + " projects";
           return info;
         },
         bottomStart: "pageLength",
@@ -320,7 +323,7 @@ const tableConfigs = {
     });
   },
   homeSharedProject: () => {
-    new DataTable("#dashboard-home-assigned-table", {
+    return new DataTable("#dashboard-home-assigned-table", {
       //select: true,
       ajax: {
         url: "/index/home/assigned",
@@ -416,7 +419,7 @@ const tableConfigs = {
         topStart: function () {
           let info = document.createElement("div");
           info.innerHTML =
-            "<h2>Shared Projects</h2>" + assignTableCount + " shared projects";
+            "<h2>Shared Projects</h2>" + window.assignTableCount + " shared projects";
           return info;
         },
         bottomStart: "pageLength",
@@ -424,7 +427,7 @@ const tableConfigs = {
     });
   },
   homeOtherProject: () => {
-    new DataTable("#dashboard-home-other-table", {
+    return new DataTable("#dashboard-home-other-table", {
       ajax: {
         url: "/index/home/other",
         dataSrc: "",
@@ -521,7 +524,7 @@ const tableConfigs = {
           let info = document.createElement("div");
           info.innerHTML =
             "<h2>Other Projects At <?= $company ?></h2><p>" +
-            otherTableCount +
+            window.otherTableCount +
             " projects at <?= $company ?>";
           return info;
         },
@@ -530,7 +533,7 @@ const tableConfigs = {
     });
   },
   homeQuote: () => {
-    new DataTable("#dashboard-home-quote-table", {
+    return new DataTable("#dashboard-home-quote-table", {
       ajax: {
         url: "/index/home/quote",
         dataSrc: "",
@@ -637,7 +640,7 @@ const tableConfigs = {
       layout: {
         topStart: function () {
           let info = document.createElement("div");
-          info.innerHTML = "<h2>My Quotes</h2>" + quoteTableCount + " quotes";
+          info.innerHTML = "<h2>My Quotes</h2>" + window.quoteTableCount + " quotes";
           return info;
         },
         bottomStart: "pageLength",
@@ -645,7 +648,7 @@ const tableConfigs = {
     });
   },
   homeNote: () => {
-    new DataTable("#dashboard-home-note-table", {
+    return new DataTable("#dashboard-home-note-table", {
       ajax: {
         url: "/index/home/note",
         dataSrc: "",
@@ -704,7 +707,7 @@ const tableConfigs = {
         topStart: function () {
           let info = document.createElement("div");
           info.innerHTML =
-            "<h2>Follow Up Notes</h2>" + noteTableCount + " notes";
+            "<h2>Follow Up Notes</h2>" + window.noteTableCount + " notes";
           return info;
         },
         bottomStart: "pageLength",
@@ -713,7 +716,7 @@ const tableConfigs = {
   },
   /* ------ APPROVAL PORTAL ------ */
   approvalWaiting: () => {
-    new DataTable("#dashboard-approve-waiting-table", {
+    return new DataTable("#dashboard-approve-waiting-table", {
       ajax: {
         url: "/index/approval/waiting",
         dataSrc: "",
@@ -794,7 +797,7 @@ const tableConfigs = {
     });
   },
   approvalApproved: () => {
-    new DataTable("#dashboard-approve-approved-table", {
+    return new DataTable("#dashboard-approve-approved-table", {
       ajax: {
         url: "/index/approval/approved",
         dataSrc: "",
@@ -892,7 +895,7 @@ const tableConfigs = {
     });
   },
   approvalDisapproved: () => {
-    new DataTable("#dashboard-approve-disapproved-table", {
+    return new DataTable("#dashboard-approve-disapproved-table", {
       ajax: {
         url: "/index/approval/disapproved",
         dataSrc: "",
@@ -998,7 +1001,7 @@ const tableConfigs = {
   },
   /* ------ ARCHITECT PORTAL ------ */
   architectAll: () => {
-    new DataTable("#architect-all-table", {
+    return new DataTable("#architect-all-table", {
       ajax: {
         url: "/index/architect/all",
         dataSrc: "",
@@ -1070,7 +1073,7 @@ const tableConfigs = {
     });
   },
   architectTop5: () => {
-    new DataTable("#top-5-architect-table", {
+    return new DataTable("#top-5-architect-table", {
       ajax: {
         url: "/index/architect/topfive",
         dataSrc: "",
@@ -1121,7 +1124,7 @@ const tableConfigs = {
   },
   /* ------ PROJECT + QUOTE EDIT ------ */
   projectNote: () => {
-    projectNoteTable = new DataTable("#note-table", {
+    return projectNoteTable = new DataTable("#note-table", {
       ajax: {
         url: `/project/${projectID}/note`,
         dataSrc: "",
@@ -1191,7 +1194,7 @@ const tableConfigs = {
         {
           data: "project_note_id",
           render: function (data, type, row) {
-            if (!isOwner) return null;
+            if (!window.isOwner) return null;
 
             const isSent = row.notified_flag === "Y";
             const buttons = [];
@@ -1237,7 +1240,7 @@ const tableConfigs = {
     });
   },
   item: () => {
-    itemTable = new DataTable("#item-table", {
+    return itemTable = new DataTable("#item-table", {
       ajax: {
         url: "/item/table",
         data: {
@@ -1340,7 +1343,7 @@ const tableConfigs = {
     });
   },
   projectQuote: () => {
-    new DataTable("#project-quote-table", {
+    return new DataTable("#project-quote-table", {
       ajax: {
         url: `/project/${projectID}/quotetable`,
         dataSrc: "",
@@ -1435,7 +1438,7 @@ const tableConfigs = {
   },
   /* ------ ARCHITECT EDIT ------ */
   architectProjects: () => {
-    architectProjectsTable = new DataTable("#architect-projects-table", {
+    return architectProjectsTable = new DataTable("#architect-projects-table", {
       ajax: {
         url: `/architect/${architectID}/projects`,
         dataSrc: "",
@@ -1490,7 +1493,7 @@ const tableConfigs = {
     });
   },
   architectAddresses: () => {
-    architectAddressesTable = new DataTable("#architect-addresses-table", {
+    return architectAddressesTable = new DataTable("#architect-addresses-table", {
       ajax: {
         url: `/architect/${architectID}/address`,
         dataSrc: "",
@@ -1536,7 +1539,7 @@ const tableConfigs = {
     });
   },
   architectSpecifiers: () => {
-    architectSpecifiersTable = new DataTable("#architect-specifiers-table", {
+    return architectSpecifiersTable = new DataTable("#architect-specifiers-table", {
       ajax: {
         url: `/architect/${architectID}/fetchspecs`,
         dataSrc: "",
@@ -1586,10 +1589,15 @@ const tableConfigs = {
   },
 };
 
+interface DataTableElement extends HTMLElement {
+  _DT_Instance?: Api<any>;
+}
+
 export function initTables() {
   const tables = document.querySelectorAll(".sTable");
-  tables.forEach(table => {
-    const initType = table.dataset.init;
+  tables.forEach((table) => {
+    const el = table as DataTableElement;
+    const initType = el.dataset.init;
 
     if (!initType || !(initType in tableConfigs)) {
       console.warn(`No DataTable config found for: ${initType}`);
@@ -1597,12 +1605,12 @@ export function initTables() {
     }
 
     // Destroy previous instance if exists (vanilla)
-    if (table._DT_Instance) {
-      table._DT_Instance.destroy();
+    if (el._DT_Instance) {
+      el._DT_Instance.destroy();
     }
 
     // Initialize and store instance on element
-    table._DT_Instance = tableConfigs[initType](table);
+    el._DT_Instance = tableConfigs[initType](el);
   });
 }
 

@@ -2,7 +2,7 @@ export function InitTheme() {
   const themeBtnIcon = document.querySelector(".theme-switcher-menu .icon");
   const themeButton = document.querySelector(".button.theme-switcher-menu");
 
-  themeButton.addEventListener("click", toggleTheme);
+  if (themeButton) themeButton.addEventListener("click", toggleTheme);
   updateThemeIcon();
   loadFlatpickrTheme(localStorage.getItem("theme") || "material_blue");
 
@@ -27,12 +27,14 @@ export function InitTheme() {
 
   function updateThemeIcon() {
     const currentTheme = localStorage.getItem("theme") || "light";
-    if (currentTheme === "dark") {
-      themeBtnIcon.classList.remove("icon-theme-light");
-      themeBtnIcon.classList.add("icon-theme-dark");
-    } else {
-      themeBtnIcon.classList.remove("icon-theme-dark");
-      themeBtnIcon.classList.add("icon-theme-light");
+    if (themeBtnIcon) {
+      if (currentTheme === "dark") {
+        themeBtnIcon.classList.remove("icon-theme-light");
+        themeBtnIcon.classList.add("icon-theme-dark");
+      } else {
+        themeBtnIcon.classList.remove("icon-theme-dark");
+        themeBtnIcon.classList.add("icon-theme-light");
+      }
     }
   }
 

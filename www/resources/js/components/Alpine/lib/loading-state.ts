@@ -1,4 +1,4 @@
-import { showFlashMessage } from "../../flashmessage.js";
+import { showFlashMessage } from "../../flashmessage";
 
 export function loadingState() {
   return {

@@ -1,6 +1,6 @@
-import { setupAutoComplete } from "../components/autocomplete.js";
-import { disableButton } from "../components/DisableButton.js";
-import { showFlashMessage } from "../components/flashmessage.js";
+import { setupAutoComplete } from "../components/autocomplete";
+import { disableButton } from "../components/DisableButton";
+import { showFlashMessage } from "../components/flashmessage";
 import {
   projectID,
   quoteForm,

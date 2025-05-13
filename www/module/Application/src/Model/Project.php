@@ -246,7 +246,7 @@ class Project
         return $result;
     }
 
-    public function countOwnProjects($user_id)
+    public function countOwnProjects($user_id): int
     {
         $sql = new Sql($this->adapter);
         $select = $sql->select();
@@ -256,7 +256,7 @@ class Project
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
-        return $result['total'] ?? 0;
+        return (int) $result['total'] ?? 0;
     }
 
     public function fetchAssignedProjects($user_id)

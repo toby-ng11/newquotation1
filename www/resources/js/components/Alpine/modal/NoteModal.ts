@@ -1,7 +1,7 @@
-import { projectID } from "../../init.js";
-import { showFlashMessage } from "../../flashmessage.js";
-import { projectNoteTable } from "../../ui/table/tables.js";
-import { resetForm } from "../../utils.js";
+import { projectID } from "../../init";
+import { showFlashMessage } from "../../flashmessage";
+import { projectNoteTable } from "../../ui/table/tables";
+import { resetForm } from "../../utils";
 
 export function initNote() {
   // Edit button 

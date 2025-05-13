@@ -1,7 +1,7 @@
-import { setupAutoComplete } from "../components/autocomplete.js";
-import { showFlashMessage } from "../components/flashmessage.js";
-import { architectID } from "../components/init.js";
-import { setState } from "../components/state.js";
+import { setupAutoComplete } from "../components/autocomplete";
+import { showFlashMessage } from "../components/flashmessage";
+import { architectID } from "../components/init";
+import { setState } from "../components/state";
 
 export function initArchitect() {
   const architectForm = document.getElementById("architect-form");
