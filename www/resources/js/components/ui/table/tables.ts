@@ -1,9 +1,6 @@
 import DataTable, { Api } from "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import "datatables.net-fixedcolumns-dt";
-import "datatables.net-dt/css/dataTables.dataTables.min.css";
-import "datatables.net-responsive-dt/css/responsive.dataTables.min.css"
-import "datatables.net-fixedcolumns-dt/css/fixedcolumns.dataTables.min.css"
 
 import { projectID, sheetType, architectID } from "../../init";
 

@@ -1,0 +1,5 @@
+@import url('datatables.net-dt');
+@import url('datatables.net-fixedcolumns-dt');
+@import url('datatables.net-responsive-dt');
+
+@import "tailwindcss";

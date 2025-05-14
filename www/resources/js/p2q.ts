@@ -1,3 +1,5 @@
+import '../css/app.css';
+
 import { InitTheme } from "@/components/ui/theme/Theme";
 import { initAlpine } from "@/components/Alpine/p2q-init";
 import { initFlatpickr } from "@/components/ui/calendar/flatpickr";
