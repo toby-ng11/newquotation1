@@ -10,7 +10,7 @@ let isEditItem = false;
 const $dialogItem = $("#dialog-item");
 const $itemForm = $("#dialog-item-form");
 const $dialogBtnAddItem = $("item-form-btn-add");
-const dialogBtnAddItem = document.getElementById("item-form-btn-add");
+const dialogBtnAddItem = document.getElementById("item-form-btn-add") as HTMLButtonElement | null;
 const $uomDropdown = $("#uom");
 
 $uomDropdown.data("default-options", $uomDropdown.html());
@@ -99,6 +99,7 @@ export function initItem() {
         text: "Save",
         click: function () {
           if ($itemForm.validationEngine("validate")) {
+            const dialogBtnAddItem = document.getElementById("item-form-btn-add") as HTMLButtonElement | null;
             disableButton(dialogBtnAddItem, true);
             if (!isEditItem) {
               additem();
@@ -226,6 +227,7 @@ export function initItem() {
 
   // Add Item Function
   function additem() {
+    const dialogBtnAddItem = document.getElementById("item-form-btn-add") as HTMLButtonElement | null;
     disableButton(dialogBtnAddItem, true);
     let formData =
       $itemForm.serialize() +
@@ -258,6 +260,7 @@ export function initItem() {
 
   // Edit Item Function
   function edititem() {
+    const dialogBtnAddItem = document.getElementById("item-form-btn-add") as HTMLButtonElement | null;
     disableButton(dialogBtnAddItem, true);
     let formData =
       $itemForm.serialize() + "&type=" + encodeURIComponent(sheetType);

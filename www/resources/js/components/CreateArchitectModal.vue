@@ -1,20 +1,26 @@
 <template>
   <div v-if="isOpen" class="fixed inset-0 z-999 flex items-center justify-center bg-black/60">
-    <div class="w-full max-w-md space-y-4 rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-800">
-      <h2 class="text-xl font-semibold">Create Architect</h2>
+    <div
+      class="relative flex max-h-[90vh] w-full max-w-[1000px] translate-y-0 animate-[floatIn_0.4s_ease-out] flex-col rounded-2xl bg-[var(--widget-background-primary)] p-8 shadow-[0_10px_25px_rgba(0,0,0,0.2)] backdrop-blur-md transition-transform"
+    >
+      <h2 class="mb-4">Create Architect</h2>
       <form @submit.prevent="submitForm" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium">Name</label>
-          <input v-model="form.name" type="text" class="mt-1 w-full rounded border p-2" required />
+        <div class="line"></div>
+        <div class="mt-4 mb-4 flex justify-between gap-8">
+          <div class="flex-auto">
+            <label class="block text-sm font-medium">Name</label>
+            <input v-model="form.name" type="text" class="mt-1 w-full rounded border p-2" required />
+          </div>
+          <div class="flex-auto">
+            <label class="block text-sm font-medium">Type</label>
+            <input v-model="form.type" type="text" class="mt-1 w-full rounded border p-2" />
+          </div>
+          <div class="flex-auto">
+            <label class="block text-sm font-medium">Class</label>
+            <input v-model="form.class" type="text" class="mt-1 w-full rounded border p-2" />
+          </div>
         </div>
-        <div>
-          <label class="block text-sm font-medium">Type</label>
-          <input v-model="form.type" type="text" class="mt-1 w-full rounded border p-2" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium">Class</label>
-          <input v-model="form.class" type="text" class="mt-1 w-full rounded border p-2" />
-        </div>
+        <div class="line"></div>
         <div class="flex justify-end gap-2">
           <button type="button" @click="close" class="rounded bg-gray-300 px-4 py-2 hover:bg-gray-400">Cancel</button>
           <button type="submit" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">Create</button>

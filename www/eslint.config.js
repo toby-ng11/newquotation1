@@ -4,6 +4,7 @@ import pluginVue from "eslint-plugin-vue";
 import pluginTs from "@typescript-eslint/eslint-plugin";
 import parserTs from "@typescript-eslint/parser";
 import prettier from "eslint-config-prettier";
+import pluginTailwind from "eslint-plugin-tailwindcss";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
@@ -54,6 +55,17 @@ export default defineConfig([
     rules: {
       ...pluginVue.configs["flat/recommended"][0].rules,
       ...pluginTs.configs.recommended.rules,
+    },
+  },
+  // Tailwind class sorting & validation
+  {
+    files: ["**/*.{vue,js,ts,jsx,tsx}"],
+    plugins: {
+      tailwindcss: pluginTailwind,
+    },
+    rules: {
+      "tailwindcss/classnames-order": "warn",
+      "tailwindcss/no-custom-classname": "off", // change to "warn" if needed
     },
   },
   // Prettier (disable conflicting formatting rules)

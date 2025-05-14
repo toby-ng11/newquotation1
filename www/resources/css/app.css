@@ -1,24 +1,37 @@
-@import url('datatables.net-dt');
-@import url('datatables.net-fixedcolumns-dt');
-@import url('datatables.net-responsive-dt');
+@import url("datatables.net-dt");
+@import url("datatables.net-fixedcolumns-dt");
+@import url("datatables.net-responsive-dt");
 
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {
-	font-display: swap;
-	font-family: "Inter";
-	font-stretch: 75% 100%;
-	font-style: oblique 0deg 20deg;
-	font-weight: 1 999;
-	src:
-	  url("./fonts/Inter.var.woff2") format("woff2 supports variations"),
-	  url("./fonts/Inter.var.woff2") format("woff2-variations");
-  }
+  font-display: swap;
+  font-family: "Inter";
+  font-stretch: 75% 100%;
+  font-style: oblique 0deg 20deg;
+  font-weight: 1 999;
+  src:
+    url("./fonts/Inter.var.woff2") format("woff2 supports variations"),
+    url("./fonts/Inter.var.woff2") format("woff2-variations");
+}
 
-  @layer base {
-    body {
-        font-family: "Inter", sans-serif;
-    }
+@layer base {
+  body {
+    font-family: "Inter", sans-serif;
   }
+}
+
+.fade-in {
+  animation: fade-in 0.2s ease-out forwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
