@@ -9,7 +9,7 @@
 	width: 100%;
 	transition: all 0.3s ease-in-out;
 
-	.container {
+	.container-a {
 		align-items: center;
 		justify-content: space-between;
 		background-color: var(--widget-background-primary);
@@ -37,7 +37,7 @@
 	&.show-nav {
 		box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 
-		.container {
+		.container-a {
 			height: auto;
 		}
 	}
