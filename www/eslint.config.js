@@ -1,77 +1,19 @@
-import js from "@eslint/js";
-import globals from "globals";
-import pluginVue from "eslint-plugin-vue";
-import pluginTs from "@typescript-eslint/eslint-plugin";
-import parserTs from "@typescript-eslint/parser";
-import prettier from "eslint-config-prettier";
-import pluginTailwind from "eslint-plugin-tailwindcss";
-import { defineConfig } from "eslint/config";
+import prettier from 'eslint-config-prettier';
+import vue from 'eslint-plugin-vue';
 
-export default defineConfig([
-  // JavaScript config
-  {
-    files: ["**/*.{js,mjs,cjs}"],
-    ...js.configs.recommended,
-    languageOptions: {
-      globals: globals.browser,
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
+
+export default defineConfigWithVueTs(
+    vue.configs['flat/essential'],
+    vueTsConfigs.recommended,
+    {
+        ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js', 'resources/js/components/ui/*'],
     },
-  },
-  // TypeScript config
-  {
-    files: ["**/*.{ts,cts,mts}"],
-    languageOptions: {
-      parser: parserTs,
-      parserOptions: {
-        sourceType: "module",
-        ecmaVersion: 2022,
-        project: "./tsconfig.json", // remove if no TS project references
-      },
+    {
+        rules: {
+            'vue/multi-word-component-names': 'off',
+            '@typescript-eslint/no-explicit-any': 'off',
+        },
     },
-    plugins: {
-      "@typescript-eslint": pluginTs,
-    },
-    rules: {
-      ...pluginTs.configs.recommended.rules,
-    },
-  },
-  ...pluginVue.configs["flat/recommended"],
-  // Vue + TypeScript (.vue files with TS support)
-  {
-    files: ["**/*.vue"],
-    languageOptions: {
-      parser: require("vue-eslint-parser"),
-      parserOptions: {
-        parser: parserTs,
-        ecmaVersion: 2022,
-        sourceType: "module",
-        extraFileExtensions: [".vue"],
-        project: "./tsconfig.json",
-      },
-    },
-    plugins: {
-      vue: pluginVue,
-      "@typescript-eslint": pluginTs,
-    },
-    rules: {
-      ...pluginVue.configs["flat/recommended"][0].rules,
-      ...pluginTs.configs.recommended.rules,
-    },
-  },
-  // Tailwind class sorting & validation
-  {
-    files: ["**/*.{vue,js,ts,jsx,tsx}"],
-    plugins: {
-      tailwindcss: pluginTailwind,
-    },
-    rules: {
-      "tailwindcss/classnames-order": "warn",
-      "tailwindcss/no-custom-classname": "off", // change to "warn" if needed
-    },
-  },
-  // Prettier (disable conflicting formatting rules)
-  {
-    rules: {
-      ...prettier.rules,
-    },
-  },
-]);
+    prettier,
+);
