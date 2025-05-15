@@ -9,6 +9,7 @@ use Laminas\Db\Sql\{Sql, Expression};
 use Exception;
 
 use Application\Service\UserService;
+use Application\Helper\InputValidator;
 
 class Note
 {
@@ -28,7 +29,7 @@ class Note
 
     function add($data, $project_id)
     {
-        if (!$data || !$project_id) {
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($project_id)) {
             return false;
         }
 
@@ -56,7 +57,7 @@ class Note
 
     function edit($data, $note_id)
     {
-        if (!$data || !$note_id) {
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($note_id)) {
             return false;
         }
 
@@ -78,7 +79,7 @@ class Note
 
     function delete($note_id)
     {
-        if (!$note_id) {
+        if (!InputValidator::isValidId($note_id)) {
             return false;
         }
 
@@ -97,9 +98,10 @@ class Note
 
     public function fetchDataTables($id)
     {
-        if (!$id) {
+        if (!InputValidator::isValidId($id)) {
             return false;
         }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select('p2q_view_project_note')
             ->where([
@@ -113,7 +115,7 @@ class Note
 
     public function fetchNote($id)
     {
-        if (!$id) {
+        if (!InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -123,6 +125,10 @@ class Note
 
     public function fetchOwnNotes($user_id)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select('p2q_view_project_note')
             ->where([
@@ -136,6 +142,9 @@ class Note
 
     public function countOwnNotes($user_id)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
         $sql = new Sql($this->adapter);
         $select = $sql->select();
         $select->from('p2q_view_project_note')
@@ -166,6 +175,10 @@ class Note
 
     public function markReminderSent($noteId)
     {
+        if (!InputValidator::isValidId($noteId)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $update = $sql->update('project_note');
         $update->set(['notified_flag' => 'Y']);

@@ -2,6 +2,8 @@
 
 namespace Application\Model;
 
+use Application\Helper\InputValidator;
+
 use Laminas\Db\TableGateway\TableGatewayInterface;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Adapter\Adapter;
@@ -26,6 +28,10 @@ class Customer
 
     public function fetchCustomerById($id)
     {
+        if (!InputValidator::isValidId($id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select('P21_customers_x_address')
             ->where(['customer_id' => $id]);
@@ -37,6 +43,10 @@ class Customer
 
     public function fetchCustomerByPattern($pattern, $limit = 10, $company = DEFAULT_COMPANY)
     {
+        if (!InputValidator::isValidPattern($pattern)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select('P21_customers_x_address')
             ->columns(['customer_id', 'customer_name', 'company_id', 'salesrep_full_name', 'from_P21'])
@@ -57,7 +67,7 @@ class Customer
 
     public function fetchContactsByCustomer($customer_id)
     {
-        if ($customer_id === null) {
+        if (!InputValidator::isValidId($customer_id)) {
             return false;
         }
 
@@ -72,7 +82,7 @@ class Customer
 
     public function fetchCustomerByContact($contact_id, $company = DEFAULT_COMPANY)
     {
-        if ($contact_id === null) {
+        if (!InputValidator::isValidId($contact_id)) {
             return false;
         }
 
@@ -98,7 +108,7 @@ class Customer
 
     public function fetchContactByID($contact_id)
     {
-        if ($contact_id === null) {
+        if (!InputValidator::isValidId($contact_id)) {
             return false;
         }
 

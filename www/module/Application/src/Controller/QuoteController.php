@@ -5,23 +5,15 @@ declare(strict_types=1);
 namespace Application\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\Mvc\Plugin\FlashMessenger;
 use Laminas\Http\Response\Stream;
 use Laminas\View\Model\{ViewModel, JsonModel};
 
-use Application\Service\UserService;
-use Application\Model\{Project, Quote, Location, Item, Customer};
-use Application\Service\PdfExportService;
+use Psr\Container\ContainerInterface;
+use Application\Model\Quote;
 
 class QuoteController extends AbstractActionController
 {
-    protected $userService;
-    protected $pdfExportService;
-    protected $quote;
-    protected $project;
-    protected $location;
-    protected $item;
-    protected $customer;
+    protected $container;
 
     const ACTION_SAVE         = 1;
     const ACTION_SUBMIT       = 2;
@@ -32,22 +24,44 @@ class QuoteController extends AbstractActionController
     const ACTION_UNDO_APPROVE = 7;
     const ACTION_SUBMIT_APPROVE = 8;
 
-    public function __construct(
-        UserService $userService,
-        PdfExportService $pdfExportService,
-        Quote $quote,
-        Project $project,
-        Location $location,
-        Item $item,
-        Customer $customer
-    ) {
-        $this->userService = $userService;
-        $this->pdfExportService = $pdfExportService;
-        $this->quote = $quote;
-        $this->project = $project;
-        $this->location = $location;
-        $this->item = $item;
-        $this->customer = $customer;
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    public function getUserService()
+    {
+        return $this->container->get(\Application\Service\UserService::class);
+    }
+
+    public function getPdfExportService()
+    {
+        return $this->container->get(\Application\Service\PdfExportService::class);
+    }
+
+    public function getQuoteModel()
+    {
+        return $this->container->get(\Application\Model\Quote::class);
+    }
+
+    public function getProjectModel()
+    {
+        return $this->container->get(\Application\Model\Project::class);
+    }
+
+    public function getLocationModel()
+    {
+        return $this->container->get(\Application\Model\Location::class);
+    }
+
+    public function getItemModel()
+    {
+        return $this->container->get(\Application\Model\Item::class);
+    }
+
+    public function getCustomerModel()
+    {
+        return $this->container->get(\Application\Model\Customer::class);
     }
 
     public function indexAction()
@@ -72,7 +86,7 @@ class QuoteController extends AbstractActionController
 
         $data = $this->params()->fromPost();
 
-        $quote_id = $this->quote->create($data);
+        $quote_id = $this->getQuoteModel()->create($data);
 
         if ($quote_id) {
             $this->flashMessenger()->addSuccessMessage("Quote created successfully!");
@@ -93,19 +107,19 @@ class QuoteController extends AbstractActionController
     {
         $quote_id = $this->params()->fromRoute('id');
 
-        $quote = $this->quote->fetchById($quote_id);
+        $quote = $this->getQuoteModel()->fetchById($quote_id);
         if (!$quote || $quote['delete_flag'] === 'Y') {
             $this->flashMessenger()->addErrorMessage("This quote is deleted.");
             return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
         }
-        $user = $this->userService->getCurrentUser();
-        $project = $this->project->fetchById($quote['project_id']);
-        $quoteType = $this->quote->fetchQuoteType();
-        $customer = $this->customer->fetchCustomerByContact($quote['contact_id']);
-        $contact = $this->customer->fetchContactById($quote['contact_id']);
-        $contactList = $this->customer->fetchContactsByCustomer($customer['customer_id']);
-        $leadtime = $this->quote->fetchLeadTimes();
-        $approvalUser = $this->userService->fetchaAllApprovalID();
+        $user = $this->getUserService()->getCurrentUser();
+        $project = $this->getProjectModel()->fetchById($quote['project_id']);
+        $quoteType = $this->getQuoteModel()->fetchQuoteType();
+        $customer = $this->getCustomerModel()->fetchCustomerByContact($quote['contact_id']);
+        $contact = $this->getCustomerModel()->fetchContactById($quote['contact_id']);
+        $contactList = $this->getCustomerModel()->fetchContactsByCustomer($customer['customer_id']);
+        $leadtime = $this->getQuoteModel()->fetchLeadTimes();
+        $approvalUser = $this->getUserService()->fetchaAllApprovalID();
 
         $admin = false;
 
@@ -125,7 +139,7 @@ class QuoteController extends AbstractActionController
         if ($request->isPost()) {
             $data = $this->params()->fromPost();
 
-            $result = $this->quote->edit($data, $quote_id);
+            $result = $this->getQuoteModel()->edit($data, $quote_id);
 
             if ($result) {
                 //$this->flashMessenger()->addSuccessMessage("Project saved successfully.");
@@ -165,7 +179,7 @@ class QuoteController extends AbstractActionController
             return new JsonModel(['success' => false, 'message' => 'Invalid quote ID']);
         }
 
-        $result = $this->quote->delete($quote_id);
+        $result = $this->getQuoteModel()->delete($quote_id);
 
         if ($result) {
             $this->flashMessenger()->addSuccessMessage("Quote deleted successfully!");
@@ -198,7 +212,7 @@ class QuoteController extends AbstractActionController
         if ($request->isPost()) {
             $data = $this->params()->fromPost();
             $data['request_action'] = $action;
-            $result = $this->quote->edit($data, $quote_id);
+            $result = $this->getQuoteModel()->edit($data, $quote_id);
         }
 
         if ($result) {
@@ -276,14 +290,14 @@ class QuoteController extends AbstractActionController
     {
         $quote_id = $this->params()->fromRoute('id');
 
-        $quote = $this->quote->fetchById($quote_id);
-        $project = $this->project->fetchById($quote['project_id']);
-        $customer = $this->customer->fetchCustomerByContact($quote['contact_id']);
-        $contact = $this->customer->fetchContactById($quote['contact_id']);
-        $quoteType = $this->quote->fetchQuoteType();
-        $items = $this->item->fetchDataTables($quote_id, 'quote');
-        $branches = $this->location->fetchAllBranches();
-        $approvalUsers = $this->userService->fetchaAllApprovalID();
+        $quote = $this->getQuoteModel()->fetchById($quote_id);
+        $project = $this->getProjectModel()->fetchById($quote['project_id']);
+        $customer = $this->getCustomerModel()->fetchCustomerByContact($quote['contact_id']);
+        $contact = $this->getCustomerModel()->fetchContactById($quote['contact_id']);
+        $quoteType = $this->getQuoteModel()->fetchQuoteType();
+        $items = $this->getItemModel()->fetchDataTables($quote_id, 'quote');
+        $branches = $this->getLocationModel()->fetchAllBranches();
+        $approvalUsers = $this->getUserService()->fetchaAllApprovalID();
 
         $data = [
             'quote' => $quote,
@@ -296,7 +310,7 @@ class QuoteController extends AbstractActionController
             'approvalList' => $approvalUsers
         ];
 
-        $pdfContent = $this->pdfExportService->generatePdf('application/quote/export', $data);
+        $pdfContent = $this->getPdfExportService()->generatePdf('application/quote/export', $data);
 
         // Return PDF as a downloadable file
         $response = new Stream();

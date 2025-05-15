@@ -178,13 +178,7 @@ return [
             },
             Controller\QuoteController::class => function ($container) {
                 return new Controller\QuoteController(
-                    $container->get(Service\UserService::class),
-                    $container->get(Service\PdfExportService::class),
-                    $container->get(Model\Quote::class),
-                    $container->get(Model\Project::class),
-                    $container->get(Model\Location::class),
-                    $container->get(Model\Item::class),
-                    $container->get(Model\Customer::class)
+                    $container
                 );
             },
             Controller\UserController::class => function ($container) {
@@ -314,9 +308,7 @@ return [
                     $dbAdapter,
                     new TableGateway('quote', $dbAdapter),
                     new TableGateway('p2q_view_quote_x_project_x_oe', $dbAdapter),
-                    $container->get(Service\UserService::class),
-                    $container->get(Model\Project::class),
-                    $container->get(Model\Item::class)
+                    $container
                 );
             },
             Model\Item::class => function ($container) {

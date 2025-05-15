@@ -2,6 +2,8 @@
 
 namespace Application\Model;
 
+use Application\Helper\InputValidator;
+
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Adapter\Adapter;
@@ -31,7 +33,7 @@ class Item
 
     public function add($data, $id, $sheetType)
     {
-        if (!$data || !$id || !$sheetType) {
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidData($sheetType) || !InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -79,7 +81,7 @@ class Item
 
     public function edit($data, $item_uid, $sheetType)
     {
-        if (!$data || !$item_uid || !$sheetType) {
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidData($sheetType) || !InputValidator::isValidId($item_uid)) {
             return false;
         }
 
@@ -123,9 +125,10 @@ class Item
 
     public function delete($item_uid, $sheetType)
     {
-        if (!$item_uid || !$sheetType) {
+        if (!InputValidator::isValidData($sheetType) || !InputValidator::isValidId($item_uid)) {
             return false;
         }
+
 
         $user = $this->userService->getCurrentUser();
 
@@ -161,6 +164,10 @@ class Item
 
     public function fetchItemsByPattern($pattern, $limit = 10, $location = DEFAULT_LOCATION_ID)
     {
+        if (!InputValidator::isValidPattern($pattern)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select('P21_Items')
             ->columns(['item_id', 'item_desc', 'location_id'])
@@ -181,7 +188,7 @@ class Item
 
     public function fetchItemByUID($item_uid, $sheetType)
     {
-        if (!$item_uid || !$sheetType) {
+        if (!InputValidator::isValidData($sheetType) || !InputValidator::isValidId($item_uid)) {
             return false;
         }
 
@@ -201,6 +208,10 @@ class Item
 
     public function fetchUomByItemId($item_id, $location = DEFAULT_LOCATION_ID)
     {
+        if (!InputValidator::isValidData($item_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select('P21_Items_x_uom')
             ->columns(['uom' => 'unit_of_measure'])
@@ -210,13 +221,17 @@ class Item
             ])
             ->order('default_selling_unit DESC');
 
-            $statement = $sql->prepareStatementForSqlObject($select);
-            $result = $statement->execute();
-            return $result;
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+        return $result;
     }
 
     public function fetchItemPrice($item_id, $uom, $fromP21, $sheetType = '', $location = DEFAULT_LOCATION_ID)
     {
+        if (!InputValidator::isValidData($item_id) || !InputValidator::isValidData($uom)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         if ($fromP21) {
             $select = $sql->select('P21_Items_x_uom')
@@ -251,6 +266,10 @@ class Item
 
     public function fetchDataTables($project_id, $sheetType, $location = DEFAULT_LOCATION_ID)
     {
+        if (!InputValidator::isValidData($sheetType) || !InputValidator::isValidId($project_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
 
         switch ($sheetType) {
@@ -281,7 +300,7 @@ class Item
 
     public function fetchExistItems($id, $sheetType)
     {
-        if (!$id || !$sheetType) {
+        if (!InputValidator::isValidData($sheetType) || !InputValidator::isValidId($id)) {
             return false;
         }
 

@@ -10,7 +10,7 @@ use Laminas\Db\Adapter\Exception\ErrorException;
 
 use Application\Service\UserService;
 
-use Application\Model\{Project, Item};
+use Psr\Container\ContainerInterface;
 use Application\Controller\QuoteController;
 
 class Quote
@@ -23,24 +23,33 @@ class Quote
     protected $adapter;
     protected $quote;
     protected $p2q_view_quote_x_project_x_oe;
-    protected $userService;
-    protected $project;
-    protected $item;
+    protected $container;
 
     public function __construct(
         Adapter $adapter,
         TableGateway $quote,
         TableGatewayInterface $p2q_view_quote_x_project_x_oe,
-        UserService $userService,
-        Project $project,
-        Item $item
+        ContainerInterface $container
     ) {
         $this->adapter = $adapter;
         $this->quote = $quote;
         $this->p2q_view_quote_x_project_x_oe = $p2q_view_quote_x_project_x_oe;
-        $this->userService = $userService;
-        $this->project = $project;
-        $this->item = $item;
+        $this->container = $container;
+    }
+
+    public function getUserService()
+    {
+        return $this->container->get(UserService::class);
+    }
+
+    public function getItem()
+    {
+        return $this->container->get(Item::class);
+    }
+
+    public function getProject()
+    {
+        return $this->container->get(Project::class);
     }
 
     public function create($data): ?int
@@ -49,7 +58,7 @@ class Quote
             return  false;
         }
 
-        $user = $this->userService->getCurrentUser();
+        $user = $this->getUserService()->getCurrentUser();
         $adapter = $this->quote->getAdapter();
         $connection = $adapter->getDriver()->getConnection();
         $connection->beginTransaction();
@@ -78,10 +87,10 @@ class Quote
             $this->addQuoteExtraInfo($newQuoteID);
 
             // Transfer items from project to quote
-            $projectItems = $this->item->fetchExistItems($data['project_id'], 'project');
+            $projectItems = $this->getItem()->fetchExistItems($data['project_id'], 'project');
             if ($projectItems && is_array($projectItems)) {
                 foreach ($projectItems as $item) {
-                    $this->item->add($item, $newQuoteID, 'quote');
+                    $this->getItem()->add($item, $newQuoteID, 'quote');
                 }
             }
 
@@ -101,8 +110,8 @@ class Quote
         }
 
         $quote = $this->fetchById($quote_id);
-        $project = $this->project->fetchById($quote['project_id']);
-        $allQuotes = $this->project->QuoteCountByProject($quote['project_id']);
+        $project = $this->getProject()->fetchById($quote['project_id']);
+        $allQuotes = $this->getProject()->QuoteCountByProject($quote['project_id']);
 
         $data = [
             'quote_id_ext' => $this->formatQuoteIdExt($project['project_id_ext'], $allQuotes),
@@ -129,7 +138,7 @@ class Quote
             return  false;
         }
 
-        $user = $this->userService->getCurrentUser();
+        $user = $this->getUserService()->getCurrentUser();
 
         $info = [
             'type_id'            => $data['quote_type_id'],

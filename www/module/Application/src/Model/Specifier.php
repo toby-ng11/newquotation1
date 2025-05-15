@@ -1,4 +1,5 @@
 <?php
+
 namespace Application\Model;
 
 use Application\Service\UserService;
@@ -8,8 +9,11 @@ use Exception;
 
 use Laminas\Db\TableGateway\TableGateway;
 use Psr\Container\ContainerInterface;
+use Application\Helper\InputValidator;
 
-class Specifier {
+
+class Specifier
+{
     protected $adapter;
     protected $specifier;
     protected $container;
@@ -17,7 +21,8 @@ class Specifier {
     public function __construct(
         Adapter $adapter,
         TableGateway $specifier,
-        ContainerInterface $container) {
+        ContainerInterface $container
+    ) {
         $this->adapter = $adapter;
         $this->specifier = $specifier;
         $this->container = $container;
@@ -33,10 +38,11 @@ class Specifier {
         return $this->container->get(UserService::class);
     }
 
-    public function add($data, $architect_id) {
-        if (!$data || !$architect_id) {
-			return  false;
-		}
+    public function add($data, $architect_id)
+    {
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($architect_id)) {
+            return false;
+        }
 
         $user = $this->getUserSerive()->getCurrentUser();
 
@@ -50,7 +56,7 @@ class Specifier {
             'added_by'          => $user['id'],
         ];
 
-        if(empty($data['specifier_address_id'])) {
+        if (empty($data['specifier_address_id'])) {
             $info['address_id'] = $this->getAddress()->addSpecifierAddress($data);
         } else {
             $info['address_id'] = $data['specifier_address_id'];
@@ -66,10 +72,11 @@ class Specifier {
         }
     }
 
-    public function edit($data, $id) {
-        if (!$data || !$id) {
-			return  false;
-		}
+    public function edit($data, $id)
+    {
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($id)) {
+            return false;
+        }
 
         $info = [
             'first_name'        => trim($data['specifier_first_name']),
@@ -81,7 +88,7 @@ class Specifier {
             //'added_by'          => $data['owner_id']
         ];
 
-        if(empty($data['specifier_address_id'])) {
+        if (empty($data['specifier_address_id'])) {
             $info['address_id'] = $this->getAddress()->addSpecifierAddress($data);
         } else {
             $info['address_id'] = $this->getAddress()->editSpecifierAddress($data, $data['specifier_address_id']);
@@ -98,8 +105,8 @@ class Specifier {
 
     public function delete($id)
     {
-        if (!$id) {
-            return  false;
+        if (!InputValidator::isValidId($id)) {
+            return false;
         }
 
         try {
@@ -111,8 +118,9 @@ class Specifier {
         }
     }
 
-    public function fetchSpecifiersByArchitect($architect_id) {
-        if (!$architect_id) {
+    public function fetchSpecifiersByArchitect($architect_id)
+    {
+        if (!InputValidator::isValidId($architect_id)) {
             return false;
         }
 
@@ -126,7 +134,12 @@ class Specifier {
         return $result;
     }
 
-    public function fetchSpecifierById($id) {
+    public function fetchSpecifierById($id)
+    {
+        if (!InputValidator::isValidId($id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('p2q_view_specifier_x_address')

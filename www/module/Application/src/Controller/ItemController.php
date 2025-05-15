@@ -19,7 +19,7 @@ class ItemController extends AbstractActionController
 
     public function tableAction() {
         $request = $this->getRequest();
-        if ($request->isXmlHttpRequest()) { 
+        if ($request->isXmlHttpRequest()) {
             $id = $this->params()->fromQuery('id');
             $sheetType = $this->params()->fromQuery('type');
             $itemTable = $this->item->fetchDataTables($id, $sheetType);
@@ -47,7 +47,7 @@ class ItemController extends AbstractActionController
 
             try {
                 $result = $this->item->add($data, $id, $sheetType);
-    
+
                 return new JsonModel([
                     'success' => true,
                     'message' => 'Item added successfully!',
@@ -86,7 +86,7 @@ class ItemController extends AbstractActionController
 
             try {
                 $result = $this->item->edit($data, $item_uid, $sheetType);
-    
+
                 return new JsonModel([
                     'success' => true,
                     'message' => 'Item saved!',
@@ -127,7 +127,7 @@ class ItemController extends AbstractActionController
                 'message' => 'Item not found.'
             ]);
         }
-    
+
         return new JsonModel([
             'success' => true,
             'data' => $item
@@ -206,7 +206,7 @@ class ItemController extends AbstractActionController
         return new JsonModel($uom);
     }
 
-    // Fetch Quoted price from Quotation
+    // Fetch custom price from Quotation
     public function quotedpriceAction()
     {
         $item_uid = $this->params()->fromQuery('item_uid', null);

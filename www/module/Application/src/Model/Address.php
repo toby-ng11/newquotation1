@@ -2,11 +2,13 @@
 
 namespace Application\Model;
 
-use Laminas\Db\Sql\Select;
+use Application\Helper\InputValidator;
+
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Sql;
-use Exception;
 use Laminas\Db\TableGateway\TableGateway;
+
+use Exception;
 
 class Address
 {
@@ -21,8 +23,8 @@ class Address
 
     public function add($data, $architectID)
     {
-        if (!$data || !$architectID) {
-            return  false;
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($architectID)) {
+            return false;
         }
 
         $info = [
@@ -52,8 +54,8 @@ class Address
 
     public function edit($data, $id)
     {
-        if (!$data || !$id) {
-            return  false;
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($id)) {
+            return false;
         }
 
         $info = [
@@ -82,8 +84,8 @@ class Address
 
     public function delete($id)
     {
-        if (!$id) {
-            return  false;
+        if (!InputValidator::isValidId($id)) {
+            return false;
         }
 
         try {
@@ -97,8 +99,8 @@ class Address
 
     public function addSpecifierAddress($data)
     {
-        if ($data == null) {
-            return  false;
+        if (!InputValidator::isValidData($data)) {
+            return false;
         }
 
         $info = [
@@ -120,8 +122,8 @@ class Address
 
     public function editSpecifierAddress($data, $id)
     {
-        if (!$data || !$id) {
-            return  false;
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($id)) {
+            return false;
         }
 
         $info = [
@@ -141,6 +143,10 @@ class Address
 
     public function fetchAddressesByArchitect($id)
     {
+        if (!InputValidator::isValidId($id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('p2q_view_address')
@@ -153,6 +159,10 @@ class Address
 
     public function fetchAddressesById($id)
     {
+        if (!InputValidator::isValidId($id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('p2q_view_address')

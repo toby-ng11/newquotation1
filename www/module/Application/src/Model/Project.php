@@ -2,6 +2,8 @@
 
 namespace Application\Model;
 
+use Application\Helper\InputValidator;
+
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\{Sql, Expression, Select};
@@ -44,8 +46,8 @@ class Project
 
     public function save($data)
     {
-        if (!$data) {
-            return  false;
+        if (!InputValidator::isValidData($data)) {
+            return false;
         }
 
         $info = [
@@ -121,8 +123,8 @@ class Project
 
     public function edit($data, $project_id)
     {
-        if (!$data || !$project_id) {
-            return  false;
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($project_id)) {
+            return false;
         }
 
         $info = [
@@ -189,7 +191,7 @@ class Project
 
     public function delete($project_id)
     {
-        if (!$project_id) {
+        if (!InputValidator::isValidId($project_id)) {
             return false;
         }
 
@@ -204,7 +206,9 @@ class Project
 
     public function clearAddressAndSpecifierByArchitect($architect_id)
     {
-        if (!$architect_id) return false;
+        if (!InputValidator::isValidId($architect_id)) {
+            return false;
+        }
 
         try {
             $this->project->update(
@@ -230,11 +234,18 @@ class Project
 
     public function fetchById($id)
     {
+        if (!InputValidator::isValidId($id)) {
+            return false;
+        }
         return $this->p2q_view_project->select(['project_id' => $id])->current();
     }
 
     public function fetchOwnProjects($user_id)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('p2q_view_project')
@@ -248,6 +259,10 @@ class Project
 
     public function countOwnProjects($user_id): int
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select();
         $select->from('p2q_view_project')
@@ -261,11 +276,19 @@ class Project
 
     public function fetchAssignedProjects($user_id)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         return $this->p2q_view_project->select(['shared_id' => $user_id])->toArray();
     }
 
     public function countAssignedProjects($user_id)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select();
         $select->from('p2q_view_project')
@@ -279,6 +302,10 @@ class Project
 
     public function fetchOtherUsersProjects($user_id, $company_id = DEFAULT_COMPANY)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('p2q_view_project')
@@ -294,6 +321,10 @@ class Project
 
     public function countOtherUsersProjects($user_id, $company_id = DEFAULT_COMPANY)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select();
         $select->from('p2q_view_project')
@@ -340,7 +371,7 @@ class Project
 
     public function fetchQuoteByProject($project_id)
     {
-        if (!$project_id) {
+        if (!InputValidator::isValidId($project_id)) {
             return false;
         }
 
@@ -358,8 +389,8 @@ class Project
 
     public function QuoteCountByProject($project_id)
     {
-        if (!$project_id) {
-            return 0;
+        if (!InputValidator::isValidId($project_id)) {
+            return false;
         }
 
         $sql = new Sql($this->adapter);
@@ -375,6 +406,10 @@ class Project
 
     public function countAllCompleteProjects($admin, $user_id)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select();
         $select->from('p2q_view_project')
@@ -392,6 +427,10 @@ class Project
 
     public function countActiveProjects($admin, $user_id)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select();
         $select->from('p2q_view_project')

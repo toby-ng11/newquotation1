@@ -3,6 +3,8 @@
 namespace Application\Model;
 
 use Application\Service\UserService;
+use Application\Helper\InputValidator;
+
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\{Sql, Expression};
 use Laminas\Db\TableGateway\TableGateway;
@@ -47,8 +49,8 @@ class Architect
 
     public function add($data)
     {
-        if (!$data) {
-            return  false;
+        if (!InputValidator::isValidData($data)) {
+            return false;
         }
 
         $user = $this->getUserService()->getCurrentUser();
@@ -80,7 +82,7 @@ class Architect
 
     public function edit($data, $id)
     {
-        if (!$data || !$id) {
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -112,7 +114,7 @@ class Architect
 
     public function delete($id)
     {
-        if (!$id) {
+        if (!InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -139,6 +141,10 @@ class Architect
 
     public function fetchArchitectById($id, $company = DEFAULT_COMPANY)
     {
+        if (!InputValidator::isValidId($id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('architect')
@@ -164,6 +170,10 @@ class Architect
 
     public function fetchArchitectByPattern($admin, $pattern, $user_id, $limit = 10, $company = DEFAULT_COMPANY)
     {
+        if (!InputValidator::isValidData($user_id) || !InputValidator::isValidPattern($pattern)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select('architect')  // can use TableGateway instead
             ->where(['company_id' => $company])
@@ -186,6 +196,10 @@ class Architect
 
     public function fetchAllTable($admin, $user_id)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select('p2q_view_architect');
 
@@ -200,6 +214,10 @@ class Architect
 
     public function countAllArchitects($admin, $user_id)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select();
         $select->from('p2q_view_architect')
@@ -216,6 +234,10 @@ class Architect
 
     public function fetchTopFiveTable($user_id)
     {
+        if (!InputValidator::isValidData($user_id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
         $select = $sql->select('p2q_view_architect_ranking')
             ->where(['owner_id' => $user_id])
@@ -229,6 +251,10 @@ class Architect
 
     public function fetchProjectsByArchitect($id)
     {
+        if (!InputValidator::isValidId($id)) {
+            return false;
+        }
+
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('p2q_view_project')

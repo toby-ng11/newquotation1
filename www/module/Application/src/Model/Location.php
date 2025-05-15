@@ -2,6 +2,8 @@
 
 namespace Application\Model;
 
+use Application\Helper\InputValidator;
+
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\Select;
 
@@ -31,9 +33,9 @@ class Location
 
     public function fetchLocationIdFromCompany($company_id)
 	{
-		if ($company_id == null) {
-			return false;
-		}
+		if (!InputValidator::isValidData($company_id)) {
+            return false;
+        }
 
 		$select = $this->location->getSql()->select()
         ->columns(['location_id'])
