@@ -35,10 +35,10 @@
 	# Gallery
 	# Buttons
 	# Content widgets
-	# Progress bars	
-	# Tables 
+	# Progress bars
+	# Tables
     # Pagination
-	# Form styles	
+	# Form styles
 	# Footer
 	# Other plugin styles*/
 
@@ -178,10 +178,6 @@ body {
 	scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
 	display: flex;
 	flex-direction: column;
-
-	&:not(textarea) {
-		transition: all 0.3s ease-in-out;
-	}
 
 	&.noscroll {
 		overflow: hidden;

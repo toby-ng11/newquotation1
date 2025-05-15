@@ -27,6 +27,7 @@
     "htmx-ext-head-support": "^2.0.4",
     "htmx.org": "^2.0.4",
     "lucide-vue-next": "^0.468.0",
+    "motion-v": "^1.1.0-alpha.1",
     "reka-ui": "^2.2.1",
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.6",

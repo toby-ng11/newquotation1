@@ -8735,10 +8735,10 @@ tr.el-finder-droppable td.icon p {
 	# Gallery
 	# Buttons
 	# Content widgets
-	# Progress bars	
-	# Tables 
+	# Progress bars
+	# Tables
     # Pagination
-	# Form styles	
+	# Form styles
 	# Footer
 	# Other plugin styles*/
 :root {
@@ -8860,9 +8860,6 @@ body {
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-bg);
   display: flex;
   flex-direction: column;
-}
-body:not(textarea) {
-  transition: all 0.3s ease-in-out;
 }
 body.noscroll {
   overflow: hidden;
