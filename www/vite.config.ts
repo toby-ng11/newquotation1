@@ -24,6 +24,7 @@ export default defineConfig({
     build: {
         outDir: '../../public/build', // Where to output compiled files
         sourcemap: true,
+        manifest: true,
         emptyOutDir: true,
         rollupOptions: {
             input: {
@@ -34,8 +35,12 @@ export default defineConfig({
                 assetFileNames: '[name].css',
                 manualChunks: {
                     vue: ['vue'],
+                    chart: ['chart.js'],
+                    datatable: ['datatables.net-dt', 'datatables.net-fixedcolumns-dt', 'datatables.net-responsive-dt'],
+                    reka: ['reka-ui'],
+                    motion: ['motion-v'],
                 },
-                chunkFileNames: '[name].js',
+                //chunkFileNames: '[name].js',
             },
         },
     },

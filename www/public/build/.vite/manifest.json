@@ -1,0 +1,51 @@
+{
+  "../css/fonts/Inter.var.woff2": {
+    "file": "Inter.var.css",
+    "src": "../css/fonts/Inter.var.woff2"
+  },
+  "_chart-D9pPdUH-.js": {
+    "file": "assets/chart-D9pPdUH-.js",
+    "name": "chart"
+  },
+  "_datatable-Dr1wSyFx.js": {
+    "file": "assets/datatable-Dr1wSyFx.js",
+    "name": "datatable"
+  },
+  "_motion-DaTo-bsL.js": {
+    "file": "assets/motion-DaTo-bsL.js",
+    "name": "motion",
+    "imports": [
+      "_vue-8UORLYLr.js"
+    ]
+  },
+  "_reka-CiaYVfCw.js": {
+    "file": "assets/reka-CiaYVfCw.js",
+    "name": "reka",
+    "imports": [
+      "_vue-8UORLYLr.js"
+    ]
+  },
+  "_vue-8UORLYLr.js": {
+    "file": "assets/vue-8UORLYLr.js",
+    "name": "vue"
+  },
+  "p2q.ts": {
+    "file": "main.js",
+    "name": "main",
+    "src": "p2q.ts",
+    "isEntry": true,
+    "imports": [
+      "_datatable-Dr1wSyFx.js",
+      "_chart-D9pPdUH-.js",
+      "_vue-8UORLYLr.js",
+      "_motion-DaTo-bsL.js",
+      "_reka-CiaYVfCw.js"
+    ],
+    "css": [
+      "main.css"
+    ],
+    "assets": [
+      "Inter.var.css"
+    ]
+  }
+}

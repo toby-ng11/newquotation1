@@ -1,5 +1,6 @@
 <?php echo $this->doctype() ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="light">
+
 <head>
 
     <?php echo $this->headTitle('P2Q')->setSeparator(' - ')->setAutoEscape(false) ?>
@@ -15,7 +16,7 @@
     <link href="/css/index.css" rel="stylesheet">
     <link href="/build/main.css" rel="stylesheet">
     <link href="/build/Inter.var.css" rel="stylesheet">
-    <?php //echo $this->headLink(); 
+    <?php //echo $this->headLink();
     ?>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -106,8 +107,15 @@
             </div>
         </div>
     </div>
-    <script type="module" src="/build/main.js"></script>
-    <script type="module" src="/build/vue.js"></script>
+    <?php
+    $manifest = json_decode(file_get_contents('public/build/.vite/manifest.json'), true);
+    $appScript = $manifest['resources/js/app.js']['file'];
+    $appCss = $manifest['resources/js/app.js']['css'][0] ?? null;
+    ?>
+    <?php if ($appCss): ?>
+        <link rel="stylesheet" href="/build/<?= $appCss ?>">
+    <?php endif; ?>
+    <script type="module" src="/build/<?= $appScript ?>"></script>
 </body>
 
 <!-- Footer -->
