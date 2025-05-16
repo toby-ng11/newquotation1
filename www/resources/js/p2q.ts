@@ -17,11 +17,6 @@ import { showLoadedFlashMessage } from "@/components/flashmessage";
 import { initNote } from "@/components/Alpine/modal/NoteModal";
 import { initSidebarToggle } from "@/components/SideBar";
 
-import { createApp } from 'vue';
-import CreateArchitectModal from '@/components/CreateArchitectModal.vue';
-
-createApp(CreateArchitectModal).mount('#vue-root');
-
 initAlpine();
 
 document.addEventListener("DOMContentLoaded", () => {

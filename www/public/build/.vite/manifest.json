@@ -29,6 +29,17 @@
     "file": "assets/vue-8UORLYLr.js",
     "name": "vue"
   },
+  "app.ts": {
+    "file": "vueapp.js",
+    "name": "vueapp",
+    "src": "app.ts",
+    "isEntry": true,
+    "imports": [
+      "_vue-8UORLYLr.js",
+      "_motion-DaTo-bsL.js",
+      "_reka-CiaYVfCw.js"
+    ]
+  },
   "p2q.ts": {
     "file": "main.js",
     "name": "main",
@@ -36,10 +47,7 @@
     "isEntry": true,
     "imports": [
       "_datatable-Dr1wSyFx.js",
-      "_chart-D9pPdUH-.js",
-      "_vue-8UORLYLr.js",
-      "_motion-DaTo-bsL.js",
-      "_reka-CiaYVfCw.js"
+      "_chart-D9pPdUH-.js"
     ],
     "css": [
       "main.css"

@@ -1,4 +1,30 @@
-<?php echo $this->doctype() ?>
+<?php echo $this->doctype();
+$manifestPath = __DIR__ . '/../../../../public/build/.vite/manifest.json'; // adjust path
+if (!$manifestPath || !file_exists($manifestPath)) {
+    throw new \RuntimeException('Vite manifest file not found: ' . $manifestPath);
+}
+$manifest = json_decode(file_get_contents($manifestPath), true);
+
+function vite_asset(string $entry, array $manifest): string
+{
+    if (!isset($manifest[$entry])) return '';
+
+    $html = '';
+    $entryInfo = $manifest[$entry];
+
+    // Load CSS
+    if (!empty($entryInfo['css'])) {
+        foreach ($entryInfo['css'] as $css) {
+            $html .= '<link rel="stylesheet" href="/build/' . $css . '">' . PHP_EOL;
+        }
+    }
+
+    // Load main JS
+    $html .= '<script type="module" src="/build/' . $entryInfo['file'] . '"></script>' . PHP_EOL;
+
+    return $html;
+}
+?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="light">
 
 <head>
@@ -45,8 +71,6 @@
     <script type="text/javascript" src="/js/plugins/forms/jquery.maskedinput.min.js"></script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-    <?php //echo $this->headScript();
-    ?>
     <script>
         (function() {
             const theme = localStorage.getItem("theme");
@@ -107,15 +131,9 @@
             </div>
         </div>
     </div>
-    <?php
-    $manifest = json_decode(file_get_contents('public/build/.vite/manifest.json'), true);
-    $appScript = $manifest['resources/js/app.js']['file'];
-    $appCss = $manifest['resources/js/app.js']['css'][0] ?? null;
-    ?>
-    <?php if ($appCss): ?>
-        <link rel="stylesheet" href="/build/<?= $appCss ?>">
-    <?php endif; ?>
-    <script type="module" src="/build/<?= $appScript ?>"></script>
+
+    <?= vite_asset('p2q.ts', $manifest) ?>
+    <?= vite_asset('app.ts', $manifest) ?>
 </body>
 
 <!-- Footer -->

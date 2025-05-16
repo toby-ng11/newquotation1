@@ -29,6 +29,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: path.resolve(__dirname, 'resources/js/p2q.ts'),
+                vueapp: path.resolve(__dirname, 'resources/js/app.ts'),
             },
             output: {
                 entryFileNames: '[name].js',
