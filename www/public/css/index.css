@@ -8797,7 +8797,7 @@ tr.el-finder-droppable td.icon p {
   --z-index-a11y: 10000;
   --z-index-modal-content: 801;
   --z-index-modal-overlay: 800;
-  --z-index-main-header: 700;
+  --z-index-main-header: 45;
   --z-index-sidebar-mobile: 600;
   --z-index-mid: 500;
   --z-index-nav-menu: 200;
