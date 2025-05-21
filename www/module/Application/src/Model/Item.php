@@ -228,7 +228,7 @@ class Item
 
     public function fetchItemPrice($item_id, $uom, $fromP21, $sheetType = '', $location = DEFAULT_LOCATION_ID)
     {
-        if (!InputValidator::isValidData($item_id) || !InputValidator::isValidData($uom)) {
+        if (!InputValidator::isValidData($item_id)) {
             return false;
         }
 
@@ -307,12 +307,18 @@ class Item
         switch ($sheetType) {
             case 'project':
                 $select = $this->project_items->getSql()->select()
-                    ->where(['project_id' => $id]);
+                    ->where([
+                        'project_id' => $id,
+                        'delete_flag' => 'N'
+                    ]);
                 return $this->project_items->selectWith($select)->toArray();
                 break;
             case 'quote':
                 $select = $this->quote_items->getSql()->select()
-                    ->where(['quote_id' => $id]);
+                    ->where([
+                        'quote_id' => $id,
+                        'delete_flag' => 'N'
+                    ]);
                 return $this->quote_items->selectWith($select)->toArray();
                 break;
             default:

@@ -29,7 +29,7 @@ class Address
 
         $info = [
             'architect_id'          => $architectID,
-            'name'                  => trim($data['address_name']),
+            'name'                  => empty(trim($data['address_name'])) ? trim($data['phys_address1']) : trim($data['address_name']),
             'phys_address1'         => trim($data['phys_address1']),
             'phys_address2'         => trim($data['phys_address2']),
             'phys_city'             => trim($data['phys_city']),
@@ -60,7 +60,7 @@ class Address
 
         $info = [
             //'architect_id'          => $architectID,
-            'name'                  => trim($data['address_name']),
+            'name'                  => empty(trim($data['address_name'])) ? trim($data['phys_address1']) : trim($data['address_name']),
             'phys_address1'         => trim($data['phys_address1']),
             'phys_address2'         => trim($data['phys_address2']),
             'phys_city'             => trim($data['phys_city']),

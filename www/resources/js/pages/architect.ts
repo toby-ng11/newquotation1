@@ -100,10 +100,4 @@ export function initArchitect() {
       }
     });
   });
-
-  document.getElementById("widget-btn-add-architect")?.addEventListener("click", () => {
-    if (window.openCreateArchitectModal) {
-      window.openCreateArchitectModal();
-    }
-  });
 }

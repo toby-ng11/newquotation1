@@ -127,7 +127,7 @@
 	--sticky-header-without-actions-height: calc(var(--top-nav-height) + 1px);
 	--sticky-header-with-actions-height: calc(var(--sticky-header-without-actions-height) + var(--article-actions-container-height) + 1px);
 
-	font-size: 14px;
+	//font-size: 1rem;
 }
 
 @media screen and (min-width: $screen-md) {
@@ -450,11 +450,6 @@ u {
 	}
 }
 
-p {
-	margin: 1rem 0 2rem;
-}
-
-
 .tag-sent {
 	color: #fff;
 	background: #4caf50;
@@ -463,8 +458,6 @@ p {
 	font-size: 0.75em;
 	margin-left: 6px;
 }
-
-
 
 /* Media queries */
 @media screen and (min-width: 769px) {

@@ -201,12 +201,12 @@ class ItemController extends AbstractActionController
             return new JsonModel(['error' => 'Pattern is required']);
         }
 
-        $uom = $this->item->fetchItemPrice($item_id, $uom, true);
+        $price = $this->item->fetchItemPrice($item_id, $uom, true);
 
-        return new JsonModel($uom);
+        return new JsonModel($price);
     }
 
-    // Fetch custom price from Quotation
+    // Fetch saved price from Quotation
     public function quotedpriceAction()
     {
         $item_uid = $this->params()->fromQuery('item_uid', null);
@@ -216,8 +216,8 @@ class ItemController extends AbstractActionController
             return new JsonModel(['error' => 'Pattern is required']);
         }
 
-        $uom = $this->item->fetchItemPrice($item_uid, null, false, $sheetType);
+        $price = $this->item->fetchItemPrice($item_uid, null, false, $sheetType);
 
-        return new JsonModel($uom);
+        return new JsonModel($price);
     }
 }

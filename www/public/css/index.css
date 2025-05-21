@@ -4802,10 +4802,6 @@ h6 code {
   font-size: inherit;
 }
 
-p {
-  margin: 1rem 0 2rem;
-}
-
 header p {
   margin: 0;
   font-size: 1.25rem;
@@ -5809,10 +5805,6 @@ kbd {
   transform: translateX(4px);
 }
 
-form label {
-  font-size: calc(100% + 1px);
-  color: var(--text-secondary);
-}
 form input[type=text], form input[type=password], form input[type=url], form input[type=tel], form textarea, form select {
   font-size: inherit;
   font-family: inherit;
@@ -8815,7 +8807,6 @@ tr.el-finder-droppable td.icon p {
   --icon-size: 1rem;
   --sticky-header-without-actions-height: calc(var(--top-nav-height) + 1px);
   --sticky-header-with-actions-height: calc(var(--sticky-header-without-actions-height) + var(--article-actions-container-height) + 1px);
-  font-size: 14px;
 }
 
 @media screen and (min-width: 769px) {
@@ -9102,10 +9093,6 @@ u {
 }
 .pageTitle .section-content p:last-child {
   margin-bottom: 2rem;
-}
-
-p {
-  margin: 1rem 0 2rem;
 }
 
 .tag-sent {
