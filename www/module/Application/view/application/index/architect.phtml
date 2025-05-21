@@ -29,25 +29,25 @@ if ($hour >= 5 && $hour < 12) {
     <section class="features fade-in-up architect-page">
         <div class="widget-information architect-dashboard row-1">
             <a href="#" class="feature fade-in-up col-1">
-                <p class="widget-text-head">Total architect
+                <p class="widget-text-head text-base">Total architect
                 </p>
                 <h2 class="widget-text-bold"><?= $this->escapeHtml($totalArchitects) ?></h2>
             </a>
 
             <a href="#" class="feature fade-in-up col-2">
-                <p class="widget-text-head">Active projects
+                <p class="widget-text-head text-base">Active projects
                 </p>
                 <h2 class="widget-text-bold"><?= $this->escapeHtml($totalActiveProjects) ?></h2>
             </a>
 
             <a href="#" class="feature fade-in-up col-3">
-                <p class="widget-text-head">Pending quotes
+                <p class="widget-text-head text-base">Pending quotes
                 </p>
                 <h2 class="widget-text-bold">0</h2>
             </a>
 
             <a href="#" class="feature fade-in-up col-4">
-                <p class="widget-text-head">Completed projects
+                <p class="widget-text-head text-base">Completed projects
                 </p>
                 <h2 class="widget-text-bold"><?= $this->escapeHtml($totalCompleteProjects) ?></h2>
             </a>
@@ -55,7 +55,7 @@ if ($hour >= 5 && $hour < 12) {
 
         <div class="widget-information architect-dashboard row-2">
             <a href="#" class="feature fade-in-up col-1">
-                <p class="widget-text-head">
+                <p class="widget-text-head text-base">
                     Top 5 architects
                 </p>
                 <table cellpadding="0" cellspacing="0" width="100%" class="sTable wTable display nowrap" id="top-5-architect-table" data-init="architectTop5">
@@ -69,19 +69,19 @@ if ($hour >= 5 && $hour < 12) {
             </a>
 
             <a href="#" class="feature fade-in-up col-2">
-                <p class="widget-text-head">Architect category
+                <p class="widget-text-head text-base">Architect category
                 </p>
                 <canvas class="chart" id="architectPieChart" width="100px" height="100px"></canvas>
             </a>
 
             <a href="#" class="feature fade-in-up col-3">
-                <p class="widget-text-head">Recent activities
+                <p class="widget-text-head text-base mb-4">Recent activities
                 </p>
-                <p>John Doe created a new Project #1024<br>
+                <p class="text-sm">John Doe created a new Project #1024<br>
                     <span style="font:italic">(2 minutes ago)</span>
                 </p>
-                <div class="line"></div>
-                <p>Jane Smith updated Project #1023<br>
+                <div class="line mt-4 mb-4"></div>
+                <p class="text-sm">Jane Smith updated Project #1023<br>
                     <span style="font:italic">(5 minutes ago)</span>
                 </p>
             </a>
