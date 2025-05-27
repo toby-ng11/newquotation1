@@ -2065,14 +2065,6 @@ a.ui-button:active,
   cursor: help;
 }
 
-@font-face {
-  font-display: swap;
-  font-family: "Inter";
-  font-stretch: 75% 100%;
-  font-style: oblique 0deg 20deg;
-  font-weight: 1 999;
-  src: url("../../css/fonts/Inter.var.woff2") format("woff2 supports variations"), url("../../css/fonts/Inter.var.woff2") format("woff2-variations");
-}
 body,
 :root {
   --mdn-color-white: #fff;
@@ -4236,7 +4228,7 @@ button,
   --button-bg-active: var(--button-primary-active);
   --button-border-color: var(--button-primary-default);
   --button-focus-effect: var(--focus-effect);
-  --button-height: var(--form-elem-height, 2rem);
+  --button-height: var(--form-elem-height, 1rem);
   --button-color: var(--background-primary);
   --button-font: var(--type-emphasis-m);
   --button-padding: 0.5rem;
@@ -4321,7 +4313,7 @@ button,
 }
 
 .widget-footer-button .button.small {
-  --button-height: 3rem;
+  --button-height: 2rem;
 }
 
 /* Secondary Version */
@@ -5162,14 +5154,15 @@ kbd {
   margin-bottom: 1rem;
 }
 .options-menu .icon {
-  height: 2.5rem;
-  width: 2.5rem;
+  height: 2rem;
+  width: 2rem;
 }
 
 .sidebar-container {
   z-index: 1;
   position: absolute;
-  width: 9rem;
+  font-size: 0.875rem;
+  width: 7rem;
   right: 0;
   display: flex;
   flex-direction: column;
@@ -5861,7 +5854,7 @@ input[readonly], input[disabled] {
   margin-top: 2rem;
   margin-bottom: 2rem;
   /* clear: both; */
-  padding: 1.5rem 2rem 2rem 2rem;
+  padding: 1.5rem;
   position: relative;
   border-radius: 15px;
   box-shadow: var(--widget-box-shadow);
@@ -5914,7 +5907,6 @@ input[readonly], input[disabled] {
 }
 .widget-table .widget-section {
   margin-top: 1rem;
-  margin-bottom: 1rem;
 }
 .widget-table .row-button {
   display: flex;
@@ -5987,7 +5979,7 @@ input[readonly], input[disabled] {
   display: none;
 }
 .widget-table .widget-footer {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 .widget-table .widget-footer .widget-footer-button {
   display: flex;
@@ -5998,9 +5990,8 @@ input[readonly], input[disabled] {
 .widget-table .widget-footer .widget-footer-button .button-wrap {
   border-radius: 15px;
   box-shadow: var(--widget-box-shadow);
-  padding: 0.5rem 2rem;
+  padding: 0.5rem 1.5rem;
   transition: all 0.3s ease-in-out;
-  font-size: calc(100% + 2px);
 }
 .widget-table .widget-footer .widget-footer-button .button-wrap::after:not(:disabled) {
   content: "";
@@ -6188,9 +6179,21 @@ input[readonly], input[disabled] {
   margin: 0;
 }
 
-.dt-container .dt-layout-row {
-  display: flex;
-  flex-direction: row;
+.dt-container .dt-layout-row .dt-length .dt-input, .dt-container .dt-layout-row .dt-length label {
+  font-size: 0.7rem;
+}
+.dt-container .dt-layout-row .dt-paging .dt-paging-button {
+  font-size: 0.7rem;
+}
+.dt-container .dt-layout-row .dt-info {
+  font-size: 0.7rem;
+}
+.dt-container .dt-search {
+  font-size: 0.7rem;
+}
+.dt-container .dt-search input {
+  width: 10rem;
+  height: 1.5rem;
 }
 
 .footer {
@@ -8701,13 +8704,6 @@ tr.el-finder-droppable td.icon p {
 	# Other plugin styles*/
 :root {
   /*Typography*/
-  --font-fallback: BlinkMacSystemFont,
-  	"Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-  	"Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  --font-body: Inter, var(--font-fallback);
-  --font-heading: Inter, var(--font-fallback);
-  --font-code: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
-  	monospace;
   --base-font-size: 100%;
   --base-line-height: 1.2;
   --intermediate-line-height: 1.5;

@@ -296,7 +296,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>My Projects</h2><p>' + window.ownTableCount + ' projects';
+                    info.innerHTML = '<h2>My Projects</h2><p class="text-[0.7rem]">' + window.ownTableCount + ' projects</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -391,7 +391,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>Shared Projects</h2>' + window.assignTableCount + ' shared projects';
+                    info.innerHTML = '<h2>Shared Projects</h2><p class="text-[0.7rem]">' + window.assignTableCount + ' shared projects</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -486,7 +486,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>Other Projects At <?= $company ?></h2><p>' + window.otherTableCount + ' projects at <?= $company ?>';
+                    info.innerHTML = '<h2>Other user projects</h2><p class="text-[0.7rem]">' + window.otherTableCount + ' projects</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -587,7 +587,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>My Quotes</h2>' + window.quoteTableCount + ' quotes';
+                    info.innerHTML = '<h2>My Quotes</h2><p class="text-[0.7rem]">' + window.quoteTableCount + ' quotes</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -647,7 +647,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>Follow Up Notes</h2>' + window.noteTableCount + ' notes';
+                    info.innerHTML = '<h2>Follow Up Notes</h2><p class="text-[0.7rem]">' + window.noteTableCount + ' notes</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -1235,6 +1235,8 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: null,
                 topEnd: null,
+                bottomStart: null,
+                bottomEnd: 'info',
             },
             order: [[7, 'desc']], // sort by item uid, newest item on top
             paging: false,
@@ -1326,10 +1328,6 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ],
             order: [[0, 'desc']],
             scrollX: true,
-            layout: {
-                topStart: null,
-                topEnd: null,
-            },
         });
     },
     /* ------ ARCHITECT EDIT ------ */

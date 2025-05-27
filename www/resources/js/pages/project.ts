@@ -1,4 +1,4 @@
-import { setupAutoComplete } from '@/components/autocomplete';
+
 import { initAutoSave } from '@/components/AutoSave';
 import { disableButton } from '@/components/DisableButton';
 import { showFlashMessage } from '@/components/flashmessage';
@@ -18,7 +18,9 @@ const awardedContractorInput = document.querySelector('#awarded_contractor_name'
 
 const saveButton = document.getElementById('form-btn-save-project') as HTMLButtonElement;
 
-export function initProject() {
+async function initProject() {
+    const { setupAutoComplete } = await import('@/components/autocomplete');
+
     if (projectForm && projectForm.dataset.page === 'edit') {
         initAutoSave(projectForm, () => saveProject(true));
     }
@@ -141,7 +143,7 @@ export function initProject() {
     }
 }
 
-export async function saveProject(isAutoSave = false) {
+async function saveProject(isAutoSave = false) {
     if (!projectForm.checkValidity()) {
         projectForm.reportValidity();
         return;
@@ -190,7 +192,8 @@ export async function saveProject(isAutoSave = false) {
 
 let isProjectArchitectFormSaved = true;
 
-function initArchitectForm() {
+async function initArchitectForm() {
+    const { setupAutoComplete } = await import('@/components/autocomplete');
     let architectFields = document.querySelectorAll(
         '#architect_name, #architect_id, #architect_company_id, #architect_rep_id,#architect_type_id, #architect_class_id',
     ) as NodeListOf<HTMLInputElement>;
@@ -439,6 +442,7 @@ function initArchitectForm() {
     const architectIDField = document.getElementById('architect_id') as HTMLInputElement;
 
     if (architectForm && architectIDField.value != '') {
+       (document.getElementById('architect_name') as HTMLInputElement).readOnly = true;
         initAutoSave(architectForm, () => saveProjectArchitectForm(true));
     }
 
@@ -508,4 +512,4 @@ async function saveProjectArchitectForm(isAutoSave = false) {
     }
 }
 
-export { initArchitectForm };
+export { initProject, initArchitectForm };

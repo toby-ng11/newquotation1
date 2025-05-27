@@ -1,6 +1,28 @@
 .dt-container {
     .dt-layout-row {
-        display: flex;
-        flex-direction: row;
+        .dt-length {
+            .dt-input, label {
+                font-size: 0.7rem;
+            }
+        }
+
+        .dt-paging {
+            .dt-paging-button {
+                font-size: 0.7rem;
+            }
+        }
+
+        .dt-info {
+            font-size: 0.7rem;
+        }
+    }
+
+    .dt-search {
+        font-size: 0.7rem;
+
+        input {
+            width: 10rem;
+            height: 1.5rem;
+        }
     }
 }

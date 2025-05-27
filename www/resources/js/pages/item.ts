@@ -2,7 +2,6 @@ import { projectID, sheetType } from "@/components/init";
 import { itemTable } from "@/components/ui/table/tables";
 import { resetForm } from "@/components/utils";
 import { showFlashMessage } from "@/components/flashmessage";
-import { setupAutoComplete } from "@/components/autocomplete";
 import { disableButton } from "@/components/DisableButton";
 
 let isEditItem = false;
@@ -15,7 +14,8 @@ const $uomDropdown = $("#uom");
 
 $uomDropdown.data("default-options", $uomDropdown.html());
 
-export function initItem() {
+async function initItem() {
+  const { setupAutoComplete } = await import('@/components/autocomplete');
   const uomDropdown = document.getElementById("uom");
   const itemForm = document.getElementById("dialog-item-form");
 
@@ -306,3 +306,5 @@ export function initItem() {
     }
   });
 }
+
+export { initItem }

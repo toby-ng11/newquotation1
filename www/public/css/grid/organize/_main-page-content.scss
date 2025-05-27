@@ -831,16 +831,16 @@ kbd {
   }
 
   .icon {
-    height: 2.5rem;
-    width: 2.5rem;
+    height: 2rem;
+    width: 2rem;
   }
 }
 
 .sidebar-container {
   z-index: 1;
   position: absolute;
-  //margin-top: 1rem;
-  width: 9rem;
+  font-size: 0.875rem;
+  width: 7rem;
   right: 0;
   display: flex;
   flex-direction: column;

@@ -13,7 +13,7 @@ button,
   --button-bg-active: var(--button-primary-active);
   --button-border-color: var(--button-primary-default);
   --button-focus-effect: var(--focus-effect);
-  --button-height: var(--form-elem-height, 2rem);
+  --button-height: var(--form-elem-height, 1rem);
   --button-color: var(--background-primary);
   --button-font: var(--type-emphasis-m);
   --button-padding: 0.5rem;
@@ -109,7 +109,7 @@ button,
 
 .widget-footer-button {
   .button.small {
-    --button-height: 3rem;
+    --button-height: 2rem;
   }
 }
 
