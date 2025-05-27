@@ -333,22 +333,13 @@ h3 {
 }
 
 h1 {
-  font: var(--type-heading-h1);
+  //font: var(--type-heading-h1);
   //margin-bottom: 1.5rem;
   word-break: break-word;
-
-  @media screen and (min-width: $screen-md) {
-    font: var(--type-heading-h1);
-  }
 }
 
 header + div {
   margin-top: 2rem;
-}
-
-h2 {
-  font: var(--type-heading-h2);
-  //margin: 0.5rem 0 0.5rem;
 }
 
 h3 {
@@ -363,12 +354,6 @@ h3 {
 h2 ~ div ~ h3,
 h2 ~ h3 {
   margin-top: 1rem;
-}
-
-h4 {
-  font: var(--type-heading-h4);
-  letter-spacing: 0.5px;
-  margin: 2rem 0 1rem;
 }
 
 h5 {
@@ -393,14 +378,6 @@ h5,
 h6 {
   code {
     font-size: inherit;
-  }
-}
-
-header {
-  p {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 300;
   }
 }
 

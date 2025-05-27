@@ -157,6 +157,29 @@
     body {
         @apply bg-background text-foreground;
     }
+
+    h1 {
+        font-size: var(--text-4xl);
+        font-weight: bold;
+    }
+
+    h2 {
+        font-size: var(--text-3xl);
+        font-weight: bold;
+    }
+
+    h3 {
+        font-size: var(--text-2xl);
+        font-weight: bold;
+    }
+
+    h4 {
+        font-size: var(--text-xl);
+    }
+
+    table {
+        font-size: 13px;
+    }
 }
 
 .input-base {

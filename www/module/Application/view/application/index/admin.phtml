@@ -22,11 +22,11 @@ if ($hour >= 5 && $hour < 12) {
         <h1>
             <?= $this->escapeHtml($greeting) ?>, <?= $this->escapeHtml($user['first_name']) ?>!
         </h1>
-        <p>Here's all projects and quotes</p>
+        <p class="font-light">Here's all projects and quotes</p>
     </header>
 
     <section class="fade-in-up" aria-labelledby="all_projects">
-        <div class="widget-table">
+        <div class="widget-table in-line">
             <table width="100%" class="sTable display nowrap" id="admin-project-table" data-init="adminProject">
                 <thead>
                     <tr>
@@ -48,7 +48,7 @@ if ($hour >= 5 && $hour < 12) {
     </section>
 
     <section class="fade-in-up" aria-labelledby="all_quotes">
-        <div class="widget-table">
+        <div class="widget-table in-line">
             <table width="100%" class="sTable display nowrap" id='admin-quote-table' data-init="adminQuote">
                 <thead>
                     <tr>

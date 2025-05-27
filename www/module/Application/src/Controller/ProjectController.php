@@ -233,6 +233,61 @@ class ProjectController extends AbstractActionController
         ]);
     }
 
+    public function editarchitectAction()
+    {
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $project_id = (int) $this->params()->fromRoute('id');
+            $data = $this->params()->fromPost();
+
+            if (!$project_id) {
+                return new JsonModel(['success' => false, 'message' => 'Invalid project ID']);
+            }
+
+            $result = $this->project->editArchitect($data, $project_id);
+
+            // Fallback if accessed normally (non-AJAX)
+            if ($result) {
+                if ($this->getRequest()->isXmlHttpRequest()) {
+                    $isAutoSave = $this->getRequest()->getHeader('X-Auto-Save')?->getFieldValue() === 'true';
+
+                    if (!$isAutoSave) {
+                        $this->flashMessenger()->addSuccessMessage("Project saved successfully!");
+                    }
+
+                    return new JsonModel([
+                        'success' => true,
+                        'message' => 'Project saved successfully.',
+                        'redirect' => $this->url()->fromRoute('project', [
+                            'action' => 'edit',
+                            'id' => $project_id
+                        ])
+                    ]);
+                }
+                return $this->redirect()->toRoute('project', [
+                    'action' => 'edit',
+                    'id' => $project_id
+                ]);
+            } else {
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonModel([
+                        'success' => false,
+                        'message' => 'Save failed. Please try again.',
+                        'redirect' => $this->url()->fromRoute('project', [
+                            'action' => 'edit',
+                            'id' => $project_id
+                        ])
+                    ]);
+                }
+                $this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
+                return $this->redirect()->toRoute('project', ['action' => 'edit', 'id' => $project_id]);
+            }
+        } else {
+            return $this->getResponse()->setStatusCode(404);
+        }
+    }
+
     public function deleteAction()
     {
         $project_id = (int) $this->params()->fromRoute('id');

@@ -8,7 +8,7 @@ import { runFadeInAnimation } from "@/components/FadeInAnimation";
 import { initSearchBox } from "@/components/ui/searchbox/searchbox";
 import { scrollOffset } from "@/components/scroll-offset";
 import { initItem } from "@/pages/item";
-import { initProject } from "@/pages/project";
+import { initArchitectForm, initProject } from "@/pages/project";
 import { initQuote, $dialogMakeQuote } from "@/pages/quote";
 import { initArchitect } from "@/pages/architect";
 import { initCharts } from "@/components/ui/chart/chart";
@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initItem();
   initNote();
   initProject();
+  initArchitectForm();
   initQuote();
   initArchitect();
   initCharts();

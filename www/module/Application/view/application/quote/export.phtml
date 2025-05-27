@@ -108,6 +108,10 @@
         #subtotal th {
             padding-top: 15px;
         }
+
+        #note {
+            margin-bottom: 10mm;
+        }
     </style>
 </head>
 
@@ -257,6 +261,17 @@
                 </tr>
             </thead>
         </table>
+
+        <?php if (!empty($quote['note'])): ?>
+        <table id="note" width='100%'>
+            <tr>
+                <td style="text-align:left">
+                    <strong>Note:</strong><br>
+                    <?= nl2br($this->escapeHtml($quote['note'])) ?>
+                </td>
+            </tr>
+        </table>
+        <?php endif; ?>
 
         <table id="footer" width='100%'>
             <tr>

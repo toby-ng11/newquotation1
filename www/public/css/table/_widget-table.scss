@@ -21,9 +21,10 @@
 	box-shadow: var(--widget-box-shadow);
 	transition: all 0.3s ease-in-out;
 
-	&.dashboard {
-		//clip-path: inset(0 round 15px);
-	}
+    &.in-line {
+        padding-top: 0.875rem;
+        padding-bottom: 1rem;
+    }
 
 	&:hover {
 		background: var(--widget-background-hover);
@@ -75,8 +76,8 @@
 	}
 
 	.widget-section {
-		margin-top: 1.5rem;
-		margin-bottom: 1.5rem;
+		margin-top: 1rem;
+		margin-bottom: 1rem;
 	}
 
 	.row-button {
@@ -141,10 +142,6 @@
 		font-weight: 600;
 	}
 
-	h4 {
-		margin-bottom: 1rem;
-	}
-
 	svg,
 	.svg {
 		display: none;
@@ -159,11 +156,11 @@
 	}
 
 	details {
-		padding: 1rem;
+		padding: 0.5rem;
 
 		&>summary {
-			font: var(--type-heading-h4);
-			font-weight: 600;
+			//font: rem;
+			font-weight: bold;
 			cursor: pointer;
 
 			&::-webkit-details-marker {

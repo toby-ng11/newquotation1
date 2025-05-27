@@ -1,9 +1,20 @@
-const loadingOverlay = document.querySelector(".loading") as HTMLElement;
+let loadingOverlay: HTMLElement | null;
 
-export function showLoading() {
-  loadingOverlay.style.display = "flex";
+function getLoadingOverlay() {
+    if (!loadingOverlay) {
+        loadingOverlay = document.querySelector('.loading') as HTMLElement | null;
+    }
+    return loadingOverlay;
 }
 
-export function hideLoading() {
-  loadingOverlay.style.display = "none";
+function showLoading() {
+    const overlay = getLoadingOverlay();
+    if (overlay) overlay.style.display = 'flex';
 }
+
+function hideLoading() {
+    const overlay = getLoadingOverlay();
+    if (overlay) overlay.style.display = 'none';
+}
+
+export { hideLoading, showLoading };

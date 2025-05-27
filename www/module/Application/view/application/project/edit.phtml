@@ -31,6 +31,7 @@ $projectRequiredDate = $project['require_date'];
 
     <header class="main-page-content-header">
         <h1>Edit Project</h1>
+        <p class="font-light">Editting project #<?= $this->escapeHtml($projectID) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
     </header>
 
     <!-- Form -->
@@ -148,210 +149,6 @@ $projectRequiredDate = $project['require_date'];
 
                 <div class="line"></div>
 
-                <details id="architect-details">
-                    <summary>Architect & Specifier</summary>
-                    <div class="widget-section">
-                        <div class="widget-header">
-                            <div class="widget-title">
-                                <h4>Architect</h4>
-                            </div>
-                            <div class="widget-button">
-                                <button type="button" title="Add new architect"
-                                    class="button action has-icon add-item-button small" id="add-architect-project-edit">
-                                    <span class="button-wrap">
-                                        <span class="icon icon-add"></span>
-                                        New Architect
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="formRow">
-                            <div class="oneTwo">
-                                <label for="architect_name">Architect Name</label>
-                                <input type='text' name="architect_name" id='architect_name' class="tipN"
-                                    original-title="Search by ID or Name" value='<?= $architect['architect_name']
-                                                                                        ?? '' ?>' />
-                                <input type="hidden" name='architect_id' id='architect_id' value="<?= $this->escapeHtml($architect['architect_id'] ?? '') ?>" />
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="architect_company_id">Company</label>
-                                <select id="architect_company_id" name="architect_company_id">
-                                    <?php foreach ($company as $l) { ?>
-                                        <option value="<?= $this->escapeHtml($l['company_id']) ?>" <?php if ($l['company_id'] === ($architect['company_id'] ?? DEFAULT_COMPANY)) echo 'selected' ?>>
-                                            <?= $this->escapeHtml($l['company_name']) ?>
-                                        </option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="architect_rep_id">Architect Representative</label>
-                                <input type="text" id="architect_rep_id" name="architect_rep_id"
-                                    value="<?= $this->escapeHtml($architect['architect_rep_id'] ?? '') ?>" />
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="architect_type_id">Architect Type</label>
-                                <select id="architect_type_id" name="architect_type_id">
-                                    <option value="">-- Choose architect type --</option>
-                                    <?php foreach ($this->architectType as $a) { ?>
-                                        <option value="<?= $this->escapeHtml($a['architect_type_id']) ?>" <?= $this->escapeHtml(($a['architect_type_id'] === ($architect['architect_type_id'] ?? '')) ? 'selected' : '') ?>><?= $this->escapeHtml($a['architect_type_desc']) ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="architect_class_id">Architect Class</label>
-                                <input type="text" id="architect_class_id" name="architect_class_id"
-                                    value="<?= $this->escapeHtml($architect['class_id'] ?? '') ?>">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="line"></div>
-
-                    <div class="widget-section">
-                        <h4>Address</h4>
-                        <div class="formRow">
-                            <input type="hidden" name='address_id' id='address_id' value="<?= $this->escapeHtml($address['address_id'] ?? '') ?>">
-                            <div class="oneTwo ">
-                                <label for="address_list">Address List</label>
-                                <select name='address_list' id='address_list'>
-                                    <?php
-                                    if (!empty($addressList)):
-                                        foreach ($addressList as $a): ?>
-                                            <option value="<?= $this->escapeHtml($a['address_id']) ?>" <?= ($a['address_id'] === $project['architect_address_id']) ? 'selected' : '' ?>>
-                                                <?= $this->escapeHtml($a['name']) ?>
-                                            </option>
-                                    <?php endforeach;
-                                    endif;
-                                    ?>
-                                    <option value="new">+ Add New Address</option>
-                                </select>
-                            </div>
-
-                            <div class="oneTwo ">
-                                <label for="address_name">Address Nickname</label>
-                                <input type='text' name="address_name" id='address_name'
-                                    value="<?= $this->escapeHtml($address['name'] ?? '') ?>">
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="phys_address1">Address 1</label>
-                                <input type='text' name="phys_address1" id='phys_address1'
-                                    value="<?= $this->escapeHtml($address['phys_address1'] ?? '') ?>" />
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="phys_address2">Address 2</label>
-                                <input type='text' name="phys_address2" id='phys_address2'
-                                    value="<?= $this->escapeHtml($address['phys_address2'] ?? '') ?>" placeholder="Optional" />
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="phys_city">City</label>
-                                <input type='text' name="phys_city" id='phys_city' value="<?= $this->escapeHtml($address['phys_city'] ?? '') ?>" placeholder="Optional" />
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="phys_state">Province</label>
-                                <input type='text' name="phys_state" id='phys_state'
-                                    value="<?= $this->escapeHtml($address['phys_state'] ?? '') ?>" placeholder="Optional" />
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="phys_postal_code">Postal Code</label>
-                                <input type='text' name="phys_postal_code" id='phys_postal_code'
-                                    value="<?= $this->escapeHtml($address['phys_postal_code'] ?? '') ?>" placeholder="Optional" />
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="phys_country">Country</label>
-                                <input type='text' name="phys_country" id='phys_country'
-                                    value="<?= $this->escapeHtml($address['phys_country'] ?? '') ?>" placeholder="Optional" />
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="central_phone_number">Company Phone Number</label>
-                                <input id='central_phone_number' name='central_phone_number' type="tel"
-                                    class="maskPhone" value="<?= $this->escapeHtml($address['central_phone_number'] ?? '') ?>"
-                                    placeholder="(123) 456-7890" />
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="email_address">Email</label>
-                                <input type="text" id='email_address' name='email_address'
-                                    value="<?= $this->escapeHtml($address['email_address'] ?? '') ?>" placeholder="Optional">
-                            </div>
-
-                            <div class="oneTwo">
-                                <label for="url">URL</label>
-                                <input type="url" id='url' name='url' value="<?= $this->escapeHtml($address['url'] ?? '') ?>" placeholder="Optional">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="line"></div>
-
-                    <div class="widget-section">
-                        <h4>Specifier</h4>
-                        <div class="formRow">
-                            <input type="hidden" id='specifier_id' name="specifier_id" value="<?= $this->escapeHtml($project['specifier_id']) ?>" />
-                            <input type="hidden" id='specifier_address_id' name="specifier_address_id"
-                                value="<?= $this->escapeHtml($specifier['address_id'] ?? '') ?>" />
-                            <div class="oneTwo ">
-                                <label for="specifier_name">Specifier</label>
-                                <select name='specifier_name' id='specifier_name'>
-                                    <?php
-                                    if (!empty($specifierList)):
-                                        foreach ($specifierList as $spec): ?>
-                                            <option value="<?= $this->escapeHtml($spec['specifier_id']) ?>" <?= ($spec['specifier_id'] === $project['specifier_id']) ? 'selected' : '' ?>>
-                                                <?= $spec['first_name'] . ' ' . $spec['last_name'] ?>
-                                            </option>
-                                    <?php endforeach;
-                                    endif;
-                                    ?>
-                                    <option value="new">+ Add New Specifier</option>
-                                </select>
-                            </div>
-
-                            <div class="oneTwo ">
-                                <label for="specifier_first_name">First Name</label>
-                                <input type='text' id='specifier_first_name' name="specifier_first_name"
-                                    class="tipN" value="<?= $this->escapeHtml($specifier['first_name'] ?? '') ?>" />
-                            </div>
-
-                            <div class="oneTwo ">
-                                <label for="specifier_last_name">Last Name</label>
-                                <input type='text' id='specifier_last_name' name="specifier_last_name"
-                                    placeholder="Optional" value="<?= $this->escapeHtml($specifier['last_name'] ?? '') ?>" />
-                            </div>
-
-                            <div class="oneTwo ">
-                                <label for="specifier_job_title">Job Title</label>
-                                <input type='text' id='specifier_job_title' name="specifier_job_title"
-                                    class="tipN" placeholder="Optional" value="<?= $this->escapeHtml($specifier['job_title'] ?? '') ?>" />
-                            </div>
-
-                            <div class="oneTwo ">
-                                <label for="specifier_phone_number">Phone Number</label>
-                                <input type='tel' id='specifier_phone_number' name="specifier_phone_number"
-                                    class="maskPhone" placeholder="(123) 456-7890" value="<?= $this->escapeHtml($specifier['central_phone_number'] ?? '') ?>" />
-                            </div>
-
-                            <div class="oneTwo ">
-                                <label for="specifier_email">Email</label>
-                                <input type='text' id='specifier_email' name="specifier_email" class="tipN"
-                                    placeholder="Optional" value="<?= $this->escapeHtml($specifierAddress['email_address'] ?? '') ?>" />
-                            </div>
-                        </div>
-                    </div>
-                </details>
-
-                <div class="line"></div>
-
                 <details id="contractor-details">
                     <summary>Contractor</summary>
                     <div class="widget-section">
@@ -399,6 +196,235 @@ $projectRequiredDate = $project['require_date'];
                 <?php } ?>
             </div>
         </form>
+    </section>
+
+    <section class="fade-in-up" aria-labelledby="architect-information">
+        <div class="widget-table">
+            <div class="widget-header">
+                <div class="widget-title">
+                    <h2>Architect Information</h2>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="widget-section">
+                <form action="/project/<?= $this->escapeHtml($projectID) ?>/editarchitect" method="post" class="form" id='project-architect-form' data-page="edit">
+                    <details id="architect-details">
+                        <summary>Architect & Specifier</summary>
+                        <div class="widget-section">
+                            <div class="widget-header">
+                                <div class="widget-title">
+                                    <h4>Architect</h4>
+                                </div>
+                                <div class="widget-button">
+                                    <button type="button" title="Add new architect"
+                                        class="button action has-icon add-item-button small" id="add-architect-project-edit">
+                                        <span class="button-wrap">
+                                            <span class="icon icon-add"></span>
+                                            New Architect
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="formRow">
+                                <div class="oneTwo">
+                                    <label for="architect_name">Architect Name</label>
+                                    <input type='text' name="architect_name" id='architect_name' class="tipN"
+                                        original-title="Search by ID or Name" value='<?= $architect['architect_name']
+                                                                                            ?? '' ?>' />
+                                    <input type="hidden" name='architect_id' id='architect_id' value="<?= $this->escapeHtml($architect['architect_id'] ?? '') ?>" />
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="architect_company_id">Company</label>
+                                    <select id="architect_company_id" name="architect_company_id">
+                                        <?php foreach ($company as $l) { ?>
+                                            <option value="<?= $this->escapeHtml($l['company_id']) ?>" <?php if ($l['company_id'] === ($architect['company_id'] ?? DEFAULT_COMPANY)) echo 'selected' ?>>
+                                                <?= $this->escapeHtml($l['company_name']) ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="architect_rep_id">Architect Representative</label>
+                                    <input type="text" id="architect_rep_id" name="architect_rep_id"
+                                        value="<?= $this->escapeHtml($architect['architect_rep_id'] ?? '') ?>" />
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="architect_type_id">Architect Type</label>
+                                    <select id="architect_type_id" name="architect_type_id">
+                                        <option value="">-- Choose architect type --</option>
+                                        <?php foreach ($this->architectType as $a) { ?>
+                                            <option value="<?= $this->escapeHtml($a['architect_type_id']) ?>" <?= $this->escapeHtml(($a['architect_type_id'] === ($architect['architect_type_id'] ?? '')) ? 'selected' : '') ?>><?= $this->escapeHtml($a['architect_type_desc']) ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="architect_class_id">Architect Class</label>
+                                    <input type="text" id="architect_class_id" name="architect_class_id"
+                                        value="<?= $this->escapeHtml($architect['class_id'] ?? '') ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="line"></div>
+
+                        <div class="widget-section">
+                            <h4>Address</h4>
+                            <div class="formRow">
+                                <input type="hidden" name='address_id' id='address_id' value="<?= $this->escapeHtml($address['address_id'] ?? '') ?>">
+                                <div class="oneTwo ">
+                                    <label for="address_list">Address List</label>
+                                    <select name='address_list' id='address_list'>
+                                        <?php
+                                        if (!empty($addressList)):
+                                            foreach ($addressList as $a): ?>
+                                                <option value="<?= $this->escapeHtml($a['address_id']) ?>" <?= ($a['address_id'] === $project['architect_address_id']) ? 'selected' : '' ?>>
+                                                    <?= $this->escapeHtml($a['name']) ?>
+                                                </option>
+                                        <?php endforeach;
+                                        endif;
+                                        ?>
+                                        <option value="new">+ Add New Address</option>
+                                    </select>
+                                </div>
+
+                                <div class="oneTwo ">
+                                    <label for="address_name">Address Nickname</label>
+                                    <input type='text' name="address_name" id='address_name'
+                                        value="<?= $this->escapeHtml($address['name'] ?? '') ?>">
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="phys_address1">Address 1</label>
+                                    <input type='text' name="phys_address1" id='phys_address1'
+                                        value="<?= $this->escapeHtml($address['phys_address1'] ?? '') ?>" />
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="phys_address2">Address 2</label>
+                                    <input type='text' name="phys_address2" id='phys_address2'
+                                        value="<?= $this->escapeHtml($address['phys_address2'] ?? '') ?>" placeholder="Optional" />
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="phys_city">City</label>
+                                    <input type='text' name="phys_city" id='phys_city' value="<?= $this->escapeHtml($address['phys_city'] ?? '') ?>" placeholder="Optional" />
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="phys_state">Province</label>
+                                    <input type='text' name="phys_state" id='phys_state'
+                                        value="<?= $this->escapeHtml($address['phys_state'] ?? '') ?>" placeholder="Optional" />
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="phys_postal_code">Postal Code</label>
+                                    <input type='text' name="phys_postal_code" id='phys_postal_code'
+                                        value="<?= $this->escapeHtml($address['phys_postal_code'] ?? '') ?>" placeholder="Optional" />
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="phys_country">Country</label>
+                                    <input type='text' name="phys_country" id='phys_country'
+                                        value="<?= $this->escapeHtml($address['phys_country'] ?? '') ?>" placeholder="Optional" />
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="central_phone_number">Company Phone Number</label>
+                                    <input id='central_phone_number' name='central_phone_number' type="tel"
+                                        class="maskPhone" value="<?= $this->escapeHtml($address['central_phone_number'] ?? '') ?>"
+                                        placeholder="(123) 456-7890" />
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="email_address">Email</label>
+                                    <input type="text" id='email_address' name='email_address'
+                                        value="<?= $this->escapeHtml($address['email_address'] ?? '') ?>" placeholder="Optional">
+                                </div>
+
+                                <div class="oneTwo">
+                                    <label for="url">URL</label>
+                                    <input type="url" id='url' name='url' value="<?= $this->escapeHtml($address['url'] ?? '') ?>" placeholder="Optional">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="line"></div>
+
+                        <div class="widget-section">
+                            <h4>Specifier</h4>
+                            <div class="formRow">
+                                <input type="hidden" id='specifier_id' name="specifier_id" value="<?= $this->escapeHtml($project['specifier_id']) ?>" />
+                                <input type="hidden" id='specifier_address_id' name="specifier_address_id"
+                                    value="<?= $this->escapeHtml($specifier['address_id'] ?? '') ?>" />
+                                <div class="oneTwo ">
+                                    <label for="specifier_name">Specifier</label>
+                                    <select name='specifier_name' id='specifier_name'>
+                                        <?php
+                                        if (!empty($specifierList)):
+                                            foreach ($specifierList as $spec): ?>
+                                                <option value="<?= $this->escapeHtml($spec['specifier_id']) ?>" <?= ($spec['specifier_id'] === $project['specifier_id']) ? 'selected' : '' ?>>
+                                                    <?= $spec['first_name'] . ' ' . $spec['last_name'] ?>
+                                                </option>
+                                        <?php endforeach;
+                                        endif;
+                                        ?>
+                                        <option value="new">+ Add New Specifier</option>
+                                    </select>
+                                </div>
+
+                                <div class="oneTwo ">
+                                    <label for="specifier_first_name">First Name</label>
+                                    <input type='text' id='specifier_first_name' name="specifier_first_name"
+                                        class="tipN" value="<?= $this->escapeHtml($specifier['first_name'] ?? '') ?>" />
+                                </div>
+
+                                <div class="oneTwo ">
+                                    <label for="specifier_last_name">Last Name</label>
+                                    <input type='text' id='specifier_last_name' name="specifier_last_name"
+                                        placeholder="Optional" value="<?= $this->escapeHtml($specifier['last_name'] ?? '') ?>" />
+                                </div>
+
+                                <div class="oneTwo ">
+                                    <label for="specifier_job_title">Job Title</label>
+                                    <input type='text' id='specifier_job_title' name="specifier_job_title"
+                                        class="tipN" placeholder="Optional" value="<?= $this->escapeHtml($specifier['job_title'] ?? '') ?>" />
+                                </div>
+
+                                <div class="oneTwo ">
+                                    <label for="specifier_phone_number">Phone Number</label>
+                                    <input type='tel' id='specifier_phone_number' name="specifier_phone_number"
+                                        class="maskPhone" placeholder="(123) 456-7890" value="<?= $this->escapeHtml($specifier['central_phone_number'] ?? '') ?>" />
+                                </div>
+
+                                <div class="oneTwo ">
+                                    <label for="specifier_email">Email</label>
+                                    <input type='text' id='specifier_email' name="specifier_email" class="tipN"
+                                        placeholder="Optional" value="<?= $this->escapeHtml($specifierAddress['email_address'] ?? '') ?>" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="line"></div>
+                        <div class="widget-footer">
+                            <div class="widget-footer-button">
+                                <button disabled id="form-btn-save-architect-project" type="submit" title="Save architect information"
+                                    class="button action save-architect-button small">
+                                    <span class="button-wrap">
+                                        <span class="icon icon-save"></span>
+                                        Save
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </details>
+                </form>
+            </div>
+        </div>
     </section>
 
     <section class="fade-in-up" aria-labelledby="quoted-items">
@@ -583,8 +609,8 @@ $projectRequiredDate = $project['require_date'];
                 <div class="line"></div>
                 <div class="modal-content">
                     <form id="dialog-note-form" @submit.prevent="submitForm">
-                        <div class="form-columns">
-                            <div class="col-1">
+                        <div class="form-columns grid grid-cols-[2fr_2px_1fr] gap-4">
+                            <div class="flex flex-col gap-4 mb-4">
                                 <h3>Note</h3>
                                 <input type="hidden" name="note_id" id="note_id">
                                 <div class="form-field required-field">
@@ -599,9 +625,9 @@ $projectRequiredDate = $project['require_date'];
                                 </div>
                             </div>
 
-                            <div class="line-vertical"></div>
+                            <div class="line-vertical w-[1px] bg-[#878787] opacity-[.28]"></div>
 
-                            <div class="col-2">
+                            <div class="flex flex-col gap-4 mb-4">
                                 <h3>Reminder</h3>
                                 <div class="form-field">
                                     <label for="next_action">Follow Up Note</label>

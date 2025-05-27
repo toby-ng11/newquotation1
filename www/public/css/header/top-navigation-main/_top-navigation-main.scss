@@ -129,7 +129,7 @@
 .main-nav {
 
   .top-level-entry-container {
-    width: 6rem;
+    width: 5rem;
   }
 
   .top-level-entry {
@@ -142,7 +142,7 @@
     width: 100%;
     justify-content: center;
     transition: all 0.3s ease-in-out;
-    
+
 
     &:link,
     &:visited {
@@ -213,7 +213,7 @@
 
 .nav-underline {
   position: absolute;
-  bottom: calc(100% - 4rem);
+  bottom: calc(100% - 3rem);
   height: 3px;
   background-color: var(--text-primary-blue);
   width: 0;

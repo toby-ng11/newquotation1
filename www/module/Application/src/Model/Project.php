@@ -145,6 +145,23 @@ class Project
             'due_date'              => !empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()')
         ];
 
+        try {
+            $this->project->update($info, ['project_id' => $project_id]);
+            return true;
+        } catch (Exception $e) {
+            error_log("Project/edit:Database Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function editArchitect($data, $project_id)
+    {
+        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($project_id)) {
+            return false;
+        }
+
+        $info = [];
+
         if (empty($data['architect_id']) && !empty($data['architect_name'])) {
             $info['architect_id'] = $this->getArchitect()->add($data);
         } else if (!empty($data['architect_id'])) {
