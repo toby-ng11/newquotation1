@@ -13,7 +13,7 @@ $sidebarTemplate = 'sidebar/default';
 
 <div class="sticky-header-container">
     <header class="top-navigation">
-        <div class="container-a">
+        <div class="container-a bg-widget-background ml-auto mr-auto flex w-full flex-col lg:flex-row justify-between gap-28 pt-2 pr-28 pb-2 pl-28">
             <div class="top-navigation-wrap">
                 <a href="https://devquotation.centura.local" class="logo w-[10rem]" aria-label="Centura Quotation homepage">
                     <svg id="centura-logo" width="200" height="20" viewBox="0 0 200 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" role="img">
@@ -37,7 +37,7 @@ $sidebarTemplate = 'sidebar/default';
                 </button>
             </div>
 
-            <nav class="main-nav text-[13px]" id="leftSide">
+            <nav class="main-nav text-[13px] hidden lg:flex" id="leftSide">
                 <ul id="menu" class="nav nav-wrapper" x-data="navUnderline()" x-init="init">
                     <?php if ($this->escapeHtml($user['p2q_system_role']) == 'admin') { ?>
                         <li class="top-level-entry-container">

@@ -18,7 +18,6 @@ export default defineConfig({
     esbuild: {
         jsx: 'automatic',
     },
-    assetsInclude: ['**/*.woff2'],
     build: {
         outDir: '../../public/build', // Where to output compiled files
         sourcemap: true,

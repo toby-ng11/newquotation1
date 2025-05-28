@@ -99,4 +99,4 @@ async function initArchitect() {
     });
 }
 
-export { initArchitect }
+export { initArchitect };

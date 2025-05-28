@@ -6,8 +6,8 @@
         "build:ssr": "vite build && vite build --ssr",
         "build-watch": "vite build --watch",
         "dev": "vite",
-        "format": "prettier --write resources/",
-        "format:check": "prettier --check resources/",
+        "format": "prettier --write resources/ module/Application/view/",
+        "format:check": "prettier --check resources/ module/Application/view/",
         "lint": "eslint . --fix"
     },
     "dependencies": {

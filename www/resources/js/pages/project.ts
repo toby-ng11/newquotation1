@@ -1,4 +1,3 @@
-
 import { initAutoSave } from '@/components/AutoSave';
 import { disableButton } from '@/components/DisableButton';
 import { showFlashMessage } from '@/components/flashmessage';
@@ -442,7 +441,7 @@ async function initArchitectForm() {
     const architectIDField = document.getElementById('architect_id') as HTMLInputElement;
 
     if (architectForm && architectIDField.value != '') {
-       (document.getElementById('architect_name') as HTMLInputElement).readOnly = true;
+        (document.getElementById('architect_name') as HTMLInputElement).readOnly = true;
         initAutoSave(architectForm, () => saveProjectArchitectForm(true));
     }
 
@@ -512,4 +511,4 @@ async function saveProjectArchitectForm(isAutoSave = false) {
     }
 }
 
-export { initProject, initArchitectForm };
+export { initArchitectForm, initProject };

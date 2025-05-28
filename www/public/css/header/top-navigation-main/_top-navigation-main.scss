@@ -1,222 +1,224 @@
 @use "../../vars" as *;
 
 .top-navigation-main {
-  display: none;
-  padding: 0;
-  width: 100%;
-
-  .show-nav & {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .welcome {
-    order: 0;
-  }
-
-  .header-search {
-    order: 1;
-  }
-
-  .main-nav {
-    order: 2;
-  }
-
-  .user-menu {
-    order: 3;
-  }
-
-  .top-level-entry-container {
-    position: relative;
-  }
-
-  .theme-toggle {
-    align-self: end;
-    margin-bottom: 1.5rem;
-  }
-
-  @media screen and (min-width: $screen-lg) {
-    .theme-toggle {
-      align-self: initial;
-      margin-bottom: initial;
-    }
-  }
-
-  .button.action {
-    &:hover {
-      --button-bg: var(--border-secondary);
-    }
-
-    @at-root .is-transparent &:not(:focus):hover {
-      --button-border-color: transparent;
-    }
-
-    @at-root .is-transparent &:hover {
-      --button-bg: var(--accent-primary-engage);
-    }
-
-    &.search-button:hover {
-      --button-bg: transparent;
-    }
-  }
-
-  .menu-toggle {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-  }
-
-  .menu-toggle:after {
-    background-color: var(--icon-primary);
-    content: "";
-    height: var(--icon-size);
-    margin-left: 0.2em;
-    margin-top: 0.2em;
-    -webkit-mask-image: url("../../../assets/icons/chevron.svg");
-    mask-image: url("../../../assets/icons/chevron.svg");
-    width: var(--icon-size);
-  }
-
-  .menu-toggle[aria-expanded="true"]::after {
-    transform: rotate(180deg);
-  }
-
-  .menu-toggle+.top-level-entry {
     display: none;
-  }
-
-  @media screen and (min-width: $screen-lg) {
-    align-items: center;
-    display: flex;
-    flex: 0;
-    flex-direction: row;
-    gap: 0.5rem;
-    left: inherit;
     padding: 0;
-    position: initial;
-    top: inherit;
-    z-index: inherit;
+    width: 100%;
 
     .show-nav & {
-      flex-direction: row;
-    }
-
-    .main-nav {
-      margin-right: auto;
-      order: 0;
-      width: max-content;
-    }
-
-    .header-search {
-      order: 1;
+        display: flex;
+        flex-direction: column;
     }
 
     .welcome {
-      order: 2;
+        order: 0;
+    }
+
+    .header-search {
+        order: 1;
+    }
+
+    .main-nav {
+        order: 2;
     }
 
     .user-menu {
-      order: 3;
+        order: 3;
+    }
+
+    .top-level-entry-container {
+        position: relative;
+    }
+
+    .theme-toggle {
+        align-self: end;
+        margin-bottom: 1.5rem;
+    }
+
+    @media screen and (min-width: $screen-lg) {
+        .theme-toggle {
+            align-self: initial;
+            margin-bottom: initial;
+        }
+    }
+
+    .button.action {
+        &:hover {
+            --button-bg: var(--border-secondary);
+        }
+
+        @at-root .is-transparent &:not(:focus):hover {
+            --button-border-color: transparent;
+        }
+
+        @at-root .is-transparent &:hover {
+            --button-bg: var(--accent-primary-engage);
+        }
+
+        &.search-button:hover {
+            --button-bg: transparent;
+        }
+    }
+
+    .menu-toggle {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .menu-toggle:after {
+        background-color: var(--icon-primary);
+        content: "";
+        height: var(--icon-size);
+        margin-left: 0.2em;
+        margin-top: 0.2em;
+        -webkit-mask-image: url("../../../assets/icons/chevron.svg");
+        mask-image: url("../../../assets/icons/chevron.svg");
+        width: var(--icon-size);
+    }
+
+    .menu-toggle[aria-expanded="true"]::after {
+        transform: rotate(180deg);
     }
 
     .menu-toggle+.top-level-entry {
-      display: inline-flex;
+        display: none;
     }
-  }
+
+    @media screen and (min-width: $screen-lg) {
+        align-items: center;
+        display: flex;
+        flex: 0;
+        flex-direction: row;
+        gap: 0.5rem;
+        left: inherit;
+        padding: 0;
+        position: initial;
+        top: inherit;
+        z-index: inherit;
+
+        .show-nav & {
+            flex-direction: row;
+        }
+
+        .main-nav {
+            margin-right: auto;
+            order: 0;
+            width: max-content;
+        }
+
+        .header-search {
+            order: 1;
+        }
+
+        .welcome {
+            order: 2;
+        }
+
+        .user-menu {
+            order: 3;
+        }
+
+        .menu-toggle+.top-level-entry {
+            display: inline-flex;
+        }
+    }
 }
 
 .main-nav {
 
-  .top-level-entry-container {
-    width: 5rem;
-  }
-
-  .top-level-entry {
-    border-top: 1px solid var(--border-secondary);
-    color: var(--text-primary);
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    padding: 1rem 0.5rem;
-    width: 100%;
-    justify-content: center;
-    transition: all 0.3s ease-in-out;
-
-
-    &:link,
-    &:visited {
-      color: var(--text-primary);
-      font-weight: bold;
+    .top-level-entry-container {
+        width: 5rem;
     }
 
-    &.menu-toggle {
-      min-height: 53px;
-      padding: 0.5rem;
-    }
+    .top-level-entry {
+        border-top: 1px solid var(--border-secondary);
+        color: var(--text-primary);
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        padding: 1rem 0.5rem;
+        width: 100%;
+        justify-content: center;
+        transition: all 0.3s ease-in-out;
 
-    sup.new {
-      --new-background: var(--text-primary-blue);
-      --new-background-beta: var(--learn-accent-color);
-      --new-color: var(--background-primary);
-      align-self: flex-start;
-    }
 
-    @media screen and (max-width: #{$screen-lg - 1}) {
-      &.button {
-        --button-color: var(--text-secondary);
-        --button-padding: 0;
-        --button-radius: 0;
-
-        .button-wrap {
-          background: none;
-          border: none;
-          gap: 0.5rem;
-          justify-content: flex-start;
-          padding: 0;
-          text-transform: initial;
+        &:link,
+        &:visited {
+            color: var(--text-primary);
+            font-weight: bold;
         }
 
-        &:focus {
-          --button-focus-effect: none;
+        &.menu-toggle {
+            min-height: 53px;
+            padding: 0.5rem;
         }
-      }
 
-      &.menu-link {
-        min-height: 53px;
-        padding: 0.5rem;
-      }
+        sup.new {
+            --new-background: var(--text-primary-blue);
+            --new-background-beta: var(--learn-accent-color);
+            --new-color: var(--background-primary);
+            align-self: flex-start;
+        }
+
+        @media screen and (max-width: #{$screen-lg - 1}) {
+            &.button {
+                --button-color: var(--text-secondary);
+                --button-padding: 0;
+                --button-radius: 0;
+
+                .button-wrap {
+                    background: none;
+                    border: none;
+                    gap: 0.5rem;
+                    justify-content: flex-start;
+                    padding: 0;
+                    text-transform: initial;
+                }
+
+                &:focus {
+                    --button-focus-effect: none;
+                }
+            }
+
+            &.menu-link {
+                min-height: 53px;
+                padding: 0.5rem;
+            }
+        }
+
+        @media screen and (min-width: $screen-lg) {
+            border-radius: var(--elem-radius);
+            border-top: none;
+            padding: 0.5rem;
+
+            &:hover,
+            &:focus {
+                background-color: var(--category-color-background);
+                color: var(--category-color);
+                text-decoration: none;
+            }
+
+            &.button {
+                padding: 0;
+            }
+        }
     }
-
-    @media screen and (min-width: $screen-lg) {
-      border-radius: var(--elem-radius);
-      border-top: none;
-      padding: 0.5rem;
-
-      &:hover,
-      &:focus {
-        background-color: var(--category-color-background);
-        color: var(--category-color);
-        text-decoration: none;
-      }
-
-      &.button {
-        padding: 0;
-      }
-    }
-  }
 }
 
 .nav-wrapper {
-  position: relative;
+    position: relative;
 }
 
 .nav-underline {
-  position: absolute;
-  bottom: calc(100% - 3rem);
-  height: 3px;
-  background-color: var(--text-primary-blue);
-  width: 0;
-  transform: translateX(0);
-  transition: width 0.5s cubic-bezier(0.25, 1.5, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1.5, 0.5, 1);
+    @media screen and (min-width: $screen-lg) {
+        position: absolute;
+        bottom: calc(100% - 3rem);
+        height: 3px;
+        background-color: var(--text-primary-blue);
+        width: 0;
+        transform: translateX(0);
+        transition: width 0.5s cubic-bezier(0.25, 1.5, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1.5, 0.5, 1);
+    }
 }

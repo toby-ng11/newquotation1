@@ -3220,19 +3220,6 @@ svg.icon-action path {
   width: 100%;
   transition: all 0.3s ease-in-out;
 }
-.top-navigation .container-a {
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--widget-background-primary);
-  display: flex;
-  flex-flow: row wrap;
-  gap: var(--gutter);
-}
-@media screen and (min-width: 768px) {
-  .top-navigation .container-a {
-    background-color: transparent;
-  }
-}
 .top-navigation.is-transparent {
   background-color: transparent;
 }
@@ -3245,9 +3232,6 @@ svg.icon-action path {
 }
 .top-navigation.show-nav {
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-}
-.top-navigation.show-nav .container-a {
-  height: auto;
 }
 
 /* Media Queries */
@@ -3434,24 +3418,16 @@ svg.icon-action path {
   position: relative;
 }
 
-.nav-underline {
-  position: absolute;
-  bottom: calc(100% - 3rem);
-  height: 3px;
-  background-color: var(--text-primary-blue);
-  width: 0;
-  transform: translateX(0);
-  transition: width 0.5s cubic-bezier(0.25, 1.5, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1.5, 0.5, 1);
-}
-
-.container-a {
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--gutter);
-  padding-right: var(--gutter);
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  width: 100%;
+@media screen and (min-width: 992px) {
+  .nav-underline {
+    position: absolute;
+    bottom: calc(100% - 3rem);
+    height: 3px;
+    background-color: var(--text-primary-blue);
+    width: 0;
+    transform: translateX(0);
+    transition: width 0.5s cubic-bezier(0.25, 1.5, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1.5, 0.5, 1);
+  }
 }
 
 ul.nav {
@@ -5854,7 +5830,7 @@ input[readonly], input[disabled] {
   margin-top: 2rem;
   margin-bottom: 2rem;
   /* clear: both; */
-  padding: 1.5rem;
+  padding: 1rem 1.5rem;
   position: relative;
   border-radius: 15px;
   box-shadow: var(--widget-box-shadow);
@@ -8854,10 +8830,6 @@ main {
   width: 1px !important;
 }
 
-.hidden {
-  display: none;
-}
-
 .inline-block {
   display: inline-block;
 }
@@ -8939,8 +8911,8 @@ u {
 .features.welcome-page {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  padding: 4rem 2rem;
+  gap: 1rem;
+  padding: 2rem 1rem;
 }
 
 .feature {

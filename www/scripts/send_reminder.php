@@ -26,7 +26,8 @@ $projectTable = $serviceManager->get(Project::class);
 /** @var \Application\Service\MailerSerive $mailer */
 $mailer = $serviceManager->get(MailerService::class);
 
-echo "✅ Reminder worker started. Press Ctrl+C to stop.\n";
+
+echo "[" . date('Y-m-d H:i:s') . "] ✅ Reminder worker started. Press Ctrl+C to stop.\n";
 while (true) {
     try {
         $notes = $noteTable->fetchPendingFollowUps();
@@ -41,12 +42,12 @@ while (true) {
             $mailer->sendReminderEmail($note, $note['owner_id'] . '@centura.ca', $subject, $projectLink);
             $noteTable->markReminderSent($note['project_note_id']);
 
-            echo "[SENT] $email @ " . date('Y-m-d H:i:s') . PHP_EOL;
+            echo "[" . date('Y-m-d H:i:s') . "] [SENT] $email @ " . PHP_EOL;
         }
 
-        sleep(30); // Wait 20sec before checking again
+        sleep(30); // Wait 30sec before checking again
     } catch (\Throwable $e) {
-        echo "[ERROR] " . $e->getMessage() . "\n";
+        echo "[" . date('Y-m-d H:i:s') . "] [ERROR] " . $e->getMessage() . "\n";
         sleep(30); // Still wait before retrying
     }
 }
