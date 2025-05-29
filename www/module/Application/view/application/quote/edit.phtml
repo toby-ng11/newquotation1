@@ -19,27 +19,36 @@ $customer = $this->customer;
 $contactList = $this->contactList;
 
 $waitingApprove = $this->quote_status_waiting;
-$approved = $this->quote_status_approved;;
+$approved = $this->quote_status_approved;
 $disapproved = $this->quote_status_disapproved;
 $notSubmit = $this->quote_status_not_submitted;
 $disabledSave = 'disabled';
 
 // All button HTML
-$btnSave         = '<button ' . $disabledSave . ' id="form-btn-save-quote" data-action="save" 		data-label="Save" 			type="button" class="button action save-quote-button quote-action-button small" data-form="#quote-content">	<span class="button-wrap"><span class="icon icon-save"></span>			Save</span></button>';
-$btnSubmit         = '<button id="form-btn-submit-quote" 					data-action="submit" 		data-label="Submit"			type="button" class="button action submit-quote-button quote-action-button small">							<span class="button-wrap"><span class="icon icon-submit"></span>		Submit</span></button>';
-$btnUndoSubmit     = '<button id="form-btn-undo-submit-quote" 				data-action="undo-submit" 	data-label="Undo Submit" 	type="button" class="button action undo-submit-quote-button quote-action-button small">						<span class="button-wrap"><span class="icon icon-undo"></span>			Undo Submit</span></button>';
-$btnDisapprove     = '<button id="form-btn-disapprove-quote" 				data-action="disapprove" 	data-label="Disapprove"		type="button" class="button action disapprove-quote-button quote-action-button small">						<span class="button-wrap"><span class="icon icon-cancel-circle"></span>	Disapprove</span></button>';
-$btnApprove     = '<button id="form-btn-approve-quote" 					data-action="approve" 		data-label="Approve" 		type="button" class="button action approve-quote-button quote-action-button small">							<span class="button-wrap"><span class="icon icon-approval"></span>		Approve</span></button>';
-$btnUndoApprove = '<button id="form-btn-undo-approve-quote" 			data-action="undo-approve" 	data-label="Undo Approve"	type="button" class="button action undo-approve-quote-button quote-action-button small">					<span class="button-wrap"><span class="icon icon-undo"></span>			Undo Approval</span></button>';
-$btnSubmitAgain = '<button id="form-btn-submit-again-quote" 			data-action="submit-again" 	data-label="Submit Again" 	type="button" class="button action submit-again-quote-button quote-action-button small">					<span class="button-wrap"><span class="icon icon-redo">	</span>			Submit Again</span></button>';
-$btnSubmitApprove = '<button id="form-btn-submit-approve-quote" 			data-action="submit-approve" 	data-label="Submit & Approve" 	type="button" class="button action submit-approve-quote-button quote-action-button small">					<span class="button-wrap"><span class="icon icon-submit">	</span>			Submit & Approve</span></button>';
+$btnSave =
+    '<button ' .
+    $disabledSave .
+    ' id="form-btn-save-quote" data-action="save" 		data-label="Save" 			type="button" class="button action save-quote-button quote-action-button small" data-form="#quote-content">	<span class="button-wrap"><span class="icon icon-save"></span>			Save</span></button>';
+$btnSubmit =
+    '<button id="form-btn-submit-quote" 					data-action="submit" 		data-label="Submit"			type="button" class="button action submit-quote-button quote-action-button small">							<span class="button-wrap"><span class="icon icon-submit"></span>		Submit</span></button>';
+$btnUndoSubmit =
+    '<button id="form-btn-undo-submit-quote" 				data-action="undo-submit" 	data-label="Undo Submit" 	type="button" class="button action undo-submit-quote-button quote-action-button small">						<span class="button-wrap"><span class="icon icon-undo"></span>			Undo Submit</span></button>';
+$btnDisapprove =
+    '<button id="form-btn-disapprove-quote" 				data-action="disapprove" 	data-label="Disapprove"		type="button" class="button action disapprove-quote-button quote-action-button small">						<span class="button-wrap"><span class="icon icon-cancel-circle"></span>	Disapprove</span></button>';
+$btnApprove =
+    '<button id="form-btn-approve-quote" 					data-action="approve" 		data-label="Approve" 		type="button" class="button action approve-quote-button quote-action-button small">							<span class="button-wrap"><span class="icon icon-approval"></span>		Approve</span></button>';
+$btnUndoApprove =
+    '<button id="form-btn-undo-approve-quote" 			data-action="undo-approve" 	data-label="Undo Approve"	type="button" class="button action undo-approve-quote-button quote-action-button small">					<span class="button-wrap"><span class="icon icon-undo"></span>			Undo Approval</span></button>';
+$btnSubmitAgain =
+    '<button id="form-btn-submit-again-quote" 			data-action="submit-again" 	data-label="Submit Again" 	type="button" class="button action submit-again-quote-button quote-action-button small">					<span class="button-wrap"><span class="icon icon-redo">	</span>			Submit Again</span></button>';
+$btnSubmitApprove =
+    '<button id="form-btn-submit-approve-quote" 			data-action="submit-approve" 	data-label="Submit & Approve" 	type="button" class="button action submit-approve-quote-button quote-action-button small">					<span class="button-wrap"><span class="icon icon-submit">	</span>			Submit & Approve</span></button>';
 // Initialize button group
 $buttons = '';
 
 $maintainenceMode = 0;
 
-if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
-?>
+if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
     <div class="main-page-content">
         <header class="main-page-content-header">
             <h1>An error has occured :&#40;</h1>
@@ -52,7 +61,9 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
     <div class="main-page-content">
         <header class="main-page-content-header">
             <h1>Edit Quote</h1>
-            <p class="font-light">Editting quote #<?= $this->escapeHtml($quoteID) ?> of project #<?= $this->escapeHtml($project['project_id']) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
+            <p class="font-light">Editting quote #<?= $this->escapeHtml($quoteID) ?> of project #<?= $this->escapeHtml(
+     $project['project_id']
+ ) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
         </header>
 
         <section class="features fade-in-up" aria-labelledby="widget-board">
@@ -63,7 +74,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                         <p><?= $this->escapeHtml($project['project_address']) ?></p>
                         </br>
                         <p>by <b><?= $this->escapeHtml($project['owner_id']) ?></b></p>
-                        <?php if (($project['shared_id']) != null) { ?>
+                        <?php if ($project['shared_id'] != null) { ?>
                             <p>shared with <b><?= $this->escapeHtml($project['shared_id']) ?></b></p>
                         <?php } ?>
                     </div>
@@ -72,11 +83,11 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                 <div class="widget-table feature fade-in-up dashboard">
                     <div class="project-information">
                         <p>P21 Order ID</p>
-                        <h2><?php if ($oeID != "") {
-                                echo $oeID;
-                            } else {
-                                echo 'Unavailable';
-                            } ?></h2>
+                        <h2><?php if ($oeID != '') {
+                            echo $oeID;
+                        } else {
+                            echo 'Unavailable';
+                        } ?></h2>
                     </div>
                 </div>
 
@@ -90,64 +101,58 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                 <div class="widget-table feature fade-in-up dashboard">
                     <div class="project-information">
                         <p>Taker</p>
-                        <h2><?= $quote['taker'] ?? "";
-                            ?></h2>
+                        <h2><?= $quote['taker'] ?? '' ?></h2>
                     </div>
                 </div>
 
-                <?php
-                if ($quoteStatusID != 0 and strcmp($quote['delete_flag'], "N") == 0) {
-                    switch ($quoteStatusID) {
-                        case $approved: ?>
+                <?php if ($quoteStatusID != 0 and strcmp($quote['delete_flag'], 'N') == 0) {
+                    switch ($quoteStatusID) { case $approved: ?>
                             <div class="widget-table feature fade-in-up dashboard quote-status status-approved">
                                 <div class="project-information">
                                     <p>Quote status</p>
                                     <h2>Approved</h2>
                                 </div>
                             </div>
-                        <?php break;
-
-                        case $waitingApprove: ?>
+                        <?php break;case $waitingApprove: ?>
                             <div class="widget-table feature fade-in-up dashboard quote-status status-waiting">
                                 <div class="project-information">
                                     <p>Quote status</p>
                                     <h2>Waiting for approval</h2>
                                 </div>
                             </div>
-                        <?php break;
-
-                        case $disapproved: ?>
+                        <?php break;case $disapproved: ?>
                             <div class="widget-table feature fade-in-up dashboard quote-status status-disapproved">
                                 <div class="project-information">
                                     <p>Quote status</p>
                                     <h2>Disapproved</h2>
                                 </div>
                             </div>
-                        <?php break;
-
-                        default: ?>
+                        <?php break;default: ?>
                             <div class="widget-table feature fade-in-up dashboard quote-status status-notsubmitted">
                                 <div class="project-information">
                                     <p>Quote status</p>
                                     <h2>Draft</h2>
                                 </div>
                             </div>
-                    <?php break;
-                    }
-                } else {  ?>
+                    <?php break;}
+                } else {
+                     ?>
                     <div class="widget-table feature fade-in-up dashboard quote-status status-disapproved">
                         <div class="project-information">
                             <p>Quote status</p>
                             <h2>Deleted</h2>
                         </div>
                     </div>
-                <?php } ?>
+                <?php
+                } ?>
             </div>
         </section>
 
         <!-- Form -->
         <section class="fade-in-up" aria-labelledby="quote-detail">
-            <form action="/quote/<?= $this->escapeHtml($quoteID) ?>/edit" method='post' class="form" id="quote-content" data-save-btn="#form-btn-save-quote" data-form="#quoteForm">
+            <form action="/quote/<?= $this->escapeHtml(
+                $quoteID
+            ) ?>/edit" method='post' class="form" id="quote-content" data-save-btn="#form-btn-save-quote" data-form="#quoteForm">
                 <div class="widget-table" id="customer_info">
                     <div class="widget-header">
                         <div class="widget-title">
@@ -170,9 +175,10 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                                 <label for='quote_type'>Type</label>
                                 <select name="quote_type_id" id='quote_type' class="validate[required]">
                                     <option value="">Select Quote type</option>
-                                    <?php
-                                    foreach ($this->type as $t): ?>
-                                        <option value="<?= $this->escapeHtml($t['type_id']) ?>" <?= ($t['type_id'] == $quote['type_id']) ? 'selected' : ''; ?>>
+                                    <?php foreach ($this->type as $t): ?>
+                                        <option value="<?= $this->escapeHtml($t['type_id']) ?>" <?= $t['type_id'] == $quote['type_id']
+    ? 'selected'
+    : '' ?>>
                                             <?= $this->escapeHtml($t['type_desc']) ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -181,14 +187,19 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 
                             <div class="oneTwo">
                                 <label for='ship_required_date'>Ship Required Date</label>
-                                <input id='ship_required_date' type="text" class="flatpickr validate[required]" name='ship_required_date' value="<?php if ($quoteShipRequiredDate && $quoteShipRequiredDate > new DateTime('2000-01-01')) {
-                                                                                                                                                        echo $quoteShipRequiredDate->format('Y-m-d');
-                                                                                                                                                    } ?>" />
+                                <input id='ship_required_date' type="text" class="flatpickr validate[required]" name='ship_required_date' value="<?php if (
+                                    $quoteShipRequiredDate &&
+                                    $quoteShipRequiredDate > new DateTime('2000-01-01')
+                                ) {
+                                    echo $quoteShipRequiredDate->format('Y-m-d');
+                                } ?>" />
                             </div>
 
                             <div class="oneTwo">
                                 <label for="quote_date">Expire Date</label>
-                                <input id="expire_date" name="expire_date" type="text" class="flatpickr" value='<?= $this->escapeHtml($quoteExpireDate->format('Y-m-d') ?? '') ?>' />
+                                <input id="expire_date" name="expire_date" type="text" class="flatpickr" value='<?= $this->escapeHtml(
+                                    $quoteExpireDate->format('Y-m-d') ?? ''
+                                ) ?>' />
                             </div>
 
                             <div class="oneTwo">
@@ -198,7 +209,9 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
 
                             <div class="oneTwo">
                                 <label for='architect_rep_id'>Architectural Representative</label>
-                                <input readonly id='architect_rep_id' name='architect_rep_id' type="text" value='<?= $this->escapeHtml($project['architect_rep_name']) ?>' />
+                                <input readonly id='architect_rep_id' name='architect_rep_id' type="text" value='<?= $this->escapeHtml(
+                                    $project['architect_rep_name']
+                                ) ?>' />
                             </div>
                         </div>
                     </div>
@@ -229,21 +242,31 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                                 </div>
                             </div>
                             <div class="formRow">
-                                <input type="hidden" id="main_customer_id" name="customer_id" value="<?= $this->escapeHtml($customer['customer_id']) ?>" />
-                                <input type="hidden" id="main_salesrep_id" name="salesrep_id" value="<?= $this->escapeHtml($customer['salesrep_id']) ?>" />
+                                <input type="hidden" id="main_customer_id" name="customer_id" value="<?= $this->escapeHtml(
+                                    $customer['customer_id']
+                                ) ?>" />
+                                <input type="hidden" id="main_salesrep_id" name="salesrep_id" value="<?= $this->escapeHtml(
+                                    $customer['salesrep_id']
+                                ) ?>" />
                                 <div class="oneTwo required-field">
                                     <label for="main_customer_name">Customer</label>
-                                    <input id='main_customer_name' name='customer_name' type="text" value="<?= $this->escapeHtml($customer['customer_name']) ?>" />
+                                    <input id='main_customer_name' name='customer_name' type="text" value="<?= $this->escapeHtml(
+                                        $customer['customer_name']
+                                    ) ?>" />
                                 </div>
 
                                 <div class="oneTwo">
                                     <label for="main_company_id">Company ID</label>
-                                    <input type="text" name='company_id' id='main_company_id' value="<?= $this->escapeHtml($customer['company_id']) ?>" readonly />
+                                    <input type="text" name='company_id' id='main_company_id' value="<?= $this->escapeHtml(
+                                        $customer['company_id']
+                                    ) ?>" readonly />
                                 </div>
 
                                 <div class="oneTwo">
                                     <label for='main_salesrep_full_name'>Sales Representative</label>
-                                    <input id='main_salesrep_full_name' name='salesrep_full_name' type="text" value="<?= $this->escapeHtml($customer['salesrep_full_name']) ?>" readonly />
+                                    <input id='main_salesrep_full_name' name='salesrep_full_name' type="text" value="<?= $this->escapeHtml(
+                                        $customer['salesrep_full_name']
+                                    ) ?>" readonly />
                                 </div>
 
                                 <div class="oneTwo">
@@ -258,68 +281,92 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                         <div class="widget-section">
                             <h3>Contact</h3>
                             <div class="formRow">
-                                <input type="hidden" id="main_contact_id" name="contact_id" value="<?= $this->escapeHtml($contact['contact_id']) ?>" />
+                                <input type="hidden" id="main_contact_id" name="contact_id" value="<?= $this->escapeHtml(
+                                    $contact['contact_id']
+                                ) ?>" />
                                 <div class="oneTwo required-field">
                                     <label for="main_contact_name">Contact</label>
                                     <select id='main_contact_name' class="validate[required]">
                                         <option value=''>-- Please search for a customer first --</option>
-                                        <?php
-                                        foreach ($contactList as $c) { ?>
-                                            <option value="<?= $this->escapeHtml($c['contact_id']) ?>" <?php if ($c['contact_id'] == $quote['contact_id']) echo 'selected' ?>><?= $this->escapeHtml($c['contact_full_name']) ?></option>
-                                        <?php }
-                                        ?>
+                                        <?php foreach ($contactList as $c) { ?>
+                                            <option value="<?= $this->escapeHtml($c['contact_id']) ?>" <?php if (
+    $c['contact_id'] == $quote['contact_id']
+) {
+    echo 'selected';
+} ?>><?= $this->escapeHtml($c['contact_full_name']) ?></option>
+                                        <?php } ?>
                                     </select>
                                 </div>
 
                                 <div class="oneTwo">
                                     <label for="main_first_name">First Name</label>
-                                    <input readonly id='main_first_name' name='first_name' type="text" value="<?= $this->escapeHtml($contact['first_name']) ?>">
+                                    <input readonly id='main_first_name' name='first_name' type="text" value="<?= $this->escapeHtml(
+                                        $contact['first_name']
+                                    ) ?>">
                                 </div>
 
                                 <div class="oneTwo">
                                     <label for="main_last_name">Last Name</label>
-                                    <input readonly id='main_last_name' name='last_name' type="text" value="<?= $this->escapeHtml($contact['last_name']) ?>">
+                                    <input readonly id='main_last_name' name='last_name' type="text" value="<?= $this->escapeHtml(
+                                        $contact['last_name']
+                                    ) ?>">
                                 </div>
 
                                 <div class="oneTwo">
                                     <label for="main_phys_address1">Address 1</label>
-                                    <input readonly id='main_phys_address1' name='phys_address1' type="text" value="<?= $this->escapeHtml($contact['phys_address1']) ?>" />
+                                    <input readonly id='main_phys_address1' name='phys_address1' type="text" value="<?= $this->escapeHtml(
+                                        $contact['phys_address1']
+                                    ) ?>" />
                                 </div>
 
                                 <div class="oneTwo">
                                     <label for="main_phys_address2">Address 2</label>
-                                    <input readonly id='main_phys_address2' name='phys_address2' type="text" value="<?= $this->escapeHtml($contact['phys_address2']) ?>">
+                                    <input readonly id='main_phys_address2' name='phys_address2' type="text" value="<?= $this->escapeHtml(
+                                        $contact['phys_address2']
+                                    ) ?>">
                                 </div>
 
                                 <div class="oneTwo">
                                     <label for="main_phys_city">City</label>
-                                    <input readonly id='main_phys_city' name='phys_city' type="text" value="<?= $this->escapeHtml($contact['phys_city']) ?>">
+                                    <input readonly id='main_phys_city' name='phys_city' type="text" value="<?= $this->escapeHtml(
+                                        $contact['phys_city']
+                                    ) ?>">
                                 </div>
 
                                 <div class="oneTwo">
                                     <label for="main_phys_state">Province</label>
-                                    <input readonly id='main_phys_state' name='phys_state' type="text" value="<?= $this->escapeHtml($contact['phys_state']) ?>">
+                                    <input readonly id='main_phys_state' name='phys_state' type="text" value="<?= $this->escapeHtml(
+                                        $contact['phys_state']
+                                    ) ?>">
                                 </div>
 
                                 <div class="oneTwo">
                                     <label for="main_phys_postal_code">Postal Code</label>
-                                    <input readonly id='main_phys_postal_code' name='phys_postal_code' type="text" value="<?= $this->escapeHtml($contact['phys_postal_code']) ?>">
+                                    <input readonly id='main_phys_postal_code' name='phys_postal_code' type="text" value="<?= $this->escapeHtml(
+                                        $contact['phys_postal_code']
+                                    ) ?>">
                                 </div>
 
                                 <div class="oneTwo">
                                     <label for="main_phys_country">Country</label>
-                                    <input readonly id='main_phys_country' name='phys_country' type="text" value="<?= $this->escapeHtml($contact['phys_country']) ?>">
+                                    <input readonly id='main_phys_country' name='phys_country' type="text" value="<?= $this->escapeHtml(
+                                        $contact['phys_country']
+                                    ) ?>">
                                 </div>
 
                                 <div class="oneTwo">
                                     <label for="main_central_phone_number">Phone Number</label>
-                                    <input readonly id='main_central_phone_number' name='central_phone_number' type="text" class="maskPhoneExt" value="<?= $this->escapeHtml($contact['central_phone_number']) ?>" />
+                                    <input readonly id='main_central_phone_number' name='central_phone_number' type="text" class="maskPhoneExt" value="<?= $this->escapeHtml(
+                                        $contact['central_phone_number']
+                                    ) ?>" />
                                 </div>
 
 
                                 <div class="oneTwo required-field">
                                     <label for="main_email_address">Email</label>
-                                    <input readonly type="text" value="<?= $this->escapeHtml($contact['email_address']) ?>" id='main_email_address' name='email_address'>
+                                    <input readonly type="text" value="<?= $this->escapeHtml(
+                                        $contact['email_address']
+                                    ) ?>" id='main_email_address' name='email_address'>
                                 </div>
 
                             </div>
@@ -333,7 +380,9 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                         <div class="formRow">
                             <div class="oneTwo">
                                 <label for="quote-note">Quote Note</label>
-                                <textarea id="quote-note" rows="5" cols="" name="note" placeholder="Add quote note here..."><?= $this->escapeHtml($quote['note']) ?></textarea>
+                                <textarea id="quote-note" rows="5" cols="" name="note" placeholder="Add quote note here..."><?= $this->escapeHtml(
+                                    $quote['note']
+                                ) ?></textarea>
                             </div>
                         </div>
                     </div>
@@ -349,13 +398,19 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                                         <select name="price_approve_id" id="price_approve_id" class="validate[required]">
                                             <option value="">Select Approval</option>
                                             <?php foreach ($this->approval as $a) { ?>
-                                                <option value="<?= $this->escapeHtml($a['id']) ?>" <?php if ($a['id'] == $quote['price_approve_id']) echo 'selected'; ?>><?= $this->escapeHtml($user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']) ?></option>
+                                                <option value="<?= $this->escapeHtml($a['id']) ?>" <?php if ($a['id'] == $quote['price_approve_id']) {
+    echo 'selected';
+} ?>><?= $this->escapeHtml($user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']) ?></option>
                                             <?php } ?>
                                         </select>
                                     <?php } else { ?>
                                         <select name="price_approve_id" id="price_approve_id">
                                             <?php foreach ($this->approval as $a) { ?>
-                                                <?php if ($a['id'] == $quote['price_approve_id']) { ?><option value="<?= $this->escapeHtml($a['id']) ?>" selected><?= $this->escapeHtml($user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']) ?></option> <?php } ?>
+                                                <?php if ($a['id'] == $quote['price_approve_id']) { ?><option value="<?= $this->escapeHtml(
+    $a['id']
+) ?>" selected><?= $this->escapeHtml(
+    $user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']
+) ?></option> <?php } ?>
                                             <?php } ?>
                                         </select>
                                     <?php } ?>
@@ -366,16 +421,17 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                                     <select name="lead_time_id" id="lead_time_id" class="validate[required]">
                                         <option value="">Select Lead Time</option>
                                         <?php foreach ($this->leadtime as $a) { ?>
-                                            <option value="<?= $this->escapeHtml($a['lead_time_id']) ?>" <?php if ($quote['lead_time_id'] == $a['lead_time_id']) {
-                                                                                                                echo 'selected';
-                                                                                                            } ?>><?= $this->escapeHtml($a['lead_time_desc']) ?></option>
+                                            <option value="<?= $this->escapeHtml($a['lead_time_id']) ?>" <?php if (
+    $quote['lead_time_id'] == $a['lead_time_id']
+) {
+    echo 'selected';
+} ?>><?= $this->escapeHtml($a['lead_time_desc']) ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                        <?php else:
-                        if ($quoteStatusID === $approved): ?>
+                        <?php else:if ($quoteStatusID === $approved): ?>
                             <div class="line"></div>
                             <div class="widget-section">
                                 <h3>Approval</h3>
@@ -386,13 +442,21 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                                             <select name="price_approve_id" id="price_approve_id" class="validate[required]">
                                                 <option value="">Select Approval</option>
                                                 <?php foreach ($this->approval as $a) { ?>
-                                                    <option value="<?= $this->escapeHtml($a['id']) ?>" <?php if ($a['id'] == $quote['price_approve_id']) echo 'selected'; ?>><?= $this->escapeHtml($user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']) ?></option>
+                                                    <option value="<?= $this->escapeHtml($a['id']) ?>" <?php if (
+    $a['id'] == $quote['price_approve_id']
+) {
+    echo 'selected';
+} ?>><?= $this->escapeHtml($user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']) ?></option>
                                                 <?php } ?>
                                             </select>
                                         <?php } else { ?>
                                             <select name="price_approve_id" id="price_approve_id">
                                                 <?php foreach ($this->approval as $a) { ?>
-                                                    <?php if ($a['id'] == $quote['price_approve_id']) { ?><option value="<?= $this->escapeHtml($a['id']) ?>" selected><?= $this->escapeHtml($user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']) ?></option> <?php } ?>
+                                                    <?php if ($a['id'] == $quote['price_approve_id']) { ?><option value="<?= $this->escapeHtml(
+    $a['id']
+) ?>" selected><?= $this->escapeHtml(
+    $user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']
+) ?></option> <?php } ?>
                                                 <?php } ?>
                                             </select>
                                         <?php } ?>
@@ -403,16 +467,17 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                                         <select name="lead_time_id" id="lead_time_id" class="validate[required]">
                                             <option value="">Select Lead Time</option>
                                             <?php foreach ($this->leadtime as $a) { ?>
-                                                <option value="<?= $this->escapeHtml($a['lead_time_id']) ?>" <?php if ($quote['lead_time_id'] == $a['lead_time_id']) {
-                                                                                                                    echo 'selected';
-                                                                                                                } ?>><?= $this->escapeHtml($a['lead_time_desc']) ?></option>
+                                                <option value="<?= $this->escapeHtml($a['lead_time_id']) ?>" <?php if (
+    $quote['lead_time_id'] == $a['lead_time_id']
+) {
+    echo 'selected';
+} ?>><?= $this->escapeHtml($a['lead_time_desc']) ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                    <?php endif;
-                    endif; ?>
+                    <?php endif;endif; ?>
 
                     <?php
                     if (!$admin) {
@@ -457,15 +522,15 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
                     }
 
                     // Render if buttons exist
-                    if (!empty($buttons)):
-                    ?>
+                    if (!empty($buttons)): ?>
                         <div class="line"></div>
                         <div class="widget-footer">
                             <div class="widget-footer-button">
                                 <?= $buttons ?>
                             </div>
                         </div>
-                    <?php endif; ?>
+                    <?php endif;
+                    ?>
                 </div>
             </form>
         </section>

@@ -139,7 +139,11 @@
                 <tr>
                     <td class="meta-head" width='20%'></td>
                     <td><?= $this->escapeHtml($contact['phys_address1']) . ' ' . $this->escapeHtml($contact['phys_address2']) ?><br>
-                        <?= $this->escapeHtml($contact['phys_city']) . ', ' . $this->escapeHtml($contact['phys_state']) . ' ' . $this->escapeHtml($contact['phys_postal_code']) ?><br>
+                        <?= $this->escapeHtml($contact['phys_city']) .
+                            ', ' .
+                            $this->escapeHtml($contact['phys_state']) .
+                            ' ' .
+                            $this->escapeHtml($contact['phys_postal_code']) ?><br>
                         <?= $this->escapeHtml($contact['phys_country']) ?>
                     </td>
                 </tr>
@@ -176,7 +180,9 @@
                 <td><?= $this->escapeHtml($quote['quote_id']) ?></td>
                 <td><?= $this->escapeHtml($quote['quote_date']->format('Y-m-d')) ?></td>
                 <td><?= $this->escapeHtml($quote['expire_date']->format('Y-m-d')) ?></td>
-                <td><?= ($quote['ship_required_date'] && $quote['ship_required_date'] > new DateTime('2000-01-01')) ? $this->escapeHtml($quote['ship_required_date']->format('Y-m-d')) : ''; ?></td>
+                <td><?= $quote['ship_required_date'] && $quote['ship_required_date'] > new DateTime('2000-01-01')
+                    ? $this->escapeHtml($quote['ship_required_date']->format('Y-m-d'))
+                    : '' ?></td>
                 <td><?php foreach ($approvalList as $a) { ?>
                         <?php if ($a['id'] === $quote['price_approve_id']): ?>
                             <?= $this->escapeHtml($a['name']) . ' - ' . $this->escapeHtml($a['default_company']) ?>
@@ -196,10 +202,9 @@
                 <td colspan="2"><?= $this->escapeHtml($project['project_name']) ?></td>
                 <td colspan="1">
                     <?php foreach ($branches as $l) { ?>
-                        <?php if ($l['location_id'] === $project['centura_location_id']):?>
-                            <?= $this->escapeHtml($l['branch_description']); ?>
-                    <?php endif;
-                    } ?>
+                        <?php if ($l['location_id'] === $project['centura_location_id']): ?>
+                            <?= $this->escapeHtml($l['branch_description']) ?>
+                    <?php endif;} ?>
                 </td>
                 <td><?= $this->escapeHtml($project['architect_name'] ?? 'N/A') ?></td>
                 <td><?= $this->escapeHtml($project['specifier_name'] ?? 'N/A') ?></td>
@@ -225,8 +230,7 @@
                     <tr>
                         <td colspan="5" style="text-align:center">No items quoted.</td>
                     </tr>
-                    <?php else:
-                    foreach ($items as $i): ?>
+                    <?php else:foreach ($items as $i): ?>
                         <tr>
                             <td style="text-align:left">
                                 <div class="item-id">
@@ -246,10 +250,8 @@
                             <td><?= $this->escapeHtml($i['uom']) ?></td>
                             <td style='text-align:right;'><?= '$' . $this->escapeHtml(number_format($i['subtotal'], 2)) ?></td>
                         </tr>
-                <?php
-                        $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'];
-                    endforeach;
-                endif; ?>
+                <?php $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'];endforeach;endif;
+                ?>
             </tbody>
         </table>
 

@@ -1,7 +1,7 @@
 <?php
 $user = $this->userHelper();
 $controller = $this->currentController ?? '';
-$action     = $this->currentAction ?? '';
+$action = $this->currentAction ?? '';
 
 if (strpos($controller, '\\') !== false) {
     $controller = substr(strrchr($controller, '\\'), 1);
@@ -12,9 +12,9 @@ $sidebarTemplate = 'sidebar/default';
 
 
 <div class="sticky-header-container">
-    <header class="top-navigation">
-        <div class="container-a bg-widget-background ml-auto mr-auto flex w-full flex-col lg:flex-row justify-between gap-28 pt-2 pr-28 pb-2 pl-28">
-            <div class="top-navigation-wrap">
+    <header class="top-navigation bg-background">
+        <div class="container-a bg-widget-background mr-auto ml-auto flex w-full flex-col justify-between gap-4 pt-2 pr-4 pb-2 pl-4 lg:flex-row">
+            <div class="top-navigation-wrap flex h-8 flex-auto items-center justify-between lg:flex-0">
                 <a href="https://devquotation.centura.local" class="logo w-[10rem]" aria-label="Centura Quotation homepage">
                     <svg id="centura-logo" width="200" height="20" viewBox="0 0 200 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" role="img">
                         <title>Centura Quotation Portal</title>
@@ -29,7 +29,7 @@ $sidebarTemplate = 'sidebar/default';
                     </svg>
                 </a>
 
-                <button title="Open main menu" type="button" class="button action has-icon main-menu-toggle" aria-haspopup="menu" aria-label="Open main menu" aria-expanded="false">
+                <button title="Open main menu" type="button" class="button action has-icon main-menu-toggle lg:hidden" aria-haspopup="menu" aria-label="Open main menu" aria-expanded="false">
                     <span class="button-wrap">
                         <span class="icon icon-menu"></span>
                         <span class="visually-hidden">Open main menu</span>
@@ -37,10 +37,10 @@ $sidebarTemplate = 'sidebar/default';
                 </button>
             </div>
 
-            <nav class="main-nav text-[13px] hidden lg:flex" id="leftSide">
-                <ul id="menu" class="nav nav-wrapper" x-data="navUnderline()" x-init="init">
+            <nav class="main-nav hidden text-[13px] lg:flex" id="leftSide">
+                <ul id="menu" class="nav nav-wrapper lg:flex lg:items-center lg:justify-around lg:gap-2 lg:p-0" x-data="navUnderline()" x-init="init">
                     <?php if ($this->escapeHtml($user['p2q_system_role']) == 'admin') { ?>
-                        <li class="top-level-entry-container">
+                        <li class="top-level-entry-container lg:w-20">
                             <a href="/index/admin"
                                 hx-get="/index/admin"
                                 hx-target="#content"
@@ -50,11 +50,11 @@ $sidebarTemplate = 'sidebar/default';
                                 @mouseenter="setHover($event)"
                                 @mouseleave="clearHover()"
                                 title="Admin Dashboard"
-                                class="top-level-entry<?= ($action === 'admin') ? ' active' : '' ?>">Admin</a>
+                                class="top-level-entry<?= $action === 'admin' ? ' active' : '' ?>">Admin</a>
                         </li>
                     <?php } ?>
 
-                    <li class="top-level-entry-container">
+                    <li class="top-level-entry-container lg:w-20">
                         <a href="/index/home"
                             hx-get="/index/home"
                             hx-target="#content"
@@ -64,11 +64,11 @@ $sidebarTemplate = 'sidebar/default';
                             @mouseenter="setHover($event)"
                             @mouseleave="clearHover()"
                             title="Home Dashboard"
-                            class="top-level-entry<?= ($action === 'home') ? ' active' : '' ?>">Home</a>
+                            class="top-level-entry<?= $action === 'home' ? ' active' : '' ?>">Home</a>
                     </li>
 
                     <?php if ($this->escapeHtml($user['approve_id']) ?? '' != null) { ?>
-                        <li class="top-level-entry-container">
+                        <li class="top-level-entry-container lg:w-20">
                             <a href="/index/approval"
                                 hx-get="/index/approval"
                                 hx-target="#content"
@@ -78,11 +78,11 @@ $sidebarTemplate = 'sidebar/default';
                                 @mouseenter="setHover($event)"
                                 @mouseleave="clearHover()"
                                 title="Approve Dashboard"
-                                class="top-level-entry<?= ($action === 'approval') ? ' active' : '' ?>">Approval</a>
+                                class="top-level-entry<?= $action === 'approval' ? ' active' : '' ?>">Approval</a>
                         </li>
                     <?php } ?>
 
-                    <li class="top-level-entry-container">
+                    <li class="top-level-entry-container lg:w-20">
                         <a href="/index/architect"
                             hx-get="/index/architect"
                             hx-target="#content"
@@ -92,14 +92,14 @@ $sidebarTemplate = 'sidebar/default';
                             @mouseenter="setHover($event)"
                             @mouseleave="clearHover()"
                             title="Architect Dashboard"
-                            class="top-level-entry<?= ($action === 'architect') ? ' active' : '' ?>">Architect</a>
+                            class="top-level-entry<?= $action === 'architect' ? ' active' : '' ?>">Architect</a>
                     </li>
                 </ul>
 
                 <div x-ref="underline" class="nav-underline"></div>
             </nav>
 
-            <div class="top-navigation-main">
+            <div class="top-navigation-main hidden flex-col items-center lg:flex lg:flex-row">
                 <div class="theme-switcher-menu">
                     <button type="button" class="button action has-icon theme-switcher-menu small" aria-haspopup="menu">
                         <span class="button-wrap">
@@ -126,7 +126,7 @@ $sidebarTemplate = 'sidebar/default';
                             <div class="submenu-item">
                                 <div class="submenu-content-container">
                                     <div class="submenu-item-heading">
-                                        Signed in as <?php echo $this->escapeHtml($user['id']) ?? '' ?>
+                                        Signed in as <?php echo $this->escapeHtml($user['id']) ?? ''; ?>
                                     </div>
                                 </div>
                             </div>

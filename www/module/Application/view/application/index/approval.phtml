@@ -10,16 +10,15 @@ $disapprovedTableCount = $this->disapprovedTableCount;
 $hour = date('H'); // 24-hour format of the current hour
 
 if ($hour >= 5 && $hour < 12) {
-    $greeting = "Good morning";
+    $greeting = 'Good morning';
 } elseif ($hour >= 12 && $hour < 18) {
-    $greeting = "Good afternoon";
+    $greeting = 'Good afternoon';
 } else {
-    $greeting = "Good evening";
+    $greeting = 'Good evening';
 }
 
 $maintainenceMode = 0;
-if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') {
-?>
+if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
     <div class="main-page-content">
         <header class="main-page-content-header">
             <h1>This page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h1>

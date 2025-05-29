@@ -11,22 +11,17 @@
     Go to Project
 </a>
 <?php
-switch ($quoteStatusID) {
-    case $approved: ?>
+switch ($quoteStatusID) { case $approved: ?>
         <a class="button quick-link" href="/mail/quote/id/<?= $quoteID ?>" title="mail">
             <span class='icon icon-mail'></span>
             Mail Quote
         </a>
-    <?php break;
-
-    case $waitingApprove: ?>
+    <?php break;case $waitingApprove: ?>
         <a href="/quote/unsubmit/id/<?= $quoteID ?>" title="" class='button quick-link undo-submit'>
             <span class='icon icon-undo'></span>
             Undo Submit
         </a>
-        <?php break;
-
-    default:
+        <?php break;default:
         if ($quoteStatusID != 0) { ?>
             <a href="/quote/ready/id/<?= $quoteID ?>" title="" class='button quick-link ready_quote'>
                 <span class='icon icon-approval'></span>
@@ -40,4 +35,5 @@ if ($quoteStatusID != $approved) { ?>
         <span class='icon icon-trash'></span>
         Delete Quote
     </a>
-<?php } ?>
+<?php }
+ ?>

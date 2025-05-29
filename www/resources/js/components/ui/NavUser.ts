@@ -4,6 +4,7 @@ export function initUserMenu() {
     const menuBtnIcon = document.querySelector('.main-menu-toggle .icon') as HTMLSpanElement;
     const menuBtnText = document.querySelector('.main-menu-toggle .visually-hidden') as HTMLSpanElement;
     const mainNav = document.querySelector('.main-nav') as HTMLElement;
+    const themeUserNav = document.querySelector('.top-navigation-main') as HTMLElement;
 
     if (menuBtn) {
         menuBtn.addEventListener('click', toggleMainMenu);
@@ -15,9 +16,13 @@ export function initUserMenu() {
         if (isMenuOpen) {
             mainNav.classList.remove('block');
             mainNav.classList.add('hidden');
+            themeUserNav.classList.remove('flex');
+            themeUserNav.classList.add('hidden');
         } else {
             mainNav.classList.remove('hidden');
             mainNav.classList.add('block');
+            themeUserNav.classList.remove('hidden');
+            themeUserNav.classList.add('flex');
         }
 
         updateButtonAttributes(
@@ -26,6 +31,23 @@ export function initUserMenu() {
             isMenuOpen ? 'icon-menu' : 'icon-cancel',
             isMenuOpen ? 'Close main menu' : 'Open main menu',
         );
+    }
+
+    if (mainNav) {
+        mainNav.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    // Close menu only on small screens
+                    menu.classList.remove('show-nav');
+                    mainNav.classList.remove('block');
+                    mainNav.classList.add('hidden');
+                    themeUserNav.classList.remove('flex');
+                    themeUserNav.classList.add('hidden');
+
+                    updateButtonAttributes('Open main menu', 'false', 'icon-menu', 'Open main menu');
+                }
+            });
+        });
     }
 
     function updateButtonAttributes(title: string, ariaExpanded: string, iconClass: string, buttonText: string) {
@@ -53,6 +75,25 @@ export function initUserMenu() {
         if (!userMenu.contains(target) && !userBtn.contains(target)) {
             userMenu.style.display = 'none';
             userBtn.setAttribute('aria-expanded', 'false');
+        }
+        if (window.innerWidth < 1024) {
+            const isMenuOpen = menu.classList.contains('show-nav');
+            const menuBtnClicked = menuBtn.contains(target);
+            const menuClicked = menu.contains(target);
+
+            if (isMenuOpen && !menuClicked && !menuBtnClicked) {
+                menu.classList.remove('show-nav');
+
+                const mainNav = document.getElementById('leftSide');
+                if (mainNav) {
+                    mainNav.classList.remove('block');
+                    mainNav.classList.add('hidden');
+                    themeUserNav.classList.remove('flex');
+                    themeUserNav.classList.add('hidden');
+                }
+
+                updateButtonAttributes('Open main menu', 'false', 'icon-menu', 'Open main menu');
+            }
         }
     });
 }

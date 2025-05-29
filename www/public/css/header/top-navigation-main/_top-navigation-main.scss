@@ -1,15 +1,6 @@
 @use "../../vars" as *;
 
 .top-navigation-main {
-    display: none;
-    padding: 0;
-    width: 100%;
-
-    .show-nav & {
-        display: flex;
-        flex-direction: column;
-    }
-
     .welcome {
         order: 0;
     }
@@ -127,11 +118,6 @@
 }
 
 .main-nav {
-
-    .top-level-entry-container {
-        width: 5rem;
-    }
-
     .top-level-entry {
         border-top: 1px solid var(--border-secondary);
         color: var(--text-primary);
@@ -205,10 +191,6 @@
             }
         }
     }
-}
-
-.nav-wrapper {
-    position: relative;
 }
 
 .nav-underline {

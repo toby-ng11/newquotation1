@@ -38,7 +38,9 @@ $user = $this->user;
                 <label for="location_id">Centura Location</label>
                 <select name="location_id" id="location_id">
                   <?php foreach ($this->locations as $l) { ?>
-                    <option value="<?= $this->escapeHtml($l['location_id']) ?>" <?php if ($l['location_id'] === DEFAULT_LOCATION_ID) echo 'selected' ?>><?= $this->escapeHtml($l['branch_description']) ?></option>
+                    <option value="<?= $this->escapeHtml($l['location_id']) ?>" <?php if ($l['location_id'] === DEFAULT_LOCATION_ID) {
+    echo 'selected';
+} ?>><?= $this->escapeHtml($l['branch_description']) ?></option>
                   <?php } ?>
                 </select>
               </div>
@@ -111,7 +113,9 @@ $user = $this->user;
                   <label for="architect_company_id">Company</label>
                   <select id="architect_company_id" name="architect_company_id">
                     <?php foreach ($this->company as $l) { ?>
-                      <option value="<?= $this->escapeHtml($l['company_id']) ?>" <?php if ($l['company_id'] === DEFAULT_COMPANY) echo 'selected' ?>><?= $this->escapeHtml($l['company_name']) ?></option>
+                      <option value="<?= $this->escapeHtml($l['company_id']) ?>" <?php if ($l['company_id'] === DEFAULT_COMPANY) {
+    echo 'selected';
+} ?>><?= $this->escapeHtml($l['company_name']) ?></option>
                     <?php } ?>
                   </select>
                 </div>

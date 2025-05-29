@@ -3214,44 +3214,6 @@ svg.icon-action path {
   fill: var(--text-primary);
 }
 
-.top-navigation {
-  background: var(--header-background-primary);
-  position: relative;
-  width: 100%;
-  transition: all 0.3s ease-in-out;
-}
-.top-navigation.is-transparent {
-  background-color: transparent;
-}
-.top-navigation .top-navigation-wrap {
-  align-items: center;
-  display: flex;
-  flex: 1 1;
-  height: var(--top-nav-height);
-  justify-content: space-between;
-}
-.top-navigation.show-nav {
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-}
-
-/* Media Queries */
-@media screen and (min-width: 992px) {
-  .top-navigation .main-menu-toggle {
-    display: none;
-  }
-  .top-navigation .top-navigation-wrap {
-    flex: 0;
-  }
-}
-.top-navigation-main {
-  display: none;
-  padding: 0;
-  width: 100%;
-}
-.show-nav .top-navigation-main {
-  display: flex;
-  flex-direction: column;
-}
 .top-navigation-main .welcome {
   order: 0;
 }
@@ -3348,9 +3310,6 @@ svg.icon-action path {
   }
 }
 
-.main-nav .top-level-entry-container {
-  width: 5rem;
-}
 .main-nav .top-level-entry {
   border-top: 1px solid var(--border-secondary);
   color: var(--text-primary);
@@ -3414,10 +3373,6 @@ svg.icon-action path {
   }
 }
 
-.nav-wrapper {
-  position: relative;
-}
-
 @media screen and (min-width: 992px) {
   .nav-underline {
     position: absolute;
@@ -3430,31 +3385,6 @@ svg.icon-action path {
   }
 }
 
-ul.nav {
-  box-sizing: border-box;
-  list-style: none;
-  padding: 0;
-  width: 100%;
-  margin-top: 1rem;
-}
-
-/* Media Queries */
-@media screen and (min-width: 992px) {
-  ul.nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    margin: 0 auto 0 0;
-  }
-  ul.nav .forms {
-    flex-shrink: 0;
-  }
-}
-@media screen and (min-width: 1200px) {
-  ul.nav {
-    gap: 0.5rem;
-  }
-}
 .submenu {
   background-color: var(--background-primary);
   list-style: none;
@@ -4109,9 +4039,6 @@ button.signout-button:hover, button.signout-button:focus {
     transform: translateY(0);
   }
 }
-.theme-switcher-menu {
-  margin-bottom: 0.5rem;
-}
 .theme-switcher-menu .button.action > .button-wrap {
   text-transform: none;
 }
@@ -4211,7 +4138,6 @@ button,
   --button-radius: var(--elem-radius, 0.25rem);
   border-radius: var(--button-radius);
   cursor: pointer;
-  display: inline-block;
   padding: 0;
   text-decoration: none;
 }
