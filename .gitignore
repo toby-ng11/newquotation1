@@ -1,4 +1,4 @@
 vendor/
-www/tmp/
+tmp/
 node_modules/
-www/public/build/
+public/build/
