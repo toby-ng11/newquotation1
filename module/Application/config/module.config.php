@@ -340,7 +340,7 @@ return [
             },
             \Twig\Environment::class => function ($container) {
                 $loader = new \Twig\Loader\FilesystemLoader([
-                   'C:\inetpub\wwwroot\newquotation\module\Application\view\email',
+                   realpath(__DIR__ . '/../view/email'),
                 ]);
                 $twig = new \Twig\Environment($loader, [
                     'cache' => false, // Set a writable path like '/data/cache/twig' in production

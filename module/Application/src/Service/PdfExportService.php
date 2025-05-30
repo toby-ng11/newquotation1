@@ -27,9 +27,9 @@ class PdfExportService
         $mpdf = new Mpdf([
             'mode' => 'utf-8',
             'format' => 'letter',
-            'tempDir' => 'C:/inetpub/wwwroot/newquotation/www/tmp',
+            'tempDir' => realpath(__DIR__ . '/../../../../tmp'),
             'fontDir' =>array_merge($fontDirs, [
-                'C:/inetpub/wwwroot/newquotation/www/public/css/fonts',
+                realpath(__DIR__ . '/../../../../public/css/fonts'),
             ]),
             'fontdata' => $fontData + [
                 'inter' => [

@@ -16,8 +16,8 @@ $user = $this->userHelper();
     <link href="/css/index.css" rel="stylesheet" type="text/css">
     <link href="/build/main.css" rel="stylesheet">
     <?php
-//echo $this->headLink();
-?>
+    //echo $this->headLink();
+    ?>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,10 +44,10 @@ $user = $this->userHelper();
     <div id="root">
         <div class="page-wrapper category-html document-page">
             <div class="sticky-header-container">
-                <header class="top-navigation">
-                    <div class="container-a">
-                        <div class="top-navigation-wrap">
-                            <a href="http://devquotation.centura.local" class="logo" aria-label="Centura Quotation homepage">
+                <header class="top-navigation bg-background">
+                    <div class="container-a bg-widget-background mr-auto ml-auto flex w-full flex-col justify-between gap-4 pt-2 pr-4 pb-2 pl-4 lg:flex-row">
+                        <div class="top-navigation-wrap flex h-8 flex-auto items-center justify-between lg:flex-0">
+                            <a href="/" class="logo logo w-40" aria-label="Centura Quotation homepage">
                                 <svg id="centura-logo" width="200" height="20" viewBox="0 0 200 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" role="img">
                                     <title>Centura Quotation Portal</title>
                                     <path d="M113.755 0.361084H87.4381V5.40201H97.9096V19.524H103.284V5.40201H113.755V0.361084Z" />
@@ -60,15 +60,22 @@ $user = $this->userHelper();
                                     <path d="M171.724 9.96108V5.40201C171.724 2.62209 169.353 0.361084 166.389 0.361084H145.446V19.524H150.82V5.40201H165.046C165.797 5.40201 166.389 5.958 166.389 6.66224V9.18271C166.389 9.88695 165.797 10.4429 165.046 10.4429H153.31V11.9997C153.31 13.3711 154.495 14.5202 155.997 14.5202H166.389V19.5611H171.763V15.002C171.763 13.5935 170.578 12.4815 169.076 12.4815C170.538 12.4445 171.724 11.3325 171.724 9.96108Z" />
                                 </svg>
                             </a>
+
+                            <button title="Open main menu" type="button" class="button action has-icon main-menu-toggle lg:hidden" aria-haspopup="menu" aria-label="Open main menu" aria-expanded="false">
+                                <span class="button-wrap">
+                                    <span class="icon icon-menu"></span>
+                                    <span class="visually-hidden">Open main menu</span>
+                                </span>
+                            </button>
                         </div>
 
-                        <div class="top-navigation-main">
+                        <div class="top-navigation-main hidden flex-col items-center lg:flex lg:flex-row">
                             <nav class="main-nav" id="leftSide"></nav>
                             <div class="theme-switcher-menu">
                                 <button type="button" class="button action has-icon theme-switcher-menu small" aria-haspopup="menu">
                                     <span class="button-wrap">
                                         <span class="icon icon-theme-light"></span>
-                                        Theme
+                                        <span class="text-[11px]">Theme</span>
                                     </span>
                                 </button>
                             </div>
