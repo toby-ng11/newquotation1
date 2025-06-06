@@ -4149,7 +4149,6 @@ button,
   border-radius: 10px;
   color: var(--button-color);
   display: flex;
-  font: var(--button-font);
   gap: 0.25rem;
   height: var(--button-height);
   justify-content: center;

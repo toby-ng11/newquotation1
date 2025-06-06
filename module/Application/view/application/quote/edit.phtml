@@ -28,21 +28,21 @@ $disabledSave = 'disabled';
 $btnSave =
     '<button ' .
     $disabledSave .
-    ' id="form-btn-save-quote" data-action="save" 		data-label="Save" 			type="button" class="button action save-quote-button quote-action-button small" data-form="#quote-content">	<span class="button-wrap"><span class="icon icon-save"></span>			Save</span></button>';
+    ' id="form-btn-save-quote" data-action="save" 		data-label="Save" 			type="button" class="button action save-quote-button quote-action-button small" data-form="#quote-content">	<span class="button-wrap text-[10px] font-bold"><span class="icon icon-save"></span>			Save</span></button>';
 $btnSubmit =
-    '<button id="form-btn-submit-quote" 					data-action="submit" 		data-label="Submit"			type="button" class="button action submit-quote-button quote-action-button small">							<span class="button-wrap"><span class="icon icon-submit"></span>		Submit</span></button>';
+    '<button id="form-btn-submit-quote" 					data-action="submit" 		data-label="Submit"			type="button" class="button action submit-quote-button quote-action-button small">							<span class="button-wrap text-[10px] font-bold"><span class="icon icon-submit"></span>		Submit</span></button>';
 $btnUndoSubmit =
-    '<button id="form-btn-undo-submit-quote" 				data-action="undo-submit" 	data-label="Undo Submit" 	type="button" class="button action undo-submit-quote-button quote-action-button small">						<span class="button-wrap"><span class="icon icon-undo"></span>			Undo Submit</span></button>';
+    '<button id="form-btn-undo-submit-quote" 				data-action="undo-submit" 	data-label="Undo Submit" 	type="button" class="button action undo-submit-quote-button quote-action-button small">						<span class="button-wrap text-[10px] font-bold"><span class="icon icon-undo"></span>			Undo Submit</span></button>';
 $btnDisapprove =
-    '<button id="form-btn-disapprove-quote" 				data-action="disapprove" 	data-label="Disapprove"		type="button" class="button action disapprove-quote-button quote-action-button small">						<span class="button-wrap"><span class="icon icon-cancel-circle"></span>	Disapprove</span></button>';
+    '<button id="form-btn-disapprove-quote" 				data-action="disapprove" 	data-label="Disapprove"		type="button" class="button action disapprove-quote-button quote-action-button small">						<span class="button-wrap text-[10px] font-bold"><span class="icon icon-cancel-circle"></span>	Disapprove</span></button>';
 $btnApprove =
-    '<button id="form-btn-approve-quote" 					data-action="approve" 		data-label="Approve" 		type="button" class="button action approve-quote-button quote-action-button small">							<span class="button-wrap"><span class="icon icon-approval"></span>		Approve</span></button>';
+    '<button id="form-btn-approve-quote" 					data-action="approve" 		data-label="Approve" 		type="button" class="button action approve-quote-button quote-action-button small">							<span class="button-wrap text-[10px] font-bold"><span class="icon icon-approval"></span>		Approve</span></button>';
 $btnUndoApprove =
-    '<button id="form-btn-undo-approve-quote" 			data-action="undo-approve" 	data-label="Undo Approve"	type="button" class="button action undo-approve-quote-button quote-action-button small">					<span class="button-wrap"><span class="icon icon-undo"></span>			Undo Approval</span></button>';
+    '<button id="form-btn-undo-approve-quote" 			data-action="undo-approve" 	data-label="Undo Approve"	type="button" class="button action undo-approve-quote-button quote-action-button small">					<span class="button-wrap text-[10px] font-bold"><span class="icon icon-undo"></span>			Undo Approval</span></button>';
 $btnSubmitAgain =
-    '<button id="form-btn-submit-again-quote" 			data-action="submit-again" 	data-label="Submit Again" 	type="button" class="button action submit-again-quote-button quote-action-button small">					<span class="button-wrap"><span class="icon icon-redo">	</span>			Submit Again</span></button>';
+    '<button id="form-btn-submit-again-quote" 			data-action="submit-again" 	data-label="Submit Again" 	type="button" class="button action submit-again-quote-button quote-action-button small">					<span class="button-wrap text-[10px] font-bold"><span class="icon icon-redo">	</span>			Submit Again</span></button>';
 $btnSubmitApprove =
-    '<button id="form-btn-submit-approve-quote" 			data-action="submit-approve" 	data-label="Submit & Approve" 	type="button" class="button action submit-approve-quote-button quote-action-button small">					<span class="button-wrap"><span class="icon icon-submit">	</span>			Submit & Approve</span></button>';
+    '<button id="form-btn-submit-approve-quote" 			data-action="submit-approve" 	data-label="Submit & Approve" 	type="button" class="button action submit-approve-quote-button quote-action-button small">					<span class="button-wrap text-[10px] font-bold"><span class="icon icon-submit">	</span>			Submit & Approve</span></button>';
 // Initialize button group
 $buttons = '';
 
@@ -227,13 +227,13 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                                 <div class="widget-button">
                                     <?php if ($quoteStatusID != $approved) { ?>
                                         <button type="button" class="button action has-icon new-customer small" id="add-new-customer">
-                                            <span class="button-wrap">
+                                            <span class="button-wrap text-[10px] font-bold">
                                                 <span class="icon icon-add"></span>
                                                 New Customer
                                             </span>
                                         </button>
                                         <button type="button" class="button action has-icon discard-customer small basic" style='display:none;' id="discard-new-customer">
-                                            <span class="button-wrap">
+                                            <span class="button-wrap text-[10px] font-bold">
                                                 <span class="icon icon-undo"></span>
                                                 Discard Adding
                                             </span>
@@ -543,7 +543,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                     </div>
                     <div class="widget-button">
                         <button type="button" title="Add new item" class="button action has-icon add-item-button small" id="widget-btn-add-item">
-                            <span class="button-wrap">
+                            <span class="button-wrap text-[10px] font-bold">
                                 <span class="icon icon-add"></span>
                                 Add Item
                             </span>

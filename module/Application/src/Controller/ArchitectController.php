@@ -9,6 +9,9 @@ use Laminas\View\Model\{ViewModel, JsonModel};
 use Application\Model\{Architect, Specifier, Address, Location, Project};
 use Application\Service\UserService;
 use Exception;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ArchitectController extends AbstractActionController
 {
@@ -233,19 +236,74 @@ class ArchitectController extends AbstractActionController
         $projects = $this->architect->fetchProjectsByArchitect($id);
 
         if ($isExport === 'excel') {
-            $filename = "architect_{$id}_projects_" . date('Y-m-d') . ".xls";
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
-            $headers = $this->getResponse()->getHeaders();
-            $headers->addHeaderLine('Content-Type', 'application/vnd.ms-excel');
-            $headers->addHeaderLine('Content-Disposition', 'attachment; filename="' . $filename . '"');
+            // Header
+            $sheet->fromArray(
+                [
+                    'Project ID',
+                    'Project Name',
+                    'Status',
+                    'Location',
+                    'Centura Location',
+                    'Segment',
+                    'Owner',
+                    'Shared',
+                    'REED ID',
+                    'Due Date',
+                    'Required Date',
+                    'General Contractor ID',
+                    'General Contractor',
+                    'Awarded Contractor ID',
+                    'General Contractor',
+                ],
+                null,
+                'A1'
+            );
 
-            $content = "Project ID\tProject Name\tStatus\n";
+            // Rows
+            $row = 2;
             foreach ($projects as $project) {
-                $content .= "{$project['project_id']}\t{$project['project_name']}\t{$project['status_desc']}\n";
+                $sheet->setCellValue("A{$row}", $project['project_id']);
+                $sheet->setCellValue("B{$row}", $project['project_name']);
+                $sheet->setCellValue("C{$row}", $project['status_desc']);
+                $sheet->setCellValue("D{$row}", $project['project_address']);
+                $sheet->setCellValue("E{$row}", $project['centura_location_id']);
+                $sheet->setCellValue("F{$row}", $project['market_segment_desc']);
+                $sheet->setCellValue("G{$row}", $project['owner_name']);
+                $sheet->setCellValue("H{$row}", $project['shared_name']);
+                $sheet->setCellValue("I{$row}", $project['reed']);
+                $sheet->setCellValue("J{$row}", $project['due_date']->format('Y-m-d'));
+                $sheet->setCellValue("K{$row}", $project['require_date']->format('Y-m-d'));
+                $sheet->setCellValue("L{$row}", $project['general_contractor_id']);
+                $sheet->setCellValue("M{$row}", $project['gcontractor_name']);
+                $sheet->setCellValue("N{$row}", $project['awarded_contractor_id']);
+                $sheet->setCellValue("O{$row}", $project['acontractor_name']);
+                $row++;
             }
 
+            $columnCount = $sheet->getHighestColumn(); // 'C', 'D', etc.
+            $columnIndex = Coordinate::columnIndexFromString($columnCount);
+
+            for ($col = 1; $col <= $columnIndex; $col++) {
+                $sheet->getColumnDimensionByColumn($col)->setAutoSize(true);
+            }
+
+            $writer = new Xlsx($spreadsheet);
+            $filename = "architect_{$id}_projects_" . date('Y-m-d') . ".xlsx";
+
             $response = $this->getResponse();
-            $response->setContent($content);
+            $headers = $response->getHeaders();
+            $headers->addHeaderLine('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            $headers->addHeaderLine('Content-Disposition', 'attachment; filename="' . $filename . '"');
+            $headers->addHeaderLine('Cache-Control', 'max-age=0');
+
+            ob_start();
+            $writer->save('php://output');
+            $excelOutput = ob_get_clean();
+
+            $response->setContent($excelOutput);
             return $response;
         }
 

@@ -931,7 +931,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'architect_id',
                     render: function (data, type, row) {
-                        return "<a target='_blank' href='/architect/" + row.architect_id + "/edit'>" + data + '</a>';
+                        return "<a href='/architect/" + row.architect_id + "/edit'>" + data + '</a>';
                     },
                 },
                 {

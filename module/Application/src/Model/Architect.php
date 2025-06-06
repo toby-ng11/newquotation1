@@ -139,7 +139,7 @@ class Architect
         }
     }
 
-    public function fetchArchitectById($id, $company = DEFAULT_COMPANY)
+    public function fetchArchitectById($id)
     {
         if (!InputValidator::isValidId($id)) {
             return false;
@@ -148,7 +148,7 @@ class Architect
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('architect')
-            ->where(['company_id' => $company, 'architect_id' => $id, 'delete_flag' => 'N']);
+            ->where(['architect_id' => $id, 'delete_flag' => 'N']);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
