@@ -52,8 +52,9 @@ class Specifier
             'job_title'         => trim($data['specifier_job_title']),
             'architect_id'      => $architect_id,
             'delete_flag'       => 'N',
-            'date_added'        => new Expression('GETDATE()'),
+            'created_at'        => new Expression('GETDATE()'),
             'added_by'          => $user['id'],
+            'updated_at'         => new Expression('GETDATE()'),
         ];
 
         if (empty($data['specifier_address_id'])) {
@@ -82,10 +83,7 @@ class Specifier
             'first_name'        => trim($data['specifier_first_name']),
             'last_name'         => trim($data['specifier_last_name']),
             'job_title'         => trim($data['specifier_job_title']),
-            //'architect_id'      => $architect_id,
-            //'delete_flag'       => 'N',
-            //'date_added'        => new Expression('GETDATE()'),
-            //'added_by'          => $data['owner_id']
+            'updated_at'         => new Expression('GETDATE()'),
         ];
 
         if (empty($data['specifier_address_id'])) {
@@ -110,7 +108,7 @@ class Specifier
         }
 
         try {
-            $this->specifier->update(['delete_flag' => 'Y'], ['specifier_id' => $id]);
+            $this->specifier->update(['delete_flag' => 'Y', 'deleted_at' => new Expression('GETDATE()'),], ['specifier_id' => $id]);
             return $id;
         } catch (Exception $e) {
             error_log("Specifier\delete: Database Update Error: " . $e->getMessage());

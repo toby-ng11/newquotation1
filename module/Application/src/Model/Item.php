@@ -48,8 +48,8 @@ class Item
             'subtotal'             => round($data['quantity'] * $data['unit_price'], 2),
             'added_by'             => $user['id'],
             'last_maintained_by'   => $user['id'],
-            'date_add'             => new Expression('GETDATE()'),
-            'date_last_maintained' => new Expression('GETDATE()'),
+            'created_at'             => new Expression('GETDATE()'),
+            'updated_at' => new Expression('GETDATE()'),
             'delete_flag'          => 'N'
         ];
 
@@ -95,7 +95,7 @@ class Item
             'uom'                  => $data['uom'],
             'subtotal'             => round($data['quantity'] * $data['unit_price'], 2),
             'last_maintained_by'   => $user['id'],
-            'date_last_maintained' => new Expression('GETDATE()'),
+            'updated_at' => new Expression('GETDATE()'),
             'delete_flag'          => 'N'
         ];
 
@@ -134,8 +134,8 @@ class Item
 
         $info = [
             'last_maintained_by'   => $user['id'],
-            'date_last_maintained' => new Expression('GETDATE()'),
-            'delete_flag'          => 'Y'
+            'delete_flag'          => 'Y',
+            'deleted_at'           => new Expression('GETDATE()'),
         ];
 
         switch ($sheetType) {

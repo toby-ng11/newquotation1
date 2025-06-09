@@ -41,7 +41,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'shared_id',
                 },
                 {
-                    data: 'create_date.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -129,7 +129,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'market_segment_desc',
                 },
                 {
-                    data: 'quote_date.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -242,7 +242,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'quote_count',
                 },
                 {
-                    data: 'create_date.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -336,7 +336,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'quote_count',
                 },
                 {
-                    data: 'create_date.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -431,7 +431,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'quote_count',
                 },
                 {
-                    data: 'create_date.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -519,7 +519,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'project_name',
                 },
                 {
-                    data: 'quote_date.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -604,7 +604,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             responsive: true,
             columns: [
                 {
-                    data: 'date_added.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return '<p><b>' + date.toLocaleDateString('en-CA') + '</b></p>';
@@ -687,7 +687,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'market_segment_desc',
                 },
                 {
-                    data: 'quote_date.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -762,7 +762,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'market_segment_desc',
                 },
                 {
-                    data: 'quote_date.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -852,7 +852,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'market_segment_desc',
                 },
                 {
-                    data: 'quote_date',
+                    data: 'created_at',
                     render: function (data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -947,7 +947,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'class_id',
                 },
                 {
-                    data: 'date_added.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();
@@ -1039,7 +1039,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             responsive: true,
             columns: [
                 {
-                    data: 'date_added.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return '<p><b>' + date.toLocaleDateString('en-CA') + '</b></p>';
@@ -1270,7 +1270,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'contact_full_name',
                 },
                 {
-                    data: 'quote_date.date',
+                    data: 'created_at.date',
                     render: function (data) {
                         let date = new Date(data);
                         return date.toLocaleDateString();

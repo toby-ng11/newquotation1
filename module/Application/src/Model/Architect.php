@@ -61,7 +61,8 @@ class Architect
             'architect_type_id' => $data['architect_type_id'] ?? null,
             'class_id'          => trim($data['architect_class_id']),
             'delete_flag'       => 'N',
-            'date_added'        => new Expression('GETDATE()')
+            'created_at'            => new Expression('GETDATE()'),
+            'updated_at'            => new Expression('GETDATE()'),
         ];
 
         if (empty(trim($data['architect_rep_id']))) {
@@ -93,8 +94,7 @@ class Architect
             //'company_id'      => $data['architect_company_id'],
             'architect_type_id' => $data['architect_type_id'] ?? null,
             'class_id'          => trim($data['architect_class_id']),
-            //'delete_flag'     => 'N',
-            //'date_added'      => new Expression('GETDATE()')
+            'updated_at'            => new Expression('GETDATE()'),
         ];
 
         if (empty(trim($data['architect_rep_id']))) {
@@ -131,7 +131,10 @@ class Architect
         }
 
         try {
-            $this->architect->update(['delete_flag' => 'Y'], ['architect_id' => $id]);
+            $this->architect->update([
+                'delete_flag' => 'Y',
+                'deleted_at' => new Expression('GETDATE()')
+            ], ['architect_id' => $id]);
             return $id;
         } catch (Exception $e) {
             error_log("Architect\delete: Database Update Error: " . $e->getMessage());

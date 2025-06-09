@@ -60,12 +60,13 @@ class Project
             'last_maintained_by'    => $data['owner_id'],
             'shared_id'             => $data['shared_id'],
             'reed'                  => trim($data['reed']),
-            'status'                => $data['status'],
+            'status_id'                => $data['status'],
             'general_contractor_id' => !empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
             'awarded_contractor_id' => !empty($data['awarded_contractor_id']) ? $data['awarded_contractor_id'] : null,
-            'create_date'           => new Expression('GETDATE()'),
+            'created_at'           => new Expression('GETDATE()'),
             'require_date'          => !empty($data['require_date']) ? $data['require_date'] : new Expression('GETDATE()'),
-            'due_date'              => !empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()')
+            'due_date'              => !empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()'),
+            'updated_at' => new Expression('GETDATE()'),
         ];
 
         if (empty($data['architect_id']) && !empty($data['architect_name'])) {
@@ -137,10 +138,10 @@ class Project
             'last_maintained_by'    => $data['user_session_id'],
             'shared_id'             => $data['shared_id'],
             'reed'                  => $data['reed'],
-            'status'                => $data['status'],
+            'status_id'                => $data['status'],
             'general_contractor_id' => !empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
             'awarded_contractor_id' => !empty($data['awarded_contractor_id']) ? $data['awarded_contractor_id'] : null,
-            //'create_date'           => new Expression('GETDATE()'),
+            'updated_at'            => new Expression('GETDATE()'),
             'require_date'          => !empty($data['require_date']) ? $data['require_date'] : new Expression('GETDATE()'),
             'due_date'              => !empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()')
         ];
@@ -160,7 +161,9 @@ class Project
             return false;
         }
 
-        $info = [];
+        $info = [
+            'updated_at' => new Expression('GETDATE()'),
+        ];
 
         if (empty($data['architect_id']) && !empty($data['architect_name'])) {
             $info['architect_id'] = $this->getArchitect()->add($data);
@@ -213,7 +216,13 @@ class Project
         }
 
         try {
-            $this->project->update(['delete_flag' => 'Y'], ['project_id' => $project_id]);
+            $this->project->update(
+                [
+                    'delete_flag' => 'Y',
+                    'deleted_at' => new Expression('GETDATE()')
+                ],
+                ['project_id' => $project_id]
+            );
             return true;
         } catch (Exception $e) {
             error_log("Project/delete:Database Delete Error: " . $e->getMessage());
@@ -229,7 +238,7 @@ class Project
 
         try {
             $this->project->update(
-                ['architect_address_id' => null, 'specifier_id' => null],
+                ['architect_address_id' => null, 'specifier_id' => null, 'updated_at' => new Expression('GETDATE()')],
                 ['architect_id' => $architect_id]
             );
             return true;
@@ -361,7 +370,6 @@ class Project
 
         $select = $sql->select('status')
             ->where([
-                'delete_flag' => 'N',
                 'project_flag' => 'Y'
             ])
             ->order('status_desc ASC');
@@ -376,9 +384,6 @@ class Project
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('market_segment')
-            ->where([
-                'delete_flag' => 'N'
-            ])
             ->order('market_segment_desc ASC');
 
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -431,7 +436,7 @@ class Project
         $select = $sql->select();
         $select->from('p2q_view_project')
             ->columns(['total' => new Expression('COUNT(*)')])
-            ->where(['status' => 11]);
+            ->where(['status_id' => 11]);
 
         if (!$admin) {
             $select->where(['architect_rep_id' => $user_id]);
@@ -452,7 +457,7 @@ class Project
         $select = $sql->select();
         $select->from('p2q_view_project')
             ->columns(['total' => new Expression('COUNT(*)')])
-            ->where(["status not in (11, 13, 14)"]);
+            ->where(["status_id not in (11, 13, 14)"]);
 
         if (!$admin) {
             $select->where(['architect_rep_id' => $user_id]);

@@ -9,6 +9,7 @@ use Laminas\Db\Sql\Sql;
 use Laminas\Db\TableGateway\TableGateway;
 
 use Exception;
+use Laminas\Db\Sql\Expression;
 
 class Address
 {
@@ -39,7 +40,9 @@ class Address
             'central_phone_number'  => trim($data['central_phone_number']),
             'delete_flag'           => 'N',
             'email_address'         => trim($data['email_address']),
-            'url'                   => trim($data['url'])
+            'url'                   => trim($data['url']),
+            'created_at'            => new Expression('GETDATE()'),
+            'updated_at'            => new Expression('GETDATE()'),
         ];
 
         try {
@@ -70,7 +73,8 @@ class Address
             'central_phone_number'  => $data['central_phone_number'],
             //'delete_flag'           => 'N',
             'email_address'         => trim($data['email_address']),
-            'url'                   => trim($data['url'])
+            'url'                   => trim($data['url']),
+            'updated_at'            => new Expression('GETDATE()'),
         ];
 
         try {
@@ -89,7 +93,10 @@ class Address
         }
 
         try {
-            $this->address->update(['delete_flag' => 'Y'], ['address_id' => $id]);
+            $this->address->update([
+                'delete_flag' => 'Y',
+                'deleted_at' => new Expression('GETDATE()')
+            ], ['address_id' => $id]);
             return $id;
         } catch (Exception $e) {
             error_log("Address\delete: Database Update Error: " . $e->getMessage());
@@ -107,7 +114,9 @@ class Address
             'name'                  => trim($data['specifier_first_name']) . ' ' . trim($data['specifier_last_name']),
             'central_phone_number'  => $data['specifier_phone_number'],
             'delete_flag'           => 'N',
-            'email_address'         => trim($data['specifier_email'])
+            'email_address'         => trim($data['specifier_email']),
+            'created_at'            => new Expression('GETDATE()'),
+            'updated_at'            => new Expression('GETDATE()'),
         ];
 
         try {
@@ -130,6 +139,7 @@ class Address
             'name'                  => trim($data['specifier_first_name']) . ' ' . trim($data['specifier_last_name']),
             'central_phone_number'  => trim($data['specifier_phone_number']),
             'email_address'         => trim($data['specifier_email']),
+            'updated_at'            => new Expression('GETDATE()'),
         ];
 
         try {

@@ -40,7 +40,8 @@ class Note
             'note_title' => trim($data['note_title']),
             'project_note' => trim($data['project_note']),
             'next_action' => trim($data['next_action']),
-            'date_added' => new Expression('GETDATE()'),
+            'created_at' => new Expression('GETDATE()'),
+            'updated_at' => new Expression('GETDATE()'),
             'owner_id' => $user['id'],
             'delete_flag' => 'N',
             'follow_up_date' => !empty($data['follow_up_date']) ? $data['follow_up_date'] : null
@@ -66,6 +67,7 @@ class Note
             'project_note' => trim($data['project_note']),
             'next_action' => trim($data['next_action']),
             'follow_up_date' => !empty($data['follow_up_date']) ? $data['follow_up_date'] : null,
+            'updated_at' => new Expression('GETDATE()'),
         ];
 
         try {
@@ -85,6 +87,7 @@ class Note
 
         $info = [
             'delete_flag' => 'Y',
+            'deleted_at' => new Expression('GETDATE()'),
         ];
 
         try {

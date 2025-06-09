@@ -69,11 +69,12 @@ class Quote
                 'delete_flag'        => 'N',
                 'project_id'         => $data['project_id'],
                 'contact_id'         => $data['contact_id'],
-                'status'             => Quote::NOT_SUBMITTED,
-                'quote_date'         => new Expression('GETDATE()'),
+                'status_id'             => Quote::NOT_SUBMITTED,
+                'created_at'         => new Expression('GETDATE()'),
                 'expire_date'        => new Expression('DATEADD(month, 2, GETDATE())'), // add 2 months to current date
                 'ship_required_date' => ($data['require_date']) ?? null,
                 'taker'              => $user['id'],
+                'updated_at'         => new Expression('GETDATE()'),
             ];
 
             $this->quote->insert($info);
@@ -148,43 +149,44 @@ class Quote
             'price_approve_id'   => $data['price_approve_id'] ?? null,
             'lead_time_id'       => $data['lead_time_id'] ?? null,
             'note'               => $data['note'],
+            'updated_at'         => new Expression('GETDATE()'),
         ];
 
         if (array_key_exists('request_action', $data)) {
             switch ($data['request_action']) {
                 case QuoteController::ACTION_SUBMIT:
-                    $info['status'] = Quote::WAITING_APPROVAL;
+                    $info['status_id'] = Quote::WAITING_APPROVAL;
                     $info['submit_by'] = $user['id'];
                     break;
                 case QuoteController::ACTION_SUBMIT_AGAIN:
-                    $info['status'] = Quote::WAITING_APPROVAL;
+                    $info['status_id'] = Quote::WAITING_APPROVAL;
                     $info['submit_by'] = $user['id'];
                     break;
                 case QuoteController::ACTION_APPROVE:
-                    $info['status'] = Quote::APPROVED;
+                    $info['status_id'] = Quote::APPROVED;
                     $info['approve_date'] = new Expression('GETDATE()');
                     $info['approved_by'] = $user['id'];
                     break;
                 case QuoteController::ACTION_DISAPPROVE:
-                    $info['status'] = Quote::DISAPPROVED;
+                    $info['status_id'] = Quote::DISAPPROVED;
                     $info['price_approve_id'] = null;
                     $info['lead_time_id'] = null;
                     $info['approve_date'] = null;
                     $info['approved_by'] = null;
                     break;
                 case QuoteController::ACTION_UNDO_SUBMIT:
-                    $info['status'] = Quote::NOT_SUBMITTED;
+                    $info['status_id'] = Quote::NOT_SUBMITTED;
                     $info['submit_by'] = null;
                     break;
                 case QuoteController::ACTION_UNDO_APPROVE:
-                    $info['status'] = Quote::WAITING_APPROVAL;
+                    $info['status_id'] = Quote::WAITING_APPROVAL;
                     $info['price_approve_id'] = null;
                     $info['lead_time_id'] = null;
                     $info['approve_date'] = null;
                     $info['approved_by'] = null;
                     break;
                 case QuoteController::ACTION_SUBMIT_APPROVE:
-                    $info['status'] = Quote::APPROVED;
+                    $info['status_id'] = Quote::APPROVED;
                     $info['submit_by'] = $user['id'];
                     $info['approve_date'] = new Expression('GETDATE()');
                     $info['approved_by'] = $user['id'];
@@ -208,7 +210,7 @@ class Quote
         }
 
         try {
-            $this->quote->update(['delete_flag' => 'Y'], ['quote_id' => $quote_id]);
+            $this->quote->update(['delete_flag' => 'Y','deleted_at' => new Expression('GETDATE()'),], ['quote_id' => $quote_id]);
             return true;
         } catch (ErrorException $e) {
             error_log("Project/delete:Database Delete Error: " . $e->getMessage());
