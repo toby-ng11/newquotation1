@@ -3,9 +3,6 @@ name: gitleaks
 on:
   pull_request:
   push:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 4 * * *" # Runs daily at 4 AM UTC
 
 jobs:
   scan:
