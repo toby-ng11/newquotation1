@@ -1,6 +1,35 @@
 <?php
 echo $this->doctype();
+
 $user = $this->userHelper();
+
+$manifestPath = __DIR__ . '/../../../../public/build/.vite/manifest.json'; // adjust path
+if (!$manifestPath || !file_exists($manifestPath)) {
+    throw new \RuntimeException('Vite manifest file not found: ' . $manifestPath);
+}
+$manifest = json_decode(file_get_contents($manifestPath), true);
+
+function vite_asset(string $entry, array $manifest): string
+{
+    if (!isset($manifest[$entry])) {
+        return '';
+    }
+
+    $html = '';
+    $entryInfo = $manifest[$entry];
+
+    // Load CSS
+    if (!empty($entryInfo['css'])) {
+        foreach ($entryInfo['css'] as $css) {
+            $html .= '<link rel="stylesheet" href="/build/' . $css . '">' . PHP_EOL;
+        }
+    }
+
+    // Load main JS
+    $html .= '<script type="module" src="/build/' . $entryInfo['file'] . '"></script>' . PHP_EOL;
+
+    return $html;
+}
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="light">
 
@@ -124,7 +153,8 @@ $user = $this->userHelper();
         </div>
     </div>
 
-    <script type="module" src="build/main.js"></script>
+    <?= vite_asset('p2q.ts', $manifest) ?>
+    <?= vite_asset('app.ts', $manifest) ?>
 </body>
 
 <!-- Footer -->

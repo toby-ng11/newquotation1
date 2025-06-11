@@ -162,7 +162,7 @@ class Architect
     {
         $sql = new Sql($this->adapter);
 
-        $select = $sql->select('architect_type')
+        $select = $sql->select('architect_types')
             ->where(['delete_flag' => 'N'])
             ->order('architect_type_desc ASC');
 

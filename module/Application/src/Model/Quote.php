@@ -316,8 +316,7 @@ class Quote
     {
         $sql = new Sql($this->adapter);
 
-        $select = $sql->select('lead_time')
-            ->where(['delete_flag' => 'N'])
+        $select = $sql->select('lead_times')
             ->order('lead_time_desc asc');
 
             $statement = $sql->prepareStatementForSqlObject($select);

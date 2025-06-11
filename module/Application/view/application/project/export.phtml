@@ -129,7 +129,7 @@
 
         <h2><?= $this->escapeHtml($project['project_name']) ?></h2>
         <p>Project #<?= $this->escapeHtml($project['project_id']) ?> at <?= $this->escapeHtml($project['project_address']) ?></p>
-        <p>Created on <?= $this->escapeHtml($project['create_date']->format('M j, Y')) ?></p>
+        <p>Created on <?= $this->escapeHtml($project['created_at']->format('M j, Y')) ?></p>
         <p>Required on <?= $this->escapeHtml($project['require_date']->format('M j, Y')) ?></p>
         <p>Due on <?= $this->escapeHtml($project['due_date']->format('M j, Y')) ?></p>
 

@@ -38,8 +38,8 @@ $projectRequiredDate = $project['require_date'];
 
     <section class="fade-in-up" aria-labelledby="project-information">
         <form action="/project/<?= $this->escapeHtml(
-            $projectID
-        ) ?>/edit" method="post" class="form" id='project_content' data-save-btn="#form-btn-save-project" data-form="#projectForm" data-page="edit">
+                                    $projectID
+                                ) ?>/edit" method="post" class="form" id='project_content' data-save-btn="#form-btn-save-project" data-form="#projectForm" data-page="edit">
             <div class="widget-table">
                 <!--<div class="widget-button">
 						<div class="widget-pin">
@@ -78,10 +78,10 @@ $projectRequiredDate = $project['require_date'];
                             <select name="location_id" id="location_id">
                                 <?php foreach ($location as $l) { ?>
                                     <option value="<?= $this->escapeHtml($l['location_id']) ?>" <?php if (
-    $l['location_id'] == $project['centura_location_id']
-) {
-    echo 'selected';
-} ?>>
+                                                                                                    $l['location_id'] == $project['centura_location_id']
+                                                                                                ) {
+                                                                                                    echo 'selected';
+                                                                                                } ?>>
                                         <?= $this->escapeHtml($l['branch_description']) ?>
                                     </option>
                                 <?php } ?>
@@ -93,9 +93,9 @@ $projectRequiredDate = $project['require_date'];
                             <select name="status" id="status" class="validate[required]">
                                 <option value="">-- Select Status --</option>
                                 <?php foreach ($status as $s) { ?>
-                                    <option value="<?= $this->escapeHtml($s['status_id']) ?>" <?php if ($s['status_id'] == $project['status']) {
-    echo 'selected';
-} ?>>
+                                    <option value="<?= $this->escapeHtml($s['status_id']) ?>" <?php if ($s['status_id'] == $project['status_id']) {
+                                                                                                    echo 'selected';
+                                                                                                } ?>>
                                         <?= $this->escapeHtml($s['status_desc']) ?>
                                     </option>
                                 <?php } ?>
@@ -108,10 +108,10 @@ $projectRequiredDate = $project['require_date'];
                                 <option value="">-- Choose Segment --</option>
                                 <?php foreach ($marketSegment as $s) { ?>
                                     <option value="<?= $this->escapeHtml($s['market_segment_id']) ?>" <?php if (
-    $s['market_segment_id'] == $project['market_segment_id']
-) {
-    echo 'selected';
-} ?>>
+                                                                                                            $s['market_segment_id'] == $project['market_segment_id']
+                                                                                                        ) {
+                                                                                                            echo 'selected';
+                                                                                                        } ?>>
                                         <?= $this->escapeHtml($s['market_segment_desc']) ?>
                                     </option>
                                 <?php } ?>
@@ -168,8 +168,8 @@ $projectRequiredDate = $project['require_date'];
                                 <label for="general_contractor_name">General Contractor</label>
                                 <input type="text" id="general_contractor_name" name="general_contractor_name"
                                     placeholder="Add general contractor" value='<?php if (!empty($generalContractor)) {
-                                        echo $generalContractor['customer_name'] . ' - ' . $generalContractor['company_id'];
-                                    } ?>' />
+                                                                                    echo $generalContractor['customer_name'] . ' - ' . $generalContractor['company_id'];
+                                                                                } ?>' />
                                 <input type="hidden" id="general_contractor_id" name="general_contractor_id"
                                     value="<?= $this->escapeHtml($project['general_contractor_id']) ?>" />
                             </div>
@@ -178,8 +178,8 @@ $projectRequiredDate = $project['require_date'];
                                 <label for="awarded_contractor_name">Awarded Contractor</label>
                                 <input type="text" id="awarded_contractor_name" name="awarded_contractor_name"
                                     placeholder="Add awarded contractor" value='<?php if (!empty($awardedContractor)) {
-                                        echo $awardedContractor['customer_name'] . ' - ' . $awardedContractor['company_id'];
-                                    } ?>' />
+                                                                                    echo $awardedContractor['customer_name'] . ' - ' . $awardedContractor['company_id'];
+                                                                                } ?>' />
                                 <input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id'
                                     value="<?= $this->escapeHtml($project['awarded_contractor_id']) ?>">
                             </div>
@@ -217,8 +217,8 @@ $projectRequiredDate = $project['require_date'];
             <div class="line"></div>
             <div class="widget-section">
                 <form action="/project/<?= $this->escapeHtml(
-                    $projectID
-                ) ?>/editarchitect" method="post" class="form" id='project-architect-form' data-page="edit">
+                                            $projectID
+                                        ) ?>/editarchitect" method="post" class="form" id='project-architect-form' data-page="edit">
                     <details id="architect-details">
                         <summary>Architect & Specifier</summary>
                         <div class="widget-section">
@@ -243,8 +243,8 @@ $projectRequiredDate = $project['require_date'];
                                     <input type='text' name="architect_name" id='architect_name' class="tipN"
                                         original-title="Search by ID or Name" value='<?= $architect['architect_name'] ?? '' ?>' />
                                     <input type="hidden" name='architect_id' id='architect_id' value="<?= $this->escapeHtml(
-                                        $architect['architect_id'] ?? ''
-                                    ) ?>" />
+                                                                                                            $architect['architect_id'] ?? ''
+                                                                                                        ) ?>" />
                                 </div>
 
                                 <div class="oneTwo">
@@ -252,11 +252,11 @@ $projectRequiredDate = $project['require_date'];
                                     <select id="architect_company_id" name="architect_company_id">
                                         <?php foreach ($company as $l) { ?>
                                             <option value="<?= $this->escapeHtml($l['company_id']) ?>" <?php if (
-    $l['company_id'] ===
-    ($architect['company_id'] ?? DEFAULT_COMPANY)
-) {
-    echo 'selected';
-} ?>>
+                                                                                                            $l['company_id'] ===
+                                                                                                            ($architect['company_id'] ?? DEFAULT_COMPANY)
+                                                                                                        ) {
+                                                                                                            echo 'selected';
+                                                                                                        } ?>>
                                                 <?= $this->escapeHtml($l['company_name']) ?>
                                             </option>
                                         <?php } ?>
@@ -275,8 +275,8 @@ $projectRequiredDate = $project['require_date'];
                                         <option value="">-- Choose architect type --</option>
                                         <?php foreach ($this->architectType as $a) { ?>
                                             <option value="<?= $this->escapeHtml($a['architect_type_id']) ?>" <?= $this->escapeHtml(
-    $a['architect_type_id'] === ($architect['architect_type_id'] ?? '') ? 'selected' : ''
-) ?>><?= $this->escapeHtml($a['architect_type_desc']) ?></option>
+                                                                                                                    $a['architect_type_id'] === ($architect['architect_type_id'] ?? '') ? 'selected' : ''
+                                                                                                                ) ?>><?= $this->escapeHtml($a['architect_type_desc']) ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -301,9 +301,9 @@ $projectRequiredDate = $project['require_date'];
                                         <?php if (!empty($addressList)):
                                             foreach ($addressList as $a): ?>
                                                 <option value="<?= $this->escapeHtml($a['address_id']) ?>" <?= $a['address_id'] ===
-$project['architect_address_id']
-    ? 'selected'
-    : '' ?>>
+                                                                                                                $project['architect_address_id']
+                                                                                                                ? 'selected'
+                                                                                                                : '' ?>>
                                                     <?= $this->escapeHtml($a['name']) ?>
                                                 </option>
                                         <?php endforeach;
@@ -333,8 +333,8 @@ $project['architect_address_id']
                                 <div class="oneTwo">
                                     <label for="phys_city">City</label>
                                     <input type='text' name="phys_city" id='phys_city' value="<?= $this->escapeHtml(
-                                        $address['phys_city'] ?? ''
-                                    ) ?>" placeholder="Optional" />
+                                                                                                    $address['phys_city'] ?? ''
+                                                                                                ) ?>" placeholder="Optional" />
                                 </div>
 
                                 <div class="oneTwo">
@@ -371,8 +371,8 @@ $project['architect_address_id']
                                 <div class="oneTwo">
                                     <label for="url">URL</label>
                                     <input type="url" id='url' name='url' value="<?= $this->escapeHtml(
-                                        $address['url'] ?? ''
-                                    ) ?>" placeholder="Optional">
+                                                                                        $address['url'] ?? ''
+                                                                                    ) ?>" placeholder="Optional">
                                 </div>
                             </div>
                         </div>
@@ -383,8 +383,8 @@ $project['architect_address_id']
                             <h4>Specifier</h4>
                             <div class="formRow">
                                 <input type="hidden" id='specifier_id' name="specifier_id" value="<?= $this->escapeHtml(
-                                    $project['specifier_id']
-                                ) ?>" />
+                                                                                                        $project['specifier_id']
+                                                                                                    ) ?>" />
                                 <input type="hidden" id='specifier_address_id' name="specifier_address_id"
                                     value="<?= $this->escapeHtml($specifier['address_id'] ?? '') ?>" />
                                 <div class="oneTwo ">
@@ -393,9 +393,9 @@ $project['architect_address_id']
                                         <?php if (!empty($specifierList)):
                                             foreach ($specifierList as $spec): ?>
                                                 <option value="<?= $this->escapeHtml($spec['specifier_id']) ?>" <?= $spec['specifier_id'] ===
-$project['specifier_id']
-    ? 'selected'
-    : '' ?>>
+                                                                                                                    $project['specifier_id']
+                                                                                                                    ? 'selected'
+                                                                                                                    : '' ?>>
                                                     <?= $spec['first_name'] . ' ' . $spec['last_name'] ?>
                                                 </option>
                                         <?php endforeach;
@@ -426,8 +426,8 @@ $project['specifier_id']
                                     <label for="specifier_phone_number">Phone Number</label>
                                     <input type='tel' id='specifier_phone_number' name="specifier_phone_number"
                                         class="maskPhone" placeholder="(123) 456-7890" value="<?= $this->escapeHtml(
-                                            $specifier['central_phone_number'] ?? ''
-                                        ) ?>" />
+                                                                                                    $specifier['central_phone_number'] ?? ''
+                                                                                                ) ?>" />
                                 </div>
 
                                 <div class="oneTwo ">

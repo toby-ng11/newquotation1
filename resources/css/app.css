@@ -61,6 +61,7 @@
     --color-sidebar-ring: var(--sidebar-ring);
 
     --color-widget-background: var(--widget-background);
+    --color-widget-background-hover: var(--widget-background-hover);
 }
 
 :root {
@@ -99,6 +100,7 @@
     --sidebar-ring: oklch(0.87 0 0);
 
     --widget-background: oklch(1 0 0 / 70%);
+    --widget-background-hover: oklch(1 0 0 / 80%);
 }
 
 .dark {
@@ -136,6 +138,7 @@
     --sidebar-ring: oklch(0.439 0 0);
 
     --widget-background: oklch(0.3979 0 0 / 50%);
+    ---widget-background-hover: oklch(1 0 0 / 10%);
 }
 
 @layer base {
@@ -150,16 +153,19 @@
     h1 {
         font-size: var(--text-3xl);
         font-weight: bold;
+        letter-spacing: -0.031rem;
     }
 
     h2 {
         font-size: var(--text-2xl);
         font-weight: bold;
+        letter-spacing: -0.031rem;
     }
 
     h3 {
         font-size: var(--text-xl);
         font-weight: bold;
+        letter-spacing: -0.031rem;
     }
 
     h4 {
@@ -175,7 +181,19 @@
     .top-navigation.show-nav {
         @apply shadow-md;
     }
- }
+
+    .fade-in-up {
+        @apply translate-y-8 opacity-0 transition duration-500 ease-in-out;
+    }
+
+    .fade-in-up.show {
+        @apply translate-y-0 opacity-100;
+    }
+
+    .feature:hover {
+        @apply -translate-y-2 bg-widget-background-hover;
+    }
+}
 
 .input-base {
     @apply border-input focus-visible:border-ring focus-visible:ring-ring/50 dark:hover:bg-input/50 flex h-9 w-full items-center rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50;
