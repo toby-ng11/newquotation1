@@ -298,7 +298,7 @@ return [
                 return new Model\Project(
                     $dbAdapter,
                     new TableGateway('project', $dbAdapter),
-                    new TableGateway('p2q_view_project', $dbAdapter),
+                    new TableGateway('p2q_view_projects', $dbAdapter),
                     $container
                 );
             },

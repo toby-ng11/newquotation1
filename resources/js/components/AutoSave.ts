@@ -1,12 +1,24 @@
 import { showFlashMessage } from '@/components/flashmessage';
 import { setState } from './state';
 
-export function initAutoSave(formElement: HTMLFormElement, saveCallback: () => void, delay = 5000) {
+let enabled = true;
+
+function disableAutoSave() {
+    enabled = false;
+}
+
+function enableAutoSave() {
+    enabled = true;
+}
+
+function initAutoSave(formElement: HTMLFormElement, saveCallback: () => void, delay = 5000) {
     if (!formElement || typeof saveCallback !== 'function') return;
 
     let autoSaveTimer: ReturnType<typeof setTimeout> | undefined = undefined;
 
     formElement.addEventListener('input', () => {
+        if (!enabled) return;
+
         setState({ unsave: true });
 
         if (autoSaveTimer) clearTimeout(autoSaveTimer);
@@ -17,3 +29,5 @@ export function initAutoSave(formElement: HTMLFormElement, saveCallback: () => v
         }, delay);
     });
 }
+
+export { disableAutoSave, enableAutoSave, initAutoSave };

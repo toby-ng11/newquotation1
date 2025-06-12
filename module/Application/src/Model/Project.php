@@ -14,18 +14,18 @@ class Project
 {
     protected $adapter;
     protected $project;
-    protected $p2q_view_project;
+    protected $p2q_view_projects;
     protected $container;
 
     public function __construct(
         Adapter $adapter,
         TableGateway $project,
-        TableGateway $p2q_view_project,
+        TableGateway $p2q_view_projects,
         ContainerInterface $container
     ) {
         $this->adapter = $adapter;
         $this->project = $project;
-        $this->p2q_view_project = $p2q_view_project;
+        $this->p2q_view_projects = $p2q_view_projects;
         $this->container = $container;
     }
 
@@ -255,7 +255,7 @@ class Project
 
     public function fetchAllViews()
     {
-        return $this->p2q_view_project->select();
+        return $this->p2q_view_projects->select();
     }
 
     public function fetchById($id)
@@ -263,7 +263,7 @@ class Project
         if (!InputValidator::isValidId($id)) {
             return false;
         }
-        return $this->p2q_view_project->select(['project_id' => $id])->current();
+        return $this->p2q_view_projects->select(['project_id' => $id])->current();
     }
 
     public function fetchOwnProjects($user_id)
@@ -274,7 +274,7 @@ class Project
 
         $sql = new Sql($this->adapter);
 
-        $select = $sql->select('p2q_view_project')
+        $select = $sql->select('p2q_view_projects')
             ->where(['owner_id' => $user_id])
             ->order('project_id DESC');
 
@@ -291,7 +291,7 @@ class Project
 
         $sql = new Sql($this->adapter);
         $select = $sql->select();
-        $select->from('p2q_view_project')
+        $select->from('p2q_view_projects')
             ->columns(['total' => new Expression('COUNT(*)')])
             ->where(['owner_id' => $user_id]);
 
@@ -306,7 +306,7 @@ class Project
             return false;
         }
 
-        return $this->p2q_view_project->select(['shared_id' => $user_id])->toArray();
+        return $this->p2q_view_projects->select(['shared_id' => $user_id])->toArray();
     }
 
     public function countAssignedProjects($user_id)
@@ -317,7 +317,7 @@ class Project
 
         $sql = new Sql($this->adapter);
         $select = $sql->select();
-        $select->from('p2q_view_project')
+        $select->from('p2q_view_projects')
             ->columns(['total' => new Expression('COUNT(*)')])
             ->where(['shared_id' => $user_id]);
 
@@ -334,7 +334,7 @@ class Project
 
         $sql = new Sql($this->adapter);
 
-        $select = $sql->select('p2q_view_project')
+        $select = $sql->select('p2q_view_projects')
             ->where(['company_id' => $company_id]);
 
         $select->where->notEqualTo('owner_id', $user_id);
@@ -353,7 +353,7 @@ class Project
 
         $sql = new Sql($this->adapter);
         $select = $sql->select();
-        $select->from('p2q_view_project')
+        $select->from('p2q_view_projects')
             ->columns(['total' => new Expression('COUNT(*)')])
             ->where(['company_id' => $company_id]);
 
@@ -434,7 +434,7 @@ class Project
 
         $sql = new Sql($this->adapter);
         $select = $sql->select();
-        $select->from('p2q_view_project')
+        $select->from('p2q_view_projects')
             ->columns(['total' => new Expression('COUNT(*)')])
             ->where(['status_id' => 11]);
 
@@ -455,7 +455,7 @@ class Project
 
         $sql = new Sql($this->adapter);
         $select = $sql->select();
-        $select->from('p2q_view_project')
+        $select->from('p2q_view_projects')
             ->columns(['total' => new Expression('COUNT(*)')])
             ->where(["status_id not in (11, 13, 14)"]);
 

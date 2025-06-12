@@ -260,7 +260,7 @@ class Architect
 
         $sql = new Sql($this->adapter);
 
-        $select = $sql->select('p2q_view_project')
+        $select = $sql->select('p2q_view_projects')
             ->where(['architect_id' => $id]);
 
         $statement = $sql->prepareStatementForSqlObject($select);

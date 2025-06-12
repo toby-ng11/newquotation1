@@ -1,4 +1,4 @@
-import { initAutoSave } from '@/components/AutoSave';
+import { disableAutoSave, initAutoSave } from '@/components/AutoSave';
 import { disableButton } from '@/components/DisableButton';
 import { showFlashMessage } from '@/components/flashmessage';
 import { projectForm, projectID } from '@/components/init.js';
@@ -6,15 +6,10 @@ import { hideLoading, showLoading } from '@/components/LoadingOverlay';
 import { setState } from '@/components/state';
 
 const architectDetails = document.querySelector('#architect-details') as HTMLDetailsElement;
-
 const architectNameInput = document.querySelector('#architect_name') as HTMLInputElement;
-
 const contractorDetails = document.querySelector('#contractor-details') as HTMLDetailsElement;
-
 const generalContractorInput = document.querySelector('#general_contractor_name') as HTMLInputElement;
-
 const awardedContractorInput = document.querySelector('#awarded_contractor_name') as HTMLInputElement;
-
 const saveButton = document.getElementById('form-btn-save-project') as HTMLButtonElement;
 
 async function initProject() {
@@ -193,6 +188,7 @@ let isProjectArchitectFormSaved = true;
 
 async function initArchitectForm() {
     const { setupAutoComplete } = await import('@/components/autocomplete');
+
     let architectFields = document.querySelectorAll(
         '#architect_name, #architect_id, #architect_company_id, #architect_rep_id,#architect_type_id, #architect_class_id',
     ) as NodeListOf<HTMLInputElement>;
@@ -206,19 +202,6 @@ async function initArchitectForm() {
     let specifierFields = document.querySelectorAll(
         '#specifier_id, #specifier_address_id, #specifier_first_name, #specifier_last_name, #specifier_job_title, #specifier_phone_number, #specifier_email',
     ) as NodeListOf<HTMLInputElement>;
-
-    const addArchitectProjectEditBtn = document.getElementById('add-architect-project-edit') as HTMLButtonElement;
-    if (addArchitectProjectEditBtn) {
-        addArchitectProjectEditBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            architectFields.forEach((field) => (field.readOnly = false));
-            addressFields.forEach((field) => (field.readOnly = false));
-            specifierFields.forEach((field) => (field.readOnly = false));
-            [addressDropdown, specifierDropdown].forEach(
-                (dropdown) => (dropdown.innerHTML = '<option value="">-- Please search for an architect first --</option>'),
-            );
-        });
-    }
 
     setupAutoComplete({
         fieldName: '#architect_name',
@@ -440,15 +423,42 @@ async function initArchitectForm() {
     const architectFormSaveBtn = document.getElementById('form-btn-save-architect-project') as HTMLButtonElement;
     const architectIDField = document.getElementById('architect_id') as HTMLInputElement;
 
+    // Init auto save
     if (architectForm && architectIDField.value != '') {
         (document.getElementById('architect_name') as HTMLInputElement).readOnly = true;
         initAutoSave(architectForm, () => saveProjectArchitectForm(true));
     }
 
+    const addArchitectProjectEditBtn = document.getElementById('add-architect-project-edit') as HTMLButtonElement;
+
+    if (addArchitectProjectEditBtn) {
+        addArchitectProjectEditBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            disableAutoSave();
+            architectFields.forEach((field) => {
+                field.readOnly = false;
+                field.value = '';
+            });
+            addressFields.forEach((field) => {
+                field.readOnly = false;
+                field.value = '';
+            });
+            specifierFields.forEach((field) => {
+                field.readOnly = false;
+                field.value = '';
+            });
+            [addressDropdown, specifierDropdown].forEach(
+                (dropdown) => (dropdown.innerHTML = '<option value="">-- Please search for an architect first --</option>'),
+            );
+            disableButton(architectFormSaveBtn, false);
+            isProjectArchitectFormSaved = false;
+        });
+    }
+
     // Enable save button on change
     if (architectForm) {
         architectForm.addEventListener('change', () => {
-            architectFormSaveBtn.disabled = false;
+            disableButton(architectFormSaveBtn, false);
             isProjectArchitectFormSaved = false;
         });
     }
