@@ -1,8 +1,10 @@
+import type { AjaxSettings } from 'datatables.net-dt';
 import DataTable, { Api } from 'datatables.net-dt';
 import 'datatables.net-fixedcolumns-dt';
 import 'datatables.net-responsive-dt';
+import 'datatables.net-select-dt';
 
-import { architectID, projectID, sheetType } from '../../init';
+import { architectID, projectID, sheetType } from '@/components/init';
 
 let projectNoteTable: Api<any>;
 let itemTable: Api<any>;
@@ -17,7 +19,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/admin/project?view=true',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             responsive: true,
             //serverSide: true, // experimetal: server-side processing
@@ -25,7 +27,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'project_id',
                     render: function (data) {
-                        return "<a target='_blank' href='/project/" + data + "/edit'>" + data + '</a>';
+                        return "<a   href='/project/" + data + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -111,7 +113,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/admin/quote?view=true',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             responsive: true,
             //serverSide: true, // to-do: server-side processing with laminas
@@ -119,7 +121,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'quote_id',
                     render: function (data) {
-                        return "<a target='_blank' href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -208,22 +210,14 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/home/own?view=true',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             //responsive: true,
             columns: [
                 {
                     data: 'project_id_ext',
                     render: function (data, type, row) {
-                        return (
-                            "<a target='_blank' href='/project/" +
-                            row.project_id +
-                            "/edit' title='Edit project " +
-                            row.project_id +
-                            "'>" +
-                            data +
-                            '</a>'
-                        );
+                        return "<a href='/project/" + row.project_id + "/edit' title='Edit project " + row.project_id + "'>" + data + '</a>';
                     },
                 },
                 {
@@ -267,7 +261,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'project_id',
                     render: function (data) {
                         return (
-                            "<a target='_blank' href='/project/" +
+                            "<a   href='/project/" +
                             data +
                             "/edit?open=make-quote'><span class='button-wrap'><span class='icon icon-money'></span></span></a>"
                         );
@@ -309,14 +303,14 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/home/assigned',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             //responsive: true,
             columns: [
                 {
                     data: 'project_id_ext',
                     render: function (data, type, row) {
                         {
-                            return "<a target='_blank' href='/project/" + row.project_id + "/edit'>" + data + '</a>';
+                            return "<a href='/project/" + row.project_id + "/edit'>" + data + '</a>';
                         }
                     },
                 },
@@ -361,7 +355,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'project_id',
                     render: function (data) {
                         return (
-                            "<a target='_blank' href='/project/" +
+                            "<a href='/project/" +
                             data +
                             "/edit?open=make-quote'><span class='button-wrap'><span class='icon icon-money'></span></span></a>"
                         );
@@ -403,13 +397,13 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/home/other',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             //responsive: true,
             columns: [
                 {
                     data: 'project_id_ext',
                     render: function (data, type, row) {
-                        return "<a target='_blank' href='/project/" + row.project_id + "/edit'>" + data + '</a>';
+                        return "<a   href='/project/" + row.project_id + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -456,7 +450,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'project_id',
                     render: function (data) {
                         return (
-                            "<a target='_blank' href='/project/" +
+                            "<a   href='/project/" +
                             data +
                             "/edit?open=make-quote'><span class='button-wrap'><span class='icon icon-money'></span></span></a>"
                         );
@@ -498,7 +492,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/home/quote',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             responsive: true,
             //"serverSide": true,
@@ -506,13 +500,13 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'quote_id',
                     render: function (data) {
-                        return "<a target='_blank' href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
                     },
                 },
                 {
                     data: 'project_id',
                     render: function (data) {
-                        return "<a target='_blank' href='/project/" + data + "/edit'>" + data + '</a>';
+                        return "<a   href='/project/" + data + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -599,7 +593,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/home/note',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             responsive: true,
             columns: [
@@ -614,7 +608,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'project_id',
                     render: function (data, type, row) {
                         {
-                            return "<a target='_blank' href='/project/" + row.project_id + "/edit'>" + row.project_id + '</a>';
+                            return "<a   href='/project/" + row.project_id + "/edit'>" + row.project_id + '</a>';
                         }
                     },
                 },
@@ -660,7 +654,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/approval/waiting',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             responsive: true,
             //serverSide: true,
@@ -668,7 +662,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'quote_id',
                     render: function (data) {
-                        return "<a target='_blank' href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -735,15 +729,23 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/approval/approved',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             //responsive: true,
             processing: true,
             //serverSide: true,
             columns: [
                 {
                     data: 'quote_id',
+                    orderable: false,
+                    searchable: false,
+                    render: (data, type, row) => {
+                        return `<input type="checkbox" class="row-checkbox" value="${data}">`;
+                    },
+                },
+                {
+                    data: 'quote_id',
                     render: function (data) {
-                        return "<a target='_blank' href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -796,17 +798,29 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ],
             columnDefs: [
                 {
+                    targets: 0,
+                    orderable: false,
+                    className: 'dt-body-center',
+                    render: function (data, type, row, meta) {
+                        if (type === 'display' && meta.row === 0) {
+                            // Render a blank cell for data rows; header will be handled separately
+                            return `<input type="checkbox" class="row-checkbox" value="${row.project_id}">`;
+                        }
+                        return `<input type="checkbox" class="row-checkbox" value="${row.project_id}">`;
+                    },
+                },
+                {
                     targets: '_all',
                     className: 'dt-head-center',
                 },
                 {
-                    targets: [0, 4, 5, 6, 7, 8, 9, 10],
+                    targets: [1, 5, 6, 7, 8, 9, 10, 11],
                     className: 'dt-body-center',
                 },
             ],
-            order: [[0, 'desc']],
+            order: [[1, 'desc']],
             fixedColumns: {
-                start: 1,
+                start: 2,
                 end: 1,
             },
             scrollX: true,
@@ -816,6 +830,22 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     info.innerHTML = '<h2>Approved</h2>';
                     return info;
                 },
+                topEnd: [
+                    {
+                        div: {
+                            className: 'layout-end',
+                            html: `
+                                <button id="export-selected" class="button action has-icon export-item-button small">
+                                    <span class="button-wrap text-[10px] font-bold">
+                                        <span class="icon icon-export"></span>
+                                            Export Selected
+                                        </span>
+                                    </button>
+                                `,
+                        },
+                    },
+                    'search',
+                ],
                 bottomStart: 'pageLength',
             },
         });
@@ -825,7 +855,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/approval/disapproved',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             responsive: true,
             processing: true,
             //serverSide: true,
@@ -833,7 +863,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'quote_id',
                     render: function (data) {
-                        return "<a target='_blank' href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -884,7 +914,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'quote_id',
                     render: function (data, type, row) {
                         return (
-                            "<a target='_blank' href='/quote/edit/id/" +
+                            "<a   href='/quote/edit/id/" +
                             row.quote_id +
                             "'><span class='button-wrap'><span class='icon icon-edit'></span></span></a>"
                         );
@@ -923,7 +953,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/architect/all',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             responsive: true,
             //serverSide: true, // experimetal: server-side processing
@@ -989,7 +1019,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: '/index/architect/topfive',
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             responsive: true,
             //serverSide: true, // experimetal: server-side processing
@@ -997,7 +1027,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'architect_name',
                     render: function (data, type, row) {
-                        return "<a target='_blank' href='/architect/" + row.architect_id + "/edit'>" + data + '</a>';
+                        return "<a   href='/architect/" + row.architect_id + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -1034,7 +1064,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: `/project/${projectID}/note`,
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             responsive: true,
             columns: [
@@ -1154,7 +1184,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     type: sheetType,
                 },
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             //responsive: true,
             columns: [
@@ -1253,14 +1283,14 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: `/project/${projectID}/quotetable`,
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             responsive: true,
             columns: [
                 {
                     data: 'quote_id',
                     render: function (data) {
-                        return "<a target='_blank' href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -1336,14 +1366,21 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: `/architect/${architectID}/projects`,
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
-            //serverSide: true, // experimetal: server-side processing
             columns: [
                 {
                     data: 'project_id',
+                    orderable: false,
+                    searchable: false,
+                    render: (data, type, row) => {
+                        return `<input type="checkbox" class="row-checkbox" value="${data}">`;
+                    },
+                },
+                {
+                    data: 'project_id',
                     render: function (data) {
-                        return "<a target='_blank' href='/project/" + data + "/edit'>" + data + '</a>';
+                        return "<a   href='/project/" + data + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -1358,20 +1395,32 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ],
             columnDefs: [
                 {
+                    targets: 0,
+                    orderable: false,
+                    className: 'dt-body-center',
+                    render: function (data, type, row, meta) {
+                        if (type === 'display' && meta.row === 0) {
+                            // Render a blank cell for data rows; header will be handled separately
+                            return `<input type="checkbox" class="row-checkbox" value="${row.project_id}">`;
+                        }
+                        return `<input type="checkbox" class="row-checkbox" value="${row.project_id}">`;
+                    },
+                },
+                {
                     targets: '_all',
                     className: 'dt-head-center',
                 },
                 {
-                    targets: [0, 2],
+                    targets: [1, 3],
                     className: 'dt-body-center',
                 },
             ],
             scrollX: true,
             fixedColumns: {
-                start: 1,
+                start: 2,
                 end: 2,
             },
-            order: [[0, 'desc']],
+            order: [[1, 'desc']],
             layout: {
                 topStart: null,
                 topEnd: null,
@@ -1385,7 +1434,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: `/architect/${architectID}/address`,
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             responsive: true,
             //serverSide: true, // experimetal: server-side processing
@@ -1393,7 +1442,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'address_id',
                     render: function (data) {
-                        return "<a target='_blank' href='/architect/" + data + "/edit'>" + data + '</a>';
+                        return "<a   href='/architect/" + data + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -1425,7 +1474,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ajax: {
                 url: `/architect/${architectID}/fetchspecs`,
                 dataSrc: '',
-            },
+            } as AjaxSettings,
             processing: true,
             responsive: true,
             //serverSide: true, // experimetal: server-side processing
@@ -1433,7 +1482,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'specifier_id',
                     render: function (data) {
-                        return "<a target='_blank' href='/architect/" + data + "/edit'>" + data + '</a>';
+                        return "<a   href='/architect/" + data + "/edit'>" + data + '</a>';
                     },
                 },
                 {
@@ -1489,5 +1538,45 @@ export function initTables() {
         el._DT_Instance = tableConfigs[initType](el);
     });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const selectAllCheckbox = document.getElementById('select-all') as HTMLInputElement | null;
+
+    selectAllCheckbox?.addEventListener('change', () => {
+        const allCheckboxes = document.querySelectorAll<HTMLInputElement>('.row-checkbox');
+        allCheckboxes.forEach((checkbox) => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+    });
+
+    // Optional: uncheck "select all" if any row checkbox is manually unchecked
+    document.addEventListener('change', (e) => {
+        const target = e.target as HTMLElement;
+        if (target && target.classList.contains('row-checkbox') && !target.closest('thead')) {
+            const allCheckboxes = document.querySelectorAll<HTMLInputElement>('.row-checkbox');
+            const checkedCheckboxes = document.querySelectorAll<HTMLInputElement>('.row-checkbox:checked');
+
+            const selectAll = document.getElementById('select-all') as HTMLInputElement | null;
+            if (selectAll) {
+                selectAll.checked = allCheckboxes.length === checkedCheckboxes.length;
+            }
+        }
+    });
+});
+
+document.getElementById('export-selected')?.addEventListener('click', function () {
+    const selected: string[] = [];
+    document.querySelectorAll<HTMLInputElement>('.row-checkbox:checked').forEach((cb) => {
+        selected.push(cb.value);
+    });
+
+    if (selected.length === 0) {
+        alert('Please select at least one project to export.');
+        return;
+    }
+
+    const url = `/architect/${architectID}/projects?export=excel&ids=${selected.join(',')}`;
+    window.location.href = url;
+});
 
 export { architectAddressesTable, architectProjectsTable, architectSpecifiersTable, itemTable, projectNoteTable };

@@ -72,7 +72,7 @@ class Quote
                 'status_id'             => Quote::NOT_SUBMITTED,
                 'created_at'         => new Expression('GETDATE()'),
                 'expire_date'        => new Expression('DATEADD(month, 2, GETDATE())'), // add 2 months to current date
-                'ship_required_date' => ($data['require_date']) ?? null,
+                'ship_required_date' => $data['require_date'] ?? new Expression('GETDATE()'),
                 'taker'              => $user['id'],
                 'updated_at'         => new Expression('GETDATE()'),
             ];
@@ -144,8 +144,8 @@ class Quote
         $info = [
             'type_id'            => $data['quote_type_id'],
             'contact_id'         => $data['contact_id'],
-            'expire_date'        => $data['expire_date'] ?? null,
-            'ship_required_date' => $data['ship_required_date'] ?? null,
+            'expire_date'        => $data['expire_date'] ?? new Expression('DATEADD(month, 2, GETDATE())'),
+            'ship_required_date' => $data['ship_required_date'] ?? new Expression('GETDATE()'),
             'price_approve_id'   => $data['price_approve_id'] ?? null,
             'lead_time_id'       => $data['lead_time_id'] ?? null,
             'note'               => $data['note'],

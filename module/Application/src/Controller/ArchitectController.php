@@ -128,7 +128,7 @@ class ArchitectController extends AbstractActionController
             $result = $this->architect->delete($architect_id);
 
             if ($result) {
-                $this->flashMessenger()->addSuccessMessage("Architect delete!");
+                $this->flashMessenger()->addSuccessMessage("Architect deleted!");
                 return new JsonModel([
                     'success' => true,
                 ]);
@@ -229,11 +229,14 @@ class ArchitectController extends AbstractActionController
         $id = $this->params()->fromRoute('id', null);
         $isExport = $this->params()->fromQuery('export', null);
 
+        $selectedIDs = $this->params()->fromQuery('ids');
+        $selectedIDsArray = $selectedIDs ? explode(',', $selectedIDs) : null;
+
         if (empty($id)) {
             return new JsonModel(['error' => 'ID is required']);
         }
 
-        $projects = $this->architect->fetchProjectsByArchitect($id);
+        $projects = $this->architect->fetchProjectsByArchitect($id, $selectedIDsArray);
 
         if ($isExport === 'excel') {
             $spreadsheet = new Spreadsheet();

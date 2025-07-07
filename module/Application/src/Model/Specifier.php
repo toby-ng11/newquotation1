@@ -57,15 +57,16 @@ class Specifier
             'updated_at'         => new Expression('GETDATE()'),
         ];
 
-        if (empty($data['specifier_address_id'])) {
-            $info['address_id'] = $this->getAddress()->addSpecifierAddress($data);
-        } else {
-            $info['address_id'] = $data['specifier_address_id'];
-        }
-
         try {
             $this->specifier->insert($info);
             $newSpecId = $this->specifier->getLastInsertValue();
+
+            if (empty($data['specifier_address_id'])) {
+                $this->getAddress()->addSpecifierAddress($data, $newSpecId);
+            } else {
+                $this->getAddress()->editSpecifierAddress($data, $data['specifier_address_id']);
+            }
+
             return $newSpecId;
         } catch (Exception $e) {
             error_log("Specifer\add:Database Insert Error: " . $e->getMessage());
@@ -87,7 +88,7 @@ class Specifier
         ];
 
         if (empty($data['specifier_address_id'])) {
-            $info['address_id'] = $this->getAddress()->addSpecifierAddress($data);
+            $info['address_id'] = $this->getAddress()->addSpecifierAddress($data, $id);
         } else {
             $info['address_id'] = $this->getAddress()->editSpecifierAddress($data, $data['specifier_address_id']);
         }

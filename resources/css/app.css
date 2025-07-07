@@ -2,6 +2,7 @@
 @import url('datatables.net-dt');
 @import url('datatables.net-fixedcolumns-dt');
 @import url('datatables.net-responsive-dt');
+@import url('datatables.net-select-dt');
 
 @import 'tailwindcss';
 @import 'tw-animate-css';
@@ -62,6 +63,10 @@
 
     --color-widget-background: var(--widget-background);
     --color-widget-background-hover: var(--widget-background-hover);
+
+    --color-architect-dash-bg1: var(--architect-dashboard-bg1);
+    --color-architect-dash-bg2: var(--architect-dashboard-bg2);
+    --color-architect-dash-bg3: var(--architect-dashboard-bg3);
 }
 
 :root {
@@ -101,6 +106,10 @@
 
     --widget-background: oklch(1 0 0 / 70%);
     --widget-background-hover: oklch(1 0 0 / 80%);
+
+    --architect-dashboard-bg1: oklch(0.9402 0.0404 222.26);
+    --architect-dashboard-bg2: oklch(96.145% 0.05691 162.515);
+    --architect-dashboard-bg3: oklch(98.331% 0.05169 103.805);
 }
 
 .dark {
@@ -138,7 +147,11 @@
     --sidebar-ring: oklch(0.439 0 0);
 
     --widget-background: oklch(0.3979 0 0 / 50%);
-    ---widget-background-hover: oklch(1 0 0 / 10%);
+    --widget-background-hover: oklch(1 0 0 / 10%);
+
+    --architect-dashboard-bg1: oklch(29.105% 0.03442 239.453);
+    --architect-dashboard-bg2: oklch(32.09% 0.04239 165.972);
+    --architect-dashboard-bg3: oklch(33.247% 0.0318 95.154);
 }
 
 @layer base {
@@ -191,7 +204,7 @@
     }
 
     .feature:hover {
-        @apply -translate-y-2 bg-widget-background-hover;
+        @apply bg-widget-background-hover -translate-y-2;
     }
 }
 

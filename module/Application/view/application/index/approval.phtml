@@ -55,69 +55,72 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
             </div>
         </section>
 
-        <section class="fade-in-up" id="waiting-table-section">
-            <div class="widget-table in-line">
-                <table width="100%" class="sTable display nowrap" id='dashboard-approve-waiting-table' data-init="approvalWaiting">
-                    <thead>
-                        <tr>
-                            <th>Quote ID</th>
-                            <th>Project Name</th>
-                            <th>Architect</th>
-                            <th>Customer</th>
-                            <th>Taker</th>
-                            <th>Segment</th>
-                            <th>Date</td>
-                            <th>Ship Required Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </section>
+        <div class="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+            <section class="fade-in-up" id="waiting-table-section">
+                <div class="widget-table in-line">
+                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-waiting-table' data-init="approvalWaiting">
+                        <thead>
+                            <tr>
+                                <th>Quote ID</th>
+                                <th>Project Name</th>
+                                <th>Architect</th>
+                                <th>Customer</th>
+                                <th>Taker</th>
+                                <th>Segment</th>
+                                <th>Date</td>
+                                <th>Ship Required Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </section>
 
-        <section class="fade-in-up" id="approved-table-section">
-            <div class="widget-table in-line">
-                <table width="100%" class="sTable display nowrap" id='dashboard-approve-approved-table' data-init="approvalApproved">
-                    <thead>
-                        <tr>
-                            <th>Quote ID</th>
-                            <th>Project Name</th>
-                            <th>Architect</th>
-                            <th>Customer</th>
-                            <th>Taker</th>
-                            <th>Segment</th>
-                            <th>Quote Date</th>
-                            <th>Expire Date</th>
-                            <th>Ship Required Date</th>
-                            <th>Status</th>
-                            <th>P21 OE #</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </section>
+            <section class="fade-in-up" id="approved-table-section">
+                <div class="widget-table in-line">
+                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-approved-table' data-init="approvalApproved">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="select-all" title="Select all approve quotes"></th>
+                                <th>Quote ID</th>
+                                <th>Project Name</th>
+                                <th>Architect</th>
+                                <th>Customer</th>
+                                <th>Taker</th>
+                                <th>Segment</th>
+                                <th>Quote Date</th>
+                                <th>Expire Date</th>
+                                <th>Ship Required Date</th>
+                                <th>Status</th>
+                                <th>P21 OE #</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </section>
 
-        <section class="fade-in-up" id="disapproved-table-section">
-            <div class="widget-table in-line">
-                <table width="100%" class="sTable display nowrap" id='dashboard-approve-disapproved-table' data-init="approvalDisapproved">
-                    <thead>
-                        <tr>
-                            <th>Quote ID</th>
-                            <th>Project Name</th>
-                            <th>Architect</th>
-                            <th>Customer</th>
-                            <th>Taker</th>
-                            <th>Segment</th>
-                            <th>Quote Date</th>
-                            <th>Expire Date</th>
-                            <th>Ship Required Date</th>
-                            <th>Status</th>
-                            <th>Edit</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </section>
+            <section class="fade-in-up" id="disapproved-table-section">
+                <div class="widget-table in-line">
+                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-disapproved-table' data-init="approvalDisapproved">
+                        <thead>
+                            <tr>
+                                <th>Quote ID</th>
+                                <th>Project Name</th>
+                                <th>Architect</th>
+                                <th>Customer</th>
+                                <th>Taker</th>
+                                <th>Segment</th>
+                                <th>Quote Date</th>
+                                <th>Expire Date</th>
+                                <th>Ship Required Date</th>
+                                <th>Status</th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </section>
+        </div>
     </div>
 
 <?php }

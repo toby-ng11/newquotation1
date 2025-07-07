@@ -55,14 +55,18 @@ class Architect
 
         $user = $this->getUserService()->getCurrentUser();
 
+        if ($data['architect_type_id'] == null || $data['architect_type_id'] == 0) {
+            $data['architect_type_id'] = 11;
+        }
+
         $info = [
             'architect_name'    => trim($data['architect_name']),
             'company_id'        => trim($data['architect_company_id']),
-            'architect_type_id' => $data['architect_type_id'] ?? null,
+            'architect_type_id' => $data['architect_type_id'],
             'class_id'          => trim($data['architect_class_id']),
             'delete_flag'       => 'N',
-            'created_at'            => new Expression('GETDATE()'),
-            'updated_at'            => new Expression('GETDATE()'),
+            'created_at'        => new Expression('GETDATE()'),
+            'updated_at'        => new Expression('GETDATE()'),
         ];
 
         if (empty(trim($data['architect_rep_id']))) {
@@ -89,10 +93,14 @@ class Architect
 
         $user = $this->getUserService()->getCurrentUser();
 
+        if ($data['architect_type_id'] == null || $data['architect_type_id'] == 0) {
+            $data['architect_type_id'] = 11;
+        }
+
         $info = [
             'architect_name'    => trim($data['architect_name']),
             //'company_id'      => $data['architect_company_id'],
-            'architect_type_id' => $data['architect_type_id'] ?? null,
+            'architect_type_id' => $data['architect_type_id'],
             'class_id'          => trim($data['architect_class_id']),
             'updated_at'            => new Expression('GETDATE()'),
         ];
@@ -140,6 +148,21 @@ class Architect
             error_log("Architect\delete: Database Update Error: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function getByName($name)
+    {
+        if (!InputValidator::isValidData($name)) {
+            return false;
+        }
+
+        $sql = new Sql($this->adapter);
+        $select = $sql->select('architect')
+            ->where(['architect_name' => trim($name), 'delete_flag' => 'N']);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
+        return $result;
     }
 
     public function fetchArchitectById($id)
@@ -252,7 +275,7 @@ class Architect
         return $result;
     }
 
-    public function fetchProjectsByArchitect($id)
+    public function fetchProjectsByArchitect($id, $selectedIDs = null)
     {
         if (!InputValidator::isValidId($id)) {
             return false;
@@ -262,6 +285,10 @@ class Architect
 
         $select = $sql->select('p2q_view_projects')
             ->where(['architect_id' => $id]);
+
+        if ($selectedIDs) {
+            $select->where(['project_id' => $selectedIDs]);
+        }
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();

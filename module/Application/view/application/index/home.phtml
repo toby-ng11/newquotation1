@@ -29,63 +29,20 @@ if ($hour >= 5 && $hour < 12) {
         <p class="font-light">Here's the quick summary your projects and quotes.</p>
     </header>
 
-    <section class="fade-in-up" aria-labelledby="my_projects" id="project-dashboard-own-project-section" data-nav="My Projects">
-        <div class="widget-table in-line">
-            <table width="100%" class="sTable display nowrap" id='dashboard-home-own-table' data-init="homeOwnProject">
-                <thead>
-                    <tr>
-                        <th>Project ID</th>
-                        <th>Project Name</th>
-                        <th>Shared</th>
-                        <th>Segment</th>
-                        <th>Architect</th>
-                        <th>No. of quotes</th>
-                        <th>Create Date</th>
-                        <th>Due Date</th>
-                        <th>Status</th>
-                        <th>Make Quote</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </section>
-
-    <section class="fade-in-up" aria-labelledby="assigned_projects" id="project-dashboard-assigned-project-section" data-nav="Assigned Projects">
-        <div class="widget-table in-line">
-            <table width="100%" class="sTable display nowrap" id='dashboard-home-assigned-table' data-init="homeSharedProject">
-                <thead>
-                    <tr>
-                        <th>Project ID</th>
-                        <th>Project Name</th>
-                        <th>Owner</th>
-                        <th>Segment</th>
-                        <th>Architect</th>
-                        <th>No. of quotes</th>
-                        <th>Create Date</th>
-                        <th>Due Date</th>
-                        <th>Status</th>
-                        <th>Make Quote</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </section>
-
-    <?php if ($user['approve_id'] != null) { ?>
-        <section class="fade-in-up" aria-labelledby="other_projects" id="project-dashboard-other-project-section" data-nav="Other Projects">
+    <div class="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+        <section class="fade-in-up" aria-labelledby="my_projects" id="project-dashboard-own-project-section" data-nav="My Projects">
             <div class="widget-table in-line">
-                <table width="100%" class="sTable display nowrap" id='dashboard-home-other-table' data-init="homeOtherProject">
+                <table width="100%" class="sTable display nowrap" id='dashboard-home-own-table' data-init="homeOwnProject">
                     <thead>
                         <tr>
                             <th>Project ID</th>
                             <th>Project Name</th>
-                            <th>Owner</th>
                             <th>Shared</th>
                             <th>Segment</th>
                             <th>Architect</th>
                             <th>No. of quotes</th>
-                            <th>Create date</th>
-                            <th>Due date</th>
+                            <th>Create Date</th>
+                            <th>Due Date</th>
                             <th>Status</th>
                             <th>Make Quote</th>
                         </tr>
@@ -93,42 +50,87 @@ if ($hour >= 5 && $hour < 12) {
                 </table>
             </div>
         </section>
-    <?php } ?>
 
-    <section class="fade-in-up" aria-labelledby="my_quotes" id="project-dashboard-quote-section" data-nav="My Quotes">
-        <div class="widget-table in-line">
-            <table width="100%" class="sTable display nowrap" id='dashboard-home-quote-table' data-init="homeQuote">
-                <thead>
-                    <tr>
-                        <th>Quote ID</th>
-                        <th>Project ID</th>
-                        <th>Project Name</th>
-                        <th>Quote Date</th>
-                        <th>Expire Date</th>
-                        <th>Ship Required Date</th>
-                        <th>Company Name</th>
-                        <th>Project Status</th>
-                        <th>Approval Status</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </section>
+        <section class="fade-in-up" aria-labelledby="assigned_projects" id="project-dashboard-assigned-project-section" data-nav="Assigned Projects">
+            <div class="widget-table in-line">
+                <table width="100%" class="sTable display nowrap" id='dashboard-home-assigned-table' data-init="homeSharedProject">
+                    <thead>
+                        <tr>
+                            <th>Project ID</th>
+                            <th>Project Name</th>
+                            <th>Owner</th>
+                            <th>Segment</th>
+                            <th>Architect</th>
+                            <th>No. of quotes</th>
+                            <th>Create Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Make Quote</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
 
-    <section class="fade-in-up" aria-labelledby="follow_up_logs" id="project-dashboard-note-section" data-nav="Follow Up Logs">
-        <div class="widget-table in-line">
-            <table width="100%" class="sTable display" id='dashboard-home-note-table' data-init="homeNote">
-                <thead>
-                    <tr>
-                        <th>Log Time</th>
-                        <th>Project ID</th>
-                        <th>Project Name</th>
-                        <th>Next Action</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </section>
+        <?php if ($user['approve_id'] != null) { ?>
+            <section class="fade-in-up" aria-labelledby="other_projects" id="project-dashboard-other-project-section" data-nav="Other Projects">
+                <div class="widget-table in-line">
+                    <table width="100%" class="sTable display nowrap" id='dashboard-home-other-table' data-init="homeOtherProject">
+                        <thead>
+                            <tr>
+                                <th>Project ID</th>
+                                <th>Project Name</th>
+                                <th>Owner</th>
+                                <th>Shared</th>
+                                <th>Segment</th>
+                                <th>Architect</th>
+                                <th>No. of quotes</th>
+                                <th>Create date</th>
+                                <th>Due date</th>
+                                <th>Status</th>
+                                <th>Make Quote</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </section>
+        <?php } ?>
+
+        <section class="fade-in-up" aria-labelledby="my_quotes" id="project-dashboard-quote-section" data-nav="My Quotes">
+            <div class="widget-table in-line">
+                <table width="100%" class="sTable display nowrap" id='dashboard-home-quote-table' data-init="homeQuote">
+                    <thead>
+                        <tr>
+                            <th>Quote ID</th>
+                            <th>Project ID</th>
+                            <th>Project Name</th>
+                            <th>Quote Date</th>
+                            <th>Expire Date</th>
+                            <th>Ship Required Date</th>
+                            <th>Company Name</th>
+                            <th>Project Status</th>
+                            <th>Approval Status</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
+
+        <section class="fade-in-up" aria-labelledby="follow_up_logs" id="project-dashboard-note-section" data-nav="Follow Up Logs">
+            <div class="widget-table in-line">
+                <table width="100%" class="sTable display" id='dashboard-home-note-table' data-init="homeNote">
+                    <thead>
+                        <tr>
+                            <th>Log Time</th>
+                            <th>Project ID</th>
+                            <th>Project Name</th>
+                            <th>Next Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
+    </div>
 </div>
 
 <!-- Right panel -->

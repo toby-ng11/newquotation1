@@ -4404,9 +4404,6 @@ button,
 .main-page-content h1::after {
   text-decoration-color: var(--category-color);
 }
-.main-page-content a:not(.button) {
-  color: var(--text-link);
-}
 .main-page-content a:not(.button):visited:not([href^="#"]) {
   color: var(--text-visited);
 }
@@ -4621,10 +4618,6 @@ h3 {
 
 h1 {
   word-break: break-word;
-}
-
-header + div {
-  margin-top: 2rem;
 }
 
 h3 {
@@ -5752,12 +5745,10 @@ input[readonly], input[disabled] {
   /*border: 1px solid var(--border-primary);*/
   -webkit-backdrop-filter: blur(100px);
   backdrop-filter: blur(100px);
-  margin-top: 2rem;
-  margin-bottom: 2rem;
   /* clear: both; */
   padding: 1rem 1.5rem;
   position: relative;
-  border-radius: 15px;
+  border-radius: 12px;
   box-shadow: var(--widget-box-shadow);
   transition: all 0.3s ease-in-out;
 }
@@ -5916,37 +5907,17 @@ input[readonly], input[disabled] {
 
 .widget-information {
   display: grid;
-  gap: 2rem;
-  padding-top: 2rem;
+  gap: 1rem;
+  padding-top: 1rem;
   transition: all 0.3s ease-in-out;
-}
-.widget-information.architect-dashboard a {
-  color: var(--text-primary);
-  text-decoration: none;
 }
 .widget-information.architect-dashboard.row-1 {
   grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-}
-.widget-information.architect-dashboard.row-1 .col-1 {
-  background: var(--architect-dashboard-bg1);
-  background: linear-gradient(142deg, var(--architect-dashboard-bg1) 0%, var(--architect-dashboard-bg2) 50%, var(--architect-dashboard-bg3) 100%);
-}
-.widget-information.architect-dashboard.row-1 .col-2 {
-  background: var(--architect-dashboard-bg1);
-  background: linear-gradient(230deg, var(--architect-dashboard-bg1) 0%, var(--architect-dashboard-bg2) 50%, var(--architect-dashboard-bg3) 100%);
-}
-.widget-information.architect-dashboard.row-1 .col-3 {
-  background: var(--architect-dashboard-bg1);
-  background: linear-gradient(105deg, var(--architect-dashboard-bg1) 0%, var(--architect-dashboard-bg2) 50%, var(--architect-dashboard-bg3) 100%);
-}
-.widget-information.architect-dashboard.row-1 .col-4 {
-  background: var(--architect-dashboard-bg1);
-  background: linear-gradient(246deg, var(--architect-dashboard-bg1) 0%, var(--architect-dashboard-bg2) 50%, var(--architect-dashboard-bg3) 100%);
+  gap: 1rem;
 }
 .widget-information.architect-dashboard.row-2 {
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 1rem;
 }
 .widget-information.approval-dashboard a {
   color: var(--text-primary);
@@ -5978,7 +5949,7 @@ input[readonly], input[disabled] {
 }
 .widget-information.quote-edit.row-1 {
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 1rem;
 }
 .widget-information .widget-text-head {
   margin-top: 0;
@@ -6021,6 +5992,11 @@ input[readonly], input[disabled] {
   background: var(--widget-background-red);
 }
 
+@media screen and (min-width: 48rem) {
+  .widget-information {
+    padding-top: 1.5rem;
+  }
+}
 /* Tables
 ================================================== */
 /* ===== Static table ===== */
@@ -6067,17 +6043,6 @@ input[readonly], input[disabled] {
 .sTable td textarea,
 .sTable th textarea {
   height: auto;
-}
-
-.architect-edit-page .row-1 {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 2rem;
-  margin-top: 2rem;
-}
-.architect-edit-page .row-1 .widget-table {
-  margin: 0;
 }
 
 .dt-container .dt-layout-row .dt-length .dt-input, .dt-container .dt-layout-row .dt-length label {

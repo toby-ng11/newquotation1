@@ -26,7 +26,6 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: path.resolve(__dirname, 'resources/js/p2q.ts'),
-                app: path.resolve(__dirname, 'resources/js/app.tsx'),
             },
             output: {
                 entryFileNames: '[name].js',

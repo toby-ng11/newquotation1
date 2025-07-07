@@ -53,7 +53,7 @@
   }
 
   a:not(.button) {
-    color: var(--text-link);
+    //color: var(--text-link);
     //width: fit-content;
 
     &:visited:not([href^="#"]) {
@@ -336,10 +336,6 @@ h1 {
   //font: var(--type-heading-h1);
   //margin-bottom: 1.5rem;
   word-break: break-word;
-}
-
-header + div {
-  margin-top: 2rem;
 }
 
 h3 {

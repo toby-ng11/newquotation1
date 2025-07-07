@@ -25,44 +25,46 @@ if ($hour >= 5 && $hour < 12) {
         <p class="font-light">Here's all projects and quotes</p>
     </header>
 
-    <section class="fade-in-up" aria-labelledby="all_projects">
-        <div class="widget-table in-line">
-            <table width="100%" class="sTable display nowrap" id="admin-project-table" data-init="adminProject">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Ext. ID</th>
-                        <th>Name</th>
-                        <th>Owner</th>
-                        <th>Shared</th>
-                        <th>Create Date</th>
-                        <th>Due Date</th>
-                        <th>Architect</th>
-                        <th>Market Segment</th>
-                        <th>Status</th>
-                        <th>Make Quote</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </section>
+    <div class="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+        <section class="fade-in-up" aria-labelledby="all_projects">
+            <div class="widget-table in-line">
+                <table width="100%" class="sTable display nowrap" id="admin-project-table" data-init="adminProject">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ext. ID</th>
+                            <th>Name</th>
+                            <th>Owner</th>
+                            <th>Shared</th>
+                            <th>Create Date</th>
+                            <th>Due Date</th>
+                            <th>Architect</th>
+                            <th>Market Segment</th>
+                            <th>Status</th>
+                            <th>Make Quote</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
 
-    <section class="fade-in-up" aria-labelledby="all_quotes">
-        <div class="widget-table in-line">
-            <table width="100%" class="sTable display nowrap" id='admin-quote-table' data-init="adminQuote">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Project Name</th>
-                        <th>Segment</th>
-                        <th>Quote Date</th>
-                        <th>Expire Date</th>
-                        <th>Ship Required Date</th>
-                        <th>Project Status</th>
-                        <th>Approval</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </section>
+        <section class="fade-in-up" aria-labelledby="all_quotes">
+            <div class="widget-table in-line">
+                <table width="100%" class="sTable display nowrap" id='admin-quote-table' data-init="adminQuote">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Project Name</th>
+                            <th>Segment</th>
+                            <th>Quote Date</th>
+                            <th>Expire Date</th>
+                            <th>Ship Required Date</th>
+                            <th>Project Status</th>
+                            <th>Approval</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
+    </div>
 </div>

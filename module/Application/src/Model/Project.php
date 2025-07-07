@@ -69,15 +69,21 @@ class Project
             'updated_at' => new Expression('GETDATE()'),
         ];
 
+        $architect = $this->getArchitect()->getByName($data['architect_name']);
+        $architectAddress = $this->getAddress()->fetchAddressesByArchitect($architect['architect_id'] ?? null);
+
+
         if (empty($data['architect_id']) && !empty($data['architect_name'])) {
-            $info['architect_id'] = $this->getArchitect()->add($data);
+            $info['architect_id'] =
+                $architect['architect_id'] ? $this->getArchitect()->edit($data, $architect['architect_id']) :
+                $this->getArchitect()->add($data);
         } else if (!empty($data['architect_id'])) {
             $info['architect_id'] = $this->getArchitect()->edit($data, $data['architect_id']);
         } else {
             $info['architect_id'] = null;
         }
 
-        if (empty($data['address_id']) && array_filter(array_intersect_key($data, array_flip([
+        $hasAddressData = array_filter(array_intersect_key($data, array_flip([
             'address_name',
             'phys_address1',
             'phys_address2',
@@ -88,9 +94,26 @@ class Project
             'central_phone_number',
             'email_address',
             'url'
-        ])))) {
-            $info['architect_address_id'] = $this->getAddress()->add($data, $info['architect_id']);
+        ])));
+
+        // Case: user typed in address but no address_id given
+        if (empty($data['address_id']) && $hasAddressData) {
+
+            // Attempt to match a global existing address using key fields
+            $existingAddress = $this->getAddress()->findByPhysicalAddressFuzzy($data['phys_address1'], $data['phys_postal_code']);
+
+            if (!empty($existingAddress)) {
+                // Update global matched address
+                $info['architect_address_id'] = $this->getAddress()->edit($data, $existingAddress['address_id']);
+            } else if (!empty($architectAddress)) {
+                // Update the existing address tied to the architect
+                $info['architect_address_id'] = $this->getAddress()->edit($data, $architectAddress['address_id']);
+            } else {
+                // No address yet, create a new one
+                $info['architect_address_id'] = $this->getAddress()->add($data, $info['architect_id']);
+            }
         } else if (!empty($data['address_id'])) {
+            // User selected a known address, update it
             $info['architect_address_id'] = $this->getAddress()->edit($data, $data['address_id']);
         } else {
             $info['architect_address_id'] = null;

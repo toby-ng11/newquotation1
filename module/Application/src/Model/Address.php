@@ -31,7 +31,7 @@ class Address
         $info = [
             'architect_id'          => $architectID,
             'name'                  => empty(trim($data['address_name'])) ? trim($data['phys_address1']) : trim($data['address_name']),
-            'phys_address1'         => trim($data['phys_address1']),
+            'phys_address1'         => empty(trim($data['phys_address1'])) ? trim($data['address_name']) : trim($data['phys_address1']),
             'phys_address2'         => trim($data['phys_address2']),
             'phys_city'             => trim($data['phys_city']),
             'phys_state'            => trim($data['phys_state']),
@@ -64,7 +64,7 @@ class Address
         $info = [
             //'architect_id'          => $architectID,
             'name'                  => empty(trim($data['address_name'])) ? trim($data['phys_address1']) : trim($data['address_name']),
-            'phys_address1'         => trim($data['phys_address1']),
+            'phys_address1'         => empty(trim($data['phys_address1'])) ? trim($data['address_name']) : trim($data['phys_address1']),
             'phys_address2'         => trim($data['phys_address2']),
             'phys_city'             => trim($data['phys_city']),
             'phys_state'            => trim($data['phys_state']),
@@ -104,13 +104,14 @@ class Address
         }
     }
 
-    public function addSpecifierAddress($data)
+    public function addSpecifierAddress($data, $specifierID)
     {
         if (!InputValidator::isValidData($data)) {
             return false;
         }
 
         $info = [
+            'specifier_id'          => $specifierID,
             'name'                  => trim($data['specifier_first_name']) . ' ' . trim($data['specifier_last_name']),
             'central_phone_number'  => $data['specifier_phone_number'],
             'delete_flag'           => 'N',
@@ -164,6 +165,55 @@ class Address
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
+        return $result;
+    }
+
+    public function findByPhysicalAddressFuzzy($address1, $postalCode)
+    {
+        if (!InputValidator::isValidData($address1) || !InputValidator::isValidData($postalCode)) {
+            return false;
+        }
+
+        $sql = new Sql($this->adapter);
+
+        $select = $sql->select('p2q_view_address');
+        $select->where
+            ->isNull('deleted_at')
+            ->equalTo('phys_postal_code', trim($postalCode));
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute()->current();
+
+        $address1 = strtolower(trim($address1));
+        $highestScore = 0;
+        $bestMatch = null;
+
+        foreach ($results as $row) {
+            $rowAddress1 = strtolower(trim($row['phys_address1']));
+            similar_text($address1, $rowAddress1, $percent);
+
+            if ($percent > $highestScore && $percent >= 85) { // threshold can be tuned
+                $highestScore = $percent;
+                $bestMatch = $row;
+            }
+        }
+
+        return $bestMatch;
+    }
+
+    public function fetchSpecifierAddress($specifier_id)
+    {
+        if (!InputValidator::isValidId($specifier_id)) {
+            return false;
+        }
+
+        $sql = new Sql($this->adapter);
+
+        $select = $sql->select('p2q_view_address')
+            ->where(['specifier_id' => $specifier_id]);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute()->current();
         return $result;
     }
 

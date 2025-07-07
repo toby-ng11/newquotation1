@@ -20,9 +20,8 @@ $specifierList = $this->specifierList;
         <p class="font-light">Editting <?= $this->escapeHtml($architectID) ?> - <?= $this->escapeHtml($architect['architect_name']) ?></p>
     </header>
 
-    <section class="features fade-in-up architect-edit-page">
-        <input type="hidden" id="owner_id" value='<?= $this->escapeHtml($user['id']) ?>' />
-        <div class="row-1">
+    <section class="features fade-in-up flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[repeat(2,_1fr)]">
             <div class="widget-table">
                 <div class="widget-header">
                     <div class="widget-title">
@@ -32,14 +31,15 @@ $specifierList = $this->specifierList;
                 <div class="line"></div>
                 <div class="widget-section">
                     <form action="/architect/<?= $architectID ?>/edit" method="post" class="form" id='architect-form' data-save-btn="#form-btn-save-architect" data-form="#architectForm">
+                        <input type="hidden" id="owner_id" value='<?= $this->escapeHtml($user['id']) ?>' />
                         <div class="formRow">
                             <div class="oneTwo">
                                 <label for="architect_name">Architect Name</label>
                                 <input type='text' name="architect_name" id='architect_name' class="no-autocomplete"
                                     original-title="Search by ID or Name" value='<?= $architect['architect_name'] ?? '' ?>' />
                                 <input type="hidden" name='architect_id' id='architect_id' value='<?= $this->escapeHtml(
-                                    $architect['architect_id'] ?? ''
-                                ) ?>' />
+                                                                                                        $architect['architect_id'] ?? ''
+                                                                                                    ) ?>' />
                             </div>
 
                             <div class="oneTwo">
@@ -47,11 +47,11 @@ $specifierList = $this->specifierList;
                                 <select id="architect_company_id" name="architect_company_id">
                                     <?php foreach ($company as $l) { ?>
                                         <option value='<?= $this->escapeHtml($l['company_id']) ?>' <?php if (
-    $l['company_id'] ===
-    ($architect['company_id'] ?? DEFAULT_COMPANY)
-) {
-    echo 'selected';
-} ?>>
+                                                                                                        $l['company_id'] ===
+                                                                                                        ($architect['company_id'] ?? DEFAULT_COMPANY)
+                                                                                                    ) {
+                                                                                                        echo 'selected';
+                                                                                                    } ?>>
                                             <?= $l['company_name'] ?>
                                         </option>
                                     <?php } ?>
@@ -70,9 +70,9 @@ $specifierList = $this->specifierList;
                                     <option value="">-- Choose architect type --</option>
                                     <?php foreach ($this->architectType as $a) { ?>
                                         <option value='<?= $this->escapeHtml($a['architect_type_id']) ?>' <?= $a['architect_type_id'] ===
-($architect['architect_type_id'] ?? '')
-    ? 'selected'
-    : '' ?>><?= $a['architect_type_desc'] ?></option>
+                                                                                                                ($architect['architect_type_id'] ?? '')
+                                                                                                                ? 'selected'
+                                                                                                                : '' ?>><?= $a['architect_type_desc'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -113,20 +113,19 @@ $specifierList = $this->specifierList;
                                 New Project
                             </span>
                         </button>
-                        <a href="/architect/<?= $architectID ?>/projects?export=excel"
-                            class="button action has-icon export-item-button small"
-                            title="Export all projects for this architect">
+                        <button id="export-selected" class="button action has-icon export-item-button small">
                             <span class="button-wrap text-[10px] font-bold">
                                 <span class="icon icon-export"></span>
-                                Export
+                                Export Selected
                             </span>
-                        </a>
+                        </button>
                     </div>
                 </div>
                 <div class="line"></div>
                 <table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="architect-projects-table" data-init="architectProjects">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="select-all" title="Select all projects"></th>
                             <th>ID</th>
                             <th>Name</th>
                             <th>No. of quotes</th>
@@ -135,7 +134,8 @@ $specifierList = $this->specifierList;
                     </thead>
                 </table>
             </div>
-
+        </div>
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[repeat(2,_1fr)]">
             <div class="widget-table">
                 <div class="widget-header">
                     <div class="widget-title">
@@ -189,8 +189,6 @@ $specifierList = $this->specifierList;
                     </thead>
                 </table>
             </div>
-
-
         </div>
     </section>
 
@@ -235,10 +233,10 @@ $specifierList = $this->specifierList;
                                 <select name="location_id" id="location_id">
                                     <?php foreach ($locations as $l) { ?>
                                         <option value='<?= $this->escapeHtml($l['location_id']) ?>' <?php if (
-    $l['location_id'] === DEFAULT_LOCATION_ID
-) {
-    echo 'selected';
-} ?>><?= $l['branch_description'] ?></option>
+                                                                                                        $l['location_id'] === DEFAULT_LOCATION_ID
+                                                                                                    ) {
+                                                                                                        echo 'selected';
+                                                                                                    } ?>><?= $l['branch_description'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>

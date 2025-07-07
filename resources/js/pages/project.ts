@@ -27,6 +27,14 @@ async function initProject() {
         renderItem: (item) => `<div><strong>${item.id}</strong><br>${item.name}</div>`,
     });
 
+    // Autocomplete for architect_rep
+    setupAutoComplete({
+        fieldName: '#architect_rep_id',
+        fetchUrl: '/user/fetchbypattern',
+        fillFields: [{ fieldSelector: '#architect_rep_id', itemKey: 'id' }],
+        renderItem: (item) => `<div><strong>${item.id}</strong><br>${item.name}</div>`,
+    });
+
     // Auto expand architect details
     if (architectDetails && architectNameInput.value.trim() !== '') architectDetails.open = true;
 
@@ -202,6 +210,10 @@ async function initArchitectForm() {
     let specifierFields = document.querySelectorAll(
         '#specifier_id, #specifier_address_id, #specifier_first_name, #specifier_last_name, #specifier_job_title, #specifier_phone_number, #specifier_email',
     ) as NodeListOf<HTMLInputElement>;
+
+    const architectForm = document.getElementById('project-architect-form') as HTMLFormElement;
+    const architectFormSaveBtn = document.getElementById('form-btn-save-architect-project') as HTMLButtonElement;
+    const architectIDField = document.getElementById('architect_id') as HTMLInputElement;
 
     setupAutoComplete({
         fieldName: '#architect_name',
@@ -392,47 +404,17 @@ async function initArchitectForm() {
         }
     }
 
-    if (specifierDropdown) {
-        specifierDropdown.addEventListener('change', function () {
-            if (this.value === 'new') {
-                specifierFields.forEach((field) => {
-                    field.value = '';
-                    field.readOnly = false;
-                });
-            } else {
-                getSpecifierInfo(specifierDropdown);
-            }
-        });
-    }
-
-    if (addressDropdown) {
-        addressDropdown.addEventListener('change', function () {
-            if (this.value === 'new') {
-                // Clear and unlock fields for adding a new address
-                addressFields.forEach((field) => {
-                    field.value = '';
-                    field.readOnly = false;
-                });
-            } else {
-                getAddressInfo(addressDropdown);
-            }
-        });
-    }
-
-    const architectForm = document.getElementById('project-architect-form') as HTMLFormElement;
-    const architectFormSaveBtn = document.getElementById('form-btn-save-architect-project') as HTMLButtonElement;
-    const architectIDField = document.getElementById('architect_id') as HTMLInputElement;
-
     // Init auto save
     if (architectForm && architectIDField.value != '') {
         (document.getElementById('architect_name') as HTMLInputElement).readOnly = true;
-        initAutoSave(architectForm, () => saveProjectArchitectForm(true));
+        //initAutoSave(architectForm, () => saveProjectArchitectForm(true));
     }
 
     const addArchitectProjectEditBtn = document.getElementById('add-architect-project-edit') as HTMLButtonElement;
 
     if (addArchitectProjectEditBtn) {
         addArchitectProjectEditBtn.addEventListener('click', (e) => {
+            console.log('Add Architect Project Edit Button Clicked');
             e.preventDefault();
             disableAutoSave();
             architectFields.forEach((field) => {
@@ -452,6 +434,35 @@ async function initArchitectForm() {
             );
             disableButton(architectFormSaveBtn, false);
             isProjectArchitectFormSaved = false;
+        });
+    }
+
+    if (specifierDropdown) {
+        specifierDropdown.addEventListener('change', function () {
+            if (this.value === 'new') {
+                disableAutoSave();
+                specifierFields.forEach((field) => {
+                    field.value = '';
+                    field.readOnly = false;
+                });
+            } else {
+                getSpecifierInfo(specifierDropdown);
+            }
+        });
+    }
+
+    if (addressDropdown) {
+        addressDropdown.addEventListener('change', function () {
+            if (this.value === 'new') {
+                disableAutoSave();
+                // Clear and unlock fields for adding a new address
+                addressFields.forEach((field) => {
+                    field.value = '';
+                    field.readOnly = false;
+                });
+            } else {
+                getAddressInfo(addressDropdown);
+            }
         });
     }
 
