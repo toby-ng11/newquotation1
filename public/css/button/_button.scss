@@ -1,12 +1,5 @@
 @use "../vars" as *;
 
-button,
-.button {
-  appearance: none;
-  background: none;
-  border: none;
-}
-
 .button {
   --button-bg: var(--button-primary-default);
   --button-bg-hover: var(--button-primary-hover);

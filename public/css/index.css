@@ -3966,7 +3966,6 @@ button.signout-button:hover, button.signout-button:focus {
 }
 
 .modal-box {
-  background: var(--widget-background-primary);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   border-radius: 1rem;
@@ -4116,13 +4115,6 @@ button.signout-button:hover, button.signout-button:focus {
   .languages-switcher-menu > .button .button-wrap:after {
     content: unset;
   }
-}
-
-button,
-.button {
-  appearance: none;
-  background: none;
-  border: none;
 }
 
 .button {
@@ -5590,11 +5582,6 @@ kbd {
     padding-left: 2rem;
     padding-right: 2rem;
   }
-  .main-wrapper .main-content,
-  .main-wrapper .toc {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
   .main-wrapper {
     padding-left: 1rem;
   }
@@ -5741,14 +5728,10 @@ input[readonly], input[disabled] {
 }
 
 .widget-table {
-  background-color: var(--widget-background-primary);
   /*border: 1px solid var(--border-primary);*/
   -webkit-backdrop-filter: blur(100px);
   backdrop-filter: blur(100px);
   /* clear: both; */
-  padding: 1rem 1.5rem;
-  position: relative;
-  border-radius: 12px;
   box-shadow: var(--widget-box-shadow);
   transition: all 0.3s ease-in-out;
 }

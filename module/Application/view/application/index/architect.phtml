@@ -18,46 +18,46 @@ if ($hour >= 5 && $hour < 12) {
 }
 ?>
 
-<div class="main-page-content">
-    <header class="main-page-content-header">
-        <h1>
+<div class="h-full flex flex-1 flex-col gap-4 p-8">
+    <header>
+        <h1 class="text-2xl font-semibold tracking-tight">
             <?= $this->escapeHtml($greeting) ?>, <?= $this->escapeHtml($user['first_name']) ?>!
         </h1>
-        <p class="font-light">Here's the summary of your architects.</p>
+        <p class="text-muted-foreground">Here's the summary of your architects.</p>
     </header>
 
-    <section class="features fade-in-up architect-page text-primary">
-        <div class="widget-information architect-dashboard row-1">
-            <a href="#" class="feature fade-in-up rounded-xl bg-[linear-gradient(142deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] px-6 pt-6 pb-4 shadow-md">
-                <p class="widget-text-head text-base mb-4">Total architect
+    <div class="features fade-in-up architect-page flex flex-col gap-4 text-primary">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div class="feature fade-in-up rounded-xl flex flex-col gap-6 bg-[linear-gradient(142deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md @container/card">
+                <p class="text-muted-foreground text-sm">Total architect
                 </p>
-                <h2 class="widget-text-bold"><?= $this->escapeHtml($totalArchitects) ?></h2>
-            </a>
+                <p class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($totalArchitects) ?></p>
+            </div>
 
-            <a href="#" class="feature fade-in-up rounded-xl bg-[linear-gradient(230deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] px-6 pt-6 pb-4 shadow-md">
-                <p class="widget-text-head text-base mb-4">Active projects
+            <div class="feature fade-in-up rounded-xl flex flex-col gap-6 bg-[linear-gradient(230deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
+                <p class="text-muted-foreground text-sm">Active projects
                 </p>
-                <h2 class="widget-text-bold"><?= $this->escapeHtml($totalActiveProjects) ?></h2>
-            </a>
+                <h2 class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($totalActiveProjects) ?></h2>
+            </div>
 
-            <a href="#" class="feature fade-in-up rounded-xl bg-[linear-gradient(105deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] px-6 pt-6 pb-4 shadow-md">
-                <p class="widget-text-head text-base mb-4">Pending quotes
+            <div class="feature fade-in-up rounded-xl flex flex-col gap-6 bg-[linear-gradient(105deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
+                <p class="text-muted-foreground text-sm">Pending quotes
                 </p>
-                <h2 class="widget-text-bold">0</h2>
-            </a>
+                <h2 class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">0</h2>
+            </div>
 
-            <a href="#" class="feature fade-in-up rounded-xl bg-[linear-gradient(246deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] px-6 pt-6 pb-4 shadow-md">
-                <p class="widget-text-head text-base mb-4">Completed projects
+            <div class="feature fade-in-up rounded-xl flex flex-col gap-6 bg-[linear-gradient(246deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
+                <p class="text-muted-foreground text-sm">Completed projects
                 </p>
-                <h2 class="widget-text-bold"><?= $this->escapeHtml($totalCompleteProjects) ?></h2>
-            </a>
+                <h2 class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($totalCompleteProjects) ?></h2>
+            </div>
         </div>
 
-        <div class="widget-information architect-dashboard row-2">
-            <a href="#" class="feature fade-in-up col-1 bg-widget-background rounded-xl p-6 shadow-md">
-                <h2 class="text-2xl font-medium mb-4">
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <div class="feature fade-in-up bg-widget-background rounded-xl p-6 shadow-md">
+                <p class="leading-none font-semibold text-lg mb-4">
                     Top 5 architects
-                </h2>
+                </p>
                 <table cellpadding="0" cellspacing="0" width="100%" class="sTable wTable display nowrap" id="top-5-architect-table" data-init="architectTop5">
                     <thead>
                         <tr>
@@ -66,17 +66,17 @@ if ($hour >= 5 && $hour < 12) {
                         </tr>
                     </thead>
                 </table>
-            </a>
+            </div>
 
-            <a href="#" class="feature fade-in-up col-2 bg-widget-background rounded-xl p-6 shadow-md">
-                <h2 class="text-2xl font-medium mb-4">Architect category
-                </h2>
-                <canvas class="chart" id="architectPieChart" width="100px" height="100px"></canvas>
-            </a>
+            <div class="feature fade-in-up bg-widget-background rounded-xl p-6 shadow-md">
+                <p class="leading-none font-semibold text-lg mb-4 ">Architect category
+                </p>
+                <canvas class="chart" id="architectPieChart" width="80px" height="80px"></canvas>
+            </div>
 
-            <a href="#" class="feature fade-in-up col-3 bg-widget-background rounded-xl p-6 shadow-md">
-                <h2 class="text-2xl font-medium mb-4">Recent activities
-                </h2>
+            <div class="feature fade-in-up bg-widget-background rounded-xl p-6 shadow-md">
+                <p class="leading-none font-semibold text-lg mb-4">Recent activities
+                </p>
                 <p class="text-sm">John Doe created a new Project #1024<br>
                     <span style="font:italic">(2 minutes ago)</span>
                 </p>
@@ -84,13 +84,13 @@ if ($hour >= 5 && $hour < 12) {
                 <p class="text-sm">Jane Smith updated Project #1023<br>
                     <span style="font:italic">(5 minutes ago)</span>
                 </p>
-            </a>
+            </div>
         </div>
 
-        <div class="widget-table architect-dashboard row-3">
+        <div class="widget-table bg-widget-background rounded-xl p-6">
             <div class="widget-header">
                 <div class="widget-title">
-                    <h2>Architects</h2>
+                    <p class="leading-none font-semibold text-lg">Architects</p>
                 </div>
                 <div class="widget-button">
                     <button type="button" title="Add new architect" class="button action has-icon add-architect-button small" id="widget-btn-add-architect">
@@ -105,7 +105,7 @@ if ($hour >= 5 && $hour < 12) {
             <div class="line"></div>
 
             <div class="widget-section">
-                <table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap text-sm" id="architect-all-table" data-init="architectAll">
+                <table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="architect-all-table" data-init="architectAll">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -121,8 +121,5 @@ if ($hour >= 5 && $hour < 12) {
                 </table>
             </div>
         </div>
-    </section>
-
-    <div id="new-architect-modal"></div>
-    <?= $this->inlineScript()->appendFile('/build/app.js', 'module') ?>
+    </div>
 </div>

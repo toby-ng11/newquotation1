@@ -1,14 +1,16 @@
-import { showFlashMessage } from '../../flashmessage';
-import { projectID } from '../../init';
-import { projectNoteTable } from '../../ui/table/tables';
-import { resetForm } from '../../utils';
+import { showFlashMessage } from '@/components/flashmessage';
+import { projectID } from '@/components/init';
+import { projectNoteTable } from '@/components/ui/table/tables';
+import { resetForm } from '@/components/utils';
 
 export function initNote() {
     // Edit button
-    document.addEventListener('click', function (e) {
-        if (e.target.closest('.note-edit')) {
+    document.addEventListener('click', function (e: Event) {
+        const target = e.target as HTMLElement;
+        if (target.closest('.note-edit')) {
             e.preventDefault();
-            const noteId = e.target.closest('.note-edit').dataset.id;
+            const noteEditBtn = target.closest('.note-edit') as HTMLButtonElement;
+            const noteId = noteEditBtn.dataset.id as string;
 
             if (window.noteModalComponent && noteId) {
                 window.noteModalComponent.editNote(noteId);
@@ -17,8 +19,9 @@ export function initNote() {
     });
 
     // Delete button
-    document.addEventListener('click', async function (e) {
-        const deleteBtn = e.target.closest('.note-delete');
+    document.addEventListener('click', async function (e: Event) {
+        const target = e.target as HTMLElement;
+        const deleteBtn = target.closest('.note-delete') as HTMLButtonElement;
 
         if (deleteBtn) {
             e.preventDefault();
@@ -31,9 +34,7 @@ export function initNote() {
             try {
                 const response = await fetch(`/note/${noteId}/delete`, {
                     method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 });
 
                 const data = await response.json();
@@ -53,9 +54,11 @@ export function initNote() {
 }
 
 export function noteModal() {
-    const form = document.getElementById('dialog-note-form');
+    const form = document.getElementById('dialog-note-form') as HTMLFormElement;
+
     return {
         open: false,
+
         // Save note
         async submitForm() {
             const formData = new FormData(form);
@@ -68,9 +71,7 @@ export function noteModal() {
                 const response = await fetch(isEditing ? `/note/${noteId}/edit` : '/note', {
                     method: 'POST',
                     body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 });
 
                 const data = await response.json();
@@ -78,7 +79,7 @@ export function noteModal() {
                 if (data.success) {
                     showFlashMessage(data.message, data.success);
                     projectNoteTable.ajax.reload();
-                    resetForm();
+                    resetForm(form);
                     this.open = false;
                 } else {
                     showFlashMessage(data.message, data.success);
@@ -89,7 +90,7 @@ export function noteModal() {
             }
         },
         // Edit note
-        async editNote(noteId) {
+        async editNote(noteId: string) {
             try {
                 const response = await fetch(`/note/${noteId}/edit`, {
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
@@ -101,7 +102,7 @@ export function noteModal() {
                     form.project_note.value = data.note.project_note;
                     form.next_action.value = data.note.next_action || '';
 
-                    const followUpDataInput = document.getElementById('follow_up_date')._flatpickr;
+                    const followUpDataInput = (document.getElementById('follow_up_date') as HTMLInputElement)._flatpickr;
                     if (followUpDataInput && data.note.follow_up_date) followUpDataInput.setDate(data.note.follow_up_date.date);
 
                     form.note_id.value = noteId;

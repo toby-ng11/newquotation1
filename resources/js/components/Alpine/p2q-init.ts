@@ -1,8 +1,8 @@
 import Alpine from 'alpinejs';
-import { loadingState } from './lib/loading-state.js';
-import { noteModal } from './modal/NoteModal.js';
-import { projectModal } from './modal/ProjectModal.js';
-import { navUnderline } from './ui/nav-underline.js';
+import { loadingState } from '@/components/Alpine/lib/loading-state';
+import { noteModal } from '@/components/Alpine/modal/NoteModal';
+import { projectModal } from '@/components/Alpine/modal/ProjectModal';
+import { navUnderline } from '@/components/Alpine/ui/nav-underline';
 
 export function initAlpine() {
     window.Alpine = Alpine;

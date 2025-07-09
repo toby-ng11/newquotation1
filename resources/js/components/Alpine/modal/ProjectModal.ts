@@ -1,7 +1,7 @@
-import { showFlashMessage } from '../../flashmessage';
-import { architectID } from '../../init';
-import { architectProjectsTable } from '../../ui/table/tables';
-import { resetForm } from '../../utils';
+import { showFlashMessage } from '@/components/flashmessage';
+import { architectID } from '@/components/init';
+import { architectProjectsTable } from '@/components/ui/table/tables';
+import { resetForm } from '@/components/utils';
 
 export function projectModal() {
     return {

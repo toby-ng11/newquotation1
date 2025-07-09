@@ -1,1 +1,1 @@
-<div className="rounded-2xl px-6 pt-6 pb-4 shadow-md"></div>;
+<div className="text-muted-foreground absolute inset-x-0 bottom-0 z-20 flex h-10 flex-col-reverse items-center gap-2 rounded-b-xl border-t border-t-neutral-100 bg-neutral-50 px-4 text-xs font-medium sm:flex-row sm:justify-end dark:border-t-neutral-700 dark:bg-neutral-800"></div>;

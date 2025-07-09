@@ -65,7 +65,7 @@ async function initArchitect() {
             function (item) {
                 const searchOverlay = document.getElementById('search-overlay') as HTMLElement;
                 searchOverlay.classList.remove('active');
-                document.body.classList.remove('noscroll');
+                document.body.classList.remove('overflow-hidden');
                 window.location.href = `/architect/${item.architect_id}/edit`;
             },
         ],

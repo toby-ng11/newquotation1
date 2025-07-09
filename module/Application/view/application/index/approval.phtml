@@ -19,45 +19,42 @@ if ($hour >= 5 && $hour < 12) {
 
 $maintainenceMode = 0;
 if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
-    <div class="main-page-content">
-        <header class="main-page-content-header">
+    <div class="h-full flex flex-1 flex-col gap-4 p-8">
+        <header>
             <h1>This page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h1>
         </header>
     </div>
 <?php } else { ?>
 
     <!-- Main page -->
-    <div class="main-page-content">
-        <header class="main-page-content-header">
-            <h1><?= $this->escapeHtml($greeting) ?>, <?= $this->escapeHtml($user['first_name']) ?>!</h1>
-            <p class="font-light">Here's the quick summary of approval status.</p>
+    <div class="h-full flex flex-1 flex-col gap-4 p-8">
+        <header>
+            <h1 class="text-2xl font-semibold tracking-tight"><?= $this->escapeHtml($greeting) ?>, <?= $this->escapeHtml($user['first_name']) ?>!</h1>
+            <p class="text-muted-foreground">Here's the quick summary of approval status.</p>
         </header>
 
-        <section class="features fade-in-up approval-page">
-            <div class="widget-information approval-dashboard row-1">
-                <a href="#waiting-table-section" class="widget-link feature fade-in-up col-1 rounded-2xl px-6 pt-6 pb-4 shadow-md">
-                    <p class="widget-text-head mb-4">Waiting for approval
-                    </p>
-                    <h2 class="widget-text-bold"><?= $this->escapeHtml($waitingTableCount) ?> <span class="widget-text-desc">quotes</span></h2>
-                </a>
+        <div class="flex flex-col gap-4 md:gap-6">
+            <div class="features fade-in-up">
+                <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                    <div class="feature fade-in-up rounded-2xl flex flex-col gap-6 bg-[linear-gradient(142deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
+                        <p class="text-muted-foreground text-sm">Waiting for approval</p>
+                        <p class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($waitingTableCount) ?></p>
+                    </div>
 
-                <a href="#approved-table-section" class="widget-link feature fade-in-up col-2 rounded-2xl px-6 pt-6 pb-4 shadow-md">
-                    <p class="widget-text-head mb-4">Approved
-                    </p>
-                    <h2 class="widget-text-bold"><?= $this->escapeHtml($approvedTableCount) ?> <span class="widget-text-desc">quotes</span></h2>
-                </a>
+                    <div class="feature fade-in-up rounded-2xl flex flex-col gap-6 bg-[linear-gradient(230deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
+                        <p class="text-muted-foreground text-sm">Approved</p>
+                        <p class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($approvedTableCount) ?></p>
+                    </div>
 
-                <a href="#disapproved-table-section" class="widget-link feature fade-in-up col-3 rounded-2xl px-6 pt-6 pb-4 shadow-md">
-                    <p class="widget-text-head mb-4">Rejected
-                    </p>
-                    <h2 class="widget-text-bold"><?= $this->escapeHtml($disapprovedTableCount) ?> <span class="widget-text-desc">quotes</span></h2>
-                </a>
+                    <div class="feature fade-in-up rounded-2xl flex flex-col gap-6 bg-[linear-gradient(105deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
+                        <p class="text-muted-foreground text-sm">Rejected</p>
+                        <p class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($disapprovedTableCount) ?></p>
+                    </div>
+                </div>
             </div>
-        </section>
 
-        <div class="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-            <section class="fade-in-up" id="waiting-table-section">
-                <div class="widget-table in-line">
+            <div class="fade-in-up" id="waiting-table-section">
+                <div class="widget-table bg-widget-background rounded-xl p-6">
                     <table width="100%" class="sTable display nowrap" id='dashboard-approve-waiting-table' data-init="approvalWaiting">
                         <thead>
                             <tr>
@@ -74,10 +71,10 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                         </thead>
                     </table>
                 </div>
-            </section>
+            </div>
 
-            <section class="fade-in-up" id="approved-table-section">
-                <div class="widget-table in-line">
+            <div class="fade-in-up" id="approved-table-section">
+                <div class="widget-table bg-widget-background rounded-xl p-6">
                     <table width="100%" class="sTable display nowrap" id='dashboard-approve-approved-table' data-init="approvalApproved">
                         <thead>
                             <tr>
@@ -97,10 +94,10 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                         </thead>
                     </table>
                 </div>
-            </section>
+            </div>
 
-            <section class="fade-in-up" id="disapproved-table-section">
-                <div class="widget-table in-line">
+            <div class="fade-in-up" id="disapproved-table-section">
+                <div class="widget-table bg-widget-background rounded-xl p-6">
                     <table width="100%" class="sTable display nowrap" id='dashboard-approve-disapproved-table' data-init="approvalDisapproved">
                         <thead>
                             <tr>
@@ -119,7 +116,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                         </thead>
                     </table>
                 </div>
-            </section>
+            </div>
         </div>
     </div>
 

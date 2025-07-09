@@ -1,4 +1,4 @@
-import { showFlashMessage } from '../../flashmessage';
+import { showFlashMessage } from '@/components/flashmessage';
 
 export function loadingState() {
     return {

@@ -8,14 +8,10 @@
 }
 
 .widget-table {
-	background-color: var(--widget-background-primary);
 	/*border: 1px solid var(--border-primary);*/
 	-webkit-backdrop-filter: blur(100px);
 	backdrop-filter: blur(100px);
 	/* clear: both; */
-	padding: 1rem 1.5rem;
-	position: relative;
-	border-radius: 12px;
 	box-shadow: var(--widget-box-shadow);
 	transition: all 0.3s ease-in-out;
 

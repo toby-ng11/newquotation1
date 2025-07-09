@@ -27,20 +27,19 @@ $projectRequiredDate = $project['require_date'];
 
 
 <!-- Main content wrapper -->
-<div class="main-page-content">
-
-    <header class="main-page-content-header">
-        <h1>Edit Project</h1>
-        <p class="font-light">Editting project #<?= $this->escapeHtml($projectID) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
+<div class="h-full flex flex-1 flex-col gap-4 p-8">
+    <header>
+        <h1 class="text-2xl font-semibold tracking-tight">Edit Project</h1>
+        <p class="text-muted-foreground">Editting project #<?= $this->escapeHtml($projectID) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
     </header>
 
     <!-- Form -->
-    <div class="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-        <section class="fade-in-up" aria-labelledby="project-information">
+    <div class="flex flex-col gap-4 md:gap-6">
+        <div class="fade-in-up" aria-labelledby="project-information">
             <form action="/project/<?= $this->escapeHtml(
                                         $projectID
                                     ) ?>/edit" method="post" class="form" id='project_content' data-save-btn="#form-btn-save-project" data-form="#projectForm" data-page="edit">
-                <div class="widget-table">
+                <div class="widget-table bg-widget-background rounded-xl p-6">
                     <!--<div class="widget-button">
 						<div class="widget-pin">
 							<input type="checkbox" id="project-pin" name="project-pin">
@@ -49,7 +48,7 @@ $projectRequiredDate = $project['require_date'];
 					</div>-->
                     <div class="widget-header">
                         <div class="widget-title">
-                            <h2>Project Information</h2>
+                            <p class="leading-none font-semibold text-lg">Project Information</p>
                         </div>
                     </div>
                     <div class="line"></div>
@@ -205,13 +204,13 @@ $projectRequiredDate = $project['require_date'];
                     <?php } ?>
                 </div>
             </form>
-        </section>
+        </div>
 
-        <section class="fade-in-up" aria-labelledby="architect-information">
-            <div class="widget-table">
+        <div class="fade-in-up" aria-labelledby="architect-information">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
                 <div class="widget-header">
                     <div class="widget-title">
-                        <h2>Architect Information</h2>
+                        <p class="leading-none font-semibold text-lg">Architect Information</p>
                     </div>
                 </div>
                 <div class="line"></div>
@@ -454,13 +453,13 @@ $projectRequiredDate = $project['require_date'];
                     </form>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section class="fade-in-up" aria-labelledby="quoted-items">
-            <div class="widget-table">
+        <div class="fade-in-up" aria-labelledby="quoted-items">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
                 <div class="widget-header">
                     <div class="widget-title">
-                        <h2>Items</h2>
+                        <p class="leading-none font-semibold text-lg">Items</p>
                     </div>
                     <div class="widget-button">
                         <?php if ($owner) { ?>
@@ -494,13 +493,13 @@ $projectRequiredDate = $project['require_date'];
                     </table>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section class="fade-in-up" aria-labelledby="project-log">
-            <div class="widget-table">
+        <div class="fade-in-up" aria-labelledby="project-log">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
                 <div class="widget-header">
                     <div class="widget-title">
-                        <h2>Project Log</h2>
+                        <p class="leading-none font-semibold text-lg">Project Log</p>
                     </div>
                     <div class="widget-button">
                         <?php if ($owner) { ?>
@@ -532,13 +531,13 @@ $projectRequiredDate = $project['require_date'];
                     </table>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section class="fade-in-up" aria-labelledby="quote-by-project">
-            <div class="widget-table">
+        <div class="fade-in-up" aria-labelledby="quote-by-project">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
                 <div class="widget-header">
                     <div class="widget-title">
-                        <h2>Project Quotes</h2>
+                        <p class="leading-none font-semibold text-lg">Project Quotes</p>
                     </div>
                     <div class="widget-button">
                         <?php if ($owner and $admin) { ?>
@@ -572,7 +571,7 @@ $projectRequiredDate = $project['require_date'];
                     </table>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
 
     <div id="dialog-item" title="Add Item">
@@ -616,32 +615,38 @@ $projectRequiredDate = $project['require_date'];
     <div
         x-data="noteModal()"
         x-init="
-		window.noteModalComponent = $data;
-    document.getElementById('widget-btn-add-note')
-      .addEventListener('click', () => open = true);
-  "
-        x-effect="if (!open) closeModal()">
+		    window.noteModalComponent = $data;
+            document.getElementById('widget-btn-add-note').addEventListener('click', () => open = true);"
+        x-effect="
+            if (open) {
+                document.body.classList.add('overflow-hidden');
+            } else {
+                document.body.classList.remove('overflow-hidden');
+                closeModal();
+        }">
 
         <!-- Modal Overlay -->
         <div
             x-show="open"
-            class="modal-overlay"
+            class="flex items-center justify-center z-50 fixed inset-0 bg-black/50"
             x-transition
             @keydown.escape.window="open = false"
             @click.self="open = false"
             style="display: none;">
             <!-- Modal Box -->
             <div
-                class="modal-box"
+                class="bg-background ring-neutral fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-xl border border-none bg-clip-padding p-6 pb-17 shadow-2xl ring-4 ring-neutral-200/80 sm:max-w-3xl dark:bg-neutral-900 dark:ring-neutral-800"
                 @click.self="open = false"
                 x-transition>
-                <h2>Add Note</h2>
-                <div class="line"></div>
-                <div class="modal-content">
+                <div class="flex flex-col gap-2 text-center sm:text-left">
+                    <h2 class="leading-none font-semibold text-lg">Add Note</h2>
+                    <p class="text-muted-foreground text-sm">Add a project note. A reminder about the project can also be set here.</p>
+                </div>
+
+                <div class="flex h-full w-full flex-col overflow-y-auto">
                     <form id="dialog-note-form" @submit.prevent="submitForm">
                         <div class="form-columns grid grid-cols-[2fr_2px_1fr] gap-4">
                             <div class="flex flex-col gap-4 mb-4">
-                                <h3>Note</h3>
                                 <input type="hidden" name="note_id" id="note_id">
                                 <div class="form-field required-field">
                                     <label for="note_title">Title</label>
@@ -658,26 +663,25 @@ $projectRequiredDate = $project['require_date'];
                             <div class="line-vertical w-[1px] bg-[#878787] opacity-[.28]"></div>
 
                             <div class="flex flex-col gap-4 mb-4">
-                                <h3>Reminder</h3>
                                 <div class="form-field">
-                                    <label for="next_action">Follow Up Note</label>
+                                    <label for="next_action">Reminder</label>
                                     <textarea rows="12" name="next_action" id='next_action'
-                                        placeholder="Can be left empty. Follow up message will be sent via email if the follow up date is set."></textarea>
+                                        placeholder="Can be left empty. Reminder will be sent via email if the follow up date is set."></textarea>
                                 </div>
 
                                 <div class="form-field">
-                                    <label for='follow_up_date'>Follow Up Date & Time</label>
+                                    <label for='follow_up_date'>Reminder Time</label>
                                     <input type="text" class="flatpickr-time" name='follow_up_date' id='follow_up_date'
-                                        placeholder="Select date and time..." readonly>
+                                        placeholder="Select time..." readonly>
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="line"></div>
-                <div class="modal-actions">
-                    <button type="button" @click="closeModal()">Cancel</button>
-                    <button type="submit" form="dialog-note-form">Save</button>
+
+                <div class="text-muted-foreground absolute inset-x-0 bottom-0 z-20 flex h-16 flex-col-reverse items-center gap-2 rounded-b-xl border-t border-t-neutral-100 bg-neutral-50 px-6 text-xs font-medium sm:flex-row sm:justify-end dark:border-t-neutral-700 dark:bg-neutral-800">
+                    <button type="button" class="button-outline button-size-default" @click="closeModal()">Cancel</button>
+                    <button type="submit" class="button-default button-size-default" form="dialog-note-form">Save</button>
                 </div>
             </div>
         </div>

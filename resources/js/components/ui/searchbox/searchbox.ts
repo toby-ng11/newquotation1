@@ -16,14 +16,14 @@ export function initSearchBox() {
   if (searchBtn) {
     searchBtn.addEventListener("click", () => {
       if (overlay) overlay.classList.add("active");
-      body.classList.add("noscroll");
+      body.classList.add("overflow-hidden");
       if (input) setTimeout(() => input.focus(), 100);
     });
   }
 
   function hideOverlay() {
     if (overlay) overlay.classList.remove("active");
-    body.classList.remove("noscroll");
+    body.classList.remove("overflow-hidden");
     if (input) setTimeout(() => (input.value = ""), 400); // match the fade-out duration
   }
 

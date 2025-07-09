@@ -101,7 +101,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>All projects</h2>';
+                    info.innerHTML = '<p class="leading-none font-semibold text-lg">All projects</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -196,7 +196,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>All quotes</h2>';
+                    info.innerHTML = '<p class="leading-none font-semibold text-lg">All quotes</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -290,7 +290,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>My Projects</h2><p class="text-[0.7rem]">' + window.ownTableCount + ' projects</p>';
+                    info.innerHTML = '<p class="leading-none font-semibold text-lg">My Projects</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -385,7 +385,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>Shared Projects</h2><p class="text-[0.7rem]">' + window.assignTableCount + ' shared projects</p>';
+                    info.innerHTML = '<p class="leading-none font-semibold text-lg">Shared Projects</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -480,7 +480,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>Other user projects</h2><p class="text-[0.7rem]">' + window.otherTableCount + ' projects</p>';
+                    info.innerHTML = '<p class="leading-none font-semibold text-lg">Other user projects</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -581,7 +581,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>My Quotes</h2><p class="text-[0.7rem]">' + window.quoteTableCount + ' quotes</p>';
+                    info.innerHTML = '<p class="leading-none font-semibold text-lg">My Quotes</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -641,7 +641,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>Follow Up Notes</h2><p class="text-[0.7rem]">' + window.noteTableCount + ' notes</p>';
+                    info.innerHTML = '<p class="leading-none font-semibold text-lg">Follow Up Notes</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -717,7 +717,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>Waiting for Approval</h2>';
+                    info.innerHTML = '<p class="leading-none font-semibold text-lg">Waiting for Approval</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',
@@ -827,7 +827,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>Approved</h2>';
+                    info.innerHTML = '<p class="leading-none font-semibold text-lg">Approved</p>';
                     return info;
                 },
                 topEnd: [
@@ -940,7 +940,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');
-                    info.innerHTML = '<h2>Disapproved</h2>';
+                    info.innerHTML = '<p class="leading-none font-semibold text-lg">Disapproved</p>';
                     return info;
                 },
                 bottomStart: 'pageLength',

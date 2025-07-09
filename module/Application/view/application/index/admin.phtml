@@ -17,17 +17,17 @@ if ($hour >= 5 && $hour < 12) {
 ?>
 
 <!-- Title area -->
-<div class="main-page-content">
-    <header class="main-page-content-header">
-        <h1>
+<div class="h-full flex flex-1 flex-col gap-4 p-8">
+    <header>
+        <h1 class="text-2xl font-semibold tracking-tight">
             <?= $this->escapeHtml($greeting) ?>, <?= $this->escapeHtml($user['first_name']) ?>!
         </h1>
-        <p class="font-light">Here's all projects and quotes</p>
+        <p class="text-muted-foreground">Here's all projects and quotes</p>
     </header>
 
-    <div class="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-        <section class="fade-in-up" aria-labelledby="all_projects">
-            <div class="widget-table in-line">
+    <div class="flex flex-col gap-4 md:gap-6">
+        <div class="fade-in-up" aria-labelledby="all_projects">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
                 <table width="100%" class="sTable display nowrap" id="admin-project-table" data-init="adminProject">
                     <thead>
                         <tr>
@@ -46,10 +46,10 @@ if ($hour >= 5 && $hour < 12) {
                     </thead>
                 </table>
             </div>
-        </section>
+        </div>
 
-        <section class="fade-in-up" aria-labelledby="all_quotes">
-            <div class="widget-table in-line">
+        <div class="fade-in-up" aria-labelledby="all_quotes">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
                 <table width="100%" class="sTable display nowrap" id='admin-quote-table' data-init="adminQuote">
                     <thead>
                         <tr>
@@ -65,6 +65,6 @@ if ($hour >= 5 && $hour < 12) {
                     </thead>
                 </table>
             </div>
-        </section>
+        </div>
     </div>
 </div>
