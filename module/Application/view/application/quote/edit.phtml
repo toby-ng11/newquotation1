@@ -579,43 +579,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
             </div>
         </div>
 
-        <div id="dialog-item" title="Add Item">
-            <form action="" class="dialog" id='dialog-item-form'>
-                <div class="dialog-form">
-                    <div class="oneTwo required-field">
-                        <label for="item_id">Item ID</label>
-                        <input type="hidden" name="item_uid" id='item_uid'>
-                        <input type="text" id="item_id" name='item_id' class="validate[required]"
-                            placeholder="Search by ID or name">
-                    </div>
-
-                    <div class="oneTwo required-field">
-                        <label for='uom'>Unit Of Measure</label>
-                        <select name="uom" id='uom' class="validate[required]">
-                            <option value=''>-- Search for item first --</option>
-                        </select>
-                    </div>
-
-                    <div class="oneTwo required-field">
-                        <label for='unit_price'>Price ($)</label>
-                        <input type="text" class="validate[required,custom[number]]" name="unit_price" id='unit_price'
-                            placeholder="*You can override the price" />
-                    </div>
-
-                    <div class="oneTwo required-field">
-                        <label for='quantity'>Quantity</label>
-                        <input type="text" name="quantity" id='quantity' class="validate[required,custom[number]]" />
-                    </div>
-
-                    <div class="oneTwo dialog-note">
-                        <label for='note'>Note</label>
-                        <textarea rows="8" name='note' id='note' maxlength="255"
-                            class="validate[maxSize[255]]"></textarea>
-                        <input type="hidden" id="is_edit" value='0' />
-                    </div>
-                </div>
-            </form>
-        </div>
+        <?= $this->render('modal/item');?>
 
         <div id="dialog-make-quote" title="Add Customer">
             <form action="" class="dialog customer-section" data-type="dialog" id='dialog-make-quote-form'>

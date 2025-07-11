@@ -1178,11 +1178,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
     item: () => {
         return (itemTable = new DataTable('#item-table', {
             ajax: {
-                url: '/item/table',
-                data: {
-                    id: projectID,
-                    type: sheetType,
-                },
+                url: `/${sheetType}/${projectID}/items`,
                 dataSrc: '',
             } as AjaxSettings,
             processing: true,
@@ -1229,7 +1225,24 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'item_uid',
                     render: function (data) {
-                        //var oldData = getolddata($(this).closest('tr'));
+                        const buttons = [];
+                        buttons.push(`
+                            <a href="#" title="Edit this item" class="item-edit" data-id="${data}">
+                                <span class="button-wrap">
+                                    <span class="icon icon-edit"></span>
+                                </span>
+                            </a>
+                        `);
+
+                        buttons.push(`
+                            <a href="#" title="Delete this item" class="item-delete" data-id="${data}">
+                                <span class="button-wrap">
+                                    <span class="icon icon-delete"></span>
+                                </span>
+                            </a>
+                        `);
+
+                        return `<div class="row-button">${buttons.join('')}</div>`;
                         return (
                             '<div class="row-button">' +
                             '<a title="Edit this item" class="item-edit" href="/item/fetch?uid=' +
@@ -1240,7 +1253,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                             '<span class="button-wrap">' +
                             '<span class="icon icon-edit"></span>' +
                             '</span></a>' +
-                            '<a title="Delete this item" class="item_delete" href="/item/delete?uid=' +
+                            '<a title="Delete this item" class="item-delete" href="/item/delete?uid=' +
                             data +
                             '&type=' +
                             sheetType +

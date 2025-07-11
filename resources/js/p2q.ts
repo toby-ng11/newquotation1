@@ -1,6 +1,6 @@
 import '../css/app.css';
 
-import { initNote } from '@/components/Alpine/modal/NoteModal';
+import { initNote } from '@/components/Alpine/modal/note-modal';
 import { initAlpine } from '@/components/Alpine/p2q-init';
 import { runFadeInAnimation } from '@/components/FadeInAnimation';
 import { showLoadedFlashMessage } from '@/components/flashmessage';
@@ -13,7 +13,7 @@ import { initSearchBox } from '@/components/ui/searchbox/searchbox';
 import { initTables } from '@/components/ui/table/tables';
 import { InitTheme } from '@/components/ui/theme/Theme';
 import { initArchitect } from '@/pages/architect';
-import { initItem } from '@/pages/item';
+import { initItem } from '@/components/Alpine/modal/item-modal';
 import { initArchitectForm, initProject } from '@/pages/project';
 import { $dialogMakeQuote, initQuote } from '@/pages/quote';
 

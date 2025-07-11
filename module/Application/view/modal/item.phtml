@@ -1,0 +1,83 @@
+<div
+    x-data="itemModal()"
+    x-init="
+		    window.itemModalComponent = $data;
+            document.getElementById('widget-btn-add-item').addEventListener('click', () => open = true);"
+    x-effect="
+            if (open) {
+                document.body.classList.add('overflow-hidden');
+            } else {
+                document.body.classList.remove('overflow-hidden');
+                closeModal();
+        }">
+
+    <!-- Modal Overlay -->
+    <div
+        x-show="open"
+        x-transition
+        @keydown.escape.window="open = false"
+        class="flex items-center justify-center z-50 fixed inset-0 bg-black/50"
+        style="display: none;">
+        <!-- Modal Box -->
+        <div
+            class="bg-background ring-neutral z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-xl border border-none bg-clip-padding p-6 shadow-2xl ring-4 ring-neutral-200/80 sm:max-w-xl dark:bg-neutral-900 dark:ring-neutral-800"
+            x-transition>
+            <div class="flex flex-col gap-2 text-center sm:text-left">
+                <h2
+                    class="leading-none font-semibold text-lg"
+                    x-text="isEditing ? 'Edit Item' : 'Add Item'">
+                </h2>
+                <p
+                    class="text-muted-foreground text-sm"
+                    x-text="isEditing ? 'Edit an item.' : 'Add an item to this project.'">
+                </p>
+            </div>
+
+            <div class="text-popover-foreground flex h-full w-full flex-col overflow-hidden">
+                <div class="max-h-[400px] scroll-py-1 overflow-x-hidden overflow-y-auto no-scrollbar min-h-80 scroll-pt-2 scroll-pb-1.5">
+                    <form id="dialog-item-form" @submit.prevent="submitForm">
+                        <div class="flex flex-col gap-4 md:gap-6 md:grid md:grid-cols-2">
+                            <div required class="grid gap-2">
+                                <label for="item_id">Item ID</label>
+                                <input type="hidden" name="item_uid" id='item_uid'>
+                                <input type="text" id="item_id" name='item_id' class="validate[required]"
+                                    placeholder="Search by ID or name">
+                            </div>
+
+                            <div required class="grid gap-2">
+                                <label for='uom'>Unit Of Measure</label>
+                                <select name="uom" id="uom" class="validate[required]" data-default-options="<option value=''>-- Search for item first --</option>">
+                                    <option value="">-- Search for item first --</option>
+                                </select>
+                            </div>
+
+                            <div required class="grid gap-2">
+                                <label for='unit_price'>Price ($)</label>
+                                <input type="text" class="validate[required,custom[number]]" name="unit_price" id='unit_price'
+                                    placeholder="You can override the price" />
+                            </div>
+
+                            <div required class="grid gap-2">
+                                <label for='quantity'>Quantity</label>
+                                <input type="number" name="quantity" id='quantity' class="validate[required,custom[number]]"
+                                placeholder="0" min="0" />
+                            </div>
+
+                            <div class="grid gap-2 col-span-2">
+                                <label for='note'>Note</label>
+                                <textarea rows="5" name='note' id='note' maxlength="255"
+                                    class="validate[maxSize[255]]"></textarea>
+                                <input type="hidden" id="is_edit" value='0' />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                <button type="button" class="button-outline button-size-default" @click="closeModal()">Cancel</button>
+                <button type="submit" class="button-default button-size-default" form="dialog-item-form">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

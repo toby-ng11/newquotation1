@@ -18,14 +18,6 @@
     width: 100%;
 }
 
-.main-wrapper {
-    /* overflow: hidden; */
-    //display: flex;
-    margin: auto;
-    //max-width: var(--max-width);
-    /*min-width: 0; */
-}
-
 .main-wrapper .toc {
     display: none;
 }
@@ -49,8 +41,6 @@
         padding-left: 2rem;
         padding-right: 2rem;
     }
-
-    .sidebar-container {}
 
     .main-wrapper {
         padding-left: 1rem;

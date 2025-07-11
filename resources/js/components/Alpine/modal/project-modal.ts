@@ -10,10 +10,10 @@ export function projectModal() {
         projectDescription: '',
         architectId: architectID,
         async submitForm() {
-            const form = document.getElementById('architect-edit-project-form');
+            const form = document.getElementById('architect-edit-project-form') as HTMLFormElement;
             const formData = new FormData(form);
 
-            const ownerInput = document.getElementById('owner_id');
+            const ownerInput = document.getElementById('owner_id') as HTMLInputElement;
             if (ownerInput) {
                 formData.append('owner_id', ownerInput.value);
             }
@@ -23,9 +23,7 @@ export function projectModal() {
                 const response = await fetch('/project', {
                     method: 'POST',
                     body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                    },
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 });
 
                 const data = await response.json();
@@ -33,7 +31,7 @@ export function projectModal() {
                 if (data.success) {
                     showFlashMessage(data.message, data.success);
                     architectProjectsTable.ajax.reload();
-                    resetForm();
+                    resetForm(form);
                     this.open = false;
                 } else {
                     showFlashMessage(data.message, data.success);
@@ -44,7 +42,7 @@ export function projectModal() {
             }
         },
         closeModal() {
-            const form = document.getElementById('architect-edit-project-form');
+            const form = document.getElementById('architect-edit-project-form') as HTMLFormElement;
             resetForm(form);
             this.projectName = '';
             this.projectDescription = '';

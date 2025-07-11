@@ -120,9 +120,10 @@ return [
             'item' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route'    => '/item[/:action]',
+                    'route'    => '/item[/:id[/:action]]',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[a-zA-Z0-9_-]+',
                     ],
                     'defaults' => [
                         'controller' => Controller\ItemController::class,

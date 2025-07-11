@@ -17,16 +17,58 @@ class ItemController extends AbstractActionController
         $this->item = $item;
     }
 
-    public function tableAction() {
+    public function indexAction()
+    {
         $request = $this->getRequest();
-        if ($request->isXmlHttpRequest()) {
-            $id = $this->params()->fromQuery('id');
-            $sheetType = $this->params()->fromQuery('type');
-            $itemTable = $this->item->fetchDataTables($id, $sheetType);
-            $view = new JsonModel($itemTable);
-            return $view;
+
+        if ($request->isPost()) { // save item
+            return $this->forward()->dispatch(ItemController::class, [
+                'action' => 'add',
+            ]);
+        } else {
+            // search for item in P21
+            $pattern = $this->params()->fromQuery('term', null);
+            $limit = $this->params()->fromQuery('limit', 10);
+
+            if ($pattern) {
+                $item = $this->item->fetchItemsByPattern($pattern, $limit);
+                return new JsonModel($item);
+            }
+
+            // fetch item from Quotation DB
+            $itemUID = $this->params()->fromRoute('id');
+            if ($itemUID) {
+                $sheetType = $this->params()->fromQuery('type', null);
+
+                if (!$sheetType) return new JsonModel([
+                    'message' => 'Sheet type is required',
+                ]);
+
+                $item = $this->item->fetchItemByUID($itemUID, $sheetType);
+
+                if (!$item) {
+                    return new JsonModel([
+                        'success' => false,
+                        'message' => 'Item not found.'
+                    ]);
+                }
+
+                return new JsonModel([
+                    'success' => true,
+                    'item' => [
+                        'item_id' => $item['item_id'],
+                        'quantity' => $item['quantity'],
+                        'unit_price' => $item['unit_price'],
+                        'uom' => $item['uom'],
+                        'note' => $item['note'],
+                    ],
+                ]);
+            }
+
+            return new JsonModel([
+                'message' => 'No item ID or pattern provided',
+            ]);
         }
-        return $this->getResponse()->setStatusCode(404);
     }
 
     public function addAction()
@@ -34,8 +76,8 @@ class ItemController extends AbstractActionController
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-            $id = $this->params()->fromPost('project_id', null);
-            $sheetType = $this->params()->fromPost('type', null);
+            $id = $this->params()->fromPost('sheet_id', null);
+            $sheetType = $this->params()->fromPost('sheet_type', null);
             $data = $this->params()->fromPost();
 
             if (!$id || empty($data['item_id'])) {
@@ -71,18 +113,18 @@ class ItemController extends AbstractActionController
     public function editAction()
     {
         $request = $this->getRequest();
+        $item_uid = $this->params()->fromRoute('id', null);
+
+        if (!$item_uid) {
+            return new JsonModel([
+                'success' => false,
+                'message' => 'Missing item UID.'
+            ]);
+        }
 
         if ($request->isPost()) {
-            $item_uid = $this->params()->fromPost('item_uid', null);
-            $sheetType = $this->params()->fromPost('type', null);
+            $sheetType = $this->params()->fromPost('sheet_type', null);
             $data = $this->params()->fromPost();
-
-            if (!$item_uid || empty($data['item_id'])) {
-                return new JsonModel([
-                    'success' => false,
-                    'message' => 'Missing required fields.'
-                ]);
-            }
 
             try {
                 $result = $this->item->edit($data, $item_uid, $sheetType);
@@ -134,8 +176,9 @@ class ItemController extends AbstractActionController
         ]);
     }
 
-    public function deleteAction() {
-        $item_uid = $this->params()->fromQuery('uid', null);
+    public function deleteAction()
+    {
+        $item_uid = $this->params()->fromRoute('id', null);
         $sheetType = $this->params()->fromQuery('type', null);
 
         if (!$item_uid) {
@@ -162,25 +205,10 @@ class ItemController extends AbstractActionController
         }
     }
 
-    // Search for items in P21
-    public function indexAction()
-    {
-        $pattern = $this->params()->fromQuery('term', null);
-        $limit = $this->params()->fromQuery('limit', 10);
-
-        if (empty($pattern)) {
-            return new JsonModel(['error' => 'Pattern is required']);
-        }
-
-        $item = $this->item->fetchItemsByPattern($pattern, $limit);
-
-        return new JsonModel($item);
-    }
-
     // Fetch UOM from P21
     public function uomAction()
     {
-        $item_id = $this->params()->fromQuery('term', null);
+        $item_id = $this->params()->fromRoute('id', null);
 
         if (empty($item_id)) {
             return new JsonModel(['error' => 'Pattern is required']);
@@ -194,7 +222,7 @@ class ItemController extends AbstractActionController
     // Fetch Price from P21
     public function priceAction()
     {
-        $item_id = $this->params()->fromQuery('item_id', null);
+        $item_id = $this->params()->fromRoute('id', null);
         $uom = $this->params()->fromQuery('uom', null);
 
         if (empty($item_id) || empty($uom)) {
@@ -209,7 +237,7 @@ class ItemController extends AbstractActionController
     // Fetch saved price from Quotation
     public function quotedpriceAction()
     {
-        $item_uid = $this->params()->fromQuery('item_uid', null);
+        $item_uid = $this->params()->fromRoute('id', null);
         $sheetType = $this->params()->fromQuery('type', null);
 
         if (empty($item_uid) || empty($sheetType)) {

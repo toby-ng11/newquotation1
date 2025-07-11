@@ -59,20 +59,20 @@ $projectRequiredDate = $project['require_date'];
                             <input type="hidden" id='create_date' name='create_date'
                                 value='<?= $this->escapeHtml($projectCreateDate?->format('Y-m-d') ?? '') ?>' />
 
-                            <div class="oneTwo required-field">
+                            <div class="grid gap-2 required-field">
                                 <label for="project_name">Project Name</label>
                                 <input type="text" id='project_name' class="validate[required]"
                                     placeholder="Project Name" name='project_name'
                                     value='<?= $this->escapeHtml($project['project_name']) ?>' />
                             </div>
 
-                            <div class="oneTwo required-field">
+                            <div class="grid gap-2 required-field">
                                 <label for="project_address">Project Location</label>
                                 <input type="text" name='project_address' id="project_address"
                                     class="validate[required]" value="<?= $this->escapeHtml($project['centura_location_id']) ?>" />
                             </div>
 
-                            <div class="oneTwo">
+                            <div class="grid gap-2">
                                 <label for="location_id">Centura Location</label>
                                 <select name="location_id" id="location_id">
                                     <?php foreach ($location as $l) { ?>
@@ -87,7 +87,7 @@ $projectRequiredDate = $project['require_date'];
                                 </select>
                             </div>
 
-                            <div class="oneTwo required-field">
+                            <div class="grid gap-2 required-field">
                                 <label for="status">Project Stage</label>
                                 <select name="status" id="status" class="validate[required]">
                                     <option value="">-- Select Status --</option>
@@ -101,7 +101,7 @@ $projectRequiredDate = $project['require_date'];
                                 </select>
                             </div>
 
-                            <div class="oneTwo required-field">
+                            <div class="grid gap-2 required-field">
                                 <label for='market_segment_id'>Project Segment</label>
                                 <select name="market_segment_id" id='market_segment_id' class="validate[required]">
                                     <option value="">-- Choose Segment --</option>
@@ -117,31 +117,31 @@ $projectRequiredDate = $project['require_date'];
                                 </select>
                             </div>
 
-                            <div class="oneTwo form-worksheet-owner">
+                            <div class="grid gap-2 form-worksheet-owner">
                                 <label for="owner_id">Worksheet Owner</label>
                                 <input id="owner_id" name="owner_id" type="text" value="<?= $this->escapeHtml($project['owner_id']) ?>"
                                     readonly />
                             </div>
 
-                            <div class="oneTwo">
+                            <div class="grid gap-2">
                                 <label for="reed">REED ID</label>
                                 <input type="text" name="reed" id="reed" value="<?= $this->escapeHtml($project['reed']) ?>" />
                             </div>
 
-                            <div class="oneTwo">
+                            <div class="grid gap-2">
                                 <label for="due_date">Tender Due Date</label>
                                 <input id="due_date" type="text" name='due_date' class="flatpickr"
                                     value="<?= $this->escapeHtml($projectDueDate?->format('Y-m-d') ?? '') ?>" />
                             </div>
 
-                            <div class="oneTwo">
+                            <div class="grid gap-2">
                                 <label for='required_date'>Required Date</label>
                                 <input id='required_date' type="text" name='required_date' class="flatpickr"
                                     value="<?= $this->escapeHtml($projectRequiredDate?->format('Y-m-d')) ?>" />
                             </div>
 
                             <?php if ($user['approve_id'] != null) { ?>
-                                <div class="oneTwo form-worksheet-owner">
+                                <div class="grid gap-2 form-worksheet-owner">
                                     <label for="shared_id">Share Worksheet</label>
                                     <input id="shared_id" name="shared_id" type="text" value="<?= $this->escapeHtml($project['shared_id']) ?>" />
                                 </div>
@@ -149,7 +149,7 @@ $projectRequiredDate = $project['require_date'];
                                 <input type="hidden" id="shared_id" name="shared_id" value="<?= $this->escapeHtml($project['shared_id']) ?>" />
                             <?php } ?>
 
-                            <div class="oneTwo">
+                            <div class="grid gap-2">
                                 <label for="project_id_ext">Project ID</label>
                                 <input id="project_id_ext" type="text" name='project_id_ext'
                                     value="<?= $this->escapeHtml($project['project_id_ext']) ?>" readonly />
@@ -163,7 +163,7 @@ $projectRequiredDate = $project['require_date'];
                         <summary>Contractor</summary>
                         <div class="widget-section">
                             <div class="formRow">
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="general_contractor_name">General Contractor</label>
                                     <input type="text" id="general_contractor_name" name="general_contractor_name"
                                         placeholder="Add general contractor" value='<?php if (!empty($generalContractor)) {
@@ -173,7 +173,7 @@ $projectRequiredDate = $project['require_date'];
                                         value="<?= $this->escapeHtml($project['general_contractor_id']) ?>" />
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="awarded_contractor_name">Awarded Contractor</label>
                                     <input type="text" id="awarded_contractor_name" name="awarded_contractor_name"
                                         placeholder="Add awarded contractor" value='<?php if (!empty($awardedContractor)) {
@@ -237,7 +237,7 @@ $projectRequiredDate = $project['require_date'];
                                 </div>
 
                                 <div class="formRow">
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="architect_name">Architect Name</label>
                                         <input type='text' name="architect_name" id='architect_name' class="tipN"
                                             original-title="Search by ID or Name" value='<?= $architect['architect_name'] ?? '' ?>' />
@@ -246,7 +246,7 @@ $projectRequiredDate = $project['require_date'];
                                                                                                             ) ?>" />
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="architect_company_id">Company</label>
                                         <select id="architect_company_id" name="architect_company_id">
                                             <?php foreach ($company as $l) { ?>
@@ -262,13 +262,13 @@ $projectRequiredDate = $project['require_date'];
                                         </select>
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="architect_rep_id">Architect Representative</label>
                                         <input type="text" id="architect_rep_id" name="architect_rep_id"
                                             value="<?= $this->escapeHtml($architect['architect_rep_id'] ?? '') ?>" />
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="architect_type_id">Architect Type</label>
                                         <select id="architect_type_id" name="architect_type_id">
                                             <option value="">-- Choose architect type --</option>
@@ -280,7 +280,7 @@ $projectRequiredDate = $project['require_date'];
                                         </select>
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="architect_class_id">Architect Class</label>
                                         <input type="text" id="architect_class_id" name="architect_class_id"
                                             value="<?= $this->escapeHtml($architect['class_id'] ?? '') ?>">
@@ -294,7 +294,7 @@ $projectRequiredDate = $project['require_date'];
                                 <h4>Address</h4>
                                 <div class="formRow">
                                     <input type="hidden" name='address_id' id='address_id' value="<?= $this->escapeHtml($address['address_id'] ?? '') ?>">
-                                    <div class="oneTwo ">
+                                    <div class="grid gap-2 ">
                                         <label for="address_list">Address List</label>
                                         <select name='address_list' id='address_list'>
                                             <option value="new">+ Add New Address</option>
@@ -311,63 +311,63 @@ $projectRequiredDate = $project['require_date'];
                                         </select>
                                     </div>
 
-                                    <div class="oneTwo ">
+                                    <div class="grid gap-2 ">
                                         <label for="address_name">Address Nickname</label>
                                         <input type='text' name="address_name" id='address_name'
                                             value="<?= $this->escapeHtml($address['name'] ?? '') ?>">
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="phys_address1">Address 1</label>
                                         <input type='text' name="phys_address1" id='phys_address1'
                                             value="<?= $this->escapeHtml($address['phys_address1'] ?? '') ?>" />
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="phys_address2">Address 2</label>
                                         <input type='text' name="phys_address2" id='phys_address2'
                                             value="<?= $this->escapeHtml($address['phys_address2'] ?? '') ?>" placeholder="Optional" />
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="phys_city">City</label>
                                         <input type='text' name="phys_city" id='phys_city' value="<?= $this->escapeHtml(
                                                                                                         $address['phys_city'] ?? ''
                                                                                                     ) ?>" placeholder="Optional" />
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="phys_state">Province</label>
                                         <input type='text' name="phys_state" id='phys_state'
                                             value="<?= $this->escapeHtml($address['phys_state'] ?? '') ?>" placeholder="Optional" />
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="phys_postal_code">Postal Code</label>
                                         <input type='text' name="phys_postal_code" id='phys_postal_code'
                                             value="<?= $this->escapeHtml($address['phys_postal_code'] ?? '') ?>" placeholder="Optional" />
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="phys_country">Country</label>
                                         <input type='text' name="phys_country" id='phys_country'
                                             value="<?= $this->escapeHtml($address['phys_country'] ?? '') ?>" placeholder="Optional" />
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="central_phone_number">Company Phone Number</label>
                                         <input id='central_phone_number' name='central_phone_number' type="tel"
                                             class="maskPhone" value="<?= $this->escapeHtml($address['central_phone_number'] ?? '') ?>"
                                             placeholder="(123) 456-7890" />
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="email_address">Email</label>
                                         <input type="text" id='email_address' name='email_address'
                                             value="<?= $this->escapeHtml($address['email_address'] ?? '') ?>" placeholder="Optional">
                                     </div>
 
-                                    <div class="oneTwo">
+                                    <div class="grid gap-2">
                                         <label for="url">URL</label>
                                         <input type="url" id='url' name='url' value="<?= $this->escapeHtml(
                                                                                             $address['url'] ?? ''
@@ -386,7 +386,7 @@ $projectRequiredDate = $project['require_date'];
                                                                                                         ) ?>" />
                                     <input type="hidden" id='specifier_address_id' name="specifier_address_id"
                                         value="<?= $this->escapeHtml($specifierAddress['address_id'] ?? '') ?>" />
-                                    <div class="oneTwo ">
+                                    <div class="grid gap-2 ">
                                         <label for="specifier_name">Specifier</label>
                                         <select name='specifier_name' id='specifier_name'>
                                             <option value="new">+ Add New Specifier</option>
@@ -403,25 +403,25 @@ $projectRequiredDate = $project['require_date'];
                                         </select>
                                     </div>
 
-                                    <div class="oneTwo ">
+                                    <div class="grid gap-2 ">
                                         <label for="specifier_first_name">First Name</label>
                                         <input type='text' id='specifier_first_name' name="specifier_first_name"
                                             class="tipN" value="<?= $this->escapeHtml($specifier['first_name'] ?? '') ?>" />
                                     </div>
 
-                                    <div class="oneTwo ">
+                                    <div class="grid gap-2 ">
                                         <label for="specifier_last_name">Last Name</label>
                                         <input type='text' id='specifier_last_name' name="specifier_last_name"
                                             placeholder="Optional" value="<?= $this->escapeHtml($specifier['last_name'] ?? '') ?>" />
                                     </div>
 
-                                    <div class="oneTwo ">
+                                    <div class="grid gap-2 ">
                                         <label for="specifier_job_title">Job Title</label>
                                         <input type='text' id='specifier_job_title' name="specifier_job_title"
                                             class="tipN" placeholder="Optional" value="<?= $this->escapeHtml($specifier['job_title'] ?? '') ?>" />
                                     </div>
 
-                                    <div class="oneTwo ">
+                                    <div class="grid gap-2 ">
                                         <label for="specifier_phone_number">Phone Number</label>
                                         <input type='tel' id='specifier_phone_number' name="specifier_phone_number"
                                             class="maskPhone" placeholder="(123) 456-7890" value="<?= $this->escapeHtml(
@@ -429,7 +429,7 @@ $projectRequiredDate = $project['require_date'];
                                                                                                     ) ?>" />
                                     </div>
 
-                                    <div class="oneTwo ">
+                                    <div class="grid gap-2 ">
                                         <label for="specifier_email">Email</label>
                                         <input type='text' id='specifier_email' name="specifier_email" class="tipN"
                                             placeholder="Optional" value="<?= $this->escapeHtml($specifierAddress['email_address'] ?? '') ?>" />
@@ -574,135 +574,26 @@ $projectRequiredDate = $project['require_date'];
         </div>
     </div>
 
-    <div id="dialog-item" title="Add Item">
-        <form action="" class="dialog" id='dialog-item-form'>
-            <div class="dialog-form">
-                <div class="oneTwo required-field">
-                    <label for="item_id">Item ID</label>
-                    <input type="hidden" name="item_uid" id='item_uid'>
-                    <input type="text" id="item_id" name='item_id' class="validate[required]"
-                        placeholder="Search by ID or name">
-                </div>
+    <?= $this->render('modal/item');?>
 
-                <div class="oneTwo required-field">
-                    <label for='uom'>Unit Of Measure</label>
-                    <select name="uom" id='uom' class="validate[required]">
-                        <option value=''>-- Search for item first --</option>
-                    </select>
-                </div>
-
-                <div class="oneTwo required-field">
-                    <label for='unit_price'>Price ($)</label>
-                    <input type="text" class="validate[required,custom[number]]" name="unit_price" id='unit_price'
-                        placeholder="*You can override the price" />
-                </div>
-
-                <div class="oneTwo required-field">
-                    <label for='quantity'>Quantity</label>
-                    <input type="text" name="quantity" id='quantity' class="validate[required,custom[number]]" />
-                </div>
-
-                <div class="oneTwo dialog-note">
-                    <label for='note'>Note</label>
-                    <textarea rows="8" name='note' id='note' maxlength="255"
-                        class="validate[maxSize[255]]"></textarea>
-                    <input type="hidden" id="is_edit" value='0' />
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <div
-        x-data="noteModal()"
-        x-init="
-		    window.noteModalComponent = $data;
-            document.getElementById('widget-btn-add-note').addEventListener('click', () => open = true);"
-        x-effect="
-            if (open) {
-                document.body.classList.add('overflow-hidden');
-            } else {
-                document.body.classList.remove('overflow-hidden');
-                closeModal();
-        }">
-
-        <!-- Modal Overlay -->
-        <div
-            x-show="open"
-            class="flex items-center justify-center z-50 fixed inset-0 bg-black/50"
-            x-transition
-            @keydown.escape.window="open = false"
-            @click.self="open = false"
-            style="display: none;">
-            <!-- Modal Box -->
-            <div
-                class="bg-background ring-neutral fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-xl border border-none bg-clip-padding p-6 pb-17 shadow-2xl ring-4 ring-neutral-200/80 sm:max-w-3xl dark:bg-neutral-900 dark:ring-neutral-800"
-                @click.self="open = false"
-                x-transition>
-                <div class="flex flex-col gap-2 text-center sm:text-left">
-                    <h2 class="leading-none font-semibold text-lg">Add Note</h2>
-                    <p class="text-muted-foreground text-sm">Add a project note. A reminder about the project can also be set here.</p>
-                </div>
-
-                <div class="flex h-full w-full flex-col overflow-y-auto">
-                    <form id="dialog-note-form" @submit.prevent="submitForm">
-                        <div class="form-columns grid grid-cols-[2fr_2px_1fr] gap-4">
-                            <div class="flex flex-col gap-4 mb-4">
-                                <input type="hidden" name="note_id" id="note_id">
-                                <div class="form-field required-field">
-                                    <label for="note_title">Title</label>
-                                    <input type="text" name='note_title' id='note_title' placeholder="Title"></input>
-                                </div>
-
-                                <div class="form-field required-field">
-                                    <label for="project_note">Content</label>
-                                    <textarea rows="12" name='project_note' id='project_note' class="validate[required]"
-                                        placeholder="Log content"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="line-vertical w-[1px] bg-[#878787] opacity-[.28]"></div>
-
-                            <div class="flex flex-col gap-4 mb-4">
-                                <div class="form-field">
-                                    <label for="next_action">Reminder</label>
-                                    <textarea rows="12" name="next_action" id='next_action'
-                                        placeholder="Can be left empty. Reminder will be sent via email if the follow up date is set."></textarea>
-                                </div>
-
-                                <div class="form-field">
-                                    <label for='follow_up_date'>Reminder Time</label>
-                                    <input type="text" class="flatpickr-time" name='follow_up_date' id='follow_up_date'
-                                        placeholder="Select time..." readonly>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="text-muted-foreground absolute inset-x-0 bottom-0 z-20 flex h-16 flex-col-reverse items-center gap-2 rounded-b-xl border-t border-t-neutral-100 bg-neutral-50 px-6 text-xs font-medium sm:flex-row sm:justify-end dark:border-t-neutral-700 dark:bg-neutral-800">
-                    <button type="button" class="button-outline button-size-default" @click="closeModal()">Cancel</button>
-                    <button type="submit" class="button-default button-size-default" form="dialog-note-form">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <?= $this->render('modal/note');?>
 
     <div id="dialog-make-quote" title="Add Customer">
         <form action="" class="dialog customer-section" data-type="dialog" id='dialog-make-quote-form'>
             <h3>Customer</h3>
             <div class="dialog-form-3">
                 <input type="hidden" id="dialog_customer_id" name="customer_id" value="">
-                <div class="oneTwo required-field">
+                <div class="grid gap-2 required-field">
                     <label for="dialog_customer_name">Customer</label>
                     <input type="text" value="" id="dialog_customer_name" class='tipN validate[required]' placeholder="Search by ID or name">
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_company_id">Company ID</label>
                     <input id="dialog_company_id" type="text">
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_salesrep_full_name">Sales Representative</label>
                     <input id="dialog_salesrep_full_name" type="text">
                 </div>
@@ -713,59 +604,59 @@ $projectRequiredDate = $project['require_date'];
             <h3>Contact</h3>
             <div class="dialog-form-3">
                 <input type="hidden" id="dialog_contact_id" name="contact_id" value="">
-                <div class="oneTwo required-field">
+                <div class="grid gap-2 required-field">
                     <label for="dialog_contact_name">Contact</label>
                     <select id="dialog_contact_name" class="validate[required]">
                         <option value=''>-- Please search for a customer first --</option>
                     </select>
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_first_name">First Name</label>
                     <input type="text" id="dialog_first_name">
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_last_name">Last Name</label>
                     <input type="text" id="dialog_last_name">
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_phys_address1">Address 1</label>
                     <input type="text" id="dialog_phys_address1">
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_phys_address2">Address 2</label>
                     <input type="text" id="dialog_phys_address2">
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_phys_city">City</label>
                     <input type="text" id="dialog_phys_city">
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_phys_state">Province</label>
                     <input type="text" id="dialog_phys_state">
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_phys_postal_code">Postal Code</label>
                     <input type="text" id="dialog_phys_postal_code">
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_phys_country">Country</label>
                     <input type="text" id="dialog_phys_country">
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_central_phone_number">Phone Number</label>
                     <input type="text" id="dialog_central_phone_number" class="maskPhoneExt">
                 </div>
 
-                <div class="oneTwo">
+                <div class="grid gap-2">
                     <label for="dialog_email_address">Email</label>
                     <input type="text" id="dialog_email_address">
                 </div>

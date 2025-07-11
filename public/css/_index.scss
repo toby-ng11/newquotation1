@@ -1,7 +1,6 @@
 @use "./vars" as *;
 @use "./mixin";
 
-@use "./jquery-ui.css";
 //@use "./ui_custom.css";
 
 @use "./base/themes";
@@ -11,7 +10,7 @@
 @use "./search/search";
 @use "./cleditor/cleditor";
 @use "./dialog/dialog";
-@use "./dialog/modal";
+//@use "./dialog/modal";
 @use "./theme-switcher/theme-switcher";
 @use "./button/button";
 @use "./grid/main-wrapper";

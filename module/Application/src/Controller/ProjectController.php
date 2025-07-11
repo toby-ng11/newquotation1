@@ -313,6 +313,18 @@ class ProjectController extends AbstractActionController
         }
     }
 
+    public function itemsAction() {
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            $id = $this->params()->fromRoute('id');
+            $sheetType = 'project';
+            $itemTable = $this->item->fetchDataTables($id, $sheetType);
+            $view = new JsonModel($itemTable);
+            return $view;
+        }
+        return $this->getResponse()->setStatusCode(404);
+    }
+
     public function noteAction()
     {
         $request = $this->getRequest();

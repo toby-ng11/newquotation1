@@ -3,7 +3,7 @@ export function resetForm(form: HTMLFormElement | null): void {
 
     // Clear common input types
     form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
-        "input[type='hidden'], input[type='text'], input[type='password'], input[type='file'], select, textarea",
+        "input, select, textarea",
     ).forEach((el) => {
         el.value = '';
         el.dispatchEvent(new Event('change', { bubbles: true }));

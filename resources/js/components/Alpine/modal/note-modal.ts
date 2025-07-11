@@ -2,6 +2,7 @@ import { showFlashMessage } from '@/components/flashmessage';
 import { projectID } from '@/components/init';
 import { projectNoteTable } from '@/components/ui/table/tables';
 import { resetForm } from '@/components/utils';
+import { Instance as FlatpickrInstance } from 'flatpickr/dist/types/instance';
 
 export function initNote() {
     // Edit button
@@ -58,6 +59,7 @@ export function noteModal() {
 
     return {
         open: false,
+        isEditing: false,
 
         // Save note
         async submitForm() {
@@ -65,10 +67,10 @@ export function noteModal() {
             formData.append('project_id', projectID);
 
             const noteId = form.note_id.value;
-            const isEditing = !!noteId;
+            this.isEditing = !!noteId;
 
             try {
-                const response = await fetch(isEditing ? `/note/${noteId}/edit` : '/note', {
+                const response = await fetch(this.isEditing ? `/note/${noteId}/edit` : '/note', {
                     method: 'POST',
                     body: formData,
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
@@ -102,12 +104,18 @@ export function noteModal() {
                     form.project_note.value = data.note.project_note;
                     form.next_action.value = data.note.next_action || '';
 
-                    const followUpDataInput = (document.getElementById('follow_up_date') as HTMLInputElement)._flatpickr;
-                    if (followUpDataInput && data.note.follow_up_date) followUpDataInput.setDate(data.note.follow_up_date.date);
+                    const followUpDataInput = document.getElementById('follow_up_date') as HTMLInputElement & {
+                        _flatpickr?: FlatpickrInstance;
+                    };
+
+                    if (followUpDataInput._flatpickr && data.note.follow_up_date) {
+                        followUpDataInput._flatpickr.setDate(data.note.follow_up_date.date);
+                    }
 
                     form.note_id.value = noteId;
 
                     this.open = true;
+                    this.isEditing = true;
                 } else {
                     alert('Note not found.');
                 }
@@ -118,6 +126,7 @@ export function noteModal() {
         },
         closeModal() {
             resetForm(form);
+            this.isEditing = false;
             this.open = false;
         },
     };
