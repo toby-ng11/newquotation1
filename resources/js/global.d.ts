@@ -19,11 +19,21 @@ type ItemModalComponent = {
     getQuotedPrice: (item_uid: string) => void;
 };
 
+type CustomerModalComponent = {
+    open: boolean;
+    isEditing: boolean;
+    submitForm: () => Promise<void>;
+    closeModal: () => void;
+    getCustomerContacts: (customerID: string) => Promise<void>;
+    getContactInfo: () => Promise<void>;
+};
+
 declare global {
     interface Window {
         isOwner: boolean;
         Alpine: any;
         noteModalComponent?: NoteModalComponent;
         itemModalComponent?: ItemModalComponent;
+        customerModalComponent?: CustomerModalComponent;
     }
 }

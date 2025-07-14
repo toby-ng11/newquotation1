@@ -170,6 +170,7 @@
         <table id="info" width="100%">
             <tr>
                 <th class="title" width="10%">Quote#</th>
+                <th class="title" width="10%">Project#</th>
                 <th class="title" width="15%">Quote Date</th>
                 <th class="title" width="17.5%">Quote Expiry</th>
                 <th class="title" width="20%">Ship Required Date</th>
@@ -178,6 +179,7 @@
             </tr>
             <tr>
                 <td><?= $this->escapeHtml($quote['quote_id']) ?></td>
+                <td><?= $this->escapeHtml($project['project_id']) ?></td>
                 <td><?= $this->escapeHtml($quote['created_at']->format('Y-m-d')) ?></td>
                 <td><?= $this->escapeHtml($quote['expire_date']->format('Y-m-d')) ?></td>
                 <td><?= $quote['ship_required_date'] && $quote['ship_required_date'] > new DateTime('2000-01-01')
@@ -192,14 +194,14 @@
                 <td><?= $this->escapeHtml($customer['salesrep_full_name']) ?? 'N/A' ?></td>
             </tr>
             <tr>
-                <td class='th title' colspan="2">Project Name</td>
+                <td class='th title' colspan="3">Project Name</td>
                 <td class='th title' colspan="1">Project Location</td>
                 <td class='th title'>Architect</td>
                 <td class='th title'>Specifier</td>
                 <td class='th title'>Arch Rep</td>
             </tr>
             <tr>
-                <td colspan="2"><?= $this->escapeHtml($project['project_name']) ?></td>
+                <td colspan="3"><?= $this->escapeHtml($project['project_name']) ?></td>
                 <td colspan="1">
                     <?php foreach ($branches as $l) { ?>
                         <?php if ($l['location_id'] === $project['centura_location_id']): ?>

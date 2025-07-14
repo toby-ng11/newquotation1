@@ -1,5 +1,9 @@
 import '../css/app.css';
+import '@/components/lucide';
+import 'basecoat-css/all';
 
+import { initCustomer } from '@/components/Alpine/modal/customer-modal';
+import { initItem } from '@/components/Alpine/modal/item-modal';
 import { initNote } from '@/components/Alpine/modal/note-modal';
 import { initAlpine } from '@/components/Alpine/p2q-init';
 import { runFadeInAnimation } from '@/components/FadeInAnimation';
@@ -13,7 +17,6 @@ import { initSearchBox } from '@/components/ui/searchbox/searchbox';
 import { initTables } from '@/components/ui/table/tables';
 import { InitTheme } from '@/components/ui/theme/Theme';
 import { initArchitect } from '@/pages/architect';
-import { initItem } from '@/components/Alpine/modal/item-modal';
 import { initArchitectForm, initProject } from '@/pages/project';
 import { $dialogMakeQuote, initQuote } from '@/pages/quote';
 
@@ -28,11 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initSearchBox();
     initTables();
     initFlatpickr();
+    initCustomer();
     initItem();
     initNote();
     initProject();
-    initArchitectForm();
     initQuote();
+    initArchitectForm();
     initArchitect();
     initCharts();
     runFadeInAnimation();
@@ -45,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         $dialogMakeQuote.dialog('open');
     }
 
-    document.querySelectorAll('.top-level-entry').forEach((link) => {
+    (document.querySelectorAll('.top-level-entry') as NodeListOf<HTMLElement>).forEach((link) => {
         link.addEventListener('click', function () {
             document.querySelectorAll('.top-level-entry').forEach((el) => el.classList.remove('active'));
             this.classList.add('active');

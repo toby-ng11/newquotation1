@@ -326,31 +326,6 @@ iframe {
   }
 }
 
-h1,
-h2,
-h3 {
-  letter-spacing: var(--heading-letter-spacing);
-}
-
-h1 {
-  //font: var(--type-heading-h1);
-  //margin-bottom: 1.5rem;
-  word-break: break-word;
-}
-
-h3 {
-  font: var(--type-heading-h3);
- // margin: 0.5rem 0 0.5rem;
-}
-
-/* When an h3 immediately follows an h2 we want to use
- * a smaller top margin. We also make accommodation
-  for situations where there is an empty div
-  between the two elements */
-h2 ~ div ~ h3,
-h2 ~ h3 {
-  margin-top: 1rem;
-}
 
 h5 {
   font: var(--type-heading-h5);

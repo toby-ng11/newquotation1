@@ -26,17 +26,17 @@ $user = $this->user;
                             <input type="hidden" id='project_id_ext' name='project_id_ext' />
                             <input type="hidden" name='create_date' value='' />
 
-                            <div class="oneTwo required-field">
+                            <div class="grid gap-2 required-field">
                                 <label for="project_name">Project Name</label>
                                 <input required type="text" id='project_name' name='project_name' />
                             </div>
 
-                            <div class="oneTwo required-field">
+                            <div class="grid gap-2 required-field">
                                 <label for='project_address'>Project Location</label>
                                 <input required id='project_address' name='project_address' type="text" />
                             </div>
 
-                            <div class="oneTwo">
+                            <div class="grid gap-2">
                                 <label for="location_id">Centura Location</label>
                                 <select name="location_id" id="location_id">
                                     <?php foreach ($this->locations as $l) { ?>
@@ -47,7 +47,7 @@ $user = $this->user;
                                 </select>
                             </div>
 
-                            <div class="oneTwo required-field">
+                            <div class="grid gap-2 required-field">
                                 <label for="status">Project Stage</label>
                                 <select required name="status" id='status'>
                                     <option value="">-- Select stage --</option>
@@ -57,7 +57,7 @@ $user = $this->user;
                                 </select>
                             </div>
 
-                            <div class="oneTwo required-field">
+                            <div class="grid gap-2 required-field">
                                 <label for="market_segment_id">Project Segment</label>
                                 <select required name="market_segment_id" id='market_segment_id'>
                                     <option value="">-- Choose market segment --</option>
@@ -67,28 +67,28 @@ $user = $this->user;
                                 </select>
                             </div>
 
-                            <div class="oneTwo">
+                            <div class="grid gap-2">
                                 <label for="owner_id">Worksheet Owner</label>
                                 <input type="text" id="owner_id" name="owner_id" value='<?= $this->escapeHtml($this->escapeHtml($user['id'])) ?>' readonly />
                             </div>
 
-                            <div class="oneTwo">
+                            <div class="grid gap-2">
                                 <label for="reed">REED ID</label>
                                 <input type="text" name='reed' original-title="REED Format" id='reed' />
                             </div>
 
-                            <div class="oneTwo">
+                            <div class="grid gap-2">
                                 <label for="due_date">Tender Due Date</label>
                                 <input type="text" id="due_date" name='due_date' class="flatpickr" placeholder="Due date" />
                             </div>
 
-                            <div class="oneTwo">
+                            <div class="grid gap-2">
                                 <label for="require_date">Required Date</label>
                                 <input type="text" id="require_date" name='require_date' class="flatpickr" placeholder="Required date" />
                             </div>
 
                             <?php if ($user['approve_id'] != null) { ?>
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="shared_id">Share Worksheet</label>
                                     <input type="text" id="shared_id" name="shared_id" placeholder="Share this project with other salesrep" />
                                 </div>
@@ -106,12 +106,12 @@ $user = $this->user;
                             <h4>Architect</h4>
                             <div class="formRow">
                                 <input type="hidden" name='architect_id' id='architect_id' />
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="architect_name">Architect Name</label>
                                     <input type='text' name="architect_name" id='architect_name' class="tipN" original-title="Search by ID or Name" />
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="architect_company_id">Company</label>
                                     <select id="architect_company_id" name="architect_company_id">
                                         <?php foreach ($this->company as $l) { ?>
@@ -122,12 +122,12 @@ $user = $this->user;
                                     </select>
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="architect_rep_id">Architect Representative</label>
                                     <input type="text" id="architect_rep_id" name="architect_rep_id" value='<?= $this->escapeHtml($user['id']) ?>' readonly />
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="architect_type_id">Architect Type</label>
                                     <select id="architect_type_id" name="architect_type_id">
                                         <option value="">-- Choose architect type --</option>
@@ -137,7 +137,7 @@ $user = $this->user;
                                     </select>
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="architect_class_id">Architect Class</label>
                                     <input type="text" id="architect_class_id" name="architect_class_id" readonly />
                                 </div>
@@ -150,59 +150,59 @@ $user = $this->user;
                             <h4>Address</h4>
                             <input type="hidden" name='address_id' id='address_id' />
                             <div class="formRow">
-                                <div class="oneTwo ">
+                                <div class="grid gap-2 ">
                                     <label for="address_list">Address List</label>
                                     <select name='address_list' id='address_list'>
                                         <option value=''>-- Please search for an architect first --</option>
                                     </select>
                                 </div>
 
-                                <div class="oneTwo ">
+                                <div class="grid gap-2 ">
                                     <label for="address_name">Address Nickname</label>
                                     <input type='text' name="address_name" id='address_name' />
                                 </div>
 
-                                <div class="oneTwo ">
+                                <div class="grid gap-2 ">
                                     <label for="phys_address1">Address 1</label>
                                     <input type='text' name="phys_address1" id='phys_address1' placeholder="Optional" />
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="phys_address2">Address 2</label>
                                     <input type='text' name="phys_address2" id='phys_address2' placeholder="Optional" />
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="phys_city">City</label>
                                     <input type='text' name="phys_city" id='phys_city' placeholder="Optional" />
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="phys_state">Province</label>
                                     <input type='text' name="phys_state" id='phys_state' placeholder="Optional" />
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="phys_postal_code">Postal Code</label>
                                     <input type='text' name="phys_postal_code" id='phys_postal_code' placeholder="Optional" />
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="phys_country">Country</label>
                                     <input type='text' name="phys_country" id='phys_country' placeholder="Optional" />
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="central_phone_number">Company Phone Number</label>
                                     <input id='central_phone_number' name='central_phone_number' type="tel" class="maskPhone" placeholder="(123) 456-7890" />
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="email_address">Email</label>
                                     <input type="text" value="" id='email_address' name='email_address' placeholder="Optional">
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="url">URL</label>
                                     <input type="url" value="" id='url' name='url' placeholder="Optional">
                                 </div>
@@ -216,34 +216,34 @@ $user = $this->user;
                             <div class="formRow">
                                 <input type="hidden" id='specifier_id' name="specifier_id" />
                                 <input type="hidden" id='specifier_address_id' name="specifier_address_id" />
-                                <div class="oneTwo ">
+                                <div class="grid gap-2 ">
                                     <label for="specifier_name">Specifier</label>
                                     <select name='specifier_name' id='specifier_name'>
                                         <option value=''>-- Please search for a architect first --</option>
                                     </select>
                                 </div>
 
-                                <div class="oneTwo ">
+                                <div class="grid gap-2 ">
                                     <label for="specifier_first_name">First Name</label>
                                     <input type='text' id='specifier_first_name' name="specifier_first_name" class="tipN" />
                                 </div>
 
-                                <div class="oneTwo ">
+                                <div class="grid gap-2 ">
                                     <label for="specifier_last_name">Last Name</label>
                                     <input type='text' id='specifier_last_name' name="specifier_last_name" placeholder="Optional" />
                                 </div>
 
-                                <div class="oneTwo ">
+                                <div class="grid gap-2 ">
                                     <label for="specifier_job_title">Job Title</label>
                                     <input type='text' id='specifier_job_title' name="specifier_job_title" class="tipN" placeholder="Optional" />
                                 </div>
 
-                                <div class="oneTwo ">
+                                <div class="grid gap-2 ">
                                     <label for="specifier_phone_number">Phone Number</label>
                                     <input type='tel' id='specifier_phone_number' name="specifier_phone_number" class="maskPhone" placeholder="(123) 456-7890" />
                                 </div>
 
-                                <div class="oneTwo ">
+                                <div class="grid gap-2 ">
                                     <label for="specifier_email">Email</label>
                                     <input type='text' id='specifier_email' name="specifier_email" class="tipN" placeholder="Optional" />
                                 </div>
@@ -257,13 +257,13 @@ $user = $this->user;
                         <summary>Contractor</summary>
                         <div class="widget-section">
                             <div class="formRow">
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="general_contractor_name">General Contractor</label>
                                     <input type="text" id="general_contractor_name" name="general_contractor_name" class='tipN' placeholder="Add general contractor" original-title="Type Company Name" />
                                     <input type="hidden" id="general_contractor_id" name="general_contractor_id" />
                                 </div>
 
-                                <div class="oneTwo">
+                                <div class="grid gap-2">
                                     <label for="awarded_contractor_name">Awarded Contractor</label>
                                     <input id="awarded_contractor_name" name="awarded_contractor_name" type="text" class='tipN' placeholder="Add awarded contractor" original-title="Type Company Name" />
                                     <input id="awarded_contractor_id" name="awarded_contractor_id" type="hidden" />

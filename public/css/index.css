@@ -2524,29 +2524,6 @@ iframe[src*="https://mdn.github.io"], iframe[src*="https://www.youtube-nocookie.
   width: calc(100% - 2rem - 2px);
 }
 
-h1,
-h2,
-h3 {
-  letter-spacing: var(--heading-letter-spacing);
-}
-
-h1 {
-  word-break: break-word;
-}
-
-h3 {
-  font: var(--type-heading-h3);
-}
-
-/* When an h3 immediately follows an h2 we want to use
- * a smaller top margin. We also make accommodation
-  for situations where there is an empty div
-  between the two elements */
-h2 ~ div ~ h3,
-h2 ~ h3 {
-  margin-top: 1rem;
-}
-
 h5 {
   font: var(--type-heading-h5);
   letter-spacing: 1.5px;
@@ -6612,10 +6589,6 @@ main {
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
-}
-
-a:not(.fade-in-up) {
-  color: var(--text-link);
 }
 
 button.button[disabled],

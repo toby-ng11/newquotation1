@@ -28,10 +28,8 @@ $projectRequiredDate = $project['require_date'];
 
 <!-- Main content wrapper -->
 <div class="h-full flex flex-1 flex-col gap-4 p-8">
-    <header>
-        <h1 class="text-2xl font-semibold tracking-tight">Edit Project</h1>
-        <p class="text-muted-foreground">Editting project #<?= $this->escapeHtml($projectID) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
-    </header>
+    <h1 class="font-mono text-5xl font-semibold tracking-wide uppercase">Project</h1>
+    <p class="text-muted-foreground">Editting project #<?= $this->escapeHtml($projectID) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
 
     <!-- Form -->
     <div class="flex flex-col gap-4 md:gap-6">
@@ -574,95 +572,11 @@ $projectRequiredDate = $project['require_date'];
         </div>
     </div>
 
-    <?= $this->render('modal/item');?>
+    <?= $this->render('modal/item'); ?>
 
-    <?= $this->render('modal/note');?>
+    <?= $this->render('modal/note'); ?>
 
-    <div id="dialog-make-quote" title="Add Customer">
-        <form action="" class="dialog customer-section" data-type="dialog" id='dialog-make-quote-form'>
-            <h3>Customer</h3>
-            <div class="dialog-form-3">
-                <input type="hidden" id="dialog_customer_id" name="customer_id" value="">
-                <div class="grid gap-2 required-field">
-                    <label for="dialog_customer_name">Customer</label>
-                    <input type="text" value="" id="dialog_customer_name" class='tipN validate[required]' placeholder="Search by ID or name">
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_company_id">Company ID</label>
-                    <input id="dialog_company_id" type="text">
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_salesrep_full_name">Sales Representative</label>
-                    <input id="dialog_salesrep_full_name" type="text">
-                </div>
-            </div>
-
-            <div class="line"></div>
-
-            <h3>Contact</h3>
-            <div class="dialog-form-3">
-                <input type="hidden" id="dialog_contact_id" name="contact_id" value="">
-                <div class="grid gap-2 required-field">
-                    <label for="dialog_contact_name">Contact</label>
-                    <select id="dialog_contact_name" class="validate[required]">
-                        <option value=''>-- Please search for a customer first --</option>
-                    </select>
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_first_name">First Name</label>
-                    <input type="text" id="dialog_first_name">
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_last_name">Last Name</label>
-                    <input type="text" id="dialog_last_name">
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_phys_address1">Address 1</label>
-                    <input type="text" id="dialog_phys_address1">
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_phys_address2">Address 2</label>
-                    <input type="text" id="dialog_phys_address2">
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_phys_city">City</label>
-                    <input type="text" id="dialog_phys_city">
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_phys_state">Province</label>
-                    <input type="text" id="dialog_phys_state">
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_phys_postal_code">Postal Code</label>
-                    <input type="text" id="dialog_phys_postal_code">
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_phys_country">Country</label>
-                    <input type="text" id="dialog_phys_country">
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_central_phone_number">Phone Number</label>
-                    <input type="text" id="dialog_central_phone_number" class="maskPhoneExt">
-                </div>
-
-                <div class="grid gap-2">
-                    <label for="dialog_email_address">Email</label>
-                    <input type="text" id="dialog_email_address">
-                </div>
-            </div>
-        </form>
-    </div>
+    <?= $this->render('modal/customer'); ?>
 </div>
 
 

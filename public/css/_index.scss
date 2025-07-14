@@ -1,8 +1,6 @@
 @use "./vars" as *;
 @use "./mixin";
 
-//@use "./ui_custom.css";
-
 @use "./base/themes";
 @use "./icon/icon";
 @use "./logo/logo";
@@ -218,10 +216,6 @@ main {
 pre {
 	white-space: pre-wrap;
 	word-wrap: break-word;
-}
-
-a:not(.fade-in-up) {
-	color: var(--text-link);
 }
 
 button.button[disabled],

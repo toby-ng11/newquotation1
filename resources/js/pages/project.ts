@@ -197,17 +197,17 @@ let isProjectArchitectFormSaved = true;
 async function initArchitectForm() {
     const { setupAutoComplete } = await import('@/components/autocomplete');
 
-    let architectFields = document.querySelectorAll(
+    const architectFields = document.querySelectorAll(
         '#architect_name, #architect_id, #architect_company_id, #architect_rep_id,#architect_type_id, #architect_class_id',
     ) as NodeListOf<HTMLInputElement>;
 
-    let addressDropdown = document.getElementById('address_list') as HTMLSelectElement;
-    let addressFields = document.querySelectorAll(
+    const addressDropdown = document.getElementById('address_list') as HTMLSelectElement;
+    const addressFields = document.querySelectorAll(
         '#address_id, #address_name, #phys_address1, #phys_address2, #phys_city, #phys_state, #phys_postal_code, #phys_country, #central_phone_number, #email_address, #url',
     ) as NodeListOf<HTMLInputElement>;
 
-    let specifierDropdown = document.getElementById('specifier_name') as HTMLSelectElement;
-    let specifierFields = document.querySelectorAll(
+    const specifierDropdown = document.getElementById('specifier_name') as HTMLSelectElement;
+    const specifierFields = document.querySelectorAll(
         '#specifier_id, #specifier_address_id, #specifier_first_name, #specifier_last_name, #specifier_job_title, #specifier_phone_number, #specifier_email',
     ) as NodeListOf<HTMLInputElement>;
 

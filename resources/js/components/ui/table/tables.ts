@@ -27,7 +27,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'project_id',
                     render: function (data) {
-                        return "<a   href='/project/" + data + "/edit'>" + data + '</a>';
+                        return '<a href="/project/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -121,7 +121,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'quote_id',
                     render: function (data) {
-                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -217,7 +217,15 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'project_id_ext',
                     render: function (data, type, row) {
-                        return "<a href='/project/" + row.project_id + "/edit' title='Edit project " + row.project_id + "'>" + data + '</a>';
+                        return (
+                            '<a href="/project/' +
+                            row.project_id +
+                            '/edit" class="text-blue-500 dark:text-blue-300" title="Edit project ' +
+                            row.project_id +
+                            '">' +
+                            data +
+                            '</a>'
+                        );
                     },
                 },
                 {
@@ -310,7 +318,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'project_id_ext',
                     render: function (data, type, row) {
                         {
-                            return "<a href='/project/" + row.project_id + "/edit'>" + data + '</a>';
+                            return '<a href="/project/' + row.project_id + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                         }
                     },
                 },
@@ -403,7 +411,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'project_id_ext',
                     render: function (data, type, row) {
-                        return "<a   href='/project/" + row.project_id + "/edit'>" + data + '</a>';
+                        return '<a href="/project/' + row.project_id + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -500,13 +508,13 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'quote_id',
                     render: function (data) {
-                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
                     data: 'project_id',
                     render: function (data) {
-                        return "<a   href='/project/" + data + "/edit'>" + data + '</a>';
+                        return '<a href="/project/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -608,7 +616,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'project_id',
                     render: function (data, type, row) {
                         {
-                            return "<a   href='/project/" + row.project_id + "/edit'>" + row.project_id + '</a>';
+                            return (
+                                '<a href="/project/' + row.project_id + '/edit" class="text-blue-500 dark:text-blue-300">' + row.project_id + '</a>'
+                            );
                         }
                     },
                 },
@@ -662,7 +672,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'quote_id',
                     render: function (data) {
-                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -745,7 +755,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'quote_id',
                     render: function (data) {
-                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -863,7 +873,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'quote_id',
                     render: function (data) {
-                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -961,7 +971,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'architect_id',
                     render: function (data, type, row) {
-                        return "<a href='/architect/" + row.architect_id + "/edit'>" + data + '</a>';
+                        return '<a href="/architect/' + row.architect_id + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -1027,7 +1037,13 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'architect_name',
                     render: function (data, type, row) {
-                        return "<a   href='/architect/" + row.architect_id + "/edit'>" + data + '</a>';
+                        return (
+                            '<a href="/architect/' +
+                            row.architect_id +
+                            `/edit" class="text-blue-500 dark:text-blue-300 after:content-['_↗']">` +
+                            data +
+                            '</a>'
+                        );
                     },
                 },
                 {
@@ -1083,7 +1099,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                             let formatted = text.replace(/(?:\r\n|\r|\n)/g, '<br>');
                             return formatted.replace(
                                 /(https:\/\/[^\s<]+)/g,
-                                '<a href="$1" target="_blank" class="text-blue-500! visited:text-blue-500! underline">$1</a>',
+                                '<a href="$1" target="_blank" class="text-blue-500 visited:text-blue-500 underline">$1</a>',
                             );
                         }
                         if (data == '') {
@@ -1303,7 +1319,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'quote_id',
                     render: function (data) {
-                        return "<a   href='/quote/" + data + "/edit'>" + data + '</a>';
+                        return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -1393,7 +1409,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'project_id',
                     render: function (data) {
-                        return "<a   href='/project/" + data + "/edit'>" + data + '</a>';
+                        return '<a href="/project/' + data + '/edit">' + data + '</a>';
                     },
                 },
                 {
@@ -1455,7 +1471,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'address_id',
                     render: function (data) {
-                        return "<a   href='/architect/" + data + "/edit'>" + data + '</a>';
+                        return '<a href="/architect/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -1495,7 +1511,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'specifier_id',
                     render: function (data) {
-                        return "<a   href='/architect/" + data + "/edit'>" + data + '</a>';
+                        return '<a href="/architect/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
