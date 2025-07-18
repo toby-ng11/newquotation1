@@ -73,11 +73,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'project_id',
                     render: function (data) {
-                        return (
-                            '<a target="_blank" href="/project/' +
-                            data +
-                            '/edit?open=make-quote"><span class="button-wrap"><span class="icon icon-money"></span></span></a>'
-                        );
+                        let info = document.createElement('div');
+                    info.innerHTML = '<i data-lucide="ellipsis" class="w-4 h-4"></i>';
+                    return info;
                     },
                 },
             ],
