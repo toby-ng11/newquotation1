@@ -3695,32 +3695,10 @@ form textarea {
 .widget-table .row-button .button-wrap:hover::after {
   opacity: 1;
 }
-.widget-table h1,
-.widget-table h2,
-.widget-table h3,
-.widget-table h4,
-.widget-table h5,
-.widget-table h6,
-.widget-table p {
-  margin: 0;
-}
-.widget-table h2 {
-  line-height: 3rem;
-}
 .widget-table h3 {
   margin-top: 1rem;
   margin-bottom: 1rem;
   font-weight: 600;
-}
-.widget-table svg,
-.widget-table .svg {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 30%;
-  height: 10rem;
-  width: 10rem;
-  opacity: 0.3;
 }
 .widget-table details {
   padding: 0.5rem;
@@ -3767,98 +3745,6 @@ form textarea {
   opacity: 1;
 }
 
-.widget-information {
-  display: grid;
-  gap: 1rem;
-  padding-top: 1rem;
-  transition: all 0.3s ease-in-out;
-}
-.widget-information.architect-dashboard.row-1 {
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-}
-.widget-information.architect-dashboard.row-2 {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-.widget-information.approval-dashboard a {
-  color: var(--text-primary);
-  text-decoration: none;
-}
-.widget-information.approval-dashboard.row-1 {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-}
-.widget-information.approval-dashboard.row-1 .col-1 {
-  background: var(--approval-dashboard-bg1);
-  background: linear-gradient(124deg, var(--approval-dashboard-bg1) 0%, var(--approval-dashboard-bg2) 100%);
-}
-.widget-information.approval-dashboard.row-1 .col-2 {
-  background: var(--approval-dashboard-bg1);
-  background: linear-gradient(124deg, var(--approval-dashboard-bg1) 0%, var(--approval-dashboard-bg2) 100%);
-}
-.widget-information.approval-dashboard.row-1 .col-3 {
-  background: var(--approval-dashboard-bg1);
-  background: linear-gradient(124deg, var(--approval-dashboard-bg1) 0%, var(--approval-dashboard-bg2) 100%);
-}
-.widget-information.approval-dashboard.row-2 {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-}
-.widget-information.quote-edit a {
-  color: var(--text-primary);
-  text-decoration: none;
-}
-.widget-information.quote-edit.row-1 {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-.widget-information .widget-text-head {
-  margin-top: 0;
-  font-size: calc(100% + 4px);
-}
-.widget-information .widget-text-bold {
-  font-size: calc(100% + 35px);
-}
-.widget-information .widget-text-desc {
-  font-size: calc(100% - 30px);
-  font-weight: 300;
-  opacity: 0.5;
-}
-.widget-information .widget-table {
-  margin: 0;
-}
-.widget-information .widget-table p + h2,
-.widget-information .widget-table h2 + p {
-  margin-top: 2rem;
-}
-.widget-information .status-approved {
-  background: var(--widget-background-green);
-  box-shadow: 0px 10px 20px 0px rgba(6, 214, 160, 0.6);
-}
-.widget-information .status-approved:hover {
-  background: var(--widget-background-green);
-}
-.widget-information .status-waiting {
-  background: var(--widget-background-yellow);
-  box-shadow: 0px 10px 20px 0px rgba(255, 209, 102, 0.6);
-}
-.widget-information .status-waiting:hover {
-  background: var(--widget-background-yellow);
-}
-.widget-information .status-disapproved {
-  background: var(--widget-background-red);
-  box-shadow: 0px 10px 20px 0px rgba(239, 77, 111, 0.6);
-}
-.widget-information .status-disapproved:hover {
-  background: var(--widget-background-red);
-}
-
-@media screen and (min-width: 48rem) {
-  .widget-information {
-    padding-top: 1.5rem;
-  }
-}
 /* Tables
 ================================================== */
 /* ===== Static table ===== */
@@ -6545,12 +6431,6 @@ body {
 body.noscroll {
   overflow: hidden;
   height: 100%;
-}
-
-:focus-visible {
-  outline-color: var(--accent-primary);
-  outline-offset: 1px;
-  outline-style: auto;
 }
 
 main {

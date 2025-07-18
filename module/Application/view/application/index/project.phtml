@@ -10,46 +10,21 @@ $assignTableCount = $this->assignTableCount;
 $otherTableCount = $this->otherTableCount;
 $quoteTableCount = $this->quoteTableCount;
 $noteTableCount = $this->noteTableCount;
-
-$hour = date('H'); // 24-hour format of the current hour
-
-if ($hour >= 5 && $hour < 12) {
-    $greeting = 'Good morning';
-} elseif ($hour >= 12 && $hour < 18) {
-    $greeting = 'Good afternoon';
-} else {
-    $greeting = 'Good evening';
-}
 ?>
 
 <!-- Title area -->
 <div class="h-full flex flex-1 flex-col gap-4 p-8">
     <header>
-        <h1 class="text-2xl font-semibold tracking-tight"><?= $this->escapeHtml($greeting) ?>, <?= $this->escapeHtml($user['first_name']) ?>!</h1>
-        <p class="text-muted-foreground">Here's the quick summary your projects and quotes.</p>
+        <?= $this->partial('components/greeting'); ?>
+        <div class="flex items-center justify-between ">
+            <p class="text-muted-foreground">Here's the quick summary your projects and quotes.</p>
+
+            <?= $this->partial('components/new-project-btn'); ?>
+        </div>
     </header>
 
     <div class="flex flex-col gap-4 md:gap-6">
-        <div class="fade-in-up" aria-labelledby="my_projects" id="project-dashboard-own-project-section" data-nav="My Projects">
-            <div class="widget-table bg-widget-background rounded-xl p-6">
-                <table width="100%" class="sTable display nowrap" id='dashboard-home-own-table' data-init="homeOwnProject">
-                    <thead>
-                        <tr>
-                            <th>Project ID</th>
-                            <th>Project Name</th>
-                            <th>Shared</th>
-                            <th>Segment</th>
-                            <th>Architect</th>
-                            <th>No. of quotes</th>
-                            <th>Create Date</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Make Quote</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
+        <div id="project-own-projects-table" class="fade-in-up"></div>
 
         <div class="fade-in-up" aria-labelledby="assigned_projects" id="project-dashboard-assigned-project-section" data-nav="Assigned Projects">
             <div class="widget-table bg-widget-background rounded-xl p-6">

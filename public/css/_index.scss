@@ -174,12 +174,6 @@ body {
 	}
 }
 
-:focus-visible {
-	outline-color: var(--accent-primary);
-	outline-offset: 1px;
-	outline-style: auto;
-}
-
 main {
 	display: flow-root;
 	min-height: 80vh;

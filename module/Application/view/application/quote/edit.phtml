@@ -62,56 +62,57 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
         <h1 class="font-mono text-5xl font-semibold tracking-wide uppercase">Quote</h1>
 
         <div class="flex items-center justify-between ">
-            <p class="text-muted-foreground">Quote # <?= $this->escapeHtml($quoteID) ?> of Project # <?= $this->escapeHtml($project['project_id']) ?></p>
+            <p class="text-muted-foreground font-medium tracking-tight">Quote #<?= $this->escapeHtml($quoteID) ?> of Project #<?= $this->escapeHtml($project['project_id']) ?></p>
 
             <div class="hidden lg:flex lg:items-center lg:gap-12">
-                <button class="btn-sm-ghost text-muted-foreground text-xs tracking-tight uppercase"
+                <button class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
                     type="button"
                     id="widget-btn-add-quote"
-                    title="Make Quote">
+                    data-tooltip="Add another quote for this project">
                     <i data-lucide="file-plus-2"></i>
-                    Add Quote
+                    ADD QUOTE
                 </button>
 
-                <a class="btn-sm-ghost text-muted-foreground text-xs tracking-tight uppercase"
+                <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
                     target="_blank"
                     href="/project/<?= $project['project_id'] ?>/edit"
-                    title="Go to project for this quote">
+                    data-tooltip="Go to this quote's project">
                     <i data-lucide="external-link"></i>
-                    Go to Project
+                    GO TO PROJECT
                 </a>
 
-                <a class="btn-sm-ghost text-muted-foreground text-xs tracking-tight uppercase"
+                <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
                     href="/quote/<?= $quoteID ?>/export"
-                    title="Print this quote">
+                    data-tooltip="Print this quote"
+                    data-align="end">
                     <i data-lucide="printer"></i>
-                    Print Quote
+                    PRINT
                 </a>
 
                 <?php
                 if ($quoteStatusID != $approved) { ?>
-                    <button class="delete-quote-btn btn-sm-destructive text-xs tracking-tight uppercase"
+                    <button class="delete-quote-btn btn-sm-ghost text-destructive-foreground hover:bg-destructive/20 font-medium text-xs tracking-tight"
                         type="button"
-                        title="Delete this quote">
+                        data-tooltip="Delete this quote">
                         <i data-lucide="trash-2"></i>
-                        Delete Quote
+                        DELETE
                     </button>
                 <?php }
                 ?>
             </div>
 
-            <div id="demo-dropdown-menu" class="dropdown-menu lg:hidden">
+            <div id="quote-menu" class="dropdown-menu lg:hidden">
                 <button type="button"
-                    id="demo-dropdown-menu-trigger"
+                    id="quote-menu-trigger"
                     aria-haspopup="menu"
-                    aria-controls="demo-dropdown-menu-menu"
+                    aria-controls="quote-menu-options"
                     aria-expanded="false"
                     class="btn-ghost text-muted-foreground text-xs tracking-tight uppercase">
                     <i data-lucide="ellipsis" class="w-4 h-4"></i>
                     Options
                 </button>
-                <div id="demo-dropdown-menu-popover" data-popover data-align="end" aria-hidden="true" class="min-w-40">
-                    <div role="menu" id="demo-dropdown-menu-menu" aria-labelledby="demo-dropdown-menu-trigger">
+                <div id="quote-menu-popover" data-popover data-align="end" aria-hidden="true" class="min-w-40">
+                    <div role="menu" id="quote-menu-options" aria-labelledby="quote-menu-trigger">
                         <div role="menuitem">
                             <button class="flex items-center gap-2"
                                 type="button"
@@ -141,11 +142,11 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                         <?php
                         if ($quoteStatusID != $approved) : ?>
                             <hr role="separator" />
-                            <div role="menuitem">
+                            <div role="menuitem" class="text-destructive-foreground hover:bg-destructive/20">
                                 <button class="delete-quote-btn flex items-center gap-2"
                                     type="button"
                                     title="Delete Quote">
-                                    <i data-lucide="trash-2" class="text-muted-foreground h-4 w-4"></i>
+                                    <i data-lucide="trash-2" class="text-destructive-foreground h-4 w-4"></i>
                                     Delete Quote
                                 </button>
                             </div>
@@ -652,9 +653,10 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                         <thead>
                             <tr>
                                 <th>Item</th>
-                                <th>Quality</th>
+                                <th>Quantity</th>
                                 <th>Unit Price</th>
                                 <th>UOM</th>
+                                <th>Stock Status</th>
                                 <th>Total Price</th>
                                 <th>Note</th>
                                 <th>Options</th>

@@ -55,16 +55,16 @@ $sidebarTemplate = 'sidebar/default';
                     <?php } ?>
 
                     <li class="top-level-entry-container lg:w-20">
-                        <a href="/index/home"
-                            hx-get="/index/home"
+                        <a href="/index/project"
+                            hx-get="/index/project"
                             hx-target="#content"
                             hx-swap="innerHTML"
                             hx-push-url="true"
                             @click.prevent="setActive($event); loadSidebar('/sidebar/home')"
                             @mouseenter="setHover($event)"
                             @mouseleave="clearHover()"
-                            title="Home Dashboard"
-                            class="top-level-entry<?= $action === 'home' ? ' active' : '' ?>">Home</a>
+                            title="Project Dashboard"
+                            class="top-level-entry<?= $action === 'home' ? ' active' : '' ?>">Project</a>
                     </li>
 
                     <?php if ($this->escapeHtml($user['approve_id']) ?? '' != null) { ?>

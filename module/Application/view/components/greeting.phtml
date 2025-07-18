@@ -1,0 +1,14 @@
+<?php
+
+$hour = date('H'); // 24-hour format of the current hour
+
+if ($hour >= 5 && $hour < 12) {
+    $greeting = 'Good morning';
+} elseif ($hour >= 12 && $hour < 18) {
+    $greeting = 'Good afternoon';
+} else {
+    $greeting = 'Good evening';
+}
+?>
+
+<h1 class="text-3xl font-semibold tracking-tight"><?= $this->escapeHtml($greeting) ?>, <?= $this->escapeHtml($user['first_name']) ?>!</h1>

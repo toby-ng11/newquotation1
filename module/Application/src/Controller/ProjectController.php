@@ -293,27 +293,35 @@ class ProjectController extends AbstractActionController
         $project_id = (int) $this->params()->fromRoute('id');
 
         if (!$project_id) {
-            return new JsonModel(['success' => false, 'message' => 'Invalid project ID']);
+            return new JsonModel([
+                'success' => false,
+                'message' => 'Invalid project ID'
+            ]);
         }
 
         $result = $this->project->delete($project_id);
 
-        // Fallback if accessed normally (non-AJAX)
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            // ✅ Always return JSON for AJAX
+            return new JsonModel([
+                'success' => (bool) $result,
+                'message' => $result ? 'Project deleted successfully!' : 'Delete failed. Please try again.'
+            ]);
+        }
+
+        // ✅ For normal browser navigation
         if ($result) {
             $this->flashMessenger()->addSuccessMessage("Project deleted successfully!");
-
-            if ($this->getRequest()->isXmlHttpRequest()) {
-                return new JsonModel(['success' => $result]);
-            }
-
-            //return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
         } else {
             $this->flashMessenger()->addErrorMessage("Delete failed. Please try again.");
-            //return $this->redirect()->toRoute('project', ['action' => 'edit', 'id' => $project_id]);
         }
+
+        // ✅ Redirect to avoid template rendering
+        return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
     }
 
-    public function itemsAction() {
+    public function itemsAction()
+    {
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest()) {
             $id = $this->params()->fromRoute('id');

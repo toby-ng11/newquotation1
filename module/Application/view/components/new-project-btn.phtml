@@ -1,0 +1,34 @@
+<div class="hidden lg:flex lg:items-center lg:gap-12">
+    <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+        target="_blank"
+        href="/project"
+        data-tooltip="Add a project">
+        <i data-lucide="file-plus-2"></i>
+        ADD PROJECT
+    </a>
+</div>
+
+<div id="quote-menu" class="dropdown-menu lg:hidden">
+    <button type="button"
+        id="quote-menu-trigger"
+        aria-haspopup="menu"
+        aria-controls="quote-menu-options"
+        aria-expanded="false"
+        class="btn-ghost text-muted-foreground text-xs tracking-tight uppercase">
+        <i data-lucide="ellipsis" class="w-4 h-4"></i>
+        Options
+    </button>
+    <div id="quote-menu-popover" data-popover data-align="end" aria-hidden="true" class="min-w-40">
+        <div role="menu" id="quote-menu-options" aria-labelledby="quote-menu-trigger">
+            <div role="menuitem">
+                <a class="flex items-center gap-2"
+                    target="_blank"
+                    href="/project"
+                    title="Add a project">
+                    <i data-lucide="file-plus-2" class="text-muted-foreground h-4 w-4"></i>
+                    Add project
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

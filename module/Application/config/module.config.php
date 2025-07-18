@@ -42,7 +42,7 @@ return [
                 'options' => [
                     'route'    => '/index[/:action][/:table]',
                     'constraints' => [
-                        'action' => 'home|approval|admin|architect',
+                        'action' => 'project|approval|admin|architect',
                         'table' => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ],
                     'defaults' => [
@@ -144,7 +144,20 @@ return [
                         'action'     => 'index',
                     ],
                 ],
-            ]
+            ],
+            'lapi-preferences' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/lapi/preferences[/:key]',
+                    'constraints' => [
+                        'key' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\Api\PreferenceController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers' => [
@@ -186,6 +199,12 @@ return [
                 return new Controller\UserController(
                     $container->get('Laminas\Db\Adapter\Adapter'),
                     $container->get(Model\User::class)
+                );
+            },
+            Controller\Api\PreferenceController::class => function ($container) {
+                return new Controller\Api\PreferenceController(
+                    $container->get(Service\UserService::class),
+                    $container->get(Model\UserPreferenceTable::class),
                 );
             },
             Controller\CustomerController::class => function ($container) {
@@ -255,6 +274,12 @@ return [
                 return new Model\User(
                     $dbAdapter,
                     new TableGateway('P21_Users', $dbAdapter)
+                );
+            },
+            Model\UserPreferenceTable::class => function ($container) {
+                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+                return new Model\UserPreferenceTable(
+                    new TableGateway('user_preferences', $dbAdapter)
                 );
             },
             Model\Location::class => function ($container) {
@@ -341,7 +366,7 @@ return [
             },
             \Twig\Environment::class => function ($container) {
                 $loader = new \Twig\Loader\FilesystemLoader([
-                   realpath(__DIR__ . '/../view/email'),
+                    realpath(__DIR__ . '/../view/email'),
                 ]);
                 $twig = new \Twig\Environment($loader, [
                     'cache' => false, // Set a writable path like '/data/cache/twig' in production

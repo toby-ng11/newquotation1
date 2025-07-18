@@ -1,9 +1,11 @@
 import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
     plugins: [
+        react(),
         tailwindcss(),
         //visualizer({ open: true })
     ],
@@ -24,6 +26,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 main: path.resolve(__dirname, 'resources/js/p2q.ts'),
+                app: path.resolve(__dirname, 'resources/js/app.tsx'),
             },
             output: {
                 entryFileNames: '[name].js',
@@ -32,6 +35,7 @@ export default defineConfig({
                     chart: ['chart.js'],
                     datatable: ['datatables.net-dt', 'datatables.net-fixedcolumns-dt', 'datatables.net-responsive-dt'],
                     flatpickr: ['flatpickr'],
+                    vendor: ['react', 'react-dom'],
                 },
             },
         },

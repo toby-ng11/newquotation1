@@ -67,7 +67,7 @@ $projectRequiredDate = $project['require_date'];
                             <div class="grid gap-2 required-field">
                                 <label for="project_address">Project Location</label>
                                 <input type="text" name='project_address' id="project_address"
-                                    class="validate[required]" value="<?= $this->escapeHtml($project['centura_location_id']) ?>" />
+                                    class="validate[required]" value="<?= $this->escapeHtml($project['project_address']) ?>" />
                             </div>
 
                             <div class="grid gap-2">
@@ -480,9 +480,10 @@ $projectRequiredDate = $project['require_date'];
                         <thead>
                             <tr>
                                 <th>Item</th>
-                                <th>Quality</th>
+                                <th>Quantity</th>
                                 <th>Unit Price</th>
                                 <th>UOM</th>
+                                <th>Stock Status</th>
                                 <th>Total Price</th>
                                 <th>Note</th>
                                 <th>Options</th>

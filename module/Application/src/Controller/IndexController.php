@@ -70,7 +70,7 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
-    public function homeAction()
+    public function projectAction()
     {
         $user = $this->userService->getCurrentUser();
 

@@ -4,7 +4,7 @@ import 'datatables.net-fixedcolumns-dt';
 import 'datatables.net-responsive-dt';
 import 'datatables.net-select-dt';
 
-import { architectID, projectID, sheetType } from '@/components/init';
+import { architectID, projectID, sheetID, sheetType } from '@/components/init';
 
 let projectNoteTable: Api<any>;
 let itemTable: Api<any>;
@@ -21,7 +21,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 dataSrc: '',
             } as AjaxSettings,
             processing: true,
-            responsive: true,
+            //responsive: true,
             //serverSide: true, // experimetal: server-side processing
             columns: [
                 {
@@ -73,9 +73,11 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'project_id',
                     render: function (data) {
-                        let info = document.createElement('div');
-                    info.innerHTML = '<i data-lucide="ellipsis" class="w-4 h-4"></i>';
-                    return info;
+                        return (
+                            '<a target="_blank" href="/project/' +
+                            data +
+                            '/edit?open=make-quote"><span class="button-wrap"><span class="icon icon-money"></span></span></a>'
+                        );
                     },
                 },
             ],
@@ -124,6 +126,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 },
                 {
                     data: 'project_name',
+                    render(data) {
+                        return `<div class="min-w-[300px] max-w-[300px] truncate">${data}</div>`;
+                    },
                 },
                 {
                     data: 'market_segment_desc',
@@ -206,7 +211,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
         return new DataTable('#dashboard-home-own-table', {
             //select: true,
             ajax: {
-                url: '/index/home/own?view=true',
+                url: '/index/project/own?view=true',
                 dataSrc: '',
             } as AjaxSettings,
             processing: true,
@@ -228,6 +233,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 },
                 {
                     data: 'project_name',
+                    render(data) {
+                        return `<div class="min-w-[300px] max-w-[300px] truncate">${data}</div>`;
+                    },
                 },
                 {
                     data: 'shared_id',
@@ -307,7 +315,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
         return new DataTable('#dashboard-home-assigned-table', {
             //select: true,
             ajax: {
-                url: '/index/home/assigned',
+                url: '/index/project/assigned',
                 dataSrc: '',
             } as AjaxSettings,
             //responsive: true,
@@ -322,6 +330,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 },
                 {
                     data: 'project_name',
+                    render(data) {
+                        return `<div class="min-w-[300px] max-w-[300px] truncate">${data}</div>`;
+                    },
                 },
                 {
                     data: 'owner_id',
@@ -401,7 +412,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
     homeOtherProject: () => {
         return new DataTable('#dashboard-home-other-table', {
             ajax: {
-                url: '/index/home/other',
+                url: '/index/project/other',
                 dataSrc: '',
             } as AjaxSettings,
             //responsive: true,
@@ -414,6 +425,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 },
                 {
                     data: 'project_name',
+                    render(data) {
+                        return `<div class="min-w-[300px] max-w-[300px] truncate">${data}</div>`;
+                    },
                 },
                 {
                     data: 'owner_id',
@@ -496,7 +510,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
     homeQuote: () => {
         return new DataTable('#dashboard-home-quote-table', {
             ajax: {
-                url: '/index/home/quote',
+                url: '/index/project/quote',
                 dataSrc: '',
             } as AjaxSettings,
             processing: true,
@@ -517,6 +531,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 },
                 {
                     data: 'project_name',
+                    render(data) {
+                        return `<div class="min-w-[300px] max-w-[300px] truncate">${data}</div>`;
+                    },
                 },
                 {
                     data: 'created_at.date',
@@ -597,7 +614,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
     homeNote: () => {
         return new DataTable('#dashboard-home-note-table', {
             ajax: {
-                url: '/index/home/note',
+                url: '/index/project/note',
                 dataSrc: '',
             } as AjaxSettings,
             processing: true,
@@ -675,6 +692,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 },
                 {
                     data: 'project_name',
+                    render(data) {
+                        return `<div class="min-w-[300px] max-w-[300px] truncate">${data}</div>`;
+                    },
                 },
                 {
                     data: 'architect_rep_id',
@@ -758,6 +778,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 },
                 {
                     data: 'project_name',
+                    render(data) {
+                        return `<div class="min-w-[300px] max-w-[300px] truncate">${data}</div>`;
+                    },
                 },
                 {
                     data: 'architect_name',
@@ -876,6 +899,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 },
                 {
                     data: 'project_name',
+                    render(data) {
+                        return `<div class="min-w-[300px] max-w-[300px] truncate">${data}</div>`;
+                    },
                 },
                 {
                     data: 'architect_name',
@@ -1192,7 +1218,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
     item: () => {
         return (itemTable = new DataTable('#item-table', {
             ajax: {
-                url: `/${sheetType}/${projectID}/items`,
+                url: `/${sheetType}/${sheetID}/items`,
                 dataSrc: '',
             } as AjaxSettings,
             processing: true,
@@ -1219,6 +1245,12 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 },
                 {
                     data: 'uom',
+                    render: function (data) {
+                        return '<b>' + data + '</b>';
+                    },
+                },
+                {
+                    data: 'stockstatus',
                     render: function (data) {
                         return '<b>' + data + '</b>';
                     },
@@ -1257,25 +1289,6 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                         `);
 
                         return `<div class="row-button">${buttons.join('')}</div>`;
-                        return (
-                            '<div class="row-button">' +
-                            '<a title="Edit this item" class="item-edit" href="/item/fetch?uid=' +
-                            data +
-                            '&type=' +
-                            sheetType +
-                            '">' +
-                            '<span class="button-wrap">' +
-                            '<span class="icon icon-edit"></span>' +
-                            '</span></a>' +
-                            '<a title="Delete this item" class="item-delete" href="/item/delete?uid=' +
-                            data +
-                            '&type=' +
-                            sheetType +
-                            '">' +
-                            '<span class="button-wrap">' +
-                            '<span class="icon icon-delete"></span>' +
-                            '</span></a></div>'
-                        );
                     },
                 },
             ],
@@ -1285,7 +1298,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     className: 'dt-head-center',
                 },
                 {
-                    targets: [0, 1, 2, 3, 4],
+                    targets: [0, 1, 2, 3, 4, 5],
                     className: 'dt-body-center',
                 },
             ],
@@ -1546,7 +1559,7 @@ interface DataTableElement extends HTMLElement {
 }
 
 export function initTables() {
-    const tables = document.querySelectorAll('.sTable');
+    const tables = document.querySelectorAll('.sTable:not([data-initialized])');
     tables.forEach((table) => {
         const el = table as DataTableElement;
         const initType = el.dataset.init;
@@ -1563,6 +1576,8 @@ export function initTables() {
 
         // Initialize and store instance on element
         el._DT_Instance = tableConfigs[initType](el);
+
+        table.setAttribute('data-initialized', 'true');
     });
 }
 

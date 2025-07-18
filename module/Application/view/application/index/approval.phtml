@@ -7,16 +7,6 @@ $waitingTableCount = $this->waitingTableCount;
 $approvedTableCount = $this->approvedTableCount;
 $disapprovedTableCount = $this->disapprovedTableCount;
 
-$hour = date('H'); // 24-hour format of the current hour
-
-if ($hour >= 5 && $hour < 12) {
-    $greeting = 'Good morning';
-} elseif ($hour >= 12 && $hour < 18) {
-    $greeting = 'Good afternoon';
-} else {
-    $greeting = 'Good evening';
-}
-
 $maintainenceMode = 0;
 if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
     <div class="h-full flex flex-1 flex-col gap-4 p-8">
@@ -29,7 +19,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
     <!-- Main page -->
     <div class="h-full flex flex-1 flex-col gap-4 p-8">
         <header>
-            <h1 class="text-2xl font-semibold tracking-tight"><?= $this->escapeHtml($greeting) ?>, <?= $this->escapeHtml($user['first_name']) ?>!</h1>
+            <?= $this->partial('components/greeting'); ?>
             <p class="text-muted-foreground">Here's the quick summary of approval status.</p>
         </header>
 

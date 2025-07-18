@@ -6,27 +6,15 @@ $user = $this->user;
 $totalArchitects = $this->totalArchitects;
 $totalCompleteProjects = $this->totalCompleteProjects;
 $totalActiveProjects = $this->totalActiveProjects;
-
-$hour = date('H');
-
-if ($hour >= 5 && $hour < 12) {
-    $greeting = 'Good morning';
-} elseif ($hour >= 12 && $hour < 18) {
-    $greeting = 'Good afternoon';
-} else {
-    $greeting = 'Good evening';
-}
 ?>
 
 <div class="h-full flex flex-1 flex-col gap-4 p-8">
     <header>
-        <h1 class="text-2xl font-semibold tracking-tight">
-            <?= $this->escapeHtml($greeting) ?>, <?= $this->escapeHtml($user['first_name']) ?>!
-        </h1>
+        <?= $this->partial('components/greeting'); ?>
         <p class="text-muted-foreground">Here's the summary of your architects.</p>
     </header>
 
-    <div class="features fade-in-up architect-page flex flex-col gap-4 text-primary">
+    <div class="features fade-in-up architect-page flex flex-col gap-4">
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             <div class="feature fade-in-up rounded-xl flex flex-col gap-6 bg-[linear-gradient(142deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md @container/card">
                 <p class="text-muted-foreground text-sm">Total architect
