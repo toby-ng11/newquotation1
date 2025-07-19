@@ -7,18 +7,16 @@ use Laminas\Db\TableGateway\TableGatewayInterface;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\{Sql, Expression};
 use Laminas\Db\Adapter\Exception\ErrorException;
-
 use Application\Service\UserService;
-
 use Psr\Container\ContainerInterface;
 use Application\Controller\QuoteController;
 
 class Quote
 {
-    const NOT_SUBMITTED     = 5;
-    const WAITING_APPROVAL = 2;
-    const APPROVED         = 3;
-    const DISAPPROVED      = 4;
+    public const NOT_SUBMITTED     = 5;
+    public const WAITING_APPROVAL = 2;
+    public const APPROVED         = 3;
+    public const DISAPPROVED      = 4;
 
     protected $adapter;
     protected $quote;
@@ -54,7 +52,7 @@ class Quote
 
     public function create($data): ?int
     {
-        if (!$data) {
+        if (! $data) {
             return  false;
         }
 
@@ -64,7 +62,6 @@ class Quote
         $connection->beginTransaction();
 
         try {
-
             $info = [
                 'delete_flag'        => 'N',
                 'project_id'         => $data['project_id'],
@@ -80,7 +77,7 @@ class Quote
             $this->quote->insert($info);
             $newQuoteID = $this->quote->getLastInsertValue();
 
-            if (!$newQuoteID) {
+            if (! $newQuoteID) {
                 throw new \RuntimeException('Failed to create quote.');
             }
 
@@ -112,7 +109,7 @@ class Quote
 
         $quote = $this->fetchById($quote_id);
         $project = $this->getProject()->fetchById($quote['project_id']);
-        $allQuotes = $this->getProject()->QuoteCountByProject($quote['project_id']);
+        $allQuotes = $this->getProject()->quoteCountByProject($quote['project_id']);
 
         $data = [
             'quote_id_ext' => $this->formatQuoteIdExt($project['project_id_ext'], $allQuotes),
@@ -135,7 +132,7 @@ class Quote
 
     public function edit($data, $quote_id)
     {
-        if (!$data || !$quote_id) {
+        if (! $data || ! $quote_id) {
             return  false;
         }
 
@@ -205,7 +202,7 @@ class Quote
 
     public function delete($quote_id)
     {
-        if (!$quote_id) {
+        if (! $quote_id) {
             return false;
         }
 

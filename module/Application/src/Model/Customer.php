@@ -3,7 +3,6 @@
 namespace Application\Model;
 
 use Application\Helper\InputValidator;
-
 use Laminas\Db\TableGateway\TableGatewayInterface;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Adapter\Adapter;
@@ -28,7 +27,7 @@ class Customer
 
     public function fetchCustomerById($id)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -43,7 +42,7 @@ class Customer
 
     public function fetchCustomerByPattern($pattern, $limit = 10, $company = DEFAULT_COMPANY)
     {
-        if (!InputValidator::isValidPattern($pattern)) {
+        if (! InputValidator::isValidPattern($pattern)) {
             return false;
         }
 
@@ -67,7 +66,7 @@ class Customer
 
     public function fetchContactsByCustomer($customer_id)
     {
-        if (!InputValidator::isValidId($customer_id)) {
+        if (! InputValidator::isValidId($customer_id)) {
             return false;
         }
 
@@ -82,7 +81,7 @@ class Customer
 
     public function fetchCustomerByContact($contact_id, $company = DEFAULT_COMPANY)
     {
-        if (!InputValidator::isValidId($contact_id)) {
+        if (! InputValidator::isValidId($contact_id)) {
             return false;
         }
 
@@ -94,7 +93,7 @@ class Customer
         $result = $statement->execute();
         $contact = $result->current(); // Get single row
 
-        if (!$contact) {
+        if (! $contact) {
             return false;
         }
 
@@ -108,7 +107,7 @@ class Customer
 
     public function fetchContactByID($contact_id)
     {
-        if (!InputValidator::isValidId($contact_id)) {
+        if (! InputValidator::isValidId($contact_id)) {
             return false;
         }
 

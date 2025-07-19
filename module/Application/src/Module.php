@@ -8,7 +8,6 @@ use Laminas\Mvc\MvcEvent;
 use Laminas\Session\Container;
 use Laminas\Session\SessionManager;
 use Laminas\ModuleManager\Feature\ConfigProviderInterface;
-
 use Application\Model\User;
 use Application\Model\Location;
 
@@ -52,7 +51,7 @@ class Module implements ConfigProviderInterface
 
             $routeMatch = $e->getRouteMatch();
 
-            if (!$routeMatch) {
+            if (! $routeMatch) {
                 return;
             }
 

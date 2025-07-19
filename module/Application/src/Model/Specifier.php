@@ -6,11 +6,9 @@ use Application\Service\UserService;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\{Sql, Expression};
 use Exception;
-
 use Laminas\Db\TableGateway\TableGateway;
 use Psr\Container\ContainerInterface;
 use Application\Helper\InputValidator;
-
 
 class Specifier
 {
@@ -40,7 +38,7 @@ class Specifier
 
     public function add($data, $architect_id)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($architect_id)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($architect_id)) {
             return false;
         }
 
@@ -76,7 +74,7 @@ class Specifier
 
     public function edit($data, $id)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -104,7 +102,7 @@ class Specifier
 
     public function delete($id)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -119,7 +117,7 @@ class Specifier
 
     public function fetchSpecifiersByArchitect($architect_id)
     {
-        if (!InputValidator::isValidId($architect_id)) {
+        if (! InputValidator::isValidId($architect_id)) {
             return false;
         }
 
@@ -135,7 +133,7 @@ class Specifier
 
     public function fetchSpecifierById($id)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
 

@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
-
 use Application\Model\Customer;
 
 class CustomerController extends AbstractActionController

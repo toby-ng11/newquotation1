@@ -48,7 +48,7 @@ $loader->register();
 
 Application::init(require 'config/application.config.php')->run();
 
-// Zend_Application 
+// Zend_Application
 require_once 'Zend/Application.php';
 
 // Create application, bootstrap, and run

@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Exception;
-
 use Application\Model\Note;
 
 class NoteController extends AbstractActionController
@@ -42,14 +41,14 @@ class NoteController extends AbstractActionController
 
             $missingFields = [];
 
-            if (!$id) {
+            if (! $id) {
                 $missingFields[] = 'id';
             }
             if (empty($data['project_note'])) {
                 $missingFields[] = 'project_note';
             }
 
-            if (!$id || empty($data['project_note'])) {
+            if (! $id || empty($data['project_note'])) {
                 return new JsonModel([
                     'success' => false,
                     'message' => 'Missing required fields: ' . implode(', ', $missingFields)
@@ -79,7 +78,7 @@ class NoteController extends AbstractActionController
         $request = $this->getRequest();
         $id = $this->params()->fromRoute('id');
 
-        if (!$id) {
+        if (! $id) {
             return new JsonModel([
                 'success' => false,
                 'message' => 'Missing note ID.'
@@ -115,7 +114,7 @@ class NoteController extends AbstractActionController
             try {
                 $note = $this->note->fetchNote($id);
 
-                if (!$note) {
+                if (! $note) {
                     return new JsonModel([
                         'success' => false,
                         'message' => 'Note not found.'
@@ -146,7 +145,7 @@ class NoteController extends AbstractActionController
         $note_id = $this->params()->fromRoute('id', null);
         $request = $this->getRequest();
 
-        if (!$note_id || !$request->isXmlHttpRequest()) {
+        if (! $note_id || ! $request->isXmlHttpRequest()) {
             return new JsonModel([
                 'success' => false,
                 'message' => 'Invalid request.',

@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Exception;
-
 use Application\Model\Item;
 
 class ItemController extends AbstractActionController
@@ -40,13 +39,15 @@ class ItemController extends AbstractActionController
             if ($itemUID) {
                 $sheetType = $this->params()->fromQuery('type', null);
 
-                if (!$sheetType) return new JsonModel([
+                if (! $sheetType) {
+                    return new JsonModel([
                     'message' => 'Sheet type is required',
-                ]);
+                    ]);
+                }
 
                 $item = $this->item->fetchItemByUID($itemUID, $sheetType);
 
-                if (!$item) {
+                if (! $item) {
                     return new JsonModel([
                         'success' => false,
                         'message' => 'Item not found.'
@@ -80,7 +81,7 @@ class ItemController extends AbstractActionController
             $sheetType = $this->params()->fromPost('sheet_type', null);
             $data = $this->params()->fromPost();
 
-            if (!$id || empty($data['item_id'])) {
+            if (! $id || empty($data['item_id'])) {
                 return new JsonModel([
                     'success' => false,
                     'message' => 'Missing required fields.'
@@ -115,7 +116,7 @@ class ItemController extends AbstractActionController
         $request = $this->getRequest();
         $item_uid = $this->params()->fromRoute('id', null);
 
-        if (!$item_uid) {
+        if (! $item_uid) {
             return new JsonModel([
                 'success' => false,
                 'message' => 'Missing item UID.'
@@ -154,7 +155,7 @@ class ItemController extends AbstractActionController
         $item_uid = $this->params()->fromQuery('uid', null);
         $sheetType = $this->params()->fromQuery('type', null);
 
-        if (!$item_uid) {
+        if (! $item_uid) {
             return new JsonModel([
                 'success' => false,
                 'message' => 'Missing item UID.'
@@ -163,7 +164,7 @@ class ItemController extends AbstractActionController
 
         $item = $this->item->fetchItemByUID($item_uid, $sheetType);
 
-        if (!$item) {
+        if (! $item) {
             return new JsonModel([
                 'success' => false,
                 'message' => 'Item not found.'
@@ -181,7 +182,7 @@ class ItemController extends AbstractActionController
         $item_uid = $this->params()->fromRoute('id', null);
         $sheetType = $this->params()->fromQuery('type', null);
 
-        if (!$item_uid) {
+        if (! $item_uid) {
             return new JsonModel([
                 'success' => false,
                 'message' => 'Missing item UID.'

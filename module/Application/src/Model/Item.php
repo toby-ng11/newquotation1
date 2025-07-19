@@ -3,13 +3,11 @@
 namespace Application\Model;
 
 use Application\Helper\InputValidator;
-
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\{Sql, Expression};
 use Exception;
-
 use Application\Service\UserService;
 
 class Item
@@ -33,7 +31,7 @@ class Item
 
     public function add($data, $id, $sheetType)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidData($sheetType) || !InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidData($sheetType) || ! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -81,7 +79,7 @@ class Item
 
     public function edit($data, $item_uid, $sheetType)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidData($sheetType) || !InputValidator::isValidId($item_uid)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidData($sheetType) || ! InputValidator::isValidId($item_uid)) {
             return false;
         }
 
@@ -125,7 +123,7 @@ class Item
 
     public function delete($item_uid, $sheetType)
     {
-        if (!InputValidator::isValidData($sheetType) || !InputValidator::isValidId($item_uid)) {
+        if (! InputValidator::isValidData($sheetType) || ! InputValidator::isValidId($item_uid)) {
             return false;
         }
 
@@ -164,7 +162,7 @@ class Item
 
     public function fetchItemsByPattern($pattern, $limit = 10, $location = DEFAULT_LOCATION_ID)
     {
-        if (!InputValidator::isValidPattern($pattern)) {
+        if (! InputValidator::isValidPattern($pattern)) {
             return false;
         }
 
@@ -188,7 +186,7 @@ class Item
 
     public function fetchItemByUID($item_uid, $sheetType)
     {
-        if (!InputValidator::isValidData($sheetType) || !InputValidator::isValidId($item_uid)) {
+        if (! InputValidator::isValidData($sheetType) || ! InputValidator::isValidId($item_uid)) {
             return false;
         }
 
@@ -208,7 +206,7 @@ class Item
 
     public function fetchUomByItemId($item_id, $location = DEFAULT_LOCATION_ID)
     {
-        if (!InputValidator::isValidData($item_id)) {
+        if (! InputValidator::isValidData($item_id)) {
             return false;
         }
 
@@ -228,7 +226,7 @@ class Item
 
     public function fetchItemPrice($item_id, $uom, $fromP21, $sheetType = '', $location = DEFAULT_LOCATION_ID)
     {
-        if (!InputValidator::isValidData($item_id)) {
+        if (! InputValidator::isValidData($item_id)) {
             return false;
         }
 
@@ -266,7 +264,7 @@ class Item
 
     public function fetchDataTables($project_id, $sheetType, $location = DEFAULT_LOCATION_ID)
     {
-        if (!InputValidator::isValidData($sheetType) || !InputValidator::isValidId($project_id)) {
+        if (! InputValidator::isValidData($sheetType) || ! InputValidator::isValidId($project_id)) {
             return false;
         }
 
@@ -300,7 +298,7 @@ class Item
 
     public function fetchExistItems($id, $sheetType)
     {
-        if (!InputValidator::isValidData($sheetType) || !InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidData($sheetType) || ! InputValidator::isValidId($id)) {
             return false;
         }
 

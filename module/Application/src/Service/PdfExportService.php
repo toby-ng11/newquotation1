@@ -28,7 +28,7 @@ class PdfExportService
             'mode' => 'utf-8',
             'format' => 'letter',
             'tempDir' => realpath(__DIR__ . '/../../../../tmp'),
-            'fontDir' =>array_merge($fontDirs, [
+            'fontDir' => array_merge($fontDirs, [
                 realpath(__DIR__ . '/../../../../public/css/fonts'),
             ]),
             'fontdata' => $fontData + [
@@ -46,7 +46,8 @@ class PdfExportService
         $viewModel->setVariables($data);
 
         $html = $this->renderer->render($viewModel); // Convert View to HTML
-        $mpdf->DefHTMLHeaderByName('CenturaHeader',
+        $mpdf->DefHTMLHeaderByName(
+            'CenturaHeader',
             '
             <div style="display: flex; justify-content: space-between;">
         <div style="width: max-content">
@@ -65,11 +66,13 @@ class PdfExportService
             '
         );
 
-        $mpdf->DefHTMLFooterByName('CenturaFooter',
+        $mpdf->DefHTMLFooterByName(
+            'CenturaFooter',
             '<div style="text-align: center; font-size: 8px; color: #808080;">
             TORONTO | VANCOUVER | CALGARY | EDMONTON | LONDON | WINDSOR | HAMILTON | PETERBOROUGH | OTTAWA | MONTREAL | QUEBEC CITY | HALIFAX | MONCTON<br>
             Page {PAGENO} of {nbpg}
-            </div>');
+            </div>'
+        );
 
         $mpdf->WriteHTML($html); // Convert HTML to PDF
 

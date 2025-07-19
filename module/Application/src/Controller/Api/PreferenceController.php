@@ -7,8 +7,8 @@ use Application\Service\UserService;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 
-class PreferenceController extends AbstractActionController {
-
+class PreferenceController extends AbstractActionController
+{
     protected $userService;
     protected $userPreferenceTable;
 

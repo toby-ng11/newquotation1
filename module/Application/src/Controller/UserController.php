@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
-
 use Application\Model\User;
 
 class UserController extends AbstractActionController
@@ -22,7 +21,7 @@ class UserController extends AbstractActionController
     public function indexAction()
     {
         $sql = "SELECT * FROM P21_Users";
-        
+
         $statement = $this->dbAdapter->query($sql);
         $user = $statement->execute();
 
@@ -33,7 +32,8 @@ class UserController extends AbstractActionController
         return [];
     }
 
-    public function fetchbypatternAction() {
+    public function fetchbypatternAction()
+    {
         $pattern = $this->params()->fromQuery('pattern', '');
         $limit = (int) $this->params()->fromQuery('limit', 10);
 

@@ -7,7 +7,6 @@ namespace Application\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Http\Response\Stream;
 use Laminas\View\Model\{ViewModel, JsonModel};
-
 use Application\Service\UserService;
 use Application\Model\{Address, Project, Quote, Location, Item, Note, Architect, Specifier, Customer};
 use Application\Service\PdfExportService;
@@ -125,12 +124,12 @@ class ProjectController extends AbstractActionController
     {
         $project_id = (int) $this->params()->fromRoute('id');
 
-        if (!$project_id) {
+        if (! $project_id) {
             return $this->redirect()->toRoute('project');
         }
 
         $project = $this->project->fetchById($project_id);
-        if (!$project || $project['delete_flag'] === 'Y') {
+        if (! $project || $project['delete_flag'] === 'Y') {
             $this->flashMessenger()->addErrorMessage("This project is deleted.");
             return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
         }
@@ -157,7 +156,12 @@ class ProjectController extends AbstractActionController
 
         $owner = false;
 
-        if ($user['id'] == $project['shared_id'] || $user['id'] == $project['owner_id'] || $user['p2q_system_role'] == 'admin' || $user['approve_id'] !== null) {
+        if (
+            $user['id'] == $project['shared_id'] ||
+            $user['id'] == $project['owner_id'] ||
+            $user['p2q_system_role'] == 'admin' ||
+            $user['approve_id'] !== null
+        ) {
             $owner = true;
         }
 
@@ -177,7 +181,7 @@ class ProjectController extends AbstractActionController
                 if ($request->isXmlHttpRequest()) {
                     $isAutoSave = $this->getRequest()->getHeader('X-Auto-Save')?->getFieldValue() === 'true';
 
-                    if (!$isAutoSave) {
+                    if (! $isAutoSave) {
                         $this->flashMessenger()->addSuccessMessage("Project saved successfully!");
                     }
 
@@ -241,7 +245,7 @@ class ProjectController extends AbstractActionController
             $project_id = (int) $this->params()->fromRoute('id');
             $data = $this->params()->fromPost();
 
-            if (!$project_id) {
+            if (! $project_id) {
                 return new JsonModel(['success' => false, 'message' => 'Invalid project ID']);
             }
 
@@ -252,7 +256,7 @@ class ProjectController extends AbstractActionController
                 if ($this->getRequest()->isXmlHttpRequest()) {
                     $isAutoSave = $this->getRequest()->getHeader('X-Auto-Save')?->getFieldValue() === 'true';
 
-                    if (!$isAutoSave) {
+                    if (! $isAutoSave) {
                         $this->flashMessenger()->addSuccessMessage("Project saved successfully!");
                     }
 
@@ -292,7 +296,7 @@ class ProjectController extends AbstractActionController
     {
         $project_id = (int) $this->params()->fromRoute('id');
 
-        if (!$project_id) {
+        if (! $project_id) {
             return new JsonModel([
                 'success' => false,
                 'message' => 'Invalid project ID'
@@ -399,6 +403,5 @@ class ProjectController extends AbstractActionController
 
 
         //return new ViewModel($data);
-
     }
 }

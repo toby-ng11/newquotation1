@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\Plugin\FlashMessenger;
 use Laminas\View\Model\{ViewModel, JsonModel};
-
 use Application\Model\{Architect, Specifier, Address, Location, Project};
 use Application\Service\UserService;
 use Exception;
@@ -60,13 +59,13 @@ class ArchitectController extends AbstractActionController
     {
         $architect_id = (int) $this->params()->fromRoute('id');
 
-        if (!$architect_id) {
+        if (! $architect_id) {
             return $this->redirect()->toRoute('dashboard', ['action' => 'architect']);
         }
 
         $architect = $this->architect->fetchArchitectById($architect_id);
 
-        if (!$architect || $architect['delete_flag'] === 'Y') {
+        if (! $architect || $architect['delete_flag'] === 'Y') {
             $this->flashMessenger()->addErrorMessage("This architect is deleted.");
             return $this->redirect()->toRoute('dashboard', ['action' => 'architect']);
         }
@@ -120,7 +119,7 @@ class ArchitectController extends AbstractActionController
         $architect_id = (int) $this->params()->fromRoute('id');
         $request = $this->getRequest();
 
-        if (!$architect_id || !$request->isXmlHttpRequest()) {
+        if (! $architect_id || ! $request->isXmlHttpRequest()) {
             return new JsonModel(['success' => false, 'message' => 'Invalid architect ID']);
         }
 
@@ -298,7 +297,10 @@ class ArchitectController extends AbstractActionController
 
             $response = $this->getResponse();
             $headers = $response->getHeaders();
-            $headers->addHeaderLine('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            $headers->addHeaderLine(
+                'Content-Type',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            );
             $headers->addHeaderLine('Content-Disposition', 'attachment; filename="' . $filename . '"');
             $headers->addHeaderLine('Cache-Control', 'max-age=0');
 

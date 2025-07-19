@@ -1,13 +1,13 @@
 <?php echo $this->doctype();
 $manifestPath = __DIR__ . '/../../../../public/build/.vite/manifest.json'; // adjust path
-if (!$manifestPath || !file_exists($manifestPath)) {
+if (! $manifestPath || ! file_exists($manifestPath)) {
     throw new \RuntimeException('Vite manifest file not found: ' . $manifestPath);
 }
 $manifest = json_decode(file_get_contents($manifestPath), true);
 
 function vite_asset(string $entry, array $manifest): string
 {
-    if (!isset($manifest[$entry])) {
+    if (! isset($manifest[$entry])) {
         return '';
     }
 
@@ -15,7 +15,7 @@ function vite_asset(string $entry, array $manifest): string
     $entryInfo = $manifest[$entry];
 
     // Load CSS
-    if (!empty($entryInfo['css'])) {
+    if (! empty($entryInfo['css'])) {
         foreach ($entryInfo['css'] as $css) {
             $html .= '<link rel="stylesheet" href="/build/' . $css . '">' . PHP_EOL;
         }
@@ -44,7 +44,7 @@ function vite_asset(string $entry, array $manifest): string
     <link href="/build/main.css" rel="stylesheet">
     <?php
 //echo $this->headLink();
-?>
+    ?>
 
     <!-- jQuery CDN -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -82,17 +82,17 @@ function vite_asset(string $entry, array $manifest): string
     <div id="root">
 
         <div id="js-flash-container">
-            <?php if ($this->flashMessenger()->hasSuccessMessages()): ?>
+            <?php if ($this->flashMessenger()->hasSuccessMessages()) : ?>
                 <div class="flash-message widget-table success">
-                    <?php foreach ($this->flashMessenger()->getSuccessMessages() as $message): ?>
+                    <?php foreach ($this->flashMessenger()->getSuccessMessages() as $message) : ?>
                         <p><?= $this->escapeHtml($message) ?></p>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
 
-            <?php if ($this->flashMessenger()->hasErrorMessages()): ?>
+            <?php if ($this->flashMessenger()->hasErrorMessages()) : ?>
                 <div class="flash-message widget-table error">
-                    <?php foreach ($this->flashMessenger()->getErrorMessages() as $message): ?>
+                    <?php foreach ($this->flashMessenger()->getErrorMessages() as $message) : ?>
                         <p><?= $this->escapeHtml($message) ?></p>
                     <?php endforeach; ?>
                 </div>

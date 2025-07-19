@@ -3,11 +3,9 @@
 namespace Application\Model;
 
 use Application\Helper\InputValidator;
-
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\TableGateway\TableGateway;
-
 use Exception;
 use Laminas\Db\Sql\Expression;
 
@@ -24,7 +22,7 @@ class Address
 
     public function add($data, $architectID)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($architectID)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($architectID)) {
             return false;
         }
 
@@ -57,7 +55,7 @@ class Address
 
     public function edit($data, $id)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -88,7 +86,7 @@ class Address
 
     public function delete($id)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -106,7 +104,7 @@ class Address
 
     public function addSpecifierAddress($data, $specifierID)
     {
-        if (!InputValidator::isValidData($data)) {
+        if (! InputValidator::isValidData($data)) {
             return false;
         }
 
@@ -132,7 +130,7 @@ class Address
 
     public function editSpecifierAddress($data, $id)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -154,7 +152,7 @@ class Address
 
     public function fetchAddressesByArchitect($id)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -170,7 +168,7 @@ class Address
 
     public function findByPhysicalAddressFuzzy($address1, $postalCode)
     {
-        if (!InputValidator::isValidData($address1) || !InputValidator::isValidData($postalCode)) {
+        if (! InputValidator::isValidData($address1) || ! InputValidator::isValidData($postalCode)) {
             return false;
         }
 
@@ -203,7 +201,7 @@ class Address
 
     public function fetchSpecifierAddress($specifier_id)
     {
-        if (!InputValidator::isValidId($specifier_id)) {
+        if (! InputValidator::isValidId($specifier_id)) {
             return false;
         }
 
@@ -219,7 +217,7 @@ class Address
 
     public function fetchAddressesById($id)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
 

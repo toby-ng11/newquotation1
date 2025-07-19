@@ -29,7 +29,7 @@ return [
     'service_manager' => [
         'factories' => [
             Laminas\Db\Adapter\Adapter::class => Laminas\Db\Adapter\AdapterServiceFactory::class,
-            Laminas\Session\Config\ConfigInterface::class =>Laminas\Session\Service\SessionConfigFactory::class
+            Laminas\Session\Config\ConfigInterface::class => Laminas\Session\Service\SessionConfigFactory::class
         ],
         'validators' => [
             \Laminas\Session\Validator\RemoteAddr::class,

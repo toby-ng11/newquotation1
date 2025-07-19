@@ -186,7 +186,7 @@
                     ? $this->escapeHtml($quote['ship_required_date']->format('Y-m-d'))
                     : '' ?></td>
                 <td><?php foreach ($approvalList as $a) { ?>
-                        <?php if ($a['id'] === $quote['price_approve_id']): ?>
+                        <?php if ($a['id'] === $quote['price_approve_id']) : ?>
                             <?= $this->escapeHtml($a['name']) . ' - ' . $this->escapeHtml($a['default_company']) ?>
                         <?php endif; ?>
                     <?php } ?>
@@ -204,9 +204,10 @@
                 <td colspan="3"><?= $this->escapeHtml($project['project_name']) ?></td>
                 <td colspan="1">
                     <?php foreach ($branches as $l) { ?>
-                        <?php if ($l['location_id'] === $project['centura_location_id']): ?>
+                        <?php if ($l['location_id'] === $project['centura_location_id']) : ?>
                             <?= $this->escapeHtml($l['branch_description']) ?>
-                    <?php endif;} ?>
+                        <?php endif;
+                    } ?>
                 </td>
                 <td><?= $this->escapeHtml($project['architect_name'] ?? 'N/A') ?></td>
                 <td><?= $this->escapeHtml($project['specifier_name'] ?? 'N/A') ?></td>
@@ -228,11 +229,12 @@
             <tbody>
                 <?php
                 $subtotal = 0;
-                if (count($items) === 0): ?>
+                if (count($items) === 0) : ?>
                     <tr>
                         <td colspan="5" style="text-align:center">No items quoted.</td>
                     </tr>
-                    <?php else:foreach ($items as $i): ?>
+                <?php else :
+                    foreach ($items as $i) : ?>
                         <tr>
                             <td style="text-align:left">
                                 <div class="item-id">
@@ -252,7 +254,9 @@
                             <td><?= $this->escapeHtml($i['uom']) ?></td>
                             <td style='text-align:right;'><?= '$' . $this->escapeHtml(number_format($i['subtotal'], 2)) ?></td>
                         </tr>
-                <?php $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'];endforeach;endif;
+                                    <?php $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'];
+                    endforeach;
+                endif;
                 ?>
             </tbody>
         </table>
@@ -266,7 +270,7 @@
             </thead>
         </table>
 
-        <?php if (!empty($quote['note'])): ?>
+        <?php if (! empty($quote['note'])) : ?>
         <table id="note" width='100%'>
             <tr>
                 <td style="text-align:left">

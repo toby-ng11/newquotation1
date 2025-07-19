@@ -5,7 +5,6 @@ namespace Application\Model;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\TableGateway\TableGatewayInterface;
 use Laminas\Db\Sql\Sql;
-
 use Application\Helper\InputValidator;
 
 class User
@@ -23,7 +22,7 @@ class User
 
     public function fetchsalebyid($username)
     {
-        if (!InputValidator::isValidData($username)) {
+        if (! InputValidator::isValidData($username)) {
             return false;
         }
         return $this->P21_Users->select(['id' => $username])->current();
@@ -31,7 +30,7 @@ class User
 
     public function fetchUserIdByPattern($pattern, $limit = 10)
     {
-        if (!InputValidator::isValidPattern($pattern)) {
+        if (! InputValidator::isValidPattern($pattern)) {
             return false;
         }
         $sql = new Sql($this->adapter, 'P21_Users');

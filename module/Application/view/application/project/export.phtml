@@ -137,7 +137,7 @@
             <tr>
                 <!-- Architect Details -->
                 <td valign="top" width="25%" style="padding-right:15px;">
-                    <?php if ($architect): ?>
+                    <?php if ($architect) : ?>
                         <table width="100%" style="border-top: 1px solid grey;">
                             <thead>
                                 <tr>
@@ -178,7 +178,7 @@
 
                 <!-- Specifier Details -->
                 <td valign="top" width="25%" style="padding-right:15px">
-                    <?php if ($specifier): ?>
+                    <?php if ($specifier) : ?>
                         <table width="100%">
                             <thead>
                                 <tr>
@@ -208,7 +208,7 @@
 
                 <!-- General Contractor -->
                 <td valign="top" width="25%" style="padding-right:15px;">
-                    <?php if ($generalContractor): ?>
+                    <?php if ($generalContractor) : ?>
                         <table width="100%">
                             <thead>
                                 <tr>
@@ -248,7 +248,7 @@
 
                 <!-- Awarded Contractor -->
                 <td valign="top" width="25%">
-                    <?php if ($awardedContractor): ?>
+                    <?php if ($awardedContractor) : ?>
                         <table width="100%">
                             <thead>
                                 <tr>
@@ -301,11 +301,12 @@
             <tbody>
                 <?php
                 $subtotal = 0;
-                if (count($items) === 0): ?>
+                if (count($items) === 0) : ?>
                     <tr>
                         <td colspan="5" style="text-align:center">No items quoted.</td>
                     </tr>
-                    <?php else:foreach ($items as $i): ?>
+                <?php else :
+                    foreach ($items as $i) : ?>
                         <tr>
                             <td style="text-align:left">
                                 <div class="item-id">
@@ -325,7 +326,9 @@
                             <td><?= $this->escapeHtml($i['uom']) ?></td>
                             <td style='text-align:right;'><?= '$' . $this->escapeHtml(number_format($i['subtotal'], 2)) ?></td>
                         </tr>
-                <?php $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'];endforeach;endif;
+                                    <?php $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'];
+                    endforeach;
+                endif;
                 ?>
             </tbody>
         </table>

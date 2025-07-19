@@ -4,7 +4,6 @@ namespace Application\Model;
 
 use Application\Service\UserService;
 use Application\Helper\InputValidator;
-
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\{Sql, Expression};
 use Laminas\Db\TableGateway\TableGateway;
@@ -49,7 +48,7 @@ class Architect
 
     public function add($data)
     {
-        if (!InputValidator::isValidData($data)) {
+        if (! InputValidator::isValidData($data)) {
             return false;
         }
 
@@ -87,7 +86,7 @@ class Architect
 
     public function edit($data, $id)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -122,7 +121,7 @@ class Architect
 
     public function delete($id)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -152,7 +151,7 @@ class Architect
 
     public function getByName($name)
     {
-        if (!InputValidator::isValidData($name)) {
+        if (! InputValidator::isValidData($name)) {
             return false;
         }
 
@@ -167,7 +166,7 @@ class Architect
 
     public function fetchArchitectById($id)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -196,7 +195,7 @@ class Architect
 
     public function fetchArchitectByPattern($admin, $pattern, $user_id, $limit = 10, $company = DEFAULT_COMPANY)
     {
-        if (!InputValidator::isValidData($user_id) || !InputValidator::isValidPattern($pattern)) {
+        if (! InputValidator::isValidData($user_id) || ! InputValidator::isValidPattern($pattern)) {
             return false;
         }
 
@@ -205,7 +204,7 @@ class Architect
             ->where(['company_id' => $company])
             ->where(['delete_flag' => 'N']);
 
-        if (!$admin) {
+        if (! $admin) {
             $select->where(['architect_rep_id' => $user_id]);
         }
 
@@ -222,14 +221,14 @@ class Architect
 
     public function fetchAllTable($admin, $user_id)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
         $sql = new Sql($this->adapter);
         $select = $sql->select('p2q_view_architect');
 
-        if (!$admin) {
+        if (! $admin) {
             $select->where(['architect_rep_id' => $user_id]);
         }
 
@@ -240,7 +239,7 @@ class Architect
 
     public function countAllArchitects($admin, $user_id)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
@@ -249,7 +248,7 @@ class Architect
         $select->from('p2q_view_architect')
             ->columns(['total' => new Expression('COUNT(*)')]);
 
-        if (!$admin) {
+        if (! $admin) {
             $select->where(['architect_rep_id' => $user_id]);
         }
 
@@ -260,7 +259,7 @@ class Architect
 
     public function fetchTopFiveTable($user_id)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
@@ -277,7 +276,7 @@ class Architect
 
     public function fetchProjectsByArchitect($id, $selectedIDs = null)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
 

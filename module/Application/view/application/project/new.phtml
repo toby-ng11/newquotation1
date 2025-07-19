@@ -42,7 +42,7 @@ $user = $this->user;
                                     <?php foreach ($this->locations as $l) { ?>
                                         <option value="<?= $this->escapeHtml($l['location_id']) ?>" <?php if ($l['location_id'] === DEFAULT_LOCATION_ID) {
                                                                                                         echo 'selected';
-                                                                                                    } ?>><?= $this->escapeHtml($l['branch_description']) ?></option>
+                                                       } ?>><?= $this->escapeHtml($l['branch_description']) ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -117,7 +117,7 @@ $user = $this->user;
                                         <?php foreach ($this->company as $l) { ?>
                                             <option value="<?= $this->escapeHtml($l['company_id']) ?>" <?php if ($l['company_id'] === DEFAULT_COMPANY) {
                                                                                                             echo 'selected';
-                                                                                                        } ?>><?= $this->escapeHtml($l['company_name']) ?></option>
+                                                           } ?>><?= $this->escapeHtml($l['company_name']) ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>

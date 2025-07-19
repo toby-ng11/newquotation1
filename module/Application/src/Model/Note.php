@@ -7,7 +7,6 @@ use Laminas\Db\Sql\Select;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\{Sql, Expression};
 use Exception;
-
 use Application\Service\UserService;
 use Application\Helper\InputValidator;
 
@@ -27,9 +26,9 @@ class Note
         $this->project_note = $project_note;
     }
 
-    function add($data, $project_id)
+    public function add($data, $project_id)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($project_id)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($project_id)) {
             return false;
         }
 
@@ -44,7 +43,7 @@ class Note
             'updated_at' => new Expression('GETDATE()'),
             'owner_id' => $user['id'],
             'delete_flag' => 'N',
-            'follow_up_date' => !empty($data['follow_up_date']) ? $data['follow_up_date'] : null
+            'follow_up_date' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null
         ];
 
         try {
@@ -56,9 +55,9 @@ class Note
         }
     }
 
-    function edit($data, $note_id)
+    public function edit($data, $note_id)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($note_id)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($note_id)) {
             return false;
         }
 
@@ -66,7 +65,7 @@ class Note
             'note_title' => trim($data['note_title']),
             'project_note' => trim($data['project_note']),
             'next_action' => trim($data['next_action']),
-            'follow_up_date' => !empty($data['follow_up_date']) ? $data['follow_up_date'] : null,
+            'follow_up_date' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null,
             'updated_at' => new Expression('GETDATE()'),
         ];
 
@@ -79,9 +78,9 @@ class Note
         }
     }
 
-    function delete($note_id)
+    public function delete($note_id)
     {
-        if (!InputValidator::isValidId($note_id)) {
+        if (! InputValidator::isValidId($note_id)) {
             return false;
         }
 
@@ -101,7 +100,7 @@ class Note
 
     public function fetchDataTables($id)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -118,7 +117,7 @@ class Note
 
     public function fetchNote($id)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
 
@@ -128,7 +127,7 @@ class Note
 
     public function fetchOwnNotes($user_id)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
@@ -145,7 +144,7 @@ class Note
 
     public function countOwnNotes($user_id)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
         $sql = new Sql($this->adapter);
@@ -178,7 +177,7 @@ class Note
 
     public function markReminderSent($noteId)
     {
-        if (!InputValidator::isValidId($noteId)) {
+        if (! InputValidator::isValidId($noteId)) {
             return false;
         }
 

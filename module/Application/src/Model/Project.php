@@ -3,7 +3,6 @@
 namespace Application\Model;
 
 use Application\Helper\InputValidator;
-
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\{Sql, Expression, Select};
@@ -46,7 +45,7 @@ class Project
 
     public function save($data)
     {
-        if (!InputValidator::isValidData($data)) {
+        if (! InputValidator::isValidData($data)) {
             return false;
         }
 
@@ -59,13 +58,13 @@ class Project
             'owner_id'              => $data['owner_id'],
             'last_maintained_by'    => $data['owner_id'],
             'shared_id'             => trim($data['shared_id']),
-            'reed'                  => !empty(trim($data['reed'])) ? trim($data['reed']) : null,
+            'reed'                  => ! empty(trim($data['reed'])) ? trim($data['reed']) : null,
             'status_id'             => $data['status'],
-            'general_contractor_id' => !empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
-            'awarded_contractor_id' => !empty($data['awarded_contractor_id']) ? $data['awarded_contractor_id'] : null,
+            'general_contractor_id' => ! empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
+            'awarded_contractor_id' => ! empty($data['awarded_contractor_id']) ? $data['awarded_contractor_id'] : null,
             'created_at'            => new Expression('GETDATE()'),
-            'require_date'          => !empty($data['require_date']) ? $data['require_date'] : new Expression('GETDATE()'),
-            'due_date'              => !empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()'),
+            'require_date'          => ! empty($data['require_date']) ? $data['require_date'] : new Expression('GETDATE()'),
+            'due_date'              => ! empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()'),
             'updated_at' => new Expression('GETDATE()'),
         ];
 
@@ -73,11 +72,11 @@ class Project
         $architectAddress = $this->getAddress()->fetchAddressesByArchitect($architect['architect_id'] ?? null);
 
 
-        if (empty($data['architect_id']) && !empty($data['architect_name'])) {
+        if (empty($data['architect_id']) && ! empty($data['architect_name'])) {
             $info['architect_id'] =
                 $architect['architect_id'] ? $this->getArchitect()->edit($data, $architect['architect_id']) :
                 $this->getArchitect()->add($data);
-        } else if (!empty($data['architect_id'])) {
+        } elseif (! empty($data['architect_id'])) {
             $info['architect_id'] = $this->getArchitect()->edit($data, $data['architect_id']);
         } else {
             $info['architect_id'] = null;
@@ -98,30 +97,29 @@ class Project
 
         // Case: user typed in address but no address_id given
         if (empty($data['address_id']) && $hasAddressData) {
-
             // Attempt to match a global existing address using key fields
             $existingAddress = $this->getAddress()->findByPhysicalAddressFuzzy($data['phys_address1'], $data['phys_postal_code']);
 
-            if (!empty($existingAddress)) {
+            if (! empty($existingAddress)) {
                 // Update global matched address
                 $info['architect_address_id'] = $this->getAddress()->edit($data, $existingAddress['address_id']);
-            } else if (!empty($architectAddress)) {
+            } elseif (! empty($architectAddress)) {
                 // Update the existing address tied to the architect
                 $info['architect_address_id'] = $this->getAddress()->edit($data, $architectAddress['address_id']);
             } else {
                 // No address yet, create a new one
                 $info['architect_address_id'] = $this->getAddress()->add($data, $info['architect_id']);
             }
-        } else if (!empty($data['address_id'])) {
+        } elseif (! empty($data['address_id'])) {
             // User selected a known address, update it
             $info['architect_address_id'] = $this->getAddress()->edit($data, $data['address_id']);
         } else {
             $info['architect_address_id'] = null;
         }
 
-        if (empty($data['specifier_id']) && !empty($data['specifier_first_name'])) {
+        if (empty($data['specifier_id']) && ! empty($data['specifier_first_name'])) {
             $info['specifier_id'] = $this->getSpecifier()->add($data, $info['architect_id']);
-        } else if (!empty($data['specifier_id'])) {
+        } elseif (! empty($data['specifier_id'])) {
             $info['specifier_id'] = $this->getSpecifier()->edit($data, $data['specifier_id']);
         } else {
             $info['specifier_id'] = null;
@@ -147,26 +145,26 @@ class Project
 
     public function edit($data, $project_id)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($project_id)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($project_id)) {
             return false;
         }
 
         $info = [
             //'delete_flag'           => 'N',
-            'project_name'          => !empty(trim($data['project_name'])) ? trim($data['project_name']) : null,
-            'project_address'       => !empty(trim($data['project_address'])) ? trim($data['project_address']) : null,
+            'project_name'          => ! empty(trim($data['project_name'])) ? trim($data['project_name']) : null,
+            'project_address'       => ! empty(trim($data['project_address'])) ? trim($data['project_address']) : null,
             'centura_location_id'   => $data['location_id'],
             'market_segment_id'     => $data['market_segment_id'],
             //'owner_id'              => $data['owner_id'],
             'last_maintained_by'    => $data['user_session_id'],
-            'shared_id'             => !empty(trim($data['shared_id'])) ? trim($data['shared_id']) : null,
-            'reed'                  => !empty(trim($data['reed'])) ? trim($data['reed']) : null,
+            'shared_id'             => ! empty(trim($data['shared_id'])) ? trim($data['shared_id']) : null,
+            'reed'                  => ! empty(trim($data['reed'])) ? trim($data['reed']) : null,
             'status_id'             => $data['status'],
-            'general_contractor_id' => !empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
-            'awarded_contractor_id' => !empty($data['awarded_contractor_id']) ? $data['awarded_contractor_id'] : null,
+            'general_contractor_id' => ! empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
+            'awarded_contractor_id' => ! empty($data['awarded_contractor_id']) ? $data['awarded_contractor_id'] : null,
             'updated_at'            => new Expression('GETDATE()'),
-            'require_date'          => !empty($data['require_date']) ? $data['require_date'] : new Expression('GETDATE()'),
-            'due_date'              => !empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()')
+            'require_date'          => ! empty($data['require_date']) ? $data['require_date'] : new Expression('GETDATE()'),
+            'due_date'              => ! empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()')
         ];
 
         try {
@@ -180,7 +178,7 @@ class Project
 
     public function editArchitect($data, $project_id)
     {
-        if (!InputValidator::isValidData($data) || !InputValidator::isValidId($project_id)) {
+        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($project_id)) {
             return false;
         }
 
@@ -188,15 +186,16 @@ class Project
             'updated_at' => new Expression('GETDATE()'),
         ];
 
-        if (empty($data['architect_id']) && !empty($data['architect_name'])) {
+        if (empty($data['architect_id']) && ! empty($data['architect_name'])) {
             $info['architect_id'] = $this->getArchitect()->add($data);
-        } else if (!empty($data['architect_id'])) {
+        } elseif (! empty($data['architect_id'])) {
             $info['architect_id'] = $this->getArchitect()->edit($data, $data['architect_id']);
         } else {
             $info['architect_id'] = null;
         }
 
-        if (empty($data['address_id']) && array_filter(array_intersect_key($data, array_flip([
+        if (
+            empty($data['address_id']) && array_filter(array_intersect_key($data, array_flip([
             'address_name',
             'phys_address1',
             'phys_address2',
@@ -207,17 +206,18 @@ class Project
             'central_phone_number',
             'email_address',
             'url'
-        ])))) {
+            ])))
+        ) {
             $info['architect_address_id'] = $this->getAddress()->add($data, $info['architect_id']);
-        } else if (!empty($data['address_id'])) {
+        } elseif (! empty($data['address_id'])) {
             $info['architect_address_id'] = $this->getAddress()->edit($data, $data['address_id']);
         } else {
             $info['architect_address_id'] = null;
         }
 
-        if (empty($data['specifier_id']) && !empty($data['specifier_first_name'])) {
+        if (empty($data['specifier_id']) && ! empty($data['specifier_first_name'])) {
             $info['specifier_id'] = $this->getSpecifier()->add($data, $info['architect_id']);
-        } else if (!empty($data['specifier_id'])) {
+        } elseif (! empty($data['specifier_id'])) {
             $info['specifier_id'] = $this->getSpecifier()->edit($data, $data['specifier_id']);
         } else {
             $info['specifier_id'] = null;
@@ -234,7 +234,7 @@ class Project
 
     public function delete($project_id)
     {
-        if (!InputValidator::isValidId($project_id)) {
+        if (! InputValidator::isValidId($project_id)) {
             return false;
         }
 
@@ -255,7 +255,7 @@ class Project
 
     public function clearAddressAndSpecifierByArchitect($architect_id)
     {
-        if (!InputValidator::isValidId($architect_id)) {
+        if (! InputValidator::isValidId($architect_id)) {
             return false;
         }
 
@@ -283,7 +283,7 @@ class Project
 
     public function fetchById($id)
     {
-        if (!InputValidator::isValidId($id)) {
+        if (! InputValidator::isValidId($id)) {
             return false;
         }
         return $this->p2q_view_projects->select(['project_id' => $id])->current();
@@ -291,7 +291,7 @@ class Project
 
     public function fetchOwnProjects($user_id)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
@@ -308,7 +308,7 @@ class Project
 
     public function countOwnProjects($user_id): int
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
@@ -325,7 +325,7 @@ class Project
 
     public function fetchAssignedProjects($user_id)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
@@ -334,7 +334,7 @@ class Project
 
     public function countAssignedProjects($user_id)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
@@ -351,7 +351,7 @@ class Project
 
     public function fetchOtherUsersProjects($user_id, $company_id = DEFAULT_COMPANY)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
@@ -370,7 +370,7 @@ class Project
 
     public function countOtherUsersProjects($user_id, $company_id = DEFAULT_COMPANY)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
@@ -416,7 +416,7 @@ class Project
 
     public function fetchQuoteByProject($project_id)
     {
-        if (!InputValidator::isValidId($project_id)) {
+        if (! InputValidator::isValidId($project_id)) {
             return false;
         }
 
@@ -432,9 +432,9 @@ class Project
         return $result;
     }
 
-    public function QuoteCountByProject($project_id)
+    public function quoteCountByProject($project_id)
     {
-        if (!InputValidator::isValidId($project_id)) {
+        if (! InputValidator::isValidId($project_id)) {
             return false;
         }
 
@@ -451,7 +451,7 @@ class Project
 
     public function countAllCompleteProjects($admin, $user_id)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
@@ -461,7 +461,7 @@ class Project
             ->columns(['total' => new Expression('COUNT(*)')])
             ->where(['status_id' => 11]);
 
-        if (!$admin) {
+        if (! $admin) {
             $select->where(['architect_rep_id' => $user_id]);
         }
 
@@ -472,7 +472,7 @@ class Project
 
     public function countActiveProjects($admin, $user_id)
     {
-        if (!InputValidator::isValidData($user_id)) {
+        if (! InputValidator::isValidData($user_id)) {
             return false;
         }
 
@@ -482,7 +482,7 @@ class Project
             ->columns(['total' => new Expression('COUNT(*)')])
             ->where(["status_id not in (11, 13, 14)"]);
 
-        if (!$admin) {
+        if (! $admin) {
             $select->where(['architect_rep_id' => $user_id]);
         }
 

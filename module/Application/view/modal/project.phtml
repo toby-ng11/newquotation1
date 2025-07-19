@@ -45,9 +45,9 @@
                                     <?php foreach ($locations as $l) { ?>
                                         <option value='<?= $this->escapeHtml($l['location_id']) ?>' <?php if (
                                                                                                         $l['location_id'] === DEFAULT_LOCATION_ID
-                                                                                                    ) {
+) {
                                                                                                         echo 'selected';
-                                                                                                    } ?>><?= $l['branch_description'] ?></option>
+                                                       } ?>><?= $l['branch_description'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -87,7 +87,7 @@
                                 <input readonly type="text" id="require_date" name='require_date' class="flatpickr" placeholder="Required date" />
                             </div>
 
-                            <?php if ($user['approve_id'] != null): ?>
+                            <?php if ($user['approve_id'] != null) : ?>
                                 <div class="grid gap-2">
                                     <label for="shared_id">Share Worksheet</label>
                                     <input type="text" id="shared_id" name="shared_id" placeholder="Share this project with other salesrep" />
@@ -101,12 +101,12 @@
                             <div class="grid gap-2">
                                 <label for="address_id">Address List</label>
                                 <select name='address_id' id='address_id'>
-                                    <?php if (!empty($addressList)):
-                                        foreach ($addressList as $a): ?>
+                                    <?php if (! empty($addressList)) :
+                                        foreach ($addressList as $a) : ?>
                                             <option value='<?= $this->escapeHtml($a['address_id']) ?>'>
                                                 <?= $a['name'] . ' - ' . $a['phys_address1'] ?>
                                             </option>
-                                    <?php endforeach;
+                                        <?php endforeach;
                                     endif; ?>
                                 </select>
                             </div>
@@ -114,12 +114,12 @@
                             <div class="grid gap-2">
                                 <label for="specifier_id">Specifier</label>
                                 <select name='specifier_id' id='specifier_id'>
-                                    <?php if (!empty($specifierList)):
-                                        foreach ($specifierList as $spec): ?>
+                                    <?php if (! empty($specifierList)) :
+                                        foreach ($specifierList as $spec) : ?>
                                             <option value='<?= $this->escapeHtml($spec['specifier_id']) ?>'>
                                                 <?= $spec['first_name'] . ' ' . $spec['last_name'] ?>
                                             </option>
-                                    <?php endforeach;
+                                        <?php endforeach;
                                     endif; ?>
                                 </select>
                             </div>

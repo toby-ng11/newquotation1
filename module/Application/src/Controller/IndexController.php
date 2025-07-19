@@ -7,7 +7,6 @@ namespace Application\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
-
 use Application\Service\UserService;
 use Application\Model\{Architect, Project, Quote, Note};
 
@@ -19,8 +18,13 @@ class IndexController extends AbstractActionController
     protected $note;
     protected $architect;
 
-    public function __construct(UserService $userService, Project $project, Quote $quote, Note $note, Architect $architect)
-    {
+    public function __construct(
+        UserService $userService,
+        Project $project,
+        Quote $quote,
+        Note $note,
+        Architect $architect
+    ) {
         $this->userService = $userService;
         $this->project = $project;
         $this->quote = $quote;
@@ -176,7 +180,7 @@ class IndexController extends AbstractActionController
             }
         }
 
-        $viewModel =  new ViewModel([
+        $viewModel = new ViewModel([
             'user' => $user,
             'totalArchitects' => $this->architect->countAllArchitects($admin, $user['id']),
             'totalCompleteProjects' => $this->project->countAllCompleteProjects($admin, $user['id']),
