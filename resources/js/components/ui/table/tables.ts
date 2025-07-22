@@ -5,6 +5,7 @@ import 'datatables.net-responsive-dt';
 import 'datatables.net-select-dt';
 
 import { architectID, projectID, sheetID, sheetType } from '@/components/init';
+import { createElement, Trash2 } from 'lucide';
 
 let projectNoteTable: Api<any>;
 let itemTable: Api<any>;
@@ -1419,8 +1420,16 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 },
                 {
                     data: 'project_id',
-                    render: function (data) {
-                        return '<a href="/project/' + data + '/edit">' + data + '</a>';
+                    render: function (data, type, row) {
+                        return (
+                            '<a href="/project/' +
+                            row.project_id +
+                            '/edit" class="text-blue-500 dark:text-blue-300" title="Edit project ' +
+                            row.project_id +
+                            '">' +
+                            data +
+                            '</a>'
+                        );
                     },
                 },
                 {
@@ -1482,11 +1491,49 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'address_id',
                     render: function (data) {
-                        return '<a href="/architect/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
+                        return (
+                            `<a
+                            href="#"
+                            class="address-edit text-blue-500 dark:text-blue-300"
+                            data-id="${data}">` +
+                            data +
+                            '</a>'
+                        );
                     },
                 },
                 {
                     data: 'name',
+                },
+                {
+                    data: 'phys_address1',
+                    render(data, type, row) {
+                        return [
+                            [data, row.phys_address2].filter(Boolean).join(', '),
+                            [row.phys_city, row.phys_state, row.phys_postal_code].filter(Boolean).join(', '),
+                            row.phys_country,
+                            row.central_phone_number,
+                            row.email_address,
+                            row.url,
+                        ]
+                            .filter(Boolean) // remove empty/null/undefined
+                            .join('<br>')
+                            .replace(
+                                /(https:\/\/[^\s<]+)/g,
+                                '<a href="$1" target="_blank" class="text-blue-500 visited:text-blue-500 underline">$1</a>',
+                            );
+                    },
+                },
+                {
+                    data: 'address_id',
+                    render(data) {
+                        const deleteBtn = document.createElement('a') as HTMLAnchorElement;
+                        deleteBtn.dataset.id = data;
+                        deleteBtn.classList.add('address-delete', 'btn-sm-icon-outline');
+
+                        const deleteIcon = createElement(Trash2);
+                        deleteBtn.appendChild(deleteIcon);
+                        return deleteBtn;
+                    },
                 },
             ],
             columnDefs: [
@@ -1512,23 +1559,47 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
     architectSpecifiers: () => {
         return (architectSpecifiersTable = new DataTable('#architect-specifiers-table', {
             ajax: {
-                url: `/architect/${architectID}/fetchspecs`,
+                url: `/architect/${architectID}/specifiers`,
                 dataSrc: '',
             } as AjaxSettings,
             processing: true,
-            responsive: true,
             //serverSide: true, // experimetal: server-side processing
             columns: [
                 {
                     data: 'specifier_id',
                     render: function (data) {
-                        return '<a href="/architect/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
+                        return (
+                            `<a
+                            href="#"
+                            class="specifier-edit text-blue-500 dark:text-blue-300"
+                            data-id="${data}">` +
+                            data +
+                            '</a>'
+                        );
                     },
                 },
                 {
-                    data: 'first_name',
-                    render: function (data, type, row) {
-                        return `${data} ${row.last_name}`;
+                    data: 'specifier_name',
+                },
+                {
+                    data: 'job_title',
+                },
+                {
+                    data: 'central_phone_number',
+                },
+                {
+                    data: 'email_address',
+                },
+                {
+                    data: 'specifier_id',
+                    render(data) {
+                        const deleteBtn = document.createElement('a') as HTMLAnchorElement;
+                        deleteBtn.dataset.id = data;
+                        deleteBtn.classList.add('specifier-delete', 'btn-sm-icon-outline');
+
+                        const deleteIcon = createElement(Trash2);
+                        deleteBtn.appendChild(deleteIcon);
+                        return deleteBtn;
                     },
                 },
             ],
@@ -1549,6 +1620,10 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 topEnd: null,
                 bottomStart: null,
                 bottomEnd: null,
+            },
+            scrollX: true,
+            fixedColumns: {
+                end: 1,
             },
         }));
     },

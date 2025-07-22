@@ -58,7 +58,7 @@ export default function OwnProjectTable() {
 
     // Restore saved visibility
     useEffect(() => {
-        axios.get('/lapi/preferences/projectTableColumnVisibility').then((res) => {
+        axios.get('/lapi/preferences/projectOwnTableColumnVisibility').then((res) => {
             setColumnVisibility(res.data || {});
             lastSavedVisibility.current = res.data;
             setIsReady(true);
@@ -72,7 +72,7 @@ export default function OwnProjectTable() {
         const previous = JSON.stringify(lastSavedVisibility.current);
 
         if (current !== previous) {
-            axios.post('/lapi/preferences/projectTableColumnVisibility', {
+            axios.post('/lapi/preferences/projectOwnTableColumnVisibility', {
                 value: columnVisibility,
             });
             lastSavedVisibility.current = columnVisibility;
@@ -227,7 +227,7 @@ export default function OwnProjectTable() {
             <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
                 <div className="flex flex-col gap-1">
                     <h2 className="text-2xl font-semibold tracking-tight">All Projects</h2>
-                    <p className="text-muted-foreground">Here's the list of all projects across all branches.</p>
+                    <p className="text-muted-foreground">Here's the list your projects.</p>
                 </div>
                 <div className="flex flex-col gap-4">
                     <DataTableToolbar

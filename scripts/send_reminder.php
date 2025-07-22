@@ -42,7 +42,7 @@ while (true) {
             $mailer->sendReminderEmail($note, $note['owner_id'] . '@centura.ca', $subject, $projectLink);
             $noteTable->markReminderSent($note['project_note_id']);
 
-            echo "[" . date('Y-m-d H:i:s') . "] [SENT] $email @ " . PHP_EOL;
+            echo "[" . date('Y-m-d H:i:s') . "] [SENT] to $email " . PHP_EOL;
         }
 
         sleep(30); // Wait 30sec before checking again

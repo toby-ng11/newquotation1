@@ -43,6 +43,11 @@ class Project
         return $this->container->get(Specifier::class);
     }
 
+    public function getQuote()
+    {
+        return $this->container->get(Quote::class);
+    }
+
     public function save($data)
     {
         if (! InputValidator::isValidData($data)) {
@@ -57,7 +62,7 @@ class Project
             'market_segment_id'     => $data['market_segment_id'],
             'owner_id'              => $data['owner_id'],
             'last_maintained_by'    => $data['owner_id'],
-            'shared_id'             => trim($data['shared_id']),
+            'shared_id'             => ! empty(trim($data['shared_id'])) ? trim($data['shared_id']) : null,
             'reed'                  => ! empty(trim($data['reed'])) ? trim($data['reed']) : null,
             'status_id'             => $data['status'],
             'general_contractor_id' => ! empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
@@ -196,16 +201,16 @@ class Project
 
         if (
             empty($data['address_id']) && array_filter(array_intersect_key($data, array_flip([
-            'address_name',
-            'phys_address1',
-            'phys_address2',
-            'phys_city',
-            'phys_state',
-            'phys_postal_code',
-            'phys_country',
-            'central_phone_number',
-            'email_address',
-            'url'
+                'address_name',
+                'phys_address1',
+                'phys_address2',
+                'phys_city',
+                'phys_state',
+                'phys_postal_code',
+                'phys_country',
+                'central_phone_number',
+                'email_address',
+                'url'
             ])))
         ) {
             $info['architect_address_id'] = $this->getAddress()->add($data, $info['architect_id']);
@@ -238,6 +243,11 @@ class Project
             return false;
         }
 
+        $quotes = $this->fetchQuoteByProject($project_id);
+        foreach ($quotes as $quote) {
+            $this->getQuote()->delete($quote['quote_id']);
+        }
+
         try {
             $this->project->update(
                 [
@@ -261,7 +271,12 @@ class Project
 
         try {
             $this->project->update(
-                ['architect_address_id' => null, 'specifier_id' => null, 'updated_at' => new Expression('GETDATE()')],
+                [
+                    'architect_address_id' => null,
+                    'specifier_id' => null,
+                    'architect_id' => null,
+                    'updated_at' => new Expression('GETDATE()')
+                ],
                 ['architect_id' => $architect_id]
             );
             return true;

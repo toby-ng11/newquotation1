@@ -63,7 +63,6 @@ class Architect
             'company_id'        => trim($data['architect_company_id']),
             'architect_type_id' => $data['architect_type_id'],
             'class_id'          => trim($data['architect_class_id']),
-            'delete_flag'       => 'N',
             'created_at'        => new Expression('GETDATE()'),
             'updated_at'        => new Expression('GETDATE()'),
         ];
@@ -139,7 +138,6 @@ class Architect
 
         try {
             $this->architect->update([
-                'delete_flag' => 'Y',
                 'deleted_at' => new Expression('GETDATE()')
             ], ['architect_id' => $id]);
             return $id;
@@ -157,7 +155,7 @@ class Architect
 
         $sql = new Sql($this->adapter);
         $select = $sql->select('architect')
-            ->where(['architect_name' => trim($name), 'delete_flag' => 'N']);
+            ->where(['deleted_at IS NULL', 'architect_name' => trim($name)]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
@@ -173,7 +171,7 @@ class Architect
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('architect')
-            ->where(['architect_id' => $id, 'delete_flag' => 'N']);
+            ->where(['deleted_at IS NULL', 'architect_id' => $id]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
@@ -202,7 +200,7 @@ class Architect
         $sql = new Sql($this->adapter);
         $select = $sql->select('architect')  // can use TableGateway instead
             ->where(['company_id' => $company])
-            ->where(['delete_flag' => 'N']);
+            ->where(['deleted_at IS NULL']);
 
         if (! $admin) {
             $select->where(['architect_rep_id' => $user_id]);

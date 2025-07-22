@@ -86,9 +86,9 @@ class Specifier
         ];
 
         if (empty($data['specifier_address_id'])) {
-            $info['address_id'] = $this->getAddress()->addSpecifierAddress($data, $id);
+            $this->getAddress()->addSpecifierAddress($data, $id);
         } else {
-            $info['address_id'] = $this->getAddress()->editSpecifierAddress($data, $data['specifier_address_id']);
+            $this->getAddress()->editSpecifierAddress($data, $data['specifier_address_id']);
         }
 
         try {
@@ -106,8 +106,11 @@ class Specifier
             return false;
         }
 
+        $specfier = $this->fetchSpecifierById($id);
+
         try {
             $this->specifier->update(['delete_flag' => 'Y', 'deleted_at' => new Expression('GETDATE()'),], ['specifier_id' => $id]);
+            $this->getAddress()->delete($specfier['address_id']);
             return $id;
         } catch (Exception $e) {
             error_log("Specifier\delete: Database Update Error: " . $e->getMessage());
@@ -123,7 +126,6 @@ class Specifier
 
         $sql = new Sql($this->adapter);
         $select = $sql->select('p2q_view_specifier_x_address')
-            ->columns(['specifier_id', 'first_name', 'last_name'])
             ->where(['architect_id' => $architect_id]);
 
         $statement = $sql->prepareStatementForSqlObject($select);

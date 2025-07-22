@@ -2,9 +2,11 @@ import 'basecoat-css/all';
 import '../css/app.css';
 
 import { mountAllTables, unmountAllTables } from '@/app';
+import { initAddress } from '@/components/Alpine/modal/address-modal';
 import { initCustomer } from '@/components/Alpine/modal/customer-modal';
 import { initItem } from '@/components/Alpine/modal/item-modal';
 import { initNote } from '@/components/Alpine/modal/note-modal';
+import { initSpecifier } from '@/components/Alpine/modal/specifier-modal';
 import { initAlpine } from '@/components/Alpine/p2q-init';
 import { runFadeInAnimation } from '@/components/FadeInAnimation';
 import { showLoadedFlashMessage } from '@/components/flashmessage';
@@ -40,6 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initQuote();
     initArchitectForm();
     initArchitect();
+    initAddress();
+    initSpecifier();
     initCharts();
     runFadeInAnimation();
 

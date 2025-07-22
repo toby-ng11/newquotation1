@@ -145,6 +145,34 @@ return [
                     ],
                 ],
             ],
+            'address' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/addresses[/:id[/:action]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\AddressController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
+            'specifier' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/specifiers[/:id[/:action]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\SpecifierController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
             'lapi-preferences' => [
                 'type' => Segment::class,
                 'options' => [
@@ -231,7 +259,17 @@ return [
                 return new Controller\NoteController(
                     $container->get(Model\Note::class)
                 );
-            }
+            },
+            Controller\SpecifierController::class => function ($container) {
+                return new Controller\SpecifierController(
+                    $container->get(Model\Specifier::class)
+                );
+            },
+            Controller\AddressController::class => function ($container) {
+                return new Controller\AddressController(
+                    $container->get(Model\Address::class)
+                );
+            },
         ],
     ],
     'view_manager' => [
@@ -366,7 +404,7 @@ return [
             },
             \Twig\Environment::class => function ($container) {
                 $loader = new \Twig\Loader\FilesystemLoader([
-                    realpath(__DIR__ . '/../view/email'),
+                    __DIR__ . '/../view/email',
                 ]);
                 $twig = new \Twig\Environment($loader, [
                     'cache' => false, // Set a writable path like '/data/cache/twig' in production

@@ -65,8 +65,8 @@ class ArchitectController extends AbstractActionController
 
         $architect = $this->architect->fetchArchitectById($architect_id);
 
-        if (! $architect || $architect['delete_flag'] === 'Y') {
-            $this->flashMessenger()->addErrorMessage("This architect is deleted.");
+        if (! $architect) {
+            $this->flashMessenger()->addErrorMessage("This architect is not found.");
             return $this->redirect()->toRoute('dashboard', ['action' => 'architect']);
         }
 
@@ -197,7 +197,7 @@ class ArchitectController extends AbstractActionController
         return new JsonModel($address);
     }
 
-    public function fetchspecsAction()
+    public function specifiersAction()
     {
         $id = $this->params()->fromRoute('id', null);
 

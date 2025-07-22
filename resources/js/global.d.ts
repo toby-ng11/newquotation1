@@ -8,6 +8,22 @@ type NoteModalComponent = {
     closeModal: () => void;
 }
 
+type SpecifierModalComponent = {
+    open: boolean;
+    isEditing: boolean;
+    submitForm: () => Promise<void>;
+    editSpecifier: (specifierID : string) => Promise<void>;
+    closeModal: () => void;
+}
+
+type AddressModalComponent = {
+    open: boolean;
+    isEditing: boolean;
+    submitForm: () => Promise<void>;
+    editAddress: (addressID : string) => Promise<void>;
+    closeModal: () => void;
+}
+
 type ItemModalComponent = {
     open: boolean;
     isEditing: boolean;
@@ -33,6 +49,8 @@ declare global {
         isOwner: boolean;
         Alpine: any;
         noteModalComponent?: NoteModalComponent;
+        specifierModalComponent?: SpecifierModalComponent;
+        addressModalComponent?: AddressModalComponent;
         itemModalComponent?: ItemModalComponent;
         customerModalComponent?: CustomerModalComponent;
     }
