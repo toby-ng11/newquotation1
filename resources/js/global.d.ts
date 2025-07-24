@@ -8,6 +8,14 @@ type NoteModalComponent = {
     closeModal: () => void;
 }
 
+type ProjectShareModalComponent = {
+    open: boolean;
+    isEditing: boolean;
+    submitForm: () => Promise<void>;
+    editShare: (projectShareId : string) => Promise<void>;
+    closeModal: () => void;
+}
+
 type SpecifierModalComponent = {
     open: boolean;
     isEditing: boolean;
@@ -53,5 +61,6 @@ declare global {
         addressModalComponent?: AddressModalComponent;
         itemModalComponent?: ItemModalComponent;
         customerModalComponent?: CustomerModalComponent;
+        projectShareModalComponent?: ProjectShareModalComponent;
     }
 }

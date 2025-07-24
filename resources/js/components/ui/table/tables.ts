@@ -5,13 +5,22 @@ import 'datatables.net-responsive-dt';
 import 'datatables.net-select-dt';
 
 import { architectID, projectID, sheetID, sheetType } from '@/components/init';
-import { createElement, Trash2 } from 'lucide';
+import { createElement, Pencil, Trash2 } from 'lucide';
 
 let projectNoteTable: Api<any>;
 let itemTable: Api<any>;
+let projectShareTable: Api<any>;
 let architectProjectsTable: Api<any>;
 let architectAddressesTable: Api<any>;
 let architectSpecifiersTable: Api<any>;
+
+function createActionButton(icon: any, className: string, dataId: string): HTMLButtonElement {
+    const btn = document.createElement('button');
+    btn.dataset.id = dataId;
+    btn.classList.add(className, 'btn-sm-icon-outline');
+    btn.appendChild(createElement(icon));
+    return btn;
+}
 
 const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
     /* ------ ADMIN PORTAL ------ */
@@ -1216,6 +1225,54 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             },
         }));
     },
+    projectShare: () => {
+        return (projectShareTable = new DataTable('#project-share-table', {
+            ajax: {
+                url: `/project/${sheetID}/shares`,
+                dataSrc: '',
+            } as AjaxSettings,
+            processing: true,
+            columns: [
+                {
+                    data: 'shared_user',
+                },
+                {
+                    data: 'role',
+                },
+                {
+                    data: 'id',
+                    render: function (data) {
+                        const btnGroup = document.createElement('div');
+                        btnGroup.classList.add('flex', 'items-center', 'gap-2');
+
+                        btnGroup.appendChild(createActionButton(Pencil, 'project-share-edit', data));
+                        btnGroup.appendChild(createActionButton(Trash2, 'project-share-delete', data));
+
+                        return btnGroup;
+                    },
+                },
+            ],
+            columnDefs: [
+                {
+                    targets: '_all',
+                    className: 'dt-head-center',
+                },
+                {
+                    targets: [0, 1, 2],
+                    className: 'dt-body-center',
+                },
+            ],
+            layout: {
+                topStart: null,
+                topEnd: null,
+                bottomStart: null,
+                bottomEnd: 'info',
+            },
+            order: [[0, 'asc']],
+            paging: false,
+            //rowReorder: true
+        }));
+    },
     item: () => {
         return (itemTable = new DataTable('#item-table', {
             ajax: {
@@ -1696,4 +1753,4 @@ document.getElementById('export-selected')?.addEventListener('click', function (
     window.location.href = url;
 });
 
-export { architectAddressesTable, architectProjectsTable, architectSpecifiersTable, itemTable, projectNoteTable };
+export { architectAddressesTable, architectProjectsTable, architectSpecifiersTable, itemTable, projectNoteTable, projectShareTable };
