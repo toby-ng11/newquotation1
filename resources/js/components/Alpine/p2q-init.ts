@@ -4,6 +4,7 @@ import { customerModal } from '@/components/Alpine/modal/customer-modal';
 import { itemModal } from '@/components/Alpine/modal/item-modal';
 import { noteModal } from '@/components/Alpine/modal/note-modal';
 import { projectModal } from '@/components/Alpine/modal/project-modal';
+import { shareModal } from '@/components/Alpine/modal/share-modal';
 import { specifierModal } from '@/components/Alpine/modal/specifier-modal';
 import { navUnderline } from '@/components/Alpine/ui/nav-underline';
 import Alpine from 'alpinejs';
@@ -20,6 +21,7 @@ export function initAlpine() {
         Alpine.data('noteModal', noteModal);
         Alpine.data('addressModal', addressModal);
         Alpine.data('specifierModal', specifierModal);
+        Alpine.data('projectShareModal', shareModal);
     });
 
     Alpine.start();

@@ -1,0 +1,70 @@
+<div
+    x-data="shareModal()"
+    x-init="
+		    window.shareModalComponent = $data;
+            document.getElementById('widget-btn-add-shared-user').addEventListener('click', () => open = true);"
+    x-effect="
+            if (open) {
+                document.body.classList.add('overflow-hidden');
+            } else {
+                document.body.classList.remove('overflow-hidden');
+                closeModal();
+        }">
+
+    <!-- Modal Overlay -->
+    <div
+        x-show="open"
+        class="flex items-center justify-center z-50 fixed inset-0 bg-black/50"
+        x-transition
+        @keydown.escape.window="open = false"
+        style="display: none;">
+        <!-- Modal Box -->
+        <div
+            class="bg-background ring-neutral fixed z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-xl border border-none bg-clip-padding p-6 shadow-2xl ring-4 ring-neutral-200/80 sm:max-w-2xl dark:bg-neutral-900 dark:ring-neutral-800"
+            x-transition>
+            <div class="flex flex-col gap-2 text-center sm:text-left">
+                <h2
+                    class="leading-none font-semibold text-lg"
+                    x-text="isEditing ? 'Edit Permission' : 'Share'">
+                </h2>
+                <p
+                    class="text-muted-foreground text-sm"
+                    x-text="isEditing ? 'Edit user's permission' : 'Add a shared user and their permission.'">
+                </p>
+            </div>
+
+            <div class="text-popover-foreground flex h-full w-full flex-col overflow-hidden">
+                <div class="max-h-[400px] scroll-py-1 overflow-x-hidden overflow-y-auto no-scrollbar min-h-80 scroll-pt-2 scroll-pb-1.5">
+                    <form id="share-form" @submit.prevent="submitForm">
+                        <div class="flex flex-col gap-4 md:gap-6 md:grid md:grid-cols-2">
+                            <input type="hidden" id="project_share_id" name="project_share_id" />
+
+                            <div class="grid gap-2">
+                                <label for="shared_user">Share Worksheet</label>
+                                <input type="text" id="shared_user" name="shared_user" placeholder="Search for user ID" />
+                            </div>
+
+                            <div class="grid gap-2">
+                                <label for="role">Role</label>
+                                <select id="role" name="role" data-default-options="<option value='viewer'>Viewer</option>">
+                                    <option value='viewer'>Viewer</option>
+                                    <option value='editor'>Editor</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+                <button type="button" class="btn-outline" @click="closeModal()">Cancel</button>
+                <button
+                    type="submit"
+                    class="btn bg-blue-500 hover:bg-blue-500/90 dark:bg-blue-400 hover:dark:bg-blue-400/90"
+                    form="share-form">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

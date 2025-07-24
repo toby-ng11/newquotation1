@@ -65,6 +65,20 @@ return [
                     ]
                 ],
             ],
+            'project-share' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/projectshare[/:id[/:action]]',
+                    'defaults' => [
+                        'controller' => Controller\ProjectShareController::class,
+                        'action'     => 'index',
+                    ],
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'     => '[0-9]+',
+                    ]
+                ],
+            ],
             'quote' => [
                 'type' => Segment::class,
                 'options' => [
@@ -365,6 +379,14 @@ return [
                     new TableGateway('projects', $dbAdapter),
                     new TableGateway('p2q_view_projects', $dbAdapter),
                     new TableGateway('p2q_view_projects_share', $dbAdapter),
+                    $container
+                );
+            },
+            Model\ProjectShare::class => function ($container) {
+                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+                return new Model\ProjectShare(
+                    $dbAdapter,
+                    new TableGateway('project_shares', $dbAdapter),
                     $container
                 );
             },

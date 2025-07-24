@@ -19,14 +19,6 @@ async function initProject() {
         initAutoSave(projectForm, () => saveProject(true));
     }
 
-    // Autocomplete for shared_id
-    setupAutoComplete({
-        fieldName: '#shared_id',
-        fetchUrl: '/user/fetchbypattern',
-        fillFields: [{ fieldSelector: '#shared_id', itemKey: 'id' }],
-        renderItem: (item) => `<div><strong>${item.id}</strong><br>${item.name}</div>`,
-    });
-
     // Autocomplete for architect_rep
     setupAutoComplete({
         fieldName: '#architect_rep_id',
