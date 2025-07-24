@@ -37,16 +37,17 @@
                 <div class="max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto no-scrollbar min-h-50 scroll-pt-2 scroll-pb-1.5">
                     <form id="dialog-item-form" @submit.prevent="submitForm" class="form">
                         <div class="flex flex-col gap-4 md:gap-6 md:grid md:grid-cols-2">
+                            <input type="hidden" name="item_id" id='item_id'>
+
                             <div required class="grid gap-2">
-                                <label for="item_id">Item ID</label>
-                                <input type="hidden" name="item_uid" id='item_uid'>
-                                <input type="text" id="item_id" name='item_id' class="validate[required]"
+                                <label for="item_code">Item ID</label>
+                                <input type="text" id="item_code" name='item_code' class="validate[required]"
                                     placeholder="Search by ID or name">
                             </div>
 
                             <div required class="grid gap-2">
-                                <label for='uom'>Unit Of Measure</label>
-                                <select name="uom" id="uom" class="validate[required]" data-default-options="<option value=''>-- Search for item first --</option>">
+                                <label for='unit_of_measure'>Unit Of Measure</label>
+                                <select name="unit_of_measure" id="unit_of_measure" class="validate[required]" data-default-options="<option value=''>-- Search for item first --</option>">
                                     <option value="">-- Search for item first --</option>
                                 </select>
                             </div>
@@ -60,7 +61,7 @@
                             <div required class="grid gap-2">
                                 <label for='quantity'>Quantity</label>
                                 <input type="number" name="quantity" id='quantity' class="validate[required,custom[number]]"
-                                placeholder="0" min="0" />
+                                    placeholder="0" min="0" />
                             </div>
 
                             <div class="grid gap-2 col-span-2">

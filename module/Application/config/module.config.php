@@ -330,7 +330,7 @@ return [
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
                 return new Model\Architect(
                     $dbAdapter,
-                    new TableGateway('architect', $dbAdapter),
+                    new TableGateway('architects', $dbAdapter),
                     $container
                 );
             },
@@ -338,7 +338,7 @@ return [
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
                 return new Model\Specifier(
                     $dbAdapter,
-                    new TableGateway('specifier', $dbAdapter),
+                    new TableGateway('specifiers', $dbAdapter),
                     $container,
                 );
             },
@@ -346,7 +346,8 @@ return [
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
                 return new Model\Address(
                     $dbAdapter,
-                    new TableGateway('address', $dbAdapter)
+                    new TableGateway('addresses', $dbAdapter),
+                    $container
                 );
             },
             Model\Customer::class => function ($container) {
@@ -361,8 +362,9 @@ return [
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
                 return new Model\Project(
                     $dbAdapter,
-                    new TableGateway('project', $dbAdapter),
+                    new TableGateway('projects', $dbAdapter),
                     new TableGateway('p2q_view_projects', $dbAdapter),
+                    new TableGateway('p2q_view_projects_share', $dbAdapter),
                     $container
                 );
             },
@@ -370,7 +372,7 @@ return [
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
                 return new Model\Quote(
                     $dbAdapter,
-                    new TableGateway('quote', $dbAdapter),
+                    new TableGateway('quotes', $dbAdapter),
                     new TableGateway('p2q_view_quote_x_project_x_oe', $dbAdapter),
                     $container
                 );
@@ -389,7 +391,7 @@ return [
                 return new Model\Note(
                     $dbAdapter,
                     $container->get(Service\UserService::class),
-                    new TableGateway('project_note', $dbAdapter)
+                    new TableGateway('project_notes', $dbAdapter)
                 );
             },
             Service\MailerService::class => function ($container) {

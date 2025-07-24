@@ -178,8 +178,8 @@
                 <th class="title" width="17.5%">Sales Rep</th>
             </tr>
             <tr>
-                <td><?= $this->escapeHtml($quote['quote_id']) ?></td>
-                <td><?= $this->escapeHtml($project['project_id']) ?></td>
+                <td><?= $this->escapeHtml($quote['id']) ?></td>
+                <td><?= $this->escapeHtml($project['id']) ?></td>
                 <td><?= $this->escapeHtml($quote['created_at']->format('Y-m-d')) ?></td>
                 <td><?= $this->escapeHtml($quote['expire_date']->format('Y-m-d')) ?></td>
                 <td><?= $quote['ship_required_date'] && $quote['ship_required_date'] > new DateTime('2000-01-01')
@@ -238,7 +238,7 @@
                         <tr>
                             <td style="text-align:left">
                                 <div class="item-id">
-                                    <?= $this->escapeHtml($i['item_id']) ?>
+                                    <?= $this->escapeHtml($i['item_code']) ?>
                                 </div>
                                 <div class="item-desc">
                                     <span class='break'>
@@ -251,10 +251,10 @@
                             </td>
                             <td><?= $this->escapeHtml($i['quantity']) ?></td>
                             <td><?= '$' . $this->escapeHtml($i['unit_price']) ?></td>
-                            <td><?= $this->escapeHtml($i['uom']) ?></td>
-                            <td style='text-align:right;'><?= '$' . $this->escapeHtml(number_format($i['subtotal'], 2)) ?></td>
+                            <td><?= $this->escapeHtml($i['unit_of_measure']) ?></td>
+                            <td style='text-align:right;'><?= '$' . $this->escapeHtml(number_format($i['total_price'], 2)) ?></td>
                         </tr>
-                                    <?php $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'];
+                                    <?php $subtotal += $i['total_price'] == null ? 0 : $i['total_price'];
                     endforeach;
                 endif;
                 ?>

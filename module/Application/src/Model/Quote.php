@@ -13,10 +13,10 @@ use Application\Controller\QuoteController;
 
 class Quote
 {
-    public const NOT_SUBMITTED     = 5;
-    public const WAITING_APPROVAL = 2;
-    public const APPROVED         = 3;
-    public const DISAPPROVED      = 4;
+    public const NOT_SUBMITTED     = 4;
+    public const WAITING_APPROVAL = 1;
+    public const APPROVED         = 2;
+    public const DISAPPROVED      = 3;
 
     protected $adapter;
     protected $quote;
@@ -63,15 +63,16 @@ class Quote
 
         try {
             $info = [
-                'delete_flag'        => 'N',
                 'project_id'         => $data['project_id'],
                 'contact_id'         => $data['contact_id'],
-                'status_id'             => Quote::NOT_SUBMITTED,
+                'status_id'          => Quote::NOT_SUBMITTED,
                 'created_at'         => new Expression('GETDATE()'),
                 'expire_date'        => new Expression('DATEADD(month, 2, GETDATE())'), // add 2 months to current date
                 'ship_required_date' => $data['require_date'] ?? new Expression('GETDATE()'),
-                'taker'              => $user['id'],
+                'created_by'              => $user['id'],
+                'updated_by'              => $user['id'],
                 'updated_at'         => new Expression('GETDATE()'),
+                'quote_type_id'      => 1,
             ];
 
             $this->quote->insert($info);
@@ -118,7 +119,7 @@ class Quote
         ];
 
         try {
-            $this->quote->update($data, ['quote_id' => $quote_id]);
+            $this->quote->update($data, ['id' => $quote_id]);
         } catch (ErrorException $e) {
             error_log("Quote/updateQuoteExtraInfo:Database Update Error: " . $e->getMessage());
             return false;
@@ -139,14 +140,15 @@ class Quote
         $user = $this->getUserService()->getCurrentUser();
 
         $info = [
-            'type_id'            => $data['quote_type_id'],
+            'quote_type_id'      => $data['quote_type_id'],
             'contact_id'         => $data['contact_id'],
             'expire_date'        => $data['expire_date'] ?? new Expression('DATEADD(month, 2, GETDATE())'),
             'ship_required_date' => $data['ship_required_date'] ?? new Expression('GETDATE()'),
             'price_approve_id'   => $data['price_approve_id'] ?? null,
-            'lead_time_id'       => $data['lead_time_id'] ?? null,
+            'lead_time_id'       => !empty($data['lead_time_id']) ? $data['lead_time_id'] : null,
             'note'               => $data['note'],
             'updated_at'         => new Expression('GETDATE()'),
+            'updated_by'              => $user['id'],
         ];
 
         if (array_key_exists('request_action', $data)) {
@@ -192,7 +194,7 @@ class Quote
         }
 
         try {
-            $this->quote->update($info, ['quote_id' => $quote_id]);
+            $this->quote->update($info, ['id' => $quote_id]);
             return true;
         } catch (ErrorException $e) {
             error_log("Quote/edit:Database Update Error: " . $e->getMessage());
@@ -207,7 +209,7 @@ class Quote
         }
 
         try {
-            $this->quote->update(['delete_flag' => 'Y','deleted_at' => new Expression('GETDATE()'),], ['quote_id' => $quote_id]);
+            $this->quote->update(['deleted_at' => new Expression('GETDATE()'),], ['id' => $quote_id]);
             return true;
         } catch (ErrorException $e) {
             error_log("Project/delete:Database Delete Error: " . $e->getMessage());
@@ -217,7 +219,7 @@ class Quote
 
     public function fetchById($quote_id)
     {
-        return $this->p2q_view_quote_x_project_x_oe->select(['quote_id' => $quote_id])->current();
+        return $this->p2q_view_quote_x_project_x_oe->select(['id' => $quote_id])->current();
     }
 
     public function fetchAll()
@@ -232,7 +234,7 @@ class Quote
 
     public function fetchOwnQuotes($user_id)
     {
-        return $this->p2q_view_quote_x_project_x_oe->select(['taker' => $user_id])->toArray();
+        return $this->p2q_view_quote_x_project_x_oe->select(['created_by' => $user_id])->toArray();
     }
 
     public function fetchApprovalTable($table)
@@ -290,7 +292,7 @@ class Quote
         $select = $sql->select();
         $select->from('p2q_view_quote_x_project_x_oe')
             ->columns(['total' => new Expression('COUNT(*)')])
-            ->where(['taker' => $user_id]);
+            ->where(['created_by' => $user_id]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
@@ -301,7 +303,7 @@ class Quote
     {
         $sql = new Sql($this->adapter);
 
-        $select = $sql->select('quote_type')
+        $select = $sql->select('quote_types')
             ->order('type_desc ASC');
 
             $statement = $sql->prepareStatementForSqlObject($select);

@@ -25,7 +25,8 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
 interface Project {
-    project_id: string;
+    id: string;
+    legacy_id: string;
     project_id_ext: string;
     project_name: string;
     owner_id: string;
@@ -50,7 +51,7 @@ const multiValueFilter: FilterFn<Project> = (row, columnId, filterValue) => {
 
 export default function OwnProjectTable() {
     const { data: projects = [], isLoading, refetch } = useProjects(true);
-    const [sorting, setSorting] = useState<SortingState>([{ id: 'project_id', desc: true }]);
+    const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: true }]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [isReady, setIsReady] = useState(false);
@@ -100,13 +101,18 @@ export default function OwnProjectTable() {
             enableHiding: false,
         },
         {
-            accessorKey: 'project_id',
+            accessorKey: 'id',
             header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
-            cell: ({ row }) => (
-                <a href={'/project/' + row.getValue('project_id') + '/edit'} className="text-blue-500 dark:text-blue-300">
-                    {row.getValue('project_id')}
-                </a>
-            ),
+            cell: ({ row }) => {
+                const id = row.getValue<number>('id');
+                const legacyId = row.original.legacy_id; // Make sure your data includes this field
+                const displayId = id <= 500 ? legacyId : id;
+                return (
+                    <a href={`/project/${id}/edit`} className="text-blue-500 dark:text-blue-300">
+                        {displayId}
+                    </a>
+                );
+            },
             enableHiding: false,
             meta: 'ID',
         },
@@ -184,7 +190,7 @@ export default function OwnProjectTable() {
             accessorKey: 'options',
             header: () => null,
             cell: ({ row }) => {
-                const projectId = row.original.project_id; // adjust based on your data shape
+                const projectId = row.original.id; // adjust based on your data shape
 
                 return (
                     <DataTableProjectOptions

@@ -36,14 +36,14 @@ class Note
 
         $info = [
             'project_id' => $project_id,
-            'note_title' => trim($data['note_title']),
-            'project_note' => trim($data['project_note']),
+            'title' => trim($data['note_title']),
+            'content' => trim($data['project_note']),
             'next_action' => trim($data['next_action']),
             'created_at' => new Expression('GETDATE()'),
             'updated_at' => new Expression('GETDATE()'),
-            'owner_id' => $user['id'],
-            'delete_flag' => 'N',
-            'follow_up_date' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null
+            'created_by' => $user['id'],
+            'updated_by' => $user['id'],
+            'notify_at' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null
         ];
 
         try {
@@ -61,16 +61,19 @@ class Note
             return false;
         }
 
+        $user = $this->userService->getCurrentUser();
+
         $info = [
-            'note_title' => trim($data['note_title']),
-            'project_note' => trim($data['project_note']),
+            'title' => trim($data['note_title']),
+            'content' => trim($data['project_note']),
             'next_action' => trim($data['next_action']),
-            'follow_up_date' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null,
+            'notify_at' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null,
             'updated_at' => new Expression('GETDATE()'),
+            'updated_by' => $user['id'],
         ];
 
         try {
-            $this->project_note->update($info, ['project_note_id ' => $note_id]);
+            $this->project_note->update($info, ['id ' => $note_id]);
             return $note_id;
         } catch (Exception $e) {
             error_log("Note\add:Database Edit Error: " . $e->getMessage());
@@ -85,12 +88,11 @@ class Note
         }
 
         $info = [
-            'delete_flag' => 'Y',
             'deleted_at' => new Expression('GETDATE()'),
         ];
 
         try {
-            $this->project_note->update($info, ['project_note_id ' => $note_id]);
+            $this->project_note->update($info, ['id ' => $note_id]);
             return $note_id;
         } catch (Exception $e) {
             error_log("Note\add:Database Delete Error: " . $e->getMessage());
@@ -121,7 +123,7 @@ class Note
             return false;
         }
 
-        $result = $this->project_note->select(['project_note_id' => $id]);
+        $result = $this->project_note->select(['id' => $id]);
         return $result->current();
     }
 
@@ -134,7 +136,7 @@ class Note
         $sql = new Sql($this->adapter);
         $select = $sql->select('p2q_view_project_note')
             ->where([
-                'owner_id' => $user_id
+                'created_by' => $user_id
             ]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -151,7 +153,7 @@ class Note
         $select = $sql->select();
         $select->from('p2q_view_project_note')
             ->columns(['total' => new Expression('COUNT(*)')])
-            ->where(['owner_id' => $user_id]);
+            ->where(['created_by' => $user_id]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
@@ -161,12 +163,12 @@ class Note
     public function fetchPendingFollowUps()
     {
         $sql = new Sql($this->adapter);
-        $select = $sql->select('project_note');
+        $select = $sql->select('project_notes');
         $select->where([
             "follow_up_date <= GETDATE()",
             "follow_up_date > DATEADD(MINUTE, -1, GETDATE())",
             "(notified_flag IS NULL OR notified_flag != 'Y')",
-            'delete_flag' => 'N'
+            'deleted_at IS NOT NULL'
         ]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -182,9 +184,9 @@ class Note
         }
 
         $sql = new Sql($this->adapter);
-        $update = $sql->update('project_note');
+        $update = $sql->update('project_notes');
         $update->set(['notified_flag' => 'Y']);
-        $update->where(['project_note_id' => $noteId]);
+        $update->where(['id' => $noteId]);
 
         $statement = $sql->prepareStatementForSqlObject($update);
         return $statement->execute();

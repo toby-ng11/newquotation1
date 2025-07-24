@@ -41,7 +41,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'owner_id',
                 },
                 {
-                    data: 'shared_id',
+                    data: 'shared_users',
                 },
                 {
                     data: 'created_at.date',
@@ -120,7 +120,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             //serverSide: true, // to-do: server-side processing with laminas
             columns: [
                 {
-                    data: 'quote_id',
+                    data: 'id',
                     render: function (data) {
                         return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
@@ -239,7 +239,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'shared_id',
+                    data: 'shared_users',
                 },
                 {
                     data: 'market_segment_desc',
@@ -370,7 +370,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'status_desc',
                 },
                 {
-                    data: 'project_id',
+                    data: 'id',
                     render: function (data) {
                         return (
                             "<a href='/project/" +
@@ -392,7 +392,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ],
             processing: true,
             order: {
-                name: 'project_id',
+                name: 'id',
                 dir: 'desc',
             },
             fixedColumns: {
@@ -421,7 +421,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'project_id_ext',
                     render: function (data, type, row) {
-                        return '<a href="/project/' + row.project_id + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
+                        return '<a href="/project/' + row.id + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -434,7 +434,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'owner_id',
                 },
                 {
-                    data: 'shared_id',
+                    data: 'shared_users',
                 },
                 {
                     data: 'market_segment_desc',
@@ -468,7 +468,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'status_desc',
                 },
                 {
-                    data: 'project_id',
+                    data: 'id',
                     render: function (data) {
                         return (
                             "<a   href='/project/" +
@@ -490,7 +490,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ],
             processing: true,
             order: {
-                name: 'project_id',
+                name: 'id',
                 dir: 'desc',
             },
             fixedColumns: {
@@ -519,15 +519,16 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             //"serverSide": true,
             columns: [
                 {
-                    data: 'quote_id',
+                    data: 'id',
                     render: function (data) {
                         return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
                     data: 'project_id',
-                    render: function (data) {
-                        return '<a href="/project/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
+                    render: function (data, type, row) {
+                        let displayId = data <= 500 && row.legacy_id ? row.legacy_id : data;
+                        return '<a href="/project/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + displayId + '</a>';
                     },
                 },
                 {
@@ -631,11 +632,8 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'project_id',
                     render: function (data, type, row) {
-                        {
-                            return (
-                                '<a href="/project/' + row.project_id + '/edit" class="text-blue-500 dark:text-blue-300">' + row.project_id + '</a>'
-                            );
-                        }
+                        let displayId = data <= 500 && row.legacy_id ? row.legacy_id : data;
+                        return '<a href="/project/' + row.project_id + '/edit" class="text-blue-500 dark:text-blue-300">' + displayId + '</a>';
                     },
                 },
                 {
@@ -686,7 +684,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             //serverSide: true,
             columns: [
                 {
-                    data: 'quote_id',
+                    data: 'id',
                     render: function (data) {
                         return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
@@ -764,7 +762,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             //serverSide: true,
             columns: [
                 {
-                    data: 'quote_id',
+                    data: 'id',
                     orderable: false,
                     searchable: false,
                     render: (data, type, row) => {
@@ -772,7 +770,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'quote_id',
+                    data: 'id',
                     render: function (data) {
                         return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
@@ -893,7 +891,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             //serverSide: true,
             columns: [
                 {
-                    data: 'quote_id',
+                    data: 'id',
                     render: function (data) {
                         return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
@@ -946,13 +944,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'quote_status',
                 },
                 {
-                    data: 'quote_id',
+                    data: 'id',
                     render: function (data, type, row) {
-                        return (
-                            "<a   href='/quote/edit/id/" +
-                            row.quote_id +
-                            "'><span class='button-wrap'><span class='icon icon-edit'></span></span></a>"
-                        );
+                        return "<a   href='/quote/edit/id/" + row.id + "'><span class='button-wrap'><span class='icon icon-edit'></span></span></a>";
                     },
                 },
             ],
@@ -994,9 +988,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             //serverSide: true, // experimetal: server-side processing
             columns: [
                 {
-                    data: 'architect_id',
+                    data: 'id',
                     render: function (data, type, row) {
-                        return '<a href="/architect/' + row.architect_id + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
+                        return '<a href="/architect/' + row.id + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
                 },
                 {
@@ -1117,7 +1111,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'note_title',
+                    data: 'title',
                     render: function (data, type, row) {
                         function formatTextWithLinks(text: string) {
                             if (!text) return '';
@@ -1128,12 +1122,12 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                             );
                         }
                         if (data == '') {
-                            return '<p>' + formatTextWithLinks(row.project_note) + '</p>';
-                        } else if (row.project_note == null) {
+                            return '<p>' + formatTextWithLinks(row.content) + '</p>';
+                        } else if (row.content == null) {
                             // this is for old quote system rendering
                             return '<p>' + data + '</p>';
                         } else {
-                            return '<p><b>' + data + '</b></br>' + formatTextWithLinks(row.project_note) + '</p>';
+                            return '<p><b>' + data + '</b></br>' + formatTextWithLinks(row.content) + '</p>';
                         }
                     },
                 },
@@ -1145,9 +1139,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'follow_up_date.date',
+                    data: 'notify_at.date',
                     render: function (data, type, row) {
-                        const isSent = row.notified_flag === 'Y';
+                        const isSent = row.is_notified === 'Y';
                         if (!data) {
                             return '--';
                         }
@@ -1159,7 +1153,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'owner_id',
+                    data: 'created_by',
                     render: function (data) {
                         if (data != null) {
                             return '<p><b>' + data + '</b></p>';
@@ -1169,7 +1163,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'project_note_id',
+                    data: 'id',
                     render: function (data, type, row) {
                         if (!window.isOwner) return null;
 
@@ -1226,7 +1220,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             //responsive: true,
             columns: [
                 {
-                    data: 'item_id',
+                    data: 'item_code',
                     render: function (data, type, row) {
                         return '<b class="item-name">' + data + '</b>' + '<br>' + row.item_desc;
                     },
@@ -1245,7 +1239,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'uom',
+                    data: 'unit_of_measure',
                     render: function (data) {
                         return '<b>' + data + '</b>';
                     },
@@ -1257,7 +1251,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'subtotal',
+                    data: 'total_price',
                     render: function (data) {
                         return '<b>' + data + '</b>';
                     },
@@ -1270,7 +1264,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'item_uid',
+                    data: 'id',
                     render: function (data) {
                         const buttons = [];
                         buttons.push(`
@@ -1329,7 +1323,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             responsive: true,
             columns: [
                 {
-                    data: 'quote_id',
+                    data: 'id',
                     render: function (data) {
                         return '<a href="/quote/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
                     },
@@ -1411,7 +1405,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             processing: true,
             columns: [
                 {
-                    data: 'project_id',
+                    data: 'id',
                     orderable: false,
                     searchable: false,
                     render: (data, type, row) => {
@@ -1419,13 +1413,13 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'project_id',
+                    data: 'id',
                     render: function (data, type, row) {
                         return (
                             '<a href="/project/' +
-                            row.project_id +
+                            row.id +
                             '/edit" class="text-blue-500 dark:text-blue-300" title="Edit project ' +
-                            row.project_id +
+                            row.id +
                             '">' +
                             data +
                             '</a>'
@@ -1450,9 +1444,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     render: function (data, type, row, meta) {
                         if (type === 'display' && meta.row === 0) {
                             // Render a blank cell for data rows; header will be handled separately
-                            return `<input type="checkbox" class="row-checkbox" value="${row.project_id}">`;
+                            return `<input type="checkbox" class="row-checkbox" value="${row.id}">`;
                         }
-                        return `<input type="checkbox" class="row-checkbox" value="${row.project_id}">`;
+                        return `<input type="checkbox" class="row-checkbox" value="${row.id}">`;
                     },
                 },
                 {
@@ -1489,7 +1483,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             //serverSide: true, // experimetal: server-side processing
             columns: [
                 {
-                    data: 'address_id',
+                    data: 'id',
                     render: function (data) {
                         return (
                             `<a
@@ -1524,7 +1518,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'address_id',
+                    data: 'id',
                     render(data) {
                         const deleteBtn = document.createElement('a') as HTMLAnchorElement;
                         deleteBtn.dataset.id = data;
@@ -1566,7 +1560,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             //serverSide: true, // experimetal: server-side processing
             columns: [
                 {
-                    data: 'specifier_id',
+                    data: 'id',
                     render: function (data) {
                         return (
                             `<a
@@ -1591,7 +1585,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     data: 'email_address',
                 },
                 {
-                    data: 'specifier_id',
+                    data: 'id',
                     render(data) {
                         const deleteBtn = document.createElement('a') as HTMLAnchorElement;
                         deleteBtn.dataset.id = data;

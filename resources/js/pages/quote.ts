@@ -93,7 +93,7 @@ async function initQuote() {
                     const response = await res.json();
 
                     if (response.success) {
-                        window.location.href = '/index/home';
+                        window.location.href = '/index/project';
                     } else {
                         showFlashMessage(`Failed to delete the quote. Error: ${response.message}`, false);
                     }

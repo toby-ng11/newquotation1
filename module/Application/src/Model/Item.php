@@ -36,19 +36,19 @@ class Item
         }
 
         $user = $this->userService->getCurrentUser();
+        error_log(print_r($data, true));
 
         $info = [
-            'item_id'              => $data['item_id'],
+            'item_code'             => $data['item_code'],
             'quantity'             => $data['quantity'],
             'note'                 => trim($data['note']),
             'unit_price'           => $data['unit_price'],
-            'uom'                  => $data['uom'],
-            'subtotal'             => round($data['quantity'] * $data['unit_price'], 2),
-            'added_by'             => $user['id'],
-            'last_maintained_by'   => $user['id'],
+            'unit_of_measure'       => $data['unit_of_measure'],
+            'total_price'            => round($data['quantity'] * $data['unit_price'], 2),
+            'created_by'             => $user['id'],
+            'updated_by'   => $user['id'],
             'created_at'             => new Expression('GETDATE()'),
             'updated_at' => new Expression('GETDATE()'),
-            'delete_flag'          => 'N'
         ];
 
         switch ($sheetType) {
@@ -86,21 +86,20 @@ class Item
         $user = $this->userService->getCurrentUser();
 
         $info = [
-            'item_id'              => $data['item_id'],
+            'item_code'              => $data['item_code'],
             'quantity'             => $data['quantity'],
             'note'                 => trim($data['note']),
             'unit_price'           => $data['unit_price'],
-            'uom'                  => $data['uom'],
-            'subtotal'             => round($data['quantity'] * $data['unit_price'], 2),
-            'last_maintained_by'   => $user['id'],
+            'unit_of_measure'                  => $data['unit_of_measure'],
+            'total_price'             => round($data['quantity'] * $data['unit_price'], 2),
+            'updated_by'   => $user['id'],
             'updated_at' => new Expression('GETDATE()'),
-            'delete_flag'          => 'N'
         ];
 
         switch ($sheetType) {
             case 'project':
                 try {
-                    $this->project_items->update($info, ['item_uid' => $item_uid]);
+                    $this->project_items->update($info, ['id' => $item_uid]);
                     return true;
                 } catch (Exception $e) {
                     error_log("Item/edit(project):Database Insert Error: " . $e->getMessage());
@@ -109,7 +108,7 @@ class Item
                 break;
             case 'quote':
                 try {
-                    $this->quote_items->update($info, ['item_uid' => $item_uid]);
+                    $this->quote_items->update($info, ['id' => $item_uid]);
                     return true;
                 } catch (Exception $e) {
                     error_log("Item/edit(quote):Database Insert Error: " . $e->getMessage());
@@ -131,15 +130,14 @@ class Item
         $user = $this->userService->getCurrentUser();
 
         $info = [
-            'last_maintained_by'   => $user['id'],
-            'delete_flag'          => 'Y',
+            'updated_by'   => $user['id'],
             'deleted_at'           => new Expression('GETDATE()'),
         ];
 
         switch ($sheetType) {
             case 'project':
                 try {
-                    $this->project_items->update($info, ['item_uid' => $item_uid]);
+                    $this->project_items->update($info, ['id' => $item_uid]);
                     return true;
                 } catch (Exception $e) {
                     error_log("Item\delete(project):Database Insert Error: " . $e->getMessage());
@@ -148,7 +146,7 @@ class Item
                 break;
             case 'quote':
                 try {
-                    $this->quote_items->update($info, ['item_uid' => $item_uid]);
+                    $this->quote_items->update($info, ['id' => $item_uid]);
                     return true;
                 } catch (Exception $e) {
                     error_log("Item\delete(quote):Database Insert Error: " . $e->getMessage());
@@ -192,10 +190,10 @@ class Item
 
         switch ($sheetType) {
             case 'project':
-                $result = $this->project_items->select(['item_uid' => $item_uid]);
+                $result = $this->project_items->select(['id' => $item_uid]);
                 break;
             case 'quote':
-                $result = $this->quote_items->select(['item_uid' => $item_uid]);
+                $result = $this->quote_items->select(['id' => $item_uid]);
                 break;
             default:
                 return false;
@@ -245,12 +243,12 @@ class Item
                 case 'project':
                     $select = $sql->select('p2q_view_project_items')
                         ->columns(['unit_price'])
-                        ->where(['location_id' => $location, 'item_uid' => $item_id]);
+                        ->where(['location_id' => $location, 'id' => $item_id]);
                     break;
                 case 'quote':
                     $select = $sql->select('p2q_view_quote_items')
                         ->columns(['unit_price'])
-                        ->where(['location_id' => $location, 'item_uid' => $item_id]);
+                        ->where(['location_id' => $location, 'id' => $item_id]);
                     break;
                 default:
                     return false;
@@ -277,7 +275,7 @@ class Item
                         'location_id' => $location,
                         'project_id' => $project_id
                     ])
-                    ->order('item_uid DESC');
+                    ->order('id DESC');
                 break;
             case 'quote':
                 $select = $sql->select('p2q_view_quote_items')
@@ -285,7 +283,7 @@ class Item
                         'location_id' => $location,
                         'quote_id' => $project_id
                     ])
-                    ->order('item_uid DESC');
+                    ->order('id DESC');
                 break;
             default:
                 return false;
@@ -307,7 +305,7 @@ class Item
                 $select = $this->project_items->getSql()->select()
                     ->where([
                         'project_id' => $id,
-                        'delete_flag' => 'N'
+                        'deleted_at IS NULL'
                     ]);
                 return $this->project_items->selectWith($select)->toArray();
                 break;
@@ -315,7 +313,7 @@ class Item
                 $select = $this->quote_items->getSql()->select()
                     ->where([
                         'quote_id' => $id,
-                        'delete_flag' => 'N'
+                        'deleted_at IS NULL'
                     ]);
                 return $this->quote_items->selectWith($select)->toArray();
                 break;

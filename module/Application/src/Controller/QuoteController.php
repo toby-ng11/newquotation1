@@ -107,7 +107,7 @@ class QuoteController extends AbstractActionController
         $quote_id = $this->params()->fromRoute('id');
 
         $quote = $this->getQuoteModel()->fetchById($quote_id);
-        if (! $quote || $quote['delete_flag'] === 'Y') {
+        if (! $quote || ($quote['deleted_at'])) {
             $this->flashMessenger()->addErrorMessage("This quote is deleted.");
             return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
         }
@@ -187,7 +187,7 @@ class QuoteController extends AbstractActionController
                 return new JsonModel(['success' => $result]);
             }
 
-            //return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
+            return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
         } else {
             $this->flashMessenger()->addErrorMessage("Failed to delete quote. Please try again.");
 
@@ -195,7 +195,7 @@ class QuoteController extends AbstractActionController
                 return new JsonModel(['success' => $result]);
             }
 
-            //return $this->redirect()->toRoute('quote', ['action' => 'edit', 'id' => $quote_id]);
+            return $this->redirect()->toRoute('quote', ['action' => 'edit', 'id' => $quote_id]);
         }
     }
 

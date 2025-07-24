@@ -129,7 +129,7 @@ class ProjectController extends AbstractActionController
         }
 
         $project = $this->project->fetchById($project_id);
-        if (! $project || $project['delete_flag'] === 'Y') {
+        if (! $project || ($project['deleted_at'])) {
             $this->flashMessenger()->addErrorMessage("This project is deleted.");
             return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
         }
@@ -144,7 +144,7 @@ class ProjectController extends AbstractActionController
         $specifierAddress = null;
 
         if ($specifier) {
-            $specifierAddress = $this->address->fetchSpecifierAddress($specifier['specifier_id']);
+            $specifierAddress = $this->address->fetchSpecifierAddress($specifier['id']);
         }
         $architectType = $this->architect->fetchArchitectType();
         $addressList = $this->address->fetchAddressesByArchitect($project['architect_id']);
@@ -157,7 +157,6 @@ class ProjectController extends AbstractActionController
         $owner = false;
 
         if (
-            $user['id'] == $project['shared_id'] ||
             $user['id'] == $project['owner_id'] ||
             $user['p2q_system_role'] == 'admin' ||
             $user['approve_id'] !== null

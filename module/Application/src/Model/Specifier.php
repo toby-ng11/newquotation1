@@ -49,10 +49,9 @@ class Specifier
             'last_name'         => trim($data['specifier_last_name']),
             'job_title'         => trim($data['specifier_job_title']),
             'architect_id'      => $architect_id,
-            'delete_flag'       => 'N',
             'created_at'        => new Expression('GETDATE()'),
-            'added_by'          => $user['id'],
-            'updated_at'         => new Expression('GETDATE()'),
+            'created_by'        => $user['id'],
+            'updated_by'        => $user['id'],
         ];
 
         try {
@@ -78,11 +77,14 @@ class Specifier
             return false;
         }
 
+        $user = $this->getUserSerive()->getCurrentUser();
+
         $info = [
             'first_name'        => trim($data['specifier_first_name']),
             'last_name'         => trim($data['specifier_last_name']),
             'job_title'         => trim($data['specifier_job_title']),
             'updated_at'         => new Expression('GETDATE()'),
+            'updated_by'        => $user['id'],
         ];
 
         if (empty($data['specifier_address_id'])) {
@@ -109,7 +111,9 @@ class Specifier
         $specfier = $this->fetchSpecifierById($id);
 
         try {
-            $this->specifier->update(['delete_flag' => 'Y', 'deleted_at' => new Expression('GETDATE()'),], ['specifier_id' => $id]);
+            $this->specifier->update([
+                'deleted_at' => new Expression('GETDATE()'),
+            ], ['id' => $id]);
             $this->getAddress()->delete($specfier['address_id']);
             return $id;
         } catch (Exception $e) {
@@ -142,7 +146,7 @@ class Specifier
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('p2q_view_specifier_x_address')
-            ->where(['specifier_id' => $id]);
+            ->where(['id' => $id]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();

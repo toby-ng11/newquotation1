@@ -57,10 +57,10 @@ class ItemController extends AbstractActionController
                 return new JsonModel([
                     'success' => true,
                     'item' => [
-                        'item_id' => $item['item_id'],
+                        'item_code' => $item['item_code'],
                         'quantity' => $item['quantity'],
                         'unit_price' => $item['unit_price'],
-                        'uom' => $item['uom'],
+                        'unit_of_measure' => $item['unit_of_measure'],
                         'note' => $item['note'],
                     ],
                 ]);
@@ -81,7 +81,7 @@ class ItemController extends AbstractActionController
             $sheetType = $this->params()->fromPost('sheet_type', null);
             $data = $this->params()->fromPost();
 
-            if (! $id || empty($data['item_id'])) {
+            if (! $id || empty($data['item_code'])) {
                 return new JsonModel([
                     'success' => false,
                     'message' => 'Missing required fields.'

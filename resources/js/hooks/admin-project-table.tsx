@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 export interface Project {
-    project_id: string;
+    id: string;
     project_id_ext: string;
     project_name: string;
     owner_id: string;
@@ -13,6 +13,7 @@ export interface Project {
     architect_name: string;
     market_segment_desc: string;
     status_desc: string;
+    legacy_id: string;
 }
 
 export function useProjects(view = true) {

@@ -3,6 +3,7 @@
 namespace Application\Model;
 
 use Application\Helper\InputValidator;
+use Application\Service\UserService;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\{Sql, Expression, Select};
@@ -14,17 +15,20 @@ class Project
     protected $adapter;
     protected $project;
     protected $p2q_view_projects;
+    protected $p2q_view_projects_share;
     protected $container;
 
     public function __construct(
         Adapter $adapter,
         TableGateway $project,
         TableGateway $p2q_view_projects,
+        TableGateway $p2q_view_projects_share,
         ContainerInterface $container
     ) {
         $this->adapter = $adapter;
         $this->project = $project;
         $this->p2q_view_projects = $p2q_view_projects;
+        $this->p2q_view_projects_share = $p2q_view_projects_share;
         $this->container = $container;
     }
 
@@ -48,6 +52,11 @@ class Project
         return $this->container->get(Quote::class);
     }
 
+    public function getUserService()
+    {
+        return $this->container->get(UserService::class);
+    }
+
     public function save($data)
     {
         if (! InputValidator::isValidData($data)) {
@@ -55,14 +64,12 @@ class Project
         }
 
         $info = [
-            'delete_flag'           => 'N',
             'project_name'          => trim($data['project_name']),
             'project_address'       => trim($data['project_address']),
             'centura_location_id'   => $data['location_id'],
             'market_segment_id'     => $data['market_segment_id'],
-            'owner_id'              => $data['owner_id'],
-            'last_maintained_by'    => $data['owner_id'],
-            'shared_id'             => ! empty(trim($data['shared_id'])) ? trim($data['shared_id']) : null,
+            'created_by'              => $data['owner_id'],
+            'updated_by'            => $data['owner_id'],
             'reed'                  => ! empty(trim($data['reed'])) ? trim($data['reed']) : null,
             'status_id'             => $data['status'],
             'general_contractor_id' => ! empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
@@ -74,12 +81,12 @@ class Project
         ];
 
         $architect = $this->getArchitect()->getByName($data['architect_name']);
-        $architectAddress = $this->getAddress()->fetchAddressesByArchitect($architect['architect_id'] ?? null);
+        $architectAddress = $this->getAddress()->fetchAddressesByArchitect($architect['id'] ?? null);
 
 
         if (empty($data['architect_id']) && ! empty($data['architect_name'])) {
             $info['architect_id'] =
-                $architect['architect_id'] ? $this->getArchitect()->edit($data, $architect['architect_id']) :
+                $architect['id'] ? $this->getArchitect()->edit($data, $architect['id']) :
                 $this->getArchitect()->add($data);
         } elseif (! empty($data['architect_id'])) {
             $info['architect_id'] = $this->getArchitect()->edit($data, $data['architect_id']);
@@ -107,10 +114,10 @@ class Project
 
             if (! empty($existingAddress)) {
                 // Update global matched address
-                $info['architect_address_id'] = $this->getAddress()->edit($data, $existingAddress['address_id']);
+                $info['architect_address_id'] = $this->getAddress()->edit($data, $existingAddress['id']);
             } elseif (! empty($architectAddress)) {
                 // Update the existing address tied to the architect
-                $info['architect_address_id'] = $this->getAddress()->edit($data, $architectAddress['address_id']);
+                $info['architect_address_id'] = $this->getAddress()->edit($data, $architectAddress['id']);
             } else {
                 // No address yet, create a new one
                 $info['architect_address_id'] = $this->getAddress()->add($data, $info['architect_id']);
@@ -139,7 +146,7 @@ class Project
                     'project_id_ext' => DEFAULT_COMPANY . '_' . $newProjectId,
                 ];
 
-                $this->project->update($updateData, ['project_id' => $newProjectId]);
+                $this->project->update($updateData, ['id' => $newProjectId]);
             }
             return $newProjectId;
         } catch (Exception $e) {
@@ -154,6 +161,8 @@ class Project
             return false;
         }
 
+        $user = $this->getUserService()->getCurrentUser();
+
         $info = [
             //'delete_flag'           => 'N',
             'project_name'          => ! empty(trim($data['project_name'])) ? trim($data['project_name']) : null,
@@ -161,8 +170,7 @@ class Project
             'centura_location_id'   => $data['location_id'],
             'market_segment_id'     => $data['market_segment_id'],
             //'owner_id'              => $data['owner_id'],
-            'last_maintained_by'    => $data['user_session_id'],
-            'shared_id'             => ! empty(trim($data['shared_id'])) ? trim($data['shared_id']) : null,
+            'updated_by'               => $user['id'],
             'reed'                  => ! empty(trim($data['reed'])) ? trim($data['reed']) : null,
             'status_id'             => $data['status'],
             'general_contractor_id' => ! empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
@@ -173,7 +181,7 @@ class Project
         ];
 
         try {
-            $this->project->update($info, ['project_id' => $project_id]);
+            $this->project->update($info, ['id' => $project_id]);
             return true;
         } catch (Exception $e) {
             error_log("Project/edit:Database Update Error: " . $e->getMessage());
@@ -229,7 +237,7 @@ class Project
         }
 
         try {
-            $this->project->update($info, ['project_id' => $project_id]);
+            $this->project->update($info, ['id' => $project_id]);
             return true;
         } catch (Exception $e) {
             error_log("Project/edit:Database Update Error: " . $e->getMessage());
@@ -251,10 +259,9 @@ class Project
         try {
             $this->project->update(
                 [
-                    'delete_flag' => 'Y',
                     'deleted_at' => new Expression('GETDATE()')
                 ],
-                ['project_id' => $project_id]
+                ['id' => $project_id]
             );
             return true;
         } catch (Exception $e) {
@@ -301,7 +308,7 @@ class Project
         if (! InputValidator::isValidId($id)) {
             return false;
         }
-        return $this->p2q_view_projects->select(['project_id' => $id])->current();
+        return $this->p2q_view_projects->select(['id' => $id])->current();
     }
 
     public function fetchOwnProjects($user_id)
@@ -314,7 +321,7 @@ class Project
 
         $select = $sql->select('p2q_view_projects')
             ->where(['owner_id' => $user_id])
-            ->order('project_id DESC');
+            ->order('id DESC');
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
@@ -344,7 +351,7 @@ class Project
             return false;
         }
 
-        return $this->p2q_view_projects->select(['shared_id' => $user_id])->toArray();
+        return $this->p2q_view_projects_share->select(['shared_user' => $user_id])->toArray();
     }
 
     public function countAssignedProjects($user_id)
@@ -355,9 +362,9 @@ class Project
 
         $sql = new Sql($this->adapter);
         $select = $sql->select();
-        $select->from('p2q_view_projects')
+        $select->from('p2q_view_projects_share')
             ->columns(['total' => new Expression('COUNT(*)')])
-            ->where(['shared_id' => $user_id]);
+            ->where(['shared_user' => $user_id]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
@@ -376,7 +383,7 @@ class Project
             ->where(['company_id' => $company_id]);
 
         $select->where->notEqualTo('owner_id', $user_id);
-        $select->order('project_id DESC');
+        $select->order('id DESC');
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
@@ -406,7 +413,7 @@ class Project
     {
         $sql = new Sql($this->adapter);
 
-        $select = $sql->select('status')
+        $select = $sql->select('statuses')
             ->where([
                 'project_flag' => 'Y'
             ])
@@ -421,7 +428,7 @@ class Project
     {
         $sql = new Sql($this->adapter);
 
-        $select = $sql->select('market_segment')
+        $select = $sql->select('market_segments')
             ->order('market_segment_desc ASC');
 
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -440,7 +447,7 @@ class Project
             ->where([
                 'project_id' => $project_id
             ])
-            ->order('quote_id DESC');
+            ->order('id DESC');
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
@@ -474,7 +481,7 @@ class Project
         $select = $sql->select();
         $select->from('p2q_view_projects')
             ->columns(['total' => new Expression('COUNT(*)')])
-            ->where(['status_id' => 11]);
+            ->where(['status_id' => 10]);
 
         if (! $admin) {
             $select->where(['architect_rep_id' => $user_id]);
@@ -495,7 +502,7 @@ class Project
         $select = $sql->select();
         $select->from('p2q_view_projects')
             ->columns(['total' => new Expression('COUNT(*)')])
-            ->where(["status_id not in (11, 13, 14)"]);
+            ->where(["status_id not in (10, 12, 13)"]);
 
         if (! $admin) {
             $select->where(['architect_rep_id' => $user_id]);

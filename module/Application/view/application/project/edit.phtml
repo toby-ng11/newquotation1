@@ -15,7 +15,7 @@ $addressList = $this->addressList;
 $specifierList = $this->specifierList;
 $generalContractor = $this->generalContractor;
 $awardedContractor = $this->awardedContractor;
-$projectID = $project['project_id'];
+$projectID = $project['id'];
 $this->headTitle('Edit Project: ' . $projectID . ' - ' . $project['project_name']);
 echo $this->headTitle();
 $projectCreateDate = $project['created_at'];
@@ -89,8 +89,8 @@ $projectRequiredDate = $project['require_date'];
                                     <option value="">-- Select Status --</option>
                                     <?php foreach ($status as $s) { ?>
                                         <option
-                                            value="<?= $this->escapeHtml($s['status_id']) ?>"
-                                            <?php if ($s['status_id'] == $project['status_id']) {
+                                            value="<?= $this->escapeHtml($s['id']) ?>"
+                                            <?php if ($s['id'] == $project['status_id']) {
                                                 echo 'selected';
                                             } ?>>
                                             <?= $this->escapeHtml($s['status_desc']) ?>
@@ -104,11 +104,10 @@ $projectRequiredDate = $project['require_date'];
                                 <select name="market_segment_id" id='market_segment_id' class="validate[required]">
                                     <option value="">-- Choose Segment --</option>
                                     <?php foreach ($marketSegment as $s) { ?>
-                                        <option value="<?= $this->escapeHtml($s['market_segment_id']) ?>" <?php if (
-                                                                                                                $s['market_segment_id'] == $project['market_segment_id']
-                                                                                                            ) {
-                                                                                                                echo 'selected';
-                                                                                                            } ?>>
+                                        <option
+                                        value="<?= $this->escapeHtml($s['id']) ?>"
+                                        <?php if ( $s['id'] == $project['market_segment_id']) {
+                                            echo 'selected';} ?>>
                                             <?= $this->escapeHtml($s['market_segment_desc']) ?>
                                         </option>
                                     <?php } ?>
@@ -141,10 +140,10 @@ $projectRequiredDate = $project['require_date'];
                             <?php if ($user['approve_id'] != null) { ?>
                                 <div class="grid gap-2 form-worksheet-owner">
                                     <label for="shared_id">Share Worksheet</label>
-                                    <input id="shared_id" name="shared_id" type="text" value="<?= $this->escapeHtml($project['shared_id']) ?>" />
+                                    <input id="shared_id" name="shared_id" type="text" value="" />
                                 </div>
                             <?php } else { ?>
-                                <input type="hidden" id="shared_id" name="shared_id" value="<?= $this->escapeHtml($project['shared_id']) ?>" />
+                                <input type="hidden" id="shared_id" name="shared_id" value=" "/>
                             <?php } ?>
 
                             <div class="grid gap-2">
@@ -235,12 +234,23 @@ $projectRequiredDate = $project['require_date'];
                                         <h4>Architect</h4>
                                     </div>
                                     <div class="widget-button">
-                                        <button type="button" title="Add new architect"
-                                            class="button action has-icon add-item-button small" id="add-architect-project-edit">
-                                            <span class="button-wrap text-[10px] font-bold">
-                                                <span class="icon icon-add"></span>
-                                                New Architect
-                                            </span>
+                                        <?php if ($architect): ?>
+                                            <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                                                target="_blank"
+                                                href="/architect/<?= $this->escapeHtml($architect['architect_id'] ?? '') ?>/edit"
+                                                data-tooltip="Edit this architect details">
+                                                <i data-lucide="external-link"></i>
+                                                EDIT ARCHITECT
+                                            </a>
+                                        <?php endif; ?>
+                                        <button
+                                            type="button"
+                                            title="Add new architect"
+                                            class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                                            id="add-architect-project-edit"
+                                            data-tooltip="This will clear the existing project's architect">
+                                            <i data-lucide="plus"></i>
+                                            NEW ARCHITECT
                                         </button>
                                     </div>
                                 </div>
@@ -284,8 +294,8 @@ $projectRequiredDate = $project['require_date'];
                                             <option value="">-- Choose architect type --</option>
                                             <?php foreach ($this->architectType as $a) { ?>
                                                 <option
-                                                    value="<?= $this->escapeHtml($a['architect_type_id']) ?>"
-                                                    <?= $this->escapeHtml($a['architect_type_id'] === ($architect['architect_type_id'] ?? '') ? 'selected' : '') ?>>
+                                                    value="<?= $this->escapeHtml($a['id']) ?>"
+                                                    <?= $this->escapeHtml($a['id'] === ($architect['architect_type_id'] ?? '') ? 'selected' : '') ?>>
                                                     <?= $this->escapeHtml($a['architect_type_desc']) ?>
                                                 </option>
                                             <?php } ?>
@@ -450,8 +460,8 @@ $projectRequiredDate = $project['require_date'];
                                             <?php if (!empty($specifierList)):
                                                 foreach ($specifierList as $spec): ?>
                                                     <option
-                                                        value="<?= $this->escapeHtml($spec['specifier_id']) ?>"
-                                                        <?= $spec['specifier_id'] === $project['specifier_id'] ? 'selected' : '' ?>>
+                                                        value="<?= $this->escapeHtml($spec['id']) ?>"
+                                                        <?= $spec['id'] === $project['specifier_id'] ? 'selected' : '' ?>>
                                                         <?= $spec['first_name'] . ' ' . $spec['last_name'] ?>
                                                     </option>
                                             <?php endforeach;
@@ -540,12 +550,13 @@ $projectRequiredDate = $project['require_date'];
                     </div>
                     <div class="widget-button">
                         <?php if ($owner) { ?>
-                            <button type="button" title="Add new item" class="button action has-icon add-item-button small"
-                                id="widget-btn-add-item">
-                                <span class="button-wrap text-[10px] font-bold">
-                                    <span class="icon icon-add"></span>
-                                    Add Item
-                                </span>
+                            <button type="button"
+                                title="Add new item"
+                                class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                                id="widget-btn-add-item"
+                                data-tooltip="Add a new item for this project">
+                                <i data-lucide="plus"></i>
+                                ADD ITEM
                             </button>
                         <?php } ?>
                     </div>
@@ -581,12 +592,14 @@ $projectRequiredDate = $project['require_date'];
                     </div>
                     <div class="widget-button">
                         <?php if ($owner) { ?>
-                            <button type="button" title="Add new log" class="button action has-icon add-log-button small"
-                                id="widget-btn-add-note">
-                                <span class="button-wrap text-[10px] font-bold">
-                                    <span class="icon icon-add"></span>
-                                    Add log
-                                </span>
+                            <button
+                                type="button"
+                                title="Add new log"
+                                class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                                id="widget-btn-add-note"
+                                data-tooltip="Add a new note for this project">
+                                <i data-lucide="plus"></i>
+                                ADD NOTE
                             </button>
                         <?php } ?>
                     </div>
@@ -619,12 +632,14 @@ $projectRequiredDate = $project['require_date'];
                     </div>
                     <div class="widget-button">
                         <?php if ($owner and $admin) { ?>
-                            <button type="button" title="Add new quote"
-                                class="button action has-icon add-quote-button small" id="widget-btn-add-quote">
-                                <span class="button-wrap text-[10px] font-bold">
-                                    <span class="icon icon-add"></span>
-                                    Make Quote
-                                </span>
+                            <button
+                                type="button"
+                                title="Add new quote"
+                                class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                                id="widget-btn-add-quote"
+                                data-tooltip="Make a new quote for this project">
+                                <i data-lucide="plus"></i>
+                                MAKE QUOTE
                             </button>
                         <?php } ?>
                     </div>

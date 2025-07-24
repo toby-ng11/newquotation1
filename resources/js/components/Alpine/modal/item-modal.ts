@@ -3,7 +3,7 @@ import { sheetID, sheetType } from '@/components/init';
 import { itemTable } from '@/components/ui/table/tables';
 import { resetForm } from '@/components/utils';
 
-const uomDropdown = document.getElementById('uom') as HTMLSelectElement;
+const uomDropdown = document.getElementById('unit_of_measure') as HTMLSelectElement;
 
 async function initItem() {
     const { setupAutoComplete } = await import('@/components/autocomplete');
@@ -57,12 +57,12 @@ async function initItem() {
     });
 
     // Autocomplete for Item ID
-    if (document.querySelector('#dialog-item-form #item_id')) {
+    if (document.querySelector('#dialog-item-form #item_code')) {
         setupAutoComplete({
-            fieldName: '#dialog-item-form #item_id',
+            fieldName: '#dialog-item-form #item_code',
             fetchUrl: '/item/index',
             fillFields: [
-                { fieldSelector: '#item_id', itemKey: 'item_id' },
+                { fieldSelector: '#item_code', itemKey: 'item_id' },
                 { fieldSelector: '#item_input', itemKey: 'item_desc' },
             ],
             minLength: 2,
@@ -104,7 +104,7 @@ function itemModal() {
             formData.append('sheet_id', sheetID);
             formData.append('sheet_type', sheetType);
 
-            const itemUID = form.item_uid.value;
+            const itemUID = form.item_id.value;
             this.isEditing = !!itemUID;
 
             try {
@@ -140,13 +140,13 @@ function itemModal() {
                 if (data && data.item) {
                     this.isEditing = true;
 
-                    form.item_uid.value = itemUID;
-                    form.item_id.value = data.item.item_id;
-                    form.uom.value = data.item.uom;
+                    form.item_id.value = itemUID;
+                    form.item_code.value = data.item.item_code;
+                    form.unit_of_measure.value = data.item.unit_of_measure;
                     form.quantity.value = data.item.quantity;
                     form.note.value = data.item.note || '';
 
-                    await this.getUOM(data.item.item_id, data.item.uom, data.item.unit_price, itemUID);
+                    await this.getUOM(data.item.item_code, data.item.unit_of_measure, data.item.unit_price, itemUID);
 
                     this.open = true;
                     this.isEditing = true;

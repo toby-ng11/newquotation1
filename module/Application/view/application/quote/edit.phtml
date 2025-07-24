@@ -5,7 +5,7 @@ $project = $this->project;
 $projectDueDate = $project['due_date'];
 
 $quote = $this->quote;
-$quoteID = $quote['quote_id'];
+$quoteID = $quote['id'];
 $quoteStatusID = $quote['quote_status_id'];
 $quoteShipRequiredDate = $quote['ship_required_date'];
 $quoteExpireDate = $quote['expire_date'];
@@ -62,7 +62,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
         <h1 class="font-mono text-5xl font-semibold tracking-wide uppercase">Quote</h1>
 
         <div class="flex items-center justify-between ">
-            <p class="text-muted-foreground font-medium tracking-tight">Quote #<?= $this->escapeHtml($quoteID) ?> of Project #<?= $this->escapeHtml($project['project_id']) ?></p>
+            <p class="text-muted-foreground font-medium tracking-tight">Quote #<?= $this->escapeHtml($quoteID) ?> of Project #<?= $this->escapeHtml($project['id']) ?></p>
 
             <div class="hidden lg:flex lg:items-center lg:gap-12">
                 <button class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
@@ -75,7 +75,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
 
                 <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
                     target="_blank"
-                    href="/project/<?= $project['project_id'] ?>/edit"
+                    href="/project/<?= $project['id'] ?>/edit"
                     data-tooltip="Go to this quote's project">
                     <i data-lucide="external-link"></i>
                     GO TO PROJECT
@@ -125,7 +125,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                         <div role="menuitem">
                             <a class="flex items-center gap-2"
                                 target="_blank"
-                                href="/project/<?= $project['project_id'] ?>/edit"
+                                href="/project/<?= $project['id'] ?>/edit"
                                 title="Go to project for this quote">
                                 <i data-lucide="external-link" class="text-muted-foreground h-4 w-4"></i>
                                 Go to Project
@@ -194,7 +194,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                     </div>
                 </div>
 
-                <?php if ($quoteStatusID != 0 and strcmp($quote['delete_flag'], 'N') == 0) {
+                <?php if ($quoteStatusID != 0 and ($quote['deleted_at'] === null)) {
                     switch ($quoteStatusID) {
                         case $approved: ?>
                             <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg quote-status status-approved">
@@ -267,7 +267,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                                 type="hidden"
                                 id='project_id'
                                 name='project_id'
-                                value="<?= $this->escapeHtml($project['project_id']) ?>" />
+                                value="<?= $this->escapeHtml($project['id']) ?>" />
 
                             <input
                                 type="hidden"
@@ -285,8 +285,8 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                                     <option value="">Select Quote type</option>
                                     <?php foreach ($this->type as $t): ?>
                                         <option
-                                            value="<?= $this->escapeHtml($t['type_id']) ?>"
-                                            <?= $t['type_id'] == $quote['type_id'] ? 'selected' : '' ?>>
+                                            value="<?= $this->escapeHtml($t['id']) ?>"
+                                            <?= $t['id'] == $quote['quote_type_id'] ? 'selected' : '' ?>>
                                             <?= $this->escapeHtml($t['type_desc']) ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -607,8 +607,8 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                                         <option value="">Select Lead Time</option>
                                         <?php foreach ($this->leadtime as $a) { ?>
                                             <option
-                                                value="<?= $this->escapeHtml($a['lead_time_id']) ?>"
-                                                <?php if ($quote['lead_time_id'] == $a['lead_time_id']) {
+                                                value="<?= $this->escapeHtml($a['id']) ?>"
+                                                <?php if ($quote['lead_time_id'] == $a['id']) {
                                                     echo 'selected';
                                                 } ?>>
                                                 <?= $this->escapeHtml($a['lead_time_desc']) ?>
@@ -735,11 +735,14 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                         <h2>Items</h2>
                     </div>
                     <div class="widget-button">
-                        <button type="button" title="Add new item" class="button action has-icon add-item-button small" id="widget-btn-add-item">
-                            <span class="button-wrap text-[10px] font-bold">
-                                <span class="icon icon-add"></span>
-                                Add Item
-                            </span>
+                        <button
+                            type="button"
+                            title="Add new item"
+                            class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                            id="widget-btn-add-item"
+                            data-tooltip="Add a new item for this quote">
+                            <i data-lucide="plus"></i>
+                            ADD ITEM
                         </button>
                     </div>
                 </div>

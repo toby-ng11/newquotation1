@@ -64,7 +64,7 @@ class Architect
             'architect_type_id' => $data['architect_type_id'],
             'class_id'          => trim($data['architect_class_id']),
             'created_at'        => new Expression('GETDATE()'),
-            'updated_at'        => new Expression('GETDATE()'),
+            'created_by' => $user['id'],
         ];
 
         if (empty(trim($data['architect_rep_id']))) {
@@ -101,6 +101,7 @@ class Architect
             'architect_type_id' => $data['architect_type_id'],
             'class_id'          => trim($data['architect_class_id']),
             'updated_at'            => new Expression('GETDATE()'),
+            'updated_by' => $user['id'],
         ];
 
         if (empty(trim($data['architect_rep_id']))) {
@@ -129,17 +130,17 @@ class Architect
         $specifiers = $this->getSpecifier()->fetchSpecifiersByArchitect($id);
 
         foreach ($addresses as $a) {
-            $this->getAddress()->delete($a['address_id']);
+            $this->getAddress()->delete($a['id']);
         }
 
         foreach ($specifiers as $s) {
-            $this->getSpecifier()->delete($s['specifier_id']);
+            $this->getSpecifier()->delete($s['id']);
         }
 
         try {
             $this->architect->update([
                 'deleted_at' => new Expression('GETDATE()')
-            ], ['architect_id' => $id]);
+            ], ['id' => $id]);
             return $id;
         } catch (Exception $e) {
             error_log("Architect\delete: Database Update Error: " . $e->getMessage());
@@ -154,7 +155,7 @@ class Architect
         }
 
         $sql = new Sql($this->adapter);
-        $select = $sql->select('architect')
+        $select = $sql->select('architects')
             ->where(['deleted_at IS NULL', 'architect_name' => trim($name)]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -170,8 +171,8 @@ class Architect
 
         $sql = new Sql($this->adapter);
 
-        $select = $sql->select('architect')
-            ->where(['deleted_at IS NULL', 'architect_id' => $id]);
+        $select = $sql->select('architects')
+            ->where(['deleted_at IS NULL', 'id' => $id]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
@@ -183,7 +184,6 @@ class Architect
         $sql = new Sql($this->adapter);
 
         $select = $sql->select('architect_types')
-            ->where(['delete_flag' => 'N'])
             ->order('architect_type_desc ASC');
 
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -198,7 +198,7 @@ class Architect
         }
 
         $sql = new Sql($this->adapter);
-        $select = $sql->select('architect')  // can use TableGateway instead
+        $select = $sql->select('architects')  // can use TableGateway instead
             ->where(['company_id' => $company])
             ->where(['deleted_at IS NULL']);
 
@@ -206,7 +206,7 @@ class Architect
             $select->where(['architect_rep_id' => $user_id]);
         }
 
-        $select->where->nest()->like('architect_id', $pattern . '%')
+        $select->where->nest()->like('id', $pattern . '%')
             ->or
             ->like('architect_name', $pattern . '%')->unnest();
 
