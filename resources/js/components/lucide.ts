@@ -1,4 +1,4 @@
-import { createIcons, Ellipsis, ExternalLink, FilePlus2, Plus, Printer, Trash2 } from 'lucide';
+import { createIcons, Ellipsis, ExternalLink, FilePlus2, Info, Plus, Printer, Search, Trash2 } from 'lucide';
 
 function initLucide() {
     createIcons({
@@ -8,7 +8,9 @@ function initLucide() {
             FilePlus2,
             Ellipsis,
             Trash2,
-            Plus
+            Plus,
+            Info,
+            Search,
         },
     });
 }

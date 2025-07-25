@@ -2,12 +2,11 @@
 
 namespace Application\Controller;
 
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Exception;
 use Application\Model\Item;
 
-class ItemController extends AbstractActionController
+class ItemController extends BaseController
 {
     protected $item;
 
@@ -21,10 +20,10 @@ class ItemController extends AbstractActionController
         $request = $this->getRequest();
 
         if ($request->isPost()) { // save item
-            return $this->forward()->dispatch(ItemController::class, [
-                'action' => 'add',
-            ]);
-        } else {
+            return $this->addAction();
+        }
+
+        if ($request->isXmlHttpRequest()) {
             // search for item in P21
             $pattern = $this->params()->fromQuery('term', null);
             $limit = $this->params()->fromQuery('limit', 10);
@@ -41,7 +40,7 @@ class ItemController extends AbstractActionController
 
                 if (! $sheetType) {
                     return new JsonModel([
-                    'message' => 'Sheet type is required',
+                        'message' => 'Sheet type is required',
                     ]);
                 }
 
@@ -70,13 +69,14 @@ class ItemController extends AbstractActionController
                 'message' => 'No item ID or pattern provided',
             ]);
         }
+        return $this->abort404();
     }
 
     public function addAction()
     {
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
+        if ($request->isXmlHttpRequest()) {
             $id = $this->params()->fromPost('sheet_id', null);
             $sheetType = $this->params()->fromPost('sheet_type', null);
             $data = $this->params()->fromPost();
@@ -105,10 +105,7 @@ class ItemController extends AbstractActionController
             }
         }
 
-        return new JsonModel([
-            'success' => false,
-            'message' => 'Invalid request method.'
-        ]);
+        return $this->abort404();
     }
 
     public function editAction()
@@ -144,109 +141,131 @@ class ItemController extends AbstractActionController
             }
         }
 
-        return new JsonModel([
-            'success' => false,
-            'message' => 'Invalid request method.'
-        ]);
+        return $this->abort404();
     }
 
     public function fetchAction() // fetch for edit
     {
-        $item_uid = $this->params()->fromQuery('uid', null);
-        $sheetType = $this->params()->fromQuery('type', null);
+        $request = $this->getRequest();
 
-        if (! $item_uid) {
+        if ($request->isXmlHttpRequest()) {
+            $item_uid = $this->params()->fromQuery('uid', null);
+            $sheetType = $this->params()->fromQuery('type', null);
+
+            if (! $item_uid) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Missing item UID.'
+                ]);
+            }
+
+            $item = $this->item->fetchItemByUID($item_uid, $sheetType);
+
+            if (! $item) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Item not found.'
+                ]);
+            }
+
             return new JsonModel([
-                'success' => false,
-                'message' => 'Missing item UID.'
+                'success' => true,
+                'data' => $item
             ]);
         }
-
-        $item = $this->item->fetchItemByUID($item_uid, $sheetType);
-
-        if (! $item) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Item not found.'
-            ]);
-        }
-
-        return new JsonModel([
-            'success' => true,
-            'data' => $item
-        ]);
+        return $this->abort404();
     }
 
     public function deleteAction()
     {
-        $item_uid = $this->params()->fromRoute('id', null);
-        $sheetType = $this->params()->fromQuery('type', null);
+        $request = $this->getRequest();
 
-        if (! $item_uid) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Missing item UID.'
-            ]);
+        if ($request->isXmlHttpRequest()) {
+            $item_uid = $this->params()->fromRoute('id', null);
+            $sheetType = $this->params()->fromQuery('type', null);
+
+            if (! $item_uid) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Missing item UID.'
+                ]);
+            }
+
+            try {
+                $result = $this->item->delete($item_uid, $sheetType);
+
+                return new JsonModel([
+                    'success' => true,
+                    'message' => 'Item deleted!',
+                    'item_id' => $result
+                ]);
+            } catch (Exception $e) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Failed to delete item.',
+                    'error' => $e->getMessage()
+                ]);
+            }
         }
-
-        try {
-            $result = $this->item->delete($item_uid, $sheetType);
-
-            return new JsonModel([
-                'success' => true,
-                'message' => 'Item deleted!',
-                'item_id' => $result
-            ]);
-        } catch (Exception $e) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Failed to delete item.',
-                'error' => $e->getMessage()
-            ]);
-        }
+        return $this->abort404();
     }
 
     // Fetch UOM from P21
     public function uomAction()
     {
-        $item_id = $this->params()->fromRoute('id', null);
+        $request = $this->getRequest();
 
-        if (empty($item_id)) {
-            return new JsonModel(['error' => 'Pattern is required']);
+        if ($request->isXmlHttpRequest()) {
+            $item_id = $this->params()->fromRoute('id', null);
+
+            if (empty($item_id)) {
+                return new JsonModel(['error' => 'Pattern is required']);
+            }
+
+            $uom = $this->item->fetchUomByItemId($item_id);
+
+            return new JsonModel($uom);
         }
-
-        $uom = $this->item->fetchUomByItemId($item_id);
-
-        return new JsonModel($uom);
+        return $this->abort404();
     }
 
     // Fetch Price from P21
     public function priceAction()
     {
-        $item_id = $this->params()->fromRoute('id', null);
-        $uom = $this->params()->fromQuery('uom', null);
+        $request = $this->getRequest();
 
-        if (empty($item_id) || empty($uom)) {
-            return new JsonModel(['error' => 'Pattern is required']);
+        if ($request->isXmlHttpRequest()) {
+            $item_id = $this->params()->fromRoute('id', null);
+            $uom = $this->params()->fromQuery('uom', null);
+
+            if (empty($item_id) || empty($uom)) {
+                return new JsonModel(['error' => 'Pattern is required']);
+            }
+
+            $price = $this->item->fetchItemPrice($item_id, $uom, true);
+
+            return new JsonModel($price);
         }
-
-        $price = $this->item->fetchItemPrice($item_id, $uom, true);
-
-        return new JsonModel($price);
+        return $this->abort404();
     }
 
     // Fetch saved price from Quotation
     public function quotedpriceAction()
     {
-        $item_uid = $this->params()->fromRoute('id', null);
-        $sheetType = $this->params()->fromQuery('type', null);
+        $request = $this->getRequest();
 
-        if (empty($item_uid) || empty($sheetType)) {
-            return new JsonModel(['error' => 'Pattern is required']);
+        if ($request->isXmlHttpRequest()) {
+            $item_uid = $this->params()->fromRoute('id', null);
+            $sheetType = $this->params()->fromQuery('type', null);
+
+            if (empty($item_uid) || empty($sheetType)) {
+                return new JsonModel(['error' => 'Pattern is required']);
+            }
+
+            $price = $this->item->fetchItemPrice($item_uid, null, false, $sheetType);
+
+            return new JsonModel($price);
         }
-
-        $price = $this->item->fetchItemPrice($item_uid, null, false, $sheetType);
-
-        return new JsonModel($price);
+        return $this->abort404();
     }
 }

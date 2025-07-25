@@ -284,7 +284,7 @@ class Architect
             ->where(['architect_id' => $id]);
 
         if ($selectedIDs) {
-            $select->where(['project_id' => $selectedIDs]);
+            $select->where(['id' => $selectedIDs]);
         }
 
         $statement = $sql->prepareStatementForSqlObject($select);

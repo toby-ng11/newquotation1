@@ -2,8 +2,10 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
+//import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
+    base: '/build/',
     plugins: [
         react(),
         tailwindcss(),
@@ -35,7 +37,6 @@ export default defineConfig({
                     chart: ['chart.js'],
                     datatable: ['datatables.net-dt', 'datatables.net-fixedcolumns-dt', 'datatables.net-responsive-dt'],
                     flatpickr: ['flatpickr'],
-                    vendor: ['react', 'react-dom'],
                 },
             },
         },

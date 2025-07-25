@@ -35,12 +35,6 @@ class UserService
             'p2q_system_role' => $userData['p2q_system_role'],
         ];
 
-        if (in_array($session->user['p2q_system_role'], ['manager', 'admin'], true)) {
-            $session->user['approve_id'] = $session->user['role_uid'];
-        } else {
-            $session->user['approve_id'] = null;
-        }
-
         return $session->user;
     }
 

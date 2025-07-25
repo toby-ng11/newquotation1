@@ -69,7 +69,12 @@ export function setupAutoComplete({
 
             const url = `${fetchUrl}?${queryParamName}=${encodeURIComponent(query)}&${limitParamName}=10`;
 
-            fetch(url)
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
                 .then((response) => response.json())
                 .then((data) => {
                     autocompleteList.classList.add('visible');

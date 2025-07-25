@@ -55,7 +55,16 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
             <h2>Maybe this page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h2>
         </header>
     </div>
-<?php } else { ?>
+    <?php } else {
+
+    if (!$project): ?>
+        <div class="border-destructive/40 bg-destructive/10 shadow-destructive/10 mx-6 mt-6 max-w-md rounded-md border p-4 shadow-md">
+            <div class="text-destructive flex flex-row items-center gap-2 text-sm font-medium">
+                <i class="w-4 h-4" data-lucide="info"></i>
+                This quote's project has been deleted.
+            </div>
+        </div>
+    <?php endif; ?>
 
     <!-- Title area -->
     <div class="h-full flex flex-1 flex-col gap-4 p-8">
@@ -166,8 +175,8 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                         <p class="text-sm"><?= $this->escapeHtml($project['project_address']) ?>
                             </br>
                             by <b><?= $this->escapeHtml($project['owner_id']) ?></b>
-                            <?php if ($project['shared_id'] != null) { ?>
-                                shared with <b><?= $this->escapeHtml($project['shared_id']) ?></b>
+                            <?php if ($project['shared_users'] != null) { ?>
+                                shared with <b><?= $this->escapeHtml($project['shared_users']) ?></b>
                         </p>
                     <?php } ?>
                     </div>
@@ -331,7 +340,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                                     id='architect_rep_id'
                                     name='architect_rep_id'
                                     type="text"
-                                    value='<?= $this->escapeHtml($project['architect_rep_name']) ?>' />
+                                    value='<?= $this->escapeHtml($project['architect_rep_id']) ?? 'No architect was assigned.' ?>' />
                             </div>
                         </div>
                     </div>

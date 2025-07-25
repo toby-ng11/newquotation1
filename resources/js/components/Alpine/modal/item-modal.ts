@@ -167,7 +167,9 @@ function itemModal() {
         async getUOM(item_id: string, old_uom: string, old_price: string, item_uid: string) {
             if (!item_id) return;
             try {
-                const response = await fetch(`/item/${item_id}/uom`);
+                const response = await fetch(`/item/${item_id}/uom`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data: { uom: string }[] = await response.json();
 
@@ -200,7 +202,9 @@ function itemModal() {
             if (!item_id || !uom) return;
 
             try {
-                const response = await fetch(`/item/${item_id}/price?uom=${uom}`);
+                const response = await fetch(`/item/${item_id}/price?uom=${uom}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
                 const data = await response.json();
 
                 const input = document.getElementById('unit_price') as HTMLInputElement;
@@ -214,7 +218,9 @@ function itemModal() {
             if (!item_uid) return;
 
             try {
-                const response = await fetch(`/item/${item_uid}/quotedprice?type=${sheetType}`);
+                const response = await fetch(`/item/${item_uid}/quotedprice?type=${sheetType}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
                 const data = await response.json();
 
                 const input = document.getElementById('unit_price') as HTMLInputElement;

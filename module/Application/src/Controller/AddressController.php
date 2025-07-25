@@ -4,10 +4,10 @@ namespace Application\Controller;
 
 use Application\Model\Address;
 use Exception;
-use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
-class AddressController extends AbstractActionController
+class AddressController extends BaseController
 {
     protected $address;
 
@@ -24,74 +24,82 @@ class AddressController extends AbstractActionController
             return $this->createAction();
         }
 
-        $addressID = $this->params()->fromRoute('id');
+        if ($request->isXmlHttpRequest()) {
+            $addressID = $this->params()->fromRoute('id');
 
-        if ($addressID) {
-            $address = $this->address->fetchAddressesById($addressID);
+            if ($addressID) {
+                $address = $this->address->fetchAddressesById($addressID);
 
-            if (! $address) {
+                if (! $address) {
+                    return new JsonModel([
+                        'success' => false,
+                        'message' => 'Address not found.'
+                    ]);
+                }
+
                 return new JsonModel([
-                    'success' => false,
-                    'message' => 'Address not found.'
+                    'success' => true,
+                    'address' => [
+                        'address_name' => $address['name'],
+                        'phys_address1' => $address['phys_address1'],
+                        'phys_address2' => $address['phys_address2'],
+                        'phys_city' => $address['phys_city'],
+                        'phys_state' => $address['phys_state'],
+                        'phys_postal_code' => $address['phys_postal_code'],
+                        'phys_country' => $address['phys_country'],
+                        'central_phone_number' => $address['central_phone_number'],
+                        'email_address' => $address['email_address'],
+                        'url' => $address['url'],
+                    ],
                 ]);
             }
-
-            return new JsonModel([
-                'success' => true,
-                'address' => [
-                    'address_name' => $address['name'],
-                    'phys_address1' => $address['phys_address1'],
-                    'phys_address2' => $address['phys_address2'],
-                    'phys_city' => $address['phys_city'],
-                    'phys_state' => $address['phys_state'],
-                    'phys_postal_code' => $address['phys_postal_code'],
-                    'phys_country' => $address['phys_country'],
-                    'central_phone_number' => $address['central_phone_number'],
-                    'email_address' => $address['email_address'],
-                    'url' => $address['url'],
-                ],
-            ]);
         }
 
-        return $this->notFoundAction();
+        return $this->abort404();
     }
 
     public function createAction()
     {
-        $architect_id = $this->params()->fromPost('architect_id', null);
-        $data = $this->params()->fromPost();
+        $request = $this->getRequest();
 
-        $missingFields = [];
+        if ($request->isXmlHttpRequest()) {
+            $architect_id = $this->params()->fromPost('architect_id', null);
+            $data = $this->params()->fromPost();
 
-        if (! $architect_id) {
-            $missingFields[] = 'Architect ID';
+            $missingFields = [];
+
+            if (! $architect_id) {
+                $missingFields[] = 'Architect ID';
+            }
+            if (empty($data['phys_address1'])) {
+                $missingFields[] = 'Address 1';
+            }
+
+            if (! $architect_id || empty($data['phys_address1'])) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Missing required fields: ' . implode(', ', $missingFields)
+                ]);
+            }
+
+            try {
+                $result = $this->address->add($data, $architect_id);
+
+                return new JsonModel([
+                    'success' => true,
+                    'message' => 'Address added!',
+                    'note_id' => $result
+                ]);
+            } catch (Exception $e) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Failed to add address.',
+                    'error' => $e->getMessage()
+                ]);
+            }
         }
-        if (empty($data['phys_address1'])) {
-            $missingFields[] = 'Address 1';
-        }
 
-        if (! $architect_id || empty($data['phys_address1'])) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Missing required fields: ' . implode(', ', $missingFields)
-            ]);
-        }
-
-        try {
-            $result = $this->address->add($data, $architect_id);
-
-            return new JsonModel([
-                'success' => true,
-                'message' => 'Address added!',
-                'note_id' => $result
-            ]);
-        } catch (Exception $e) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Failed to add address.',
-                'error' => $e->getMessage()
-            ]);
-        }
+        return $this->abort404();
     }
 
     public function editAction()
@@ -126,7 +134,7 @@ class AddressController extends AbstractActionController
             }
         }
 
-        return $this->notFoundAction();
+        return $this->abort404();
     }
 
     public function deleteAction()
@@ -165,6 +173,6 @@ class AddressController extends AbstractActionController
             }
         }
 
-        return $this->notFoundAction();
+        return $this->abort404();
     }
 }

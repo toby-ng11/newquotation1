@@ -42,7 +42,7 @@ $company = DEFAULT_COMPANY;
             </div>
         </div>
 
-        <?php if ($user['approve_id'] != null) { ?>
+        <?php if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') { ?>
             <div class="fade-in-up" aria-labelledby="other_projects" id="project-dashboard-other-project-section" data-nav="Other Projects">
                 <div class="widget-table bg-widget-background rounded-xl p-6">
                     <table width="100%" class="sTable display nowrap" id='dashboard-home-other-table' data-init="homeOtherProject">

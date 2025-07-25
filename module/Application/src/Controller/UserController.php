@@ -3,11 +3,10 @@
 namespace Application\Controller;
 
 use Laminas\Db\Adapter\AdapterInterface;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Application\Model\User;
 
-class UserController extends AbstractActionController
+class UserController extends BaseController
 {
     private $dbAdapter;
     protected $user;

@@ -4,13 +4,11 @@ namespace Application\Controller;
 
 use Application\Model\ProjectShare;
 use Application\Service\UserService;
-use Error;
 use Exception;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Psr\Container\ContainerInterface;
 
-class ProjectShareController extends AbstractActionController
+class ProjectShareController extends BaseController
 {
     protected $project_share;
     protected $container;
@@ -54,62 +52,65 @@ class ProjectShareController extends AbstractActionController
                 ],
             ]);
         }
-        return $this->notFoundAction();
+        return $this->abort404();
     }
 
     public function createAction()
     {
-        $project_id = $this->params()->fromPost('project_id', null);
-        $data = $this->params()->fromPost();
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $project_id = $this->params()->fromPost('project_id', null);
+            $data = $this->params()->fromPost();
 
-        $missingFields = [];
+            $missingFields = [];
 
-        if (! $project_id) {
-            $missingFields[] = 'Project ID';
+            if (! $project_id) {
+                $missingFields[] = 'Project ID';
+            }
+            if (empty($data['shared_user'])) {
+                $missingFields[] = 'Shared user';
+            }
+
+            if (! $project_id || empty($data['shared_user'])) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Missing required fields: ' . implode(', ', $missingFields)
+                ]);
+            }
+
+            $user = $this->getUserService()->getCurrentUser();
+
+            if ($user['id'] === $data['shared_user']) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => "You can't share a project with yourself!",
+                ]);
+            }
+
+            $isShareExists = $this->project_share->isShareExists($project_id, $data['shared_user']);
+
+            if ($isShareExists) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'This user is already shared!',
+                ]);
+            }
+
+            try {
+                $result = $this->project_share->add($data, $project_id);
+
+                return new JsonModel([
+                    'success' => true,
+                    'message' => 'Share successfully!',
+                ]);
+            } catch (Exception $e) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Failed to share project',
+                    'error' => $e->getMessage()
+                ]);
+            }
         }
-        if (empty($data['shared_user'])) {
-            $missingFields[] = 'Shared user';
-        }
-
-        if (! $project_id || empty($data['shared_user'])) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Missing required fields: ' . implode(', ', $missingFields)
-            ]);
-        }
-
-        $user = $this->getUserService()->getCurrentUser();
-
-        if ($user['id'] === $data['shared_user']) {
-            return new JsonModel([
-                'success' => false,
-                'message' => "You can't share a project with yourself!",
-            ]);
-        }
-
-        $isShareExists = $this->project_share->isShareExists($project_id, $data['shared_user']);
-
-        if ($isShareExists) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'This user is already shared!',
-            ]);
-        }
-
-        try {
-            $result = $this->project_share->add($data, $project_id);
-
-            return new JsonModel([
-                'success' => true,
-                'message' => 'Share successfully!',
-            ]);
-        } catch (Exception $e) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Failed to share project',
-                'error' => $e->getMessage()
-            ]);
-        }
+        return $this->abort404();
     }
 
     public function editAction()
@@ -183,6 +184,6 @@ class ProjectShareController extends AbstractActionController
             }
         }
 
-        return $this->notFoundAction();
+        return $this->abort404();
     }
 }

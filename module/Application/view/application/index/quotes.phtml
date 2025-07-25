@@ -1,0 +1,14 @@
+<div class="h-full flex flex-1 flex-col gap-4 p-8">
+    <header>
+        <?= $this->partial('components/greeting'); ?>
+
+        <div class="flex items-center justify-between ">
+            <p class="text-muted-foreground">Welcome to the quote dashboard. Here you can search through the quote list below or the item belong to a quote.</p>
+
+            <?= $this->partial('components/quotes-dashboard-toolbar'); ?>
+        </div>
+    </header>
+
+      <div class="flex flex-col gap-4 md:gap-6">
+        <div id="quotes-dash-quote-table" class="fade-in-up"></div>
+</div>

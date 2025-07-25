@@ -2,8 +2,6 @@
 
 namespace Application\Controller;
 
-use Laminas\Mvc\Controller\AbstractActionController;
-use Laminas\Mvc\Plugin\FlashMessenger;
 use Laminas\View\Model\{ViewModel, JsonModel};
 use Application\Model\{Architect, Specifier, Address, Location, Project};
 use Application\Service\UserService;
@@ -12,7 +10,7 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-class ArchitectController extends AbstractActionController
+class ArchitectController extends BaseController
 {
     protected $userService;
     protected $architect;
@@ -39,51 +37,42 @@ class ArchitectController extends AbstractActionController
 
     public function indexAction()
     {
-        $pattern = $this->params()->fromQuery('search', '');
-        $user = $this->userService->getCurrentUser();
-        $admin = false;
-        if ($user['p2q_system_role'] === 'admin' || $user['approve_id'] !== null) {
-            $admin = true;
+        $request = $this->getRequest();
+
+        if ($request->isXmlHttpRequest()) {
+            $pattern = $this->params()->fromQuery('search', '');
+            $user = $this->userService->getCurrentUser();
+            $admin = false;
+            if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') {
+                $admin = true;
+            }
+
+            if (empty($pattern)) {
+                return new JsonModel(['error' => 'Pattern is required']);
+            }
+
+            $architect = $this->architect->fetchArchitectByPattern($admin, $pattern, $user['id']);
+
+            return new JsonModel($architect);
         }
 
-        if (empty($pattern)) {
-            return new JsonModel(['error' => 'Pattern is required']);
-        }
-
-        $architect = $this->architect->fetchArchitectByPattern($admin, $pattern, $user['id']);
-
-        return new JsonModel($architect);
+        return $this->abort404();
     }
 
     public function editAction()
     {
-        $architect_id = (int) $this->params()->fromRoute('id');
-
-        if (! $architect_id) {
-            return $this->redirect()->toRoute('dashboard', ['action' => 'architect']);
-        }
-
-        $architect = $this->architect->fetchArchitectById($architect_id);
-
-        if (! $architect) {
-            $this->flashMessenger()->addErrorMessage("This architect is not found.");
-            return $this->redirect()->toRoute('dashboard', ['action' => 'architect']);
-        }
-
-        $user = $this->userService->getCurrentUser();
-        $location = $this->location->fetchAllBranches();
-        $projectStatus = $this->project->fetchProjectStatus();
-        $marketSegment = $this->project->fetchProjectSegment();
-
-        $architectType = $this->architect->fetchArchitectType();
-        $addressList = $this->address->fetchAddressesByArchitect($architect_id);
-        $specifierList = $this->specifier->fetchSpecifiersByArchitect($architect_id);
-        $company = $this->location->fetchAllCompanies();
-
         $request = $this->getRequest(); // for submit edit form
 
         if ($request->isPost()) {
+            $architect_id = (int) $this->params()->fromRoute('id');
             $data = $this->params()->fromPost();
+
+            if (! $architect_id) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Missing required fields: Architect ID'
+                ]);
+            }
 
             $result = $this->architect->edit($data, $architect_id);
 
@@ -99,6 +88,28 @@ class ArchitectController extends AbstractActionController
                 ]);
             }
         }
+
+        $architect_id = (int) $this->params()->fromRoute('id');
+        if (! $architect_id) {
+            return $this->redirect()->toRoute('dashboard', ['action' => 'architect']);
+        }
+
+        $architect = $this->architect->fetchArchitectById($architect_id);
+
+        if (! $architect) {
+            $this->flashMessenger()->addErrorMessage("This architect doesn't exist.");
+            return $this->redirect()->toRoute('dashboard', ['action' => 'architect']);
+        }
+
+        $user = $this->userService->getCurrentUser();
+        $location = $this->location->fetchAllBranches();
+        $projectStatus = $this->project->fetchProjectStatus();
+        $marketSegment = $this->project->fetchProjectSegment();
+
+        $architectType = $this->architect->fetchArchitectType();
+        $addressList = $this->address->fetchAddressesByArchitect($architect_id);
+        $specifierList = $this->specifier->fetchSpecifiersByArchitect($architect_id);
+        $company = $this->location->fetchAllCompanies();
 
         return new ViewModel([
             'id' => $architect_id,
@@ -116,34 +127,38 @@ class ArchitectController extends AbstractActionController
 
     public function deleteAction()
     {
-        $architect_id = (int) $this->params()->fromRoute('id');
         $request = $this->getRequest();
+        if ($request->isXmlHttpRequest()) {
 
-        if (! $architect_id || ! $request->isXmlHttpRequest()) {
-            return new JsonModel(['success' => false, 'message' => 'Invalid architect ID']);
-        }
+            $architect_id = (int) $this->params()->fromRoute('id');
 
-        try {
-            $result = $this->architect->delete($architect_id);
+            if (! $architect_id) {
+                return new JsonModel(['success' => false, 'message' => 'Missing architect ID']);
+            }
 
-            if ($result) {
-                $this->flashMessenger()->addSuccessMessage("Architect deleted!");
-                return new JsonModel([
-                    'success' => true,
-                ]);
-            } else {
+            try {
+                $result = $this->architect->delete($architect_id);
+
+                if ($result) {
+                    $this->flashMessenger()->addSuccessMessage("Architect deleted!");
+                    return new JsonModel([
+                        'success' => true,
+                    ]);
+                } else {
+                    return new JsonModel([
+                        'success' => false,
+                        'message' => 'Failed to delete architect.',
+                    ]);
+                }
+            } catch (Exception $e) {
                 return new JsonModel([
                     'success' => false,
                     'message' => 'Failed to delete architect.',
+                    'error' => $e->getMessage()
                 ]);
             }
-        } catch (Exception $e) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Failed to delete architect.',
-                'error' => $e->getMessage()
-            ]);
         }
+        return $this->abort404();
     }
 
     public function specifierstableAction()
@@ -155,72 +170,92 @@ class ArchitectController extends AbstractActionController
             $view = new JsonModel($specifiers);
             return $view;
         }
-        return $this->getResponse()->setStatusCode(404);
+        return $this->abort404();
     }
 
     public function fetchfullAction()
     {
-        $id = $this->params()->fromRoute('id', null);
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            $id = $this->params()->fromRoute('id', null);
 
-        if (empty($id)) {
-            return new JsonModel(['error' => 'ID is required']);
+            if (empty($id)) {
+                return new JsonModel(['error' => 'ID is required']);
+            }
+
+            $architect = $this->architect->fetchArchitectById($id);
+
+            return new JsonModel($architect);
         }
-
-        $architect = $this->architect->fetchArchitectById($id);
-
-        return new JsonModel($architect);
+        return $this->abort404();
     }
 
     public function addressAction()
     {
-        $id = $this->params()->fromRoute('id', null);
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            $id = $this->params()->fromRoute('id', null);
 
-        if (empty($id)) {
-            return new JsonModel(['error' => 'ID is required']);
+            if (empty($id)) {
+                return new JsonModel(['error' => 'ID is required']);
+            }
+
+            $address = $this->address->fetchAddressesByArchitect($id);
+
+            return new JsonModel($address);
         }
-
-        $address = $this->address->fetchAddressesByArchitect($id);
-
-        return new JsonModel($address);
+        return $this->abort404();
     }
 
     public function addressinfoAction()
     {
-        $id = $this->params()->fromRoute('id', null);
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            $id = $this->params()->fromRoute('id', null);
 
-        if (empty($id)) {
-            return new JsonModel(['error' => 'ID is required']);
+            if (empty($id)) {
+                return new JsonModel(['error' => 'ID is required']);
+            }
+
+            $address = $this->address->fetchAddressesById($id);
+
+            return new JsonModel($address);
         }
-
-        $address = $this->address->fetchAddressesById($id);
-
-        return new JsonModel($address);
+        return $this->abort404();
     }
 
     public function specifiersAction()
     {
-        $id = $this->params()->fromRoute('id', null);
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            $id = $this->params()->fromRoute('id', null);
 
-        if (empty($id)) {
-            return new JsonModel(['error' => 'ID is required']);
+            if (empty($id)) {
+                return new JsonModel(['error' => 'ID is required']);
+            }
+
+            $architect = $this->specifier->fetchSpecifiersByArchitect($id);
+
+            return new JsonModel($architect);
         }
-
-        $architect = $this->specifier->fetchSpecifiersByArchitect($id);
-
-        return new JsonModel($architect);
+        return $this->abort404();
     }
 
     public function specinfoAction()
     {
-        $id = $this->params()->fromRoute('id', null);
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            $id = $this->params()->fromRoute('id', null);
 
-        if (empty($id)) {
-            return new JsonModel(['error' => 'ID is required']);
+            if (empty($id)) {
+                return new JsonModel(['error' => 'ID is required']);
+            }
+
+            $architect = $this->specifier->fetchSpecifierById($id);
+
+            return new JsonModel($architect);
         }
-
-        $architect = $this->specifier->fetchSpecifierById($id);
-
-        return new JsonModel($architect);
+        return $this->abort404();
     }
 
     public function projectsAction()
@@ -267,7 +302,7 @@ class ArchitectController extends AbstractActionController
             // Rows
             $row = 2;
             foreach ($projects as $project) {
-                $sheet->setCellValue("A{$row}", $project['project_id']);
+                $sheet->setCellValue("A{$row}", $project['id']);
                 $sheet->setCellValue("B{$row}", $project['project_name']);
                 $sheet->setCellValue("C{$row}", $project['status_desc']);
                 $sheet->setCellValue("D{$row}", $project['project_address']);
@@ -312,6 +347,10 @@ class ArchitectController extends AbstractActionController
             return $response;
         }
 
-        return new JsonModel($projects);
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            return new JsonModel($projects);
+        }
+
+        return $this->abort404();
     }
 }

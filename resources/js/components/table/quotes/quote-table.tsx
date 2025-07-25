@@ -1,4 +1,3 @@
-
 import { DataTableColumnHeader } from '@/components/table-header';
 import { DataTablePagination } from '@/components/table-pagination';
 import { DataTableLoadingSpinner } from '@/components/table-spinner';
@@ -6,7 +5,7 @@ import { DataTableToolbar } from '@/components/table-toolbar';
 import { DataTableProjectOptions } from '@/components/table/project-options';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useProjects } from '@/hooks/project-own-projects-table';
+import { useQuotesQuote } from '@/hooks/quotes-dash-quote-table';
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -25,32 +24,27 @@ import {
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
-interface Project {
+export interface Quote {
     id: string;
-    project_id_ext: string;
+    project_id: string;
     project_name: string;
-    owner_id: string;
-    shared_users: string;
-    reed: string;
-    created_at: {
-        date: string;
-    };
-    due_date: {
-        date: string;
-    };
-    architect_name: string;
-    market_segment_desc: string;
-    status_desc: string;
+    customer_name: string;
+    contact_full_name: string;
+    quote_status: string;
+    created_by: string;
+    created_at: { date: string };
+    expire_date: { date: string };
+    ship_required_date: { date: string };
 }
 
-const multiValueFilter: FilterFn<Project> = (row, columnId, filterValue) => {
+const multiValueFilter: FilterFn<Quote> = (row, columnId, filterValue) => {
     if (!Array.isArray(filterValue)) return true;
     const rowValue = row.getValue(columnId);
     return filterValue.includes(rowValue);
 };
 
-export default function OwnProjectTable() {
-    const { data: projects = [], isLoading, refetch } = useProjects(true);
+export default function QuotesQuoteTable() {
+    const { data: projects = [], isLoading, refetch } = useQuotesQuote(true);
     const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: true }]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -59,7 +53,7 @@ export default function OwnProjectTable() {
 
     // Restore saved visibility
     useEffect(() => {
-        axios.get('/lapi/preferences/projectOwnTableColumnVisibility').then((res) => {
+        axios.get('/lapi/preferences/quotesQuoteTableColumnVisibility').then((res) => {
             setColumnVisibility(res.data || {});
             lastSavedVisibility.current = res.data;
             setIsReady(true);
@@ -73,14 +67,14 @@ export default function OwnProjectTable() {
         const previous = JSON.stringify(lastSavedVisibility.current);
 
         if (current !== previous) {
-            axios.post('/lapi/preferences/projectOwnTableColumnVisibility', {
+            axios.post('/lapi/preferences/quotesQuoteTableColumnVisibility', {
                 value: columnVisibility,
             });
             lastSavedVisibility.current = columnVisibility;
         }
     }, [columnVisibility, isReady]);
 
-    const columns: ColumnDef<Project>[] = [
+    const columns: ColumnDef<Quote>[] = [
         {
             id: 'select',
             header: ({ table }) => (
@@ -103,18 +97,21 @@ export default function OwnProjectTable() {
         {
             accessorKey: 'id',
             header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
-            cell: ({ row }) => (
-                <a href={'/project/' + row.getValue('id') + '/edit'} className="text-blue-500 dark:text-blue-300">
-                    {row.getValue('id')}
-                </a>
-            ),
+            cell: ({ row }) => {
+                const id = row.getValue<number>('id');
+                return (
+                    <a href={`/quote/${id}/edit`} className="text-blue-500 dark:text-blue-300">
+                        {id}
+                    </a>
+                );
+            },
             enableHiding: false,
             meta: 'ID',
         },
         {
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Ext. ID" />,
-            accessorKey: 'project_id_ext',
-            meta: 'Ext. ID',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Project ID" />,
+            accessorKey: 'project_id',
+            meta: 'Project ID',
         },
         {
             accessorKey: 'project_name',
@@ -123,28 +120,27 @@ export default function OwnProjectTable() {
             meta: 'Name',
         },
         {
-            accessorKey: 'owner_id',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Owner" />,
+            accessorKey: 'customer_name',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Customer" />,
+            cell: ({ row }) => <div className="max-w-[300px] min-w-[300px] truncate">{row.getValue('customer_name')}</div>,
             filterFn: 'arrIncludesSome',
-            meta: 'Owner',
+            meta: 'Customer',
         },
         {
-            accessorKey: 'shared_users',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Shared" />,
+            accessorKey: 'contact_full_name',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Contact" />,
             filterFn: 'arrIncludesSome',
-            meta: 'Shared',
+            meta: 'Contact',
         },
         {
-            accessorKey: 'quote_count',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="No. of Quotes" />,
-            filterFn: 'arrIncludesSome',
-            meta: 'No. of Quotes',
+            accessorKey: 'quote_status',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Quote Status" />,
+            meta: 'Quote Status',
         },
         {
-            accessorKey: 'reed',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="REED" />,
-            filterFn: 'arrIncludesSome',
-            meta: 'REED',
+            accessorKey: 'created_by',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Created By" />,
+            meta: 'Created By',
         },
         {
             id: 'created_at',
@@ -155,31 +151,20 @@ export default function OwnProjectTable() {
             meta: 'Created At',
         },
         {
-            id: 'due_date',
-            accessorFn: (row) => row.due_date?.date,
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Due Date" />,
-            cell: ({ row }) => new Date(row.getValue('due_date')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
+            id: 'expire_date',
+            accessorFn: (row) => row.expire_date?.date,
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Expire Date" />,
+            cell: ({ row }) => new Date(row.getValue('expire_date')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
             sortingFn: 'datetime',
-            meta: 'Due Date',
+            meta: 'Expire Date',
         },
         {
-            accessorKey: 'architect_name',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Architect" />,
-            cell: ({ row }) => <div className="max-w-[300px] truncate font-medium">{row.getValue('architect_name')}</div>,
-            filterFn: 'arrIncludesSome',
-            meta: 'Architect',
-        },
-        {
-            accessorKey: 'market_segment_desc',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Market Segment" />,
-            filterFn: 'arrIncludesSome',
-            meta: 'Market Segment',
-        },
-        {
-            accessorKey: 'status_desc',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-            filterFn: 'arrIncludesSome',
-            meta: 'Status',
+            id: 'ship_required_date',
+            accessorFn: (row) => row.ship_required_date?.date,
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Tender Closing Date" />,
+            cell: ({ row }) => new Date(row.getValue('ship_required_date')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
+            sortingFn: 'datetime',
+            meta: 'Tender Closing Date',
         },
         {
             accessorKey: 'options',
@@ -227,23 +212,19 @@ export default function OwnProjectTable() {
         <div>
             <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
                 <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl font-semibold tracking-tight">All Projects</h2>
-                    <p className="text-muted-foreground">Here's the list your projects.</p>
+                    <h2 className="text-2xl font-semibold tracking-tight">All Quotes</h2>
+                    <p className="text-muted-foreground">Here's the list of all customers and their quotes.</p>
                 </div>
                 <div className="flex flex-col gap-4">
                     <DataTableToolbar
                         table={table}
                         searchColumn="project_name"
-                        searchPlaceholder="Filter project names..."
+                        searchPlaceholder="Filter quote names..."
                         showAddButton
                         onAddClick={() => console.log('Add clicked')}
                         facetedFilters={[
-                            { columnId: 'owner_id', title: 'Owner' },
-                            { columnId: 'shared_id', title: 'Shared' },
-                            { columnId: 'reed', title: 'REED' },
-                            { columnId: 'architect_name', title: 'Architect' },
-                            { columnId: 'market_segment_desc', title: 'Market Segment' },
-                            { columnId: 'status_desc', title: 'Status' },
+                            { columnId: 'customer_name', title: 'Customer' },
+                            { columnId: 'contact_full_name', title: 'Contact' },
                         ]}
                     />
 
@@ -279,7 +260,7 @@ export default function OwnProjectTable() {
                                     ) : (
                                         <TableRow>
                                             <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                No projects found.
+                                                No quotes found.
                                             </TableCell>
                                         </TableRow>
                                     )}

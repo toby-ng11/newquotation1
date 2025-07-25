@@ -227,8 +227,14 @@ class Quote
         return $this->quote->select()->toArray();
     }
 
-    public function fetchAllViews()
+    public function fetchAllViews($location)
     {
+        if ($location) {
+            return $this->p2q_view_quote_x_project_x_oe
+                ->select(['centura_location_id' => $location])
+                ->toArray();
+        }
+
         return $this->p2q_view_quote_x_project_x_oe->select()->toArray();
     }
 
@@ -306,8 +312,8 @@ class Quote
         $select = $sql->select('quote_types')
             ->order('type_desc ASC');
 
-            $statement = $sql->prepareStatementForSqlObject($select);
-            $result = $statement->execute();
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 
@@ -318,8 +324,8 @@ class Quote
         $select = $sql->select('lead_times')
             ->order('lead_time_desc asc');
 
-            $statement = $sql->prepareStatementForSqlObject($select);
-            $result = $statement->execute();
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
         return $result;
     }
 }

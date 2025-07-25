@@ -42,7 +42,7 @@ return [
                 'options' => [
                     'route'    => '/index[/:action][/:table]',
                     'constraints' => [
-                        'action' => 'project|approval|admin|architect',
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'table' => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ],
                     'defaults' => [
@@ -210,7 +210,8 @@ return [
                     $container->get(Model\Project::class),
                     $container->get(Model\Quote::class),
                     $container->get(Model\Note::class),
-                    $container->get(Model\Architect::class)
+                    $container->get(Model\Architect::class),
+                    $container
                 );
             },
             Controller\SidebarController::class => function ($container) {

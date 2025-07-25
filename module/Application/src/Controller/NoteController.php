@@ -2,12 +2,11 @@
 
 namespace Application\Controller;
 
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 use Exception;
 use Application\Model\Note;
 
-class NoteController extends AbstractActionController
+class NoteController extends BaseController
 {
     protected $note;
 
@@ -21,14 +20,10 @@ class NoteController extends AbstractActionController
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-            return $this->forward()->dispatch(NoteController::class, [
-                'action' => 'add',
-            ]);
+            return $this->addAction();
         }
 
-        return $this->forward()->dispatch(NoteController::class, [
-            'action' => 'fetch', // you can implement an view note page
-        ]);
+        return $this->fetchAction();
     }
 
     public function addAction()
@@ -71,6 +66,7 @@ class NoteController extends AbstractActionController
                 ]);
             }
         }
+        return $this->abort404();
     }
 
     public function editAction()
@@ -111,67 +107,76 @@ class NoteController extends AbstractActionController
                 ]);
             }
         } else {
-            try {
-                $note = $this->note->fetchNote($id);
+            if ($request->isXmlHttpRequest()) {
+                try {
+                    $note = $this->note->fetchNote($id);
 
-                if (! $note) {
+                    if (! $note) {
+                        return new JsonModel([
+                            'success' => false,
+                            'message' => 'Note not found.'
+                        ]);
+                    }
+
+                    return new JsonModel([
+                        'success' => true,
+                        'note' => [
+                            'note_title' => $note['title'],
+                            'project_note' => $note['content'],
+                            'next_action' => $note['next_action'],
+                            'follow_up_date' => $note['notify_at'],
+                        ],
+                    ]);
+                } catch (\Exception $e) {
                     return new JsonModel([
                         'success' => false,
-                        'message' => 'Note not found.'
+                        'message' => 'Error loading note.',
+                        'error' => $e->getMessage()
                     ]);
                 }
-
-                return new JsonModel([
-                    'success' => true,
-                    'note' => [
-                        'note_title' => $note['title'],
-                        'project_note' => $note['content'],
-                        'next_action' => $note['next_action'],
-                        'follow_up_date' => $note['notify_at'],
-                    ],
-                ]);
-            } catch (\Exception $e) {
-                return new JsonModel([
-                    'success' => false,
-                    'message' => 'Error loading note.',
-                    'error' => $e->getMessage()
-                ]);
             }
+
+            return $this->abort404();
         }
     }
 
     public function deleteAction()
     {
-        $note_id = $this->params()->fromRoute('id', null);
         $request = $this->getRequest();
+        if ($request->isXmlHttpRequest()) {
 
-        if (! $note_id || ! $request->isXmlHttpRequest()) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Invalid request.',
-            ]);
-        }
+            $note_id = $this->params()->fromRoute('id', null);
 
-        try {
-            $result = $this->note->delete($note_id);
-
-            if ($result) {
+            if (! $note_id) {
                 return new JsonModel([
-                    'success' => true,
-                    'message' => 'Note deleted successfully.',
+                    'success' => false,
+                    'message' => 'Missing note ID',
                 ]);
-            } else {
+            }
+
+            try {
+                $result = $this->note->delete($note_id);
+
+                if ($result) {
+                    return new JsonModel([
+                        'success' => true,
+                        'message' => 'Note deleted successfully.',
+                    ]);
+                } else {
+                    return new JsonModel([
+                        'success' => false,
+                        'message' => 'Failed to delete note.',
+                    ]);
+                }
+            } catch (Exception $e) {
                 return new JsonModel([
                     'success' => false,
                     'message' => 'Failed to delete note.',
+                    'error' => $e->getMessage()
                 ]);
             }
-        } catch (Exception $e) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Failed to delete note.',
-                'error' => $e->getMessage()
-            ]);
         }
+
+        return $this->abort404();
     }
 }

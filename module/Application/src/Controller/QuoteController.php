@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Application\Controller;
 
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Http\Response\Stream;
 use Laminas\View\Model\{ViewModel, JsonModel};
 use Psr\Container\ContainerInterface;
 use Application\Model\Quote;
 
-class QuoteController extends AbstractActionController
+class QuoteController extends BaseController
 {
     protected $container;
 
@@ -79,31 +78,51 @@ class QuoteController extends AbstractActionController
     public function createAction()
     {
         $request = $this->getRequest();
-        if (! $request->isPost()) {
-            return $this->getResponse()->setStatusCode(405); // Method Not Allowed
+        if ($request->isXmlHttpRequest()) {
+
+            $data = $this->params()->fromPost();
+
+            $quote_id = $this->getQuoteModel()->create($data);
+
+            if ($quote_id) {
+                $this->flashMessenger()->addSuccessMessage("Quote created successfully!");
+                return new JsonModel([
+                    'success' => true,
+                    'quote_id' => $quote_id,
+                ]);
+            } else {
+                $this->flashMessenger()->addErrorMessage("Create quote failed. Please try again.");
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Failed to create quote.'
+                ]);
+            }
         }
-
-        $data = $this->params()->fromPost();
-
-        $quote_id = $this->getQuoteModel()->create($data);
-
-        if ($quote_id) {
-            $this->flashMessenger()->addSuccessMessage("Quote created successfully!");
-            return new JsonModel([
-                'success' => true,
-                'quote_id' => $quote_id,
-            ]);
-        } else {
-            $this->flashMessenger()->addErrorMessage("Create quote failed. Please try again.");
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Failed to create quote.'
-            ]);
-        }
+        return $this->abort404();
     }
 
     public function editAction()
     {
+        $request = $this->getRequest(); // for submit edit form
+
+        if ($request->isPost()) {
+            $quote_id = $this->params()->fromRoute('id');
+            $data = $this->params()->fromPost();
+
+            $result = $this->getQuoteModel()->edit($data, $quote_id);
+
+            if ($result) {
+                //$this->flashMessenger()->addSuccessMessage("Project saved successfully.");
+                return $this->redirect()->toRoute('quote', [
+                    'action' => 'edit',
+                    'id' => $quote_id
+                ]);
+            } else {
+                //$this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
+                return false;
+            }
+        }
+
         $quote_id = $this->params()->fromRoute('id');
 
         $quote = $this->getQuoteModel()->fetchById($quote_id);
@@ -129,27 +148,8 @@ class QuoteController extends AbstractActionController
         $this->layout()->setVariable('waitingApprove', Quote::WAITING_APPROVAL);
         $this->layout()->setVariable('disapproved', Quote::DISAPPROVED);
 
-        if ($user['p2q_system_role'] === 'admin' || $user['approve_id'] !== null) {
+        if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') {
             $admin = true;
-        }
-
-        $request = $this->getRequest(); // for submit edit form
-
-        if ($request->isPost()) {
-            $data = $this->params()->fromPost();
-
-            $result = $this->getQuoteModel()->edit($data, $quote_id);
-
-            if ($result) {
-                //$this->flashMessenger()->addSuccessMessage("Project saved successfully.");
-                return $this->redirect()->toRoute('quote', [
-                    'action' => 'edit',
-                    'id' => $quote_id
-                ]);
-            } else {
-                //$this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
-                return false;
-            }
         }
 
         return new ViewModel([
@@ -172,6 +172,7 @@ class QuoteController extends AbstractActionController
 
     public function deleteAction()
     {
+
         $quote_id = (int) $this->params()->fromRoute('id');
 
         if (! $quote_id) {

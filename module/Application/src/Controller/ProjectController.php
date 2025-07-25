@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Application\Controller;
 
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Http\Response\Stream;
 use Laminas\View\Model\{ViewModel, JsonModel};
 use Application\Service\UserService;
 use Application\Model\{Address, Project, Quote, Location, Item, Note, Architect, Specifier, Customer, ProjectShare};
 use Application\Service\PdfExportService;
 
-class ProjectController extends AbstractActionController
+class ProjectController extends BaseController
 {
     protected $userService;
     protected $pdfExportService;
@@ -56,14 +55,10 @@ class ProjectController extends AbstractActionController
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-            return $this->forward()->dispatch(ProjectController::class, [
-                'action' => 'create',
-            ]);
+            return $this->createAction();
         }
 
-        return $this->forward()->dispatch(ProjectController::class, [
-            'action' => 'new',
-        ]);
+        return $this->newAction();
     }
 
     public function createAction()
@@ -102,6 +97,8 @@ class ProjectController extends AbstractActionController
                 }
             }
         }
+
+        return $this->abort404();
     }
 
     public function newAction()
@@ -125,59 +122,10 @@ class ProjectController extends AbstractActionController
 
     public function editAction()
     {
-        $project_id = (int) $this->params()->fromRoute('id');
-
-        if (! $project_id) {
-            return $this->redirect()->toRoute('project');
-        }
-
-        $project = $this->project->fetchById($project_id);
-        if (! $project || ($project['deleted_at'])) {
-            $this->flashMessenger()->addErrorMessage("This project is deleted.");
-            return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
-        }
-        $user = $this->userService->getCurrentUser();
-        $location = $this->location->fetchAllBranches();
-        $company = $this->location->fetchAllCompanies();
-        $status = $this->project->fetchProjectStatus();
-        $marketSegment = $this->project->fetchProjectSegment();
-        $architect = $this->architect->fetchArchitectById($project['architect_id']);
-        $address = $this->address->fetchAddressesById($project['architect_address_id']);
-        $specifier = $this->specifier->fetchSpecifierById($project['specifier_id']);
-        $specifierAddress = null;
-
-        if ($specifier) {
-            $specifierAddress = $this->address->fetchSpecifierAddress($specifier['id']);
-        }
-        $architectType = $this->architect->fetchArchitectType();
-        $addressList = $this->address->fetchAddressesByArchitect($project['architect_id']);
-        $specifierList = $this->specifier->fetchSpecifiersByArchitect($project['architect_id']);
-        $generalContractor = $this->customer->fetchCustomerById($project['general_contractor_id']);
-        $awardedContractor = $this->customer->fetchCustomerById($project['awarded_contractor_id']);
-
-        $this->layout()->setVariable('id', $project_id); //for sidebar
-
-        $owner = false;
-
-        $isShareExists = $this->projectShare->isShareExists($project_id, $user['id']);
-
-        if (
-            $isShareExists ||
-            $user['id'] === $project['owner_id'] ||
-            $user['p2q_system_role'] === 'admin' ||
-            $user['approve_id'] !== null
-        ) {
-            $owner = true;
-        }
-
-        $admin = false;
-        if ($user['p2q_system_role'] === 'admin' || $user['approve_id'] !== null) {
-            $admin = true;
-        }
-
         $request = $this->getRequest(); // for submit edit form
 
         if ($request->isPost()) {
+            $project_id = (int) $this->params()->fromRoute('id');
             $data = $this->params()->fromPost();
 
             $result = $this->project->edit($data, $project_id);
@@ -218,6 +166,56 @@ class ProjectController extends AbstractActionController
                 $this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
                 return $this->redirect()->toRoute('project', ['action' => 'edit', 'id' => $project_id]);
             }
+        }
+
+        $project_id = (int) $this->params()->fromRoute('id');
+
+        if (! $project_id) {
+            return $this->redirect()->toRoute('project');
+        }
+
+        $project = $this->project->fetchById($project_id);
+        if (! $project || ($project['deleted_at'])) {
+            $this->flashMessenger()->addErrorMessage("This project is deleted.");
+            return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
+        }
+        $user = $this->userService->getCurrentUser();
+        $location = $this->location->fetchAllBranches();
+        $company = $this->location->fetchAllCompanies();
+        $status = $this->project->fetchProjectStatus();
+        $marketSegment = $this->project->fetchProjectSegment();
+        $architect = $this->architect->fetchArchitectById($project['architect_id']);
+        $address = $this->address->fetchAddressesById($project['architect_address_id']);
+        $specifier = $this->specifier->fetchSpecifierById($project['specifier_id']);
+        $specifierAddress = null;
+
+        if ($specifier) {
+            $specifierAddress = $this->address->fetchSpecifierAddress($specifier['id']);
+        }
+        $architectType = $this->architect->fetchArchitectType();
+        $addressList = $this->address->fetchAddressesByArchitect($project['architect_id']);
+        $specifierList = $this->specifier->fetchSpecifiersByArchitect($project['architect_id']);
+        $generalContractor = $this->customer->fetchCustomerById($project['general_contractor_id']);
+        $awardedContractor = $this->customer->fetchCustomerById($project['awarded_contractor_id']);
+
+        $this->layout()->setVariable('id', $project_id); //for sidebar
+
+        $owner = false;
+
+        $isShareExists = $this->projectShare->isShareExists($project_id, $user['id']);
+
+        if (
+            $isShareExists ||
+            $user['id'] === $project['owner_id'] ||
+            $user['p2q_system_role'] === 'admin' ||
+            $user['p2q_system_role'] === 'manager'
+        ) {
+            $owner = true;
+        }
+
+        $admin = false;
+        if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') {
+            $admin = true;
         }
 
         return new ViewModel([
@@ -293,40 +291,37 @@ class ProjectController extends AbstractActionController
                 return $this->redirect()->toRoute('project', ['action' => 'edit', 'id' => $project_id]);
             }
         } else {
-            return $this->getResponse()->setStatusCode(404);
+            return $this->abort404();
         }
     }
 
     public function deleteAction()
     {
-        $project_id = (int) $this->params()->fromRoute('id');
-
-        if (! $project_id) {
-            return new JsonModel([
-                'success' => false,
-                'message' => 'Invalid project ID'
-            ]);
-        }
-
-        $result = $this->project->delete($project_id);
-
         if ($this->getRequest()->isXmlHttpRequest()) {
-            // ✅ Always return JSON for AJAX
+            $project_id = (int) $this->params()->fromRoute('id');
+
+            if (! $project_id) {
+                return new JsonModel([
+                    'success' => false,
+                    'message' => 'Invalid project ID'
+                ]);
+            }
+
+            $result = $this->project->delete($project_id);
+
+            if ($result) {
+                $this->flashMessenger()->addSuccessMessage("Project deleted successfully!");
+            } else {
+                $this->flashMessenger()->addErrorMessage("Delete failed. Please try again.");
+            }
+
             return new JsonModel([
                 'success' => (bool) $result,
                 'message' => $result ? 'Project deleted successfully!' : 'Delete failed. Please try again.'
             ]);
         }
 
-        // ✅ For normal browser navigation
-        if ($result) {
-            $this->flashMessenger()->addSuccessMessage("Project deleted successfully!");
-        } else {
-            $this->flashMessenger()->addErrorMessage("Delete failed. Please try again.");
-        }
-
-        // ✅ Redirect to avoid template rendering
-        return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
+        return $this->abort404();
     }
 
     public function sharesAction()
@@ -338,7 +333,7 @@ class ProjectController extends AbstractActionController
             $view = new JsonModel($shareTable);
             return $view;
         }
-        return $this->getResponse()->setStatusCode(404);
+        return $this->abort404();
     }
 
 
@@ -352,7 +347,7 @@ class ProjectController extends AbstractActionController
             $view = new JsonModel($itemTable);
             return $view;
         }
-        return $this->getResponse()->setStatusCode(404);
+        return $this->abort404();
     }
 
     public function noteAction()
@@ -364,7 +359,7 @@ class ProjectController extends AbstractActionController
             $view = new JsonModel($noteTable);
             return $view;
         }
-        return $this->getResponse()->setStatusCode(404);
+        return $this->abort404();
     }
 
     public function quotetableAction()
@@ -376,7 +371,7 @@ class ProjectController extends AbstractActionController
             $view = new JsonModel($projectQuotes);
             return $view;
         }
-        return $this->getResponse()->setStatusCode(404);
+        return $this->abort404();
     }
 
     public function exportAction()
@@ -418,8 +413,5 @@ class ProjectController extends AbstractActionController
         $headers->addHeaderLine('Content-Length', strlen($pdfContent));
 
         return $response;
-
-
-        //return new ViewModel($data);
     }
 }

@@ -129,7 +129,9 @@ function customerModal() {
             if (!customer_id) return;
 
             try {
-                const res = await fetch(`/customer/${customer_id}/contacts`);
+                const res = await fetch(`/customer/${customer_id}/contacts`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
                 if (!res.ok) throw new Error(`Server returned ${res.status}`);
                 const data: { contact_id: string; contact_full_name: string }[] = await res.json();
 
@@ -156,7 +158,9 @@ function customerModal() {
             if (!contactID) return;
 
             try {
-                const res = await fetch(`/customer/${contactID}/contactinfo`);
+                const res = await fetch(`/customer/${contactID}/contactinfo`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
                 if (!res.ok) throw new Error(`Server returned ${res.status}`);
                 const data = await res.json();
 

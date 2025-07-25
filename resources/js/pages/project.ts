@@ -119,7 +119,9 @@ async function initProject() {
     async function fetchAndFillContractor(id: string, prefix: string) {
         if (!id || !prefix) return;
         try {
-            const response = await fetch(`/customer/${id}/fetchbyid`);
+            const response = await fetch(`/customer/${id}/fetchbyid`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const result = await response.json();
@@ -234,7 +236,9 @@ async function initArchitectForm() {
         if (!id) return;
 
         try {
-            const response = await fetch(`/architect/${id}/fetchfull`);
+            const response = await fetch(`/architect/${id}/fetchfull`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
             if (!response.ok) throw new Error('Something happened. Please try again');
 
             const architect = await response.json();
@@ -268,7 +272,9 @@ async function initArchitectForm() {
     async function getAddress(id: string) {
         if (!id) return;
         try {
-            const response = await fetch(`/architect/${id}/address`);
+            const response = await fetch(`/architect/${id}/address`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
             if (!response.ok) throw new Error('Something happened. Please try again');
 
             const addresses = await response.json();
@@ -309,7 +315,9 @@ async function initArchitectForm() {
         if (!addressID || addressID === 'new') return;
 
         try {
-            const response = await fetch(`/architect/${addressID}/addressinfo`);
+            const response = await fetch(`/architect/${addressID}/addressinfo`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
             if (!response.ok) throw new Error('Something happened. Please try again');
 
             const address = await response.json();
@@ -334,7 +342,9 @@ async function initArchitectForm() {
         if (!id) return;
 
         try {
-            const response = await fetch(`/architect/${id}/specifiers`);
+            const response = await fetch(`/architect/${id}/specifiers`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
             if (!response.ok) throw new Error('Network response was not ok');
 
             const specifiers = await response.json();
@@ -376,7 +386,9 @@ async function initArchitectForm() {
         if (!specifierId || specifierId === 'new') return;
 
         try {
-            const response = await fetch(`/architect/${specifierId}/specinfo`);
+            const response = await fetch(`/architect/${specifierId}/specinfo`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
             if (!response.ok) throw new Error('Network response was not ok');
 
             const specifier = await response.json();

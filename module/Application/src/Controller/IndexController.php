@@ -4,32 +4,40 @@ declare(strict_types=1);
 
 namespace Application\Controller;
 
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Service\UserService;
-use Application\Model\{Architect, Project, Quote, Note};
+use Application\Model\{Architect, Location, Project, Quote, Note};
+use Psr\Container\ContainerInterface;
 
-class IndexController extends AbstractActionController
+class IndexController extends BaseController
 {
     protected $userService;
     protected $project;
     protected $quote;
     protected $note;
     protected $architect;
+    protected $container;
 
     public function __construct(
         UserService $userService,
         Project $project,
         Quote $quote,
         Note $note,
-        Architect $architect
+        Architect $architect,
+        ContainerInterface $container
     ) {
         $this->userService = $userService;
         $this->project = $project;
         $this->quote = $quote;
         $this->note = $note;
         $this->architect = $architect;
+        $this->container = $container;
+    }
+
+    public function getLocationModel()
+    {
+        return $this->container->get(Location::class);
     }
 
     public function indexAction()
@@ -45,7 +53,14 @@ class IndexController extends AbstractActionController
     {
         $user = $this->userService->getCurrentUser();
 
+        if ($user['p2q_system_role'] !== 'admin') {
+            $view = new ViewModel();
+            $view->setTemplate('error/permission');
+            return $view;
+        }
+
         $table = $this->params()->fromRoute('table', 'project'); // default to project
+        $location = null;
 
         if ($this->getRequest()->isXmlHttpRequest()) {
             switch ($table) {
@@ -56,7 +71,7 @@ class IndexController extends AbstractActionController
                     return $view;
                 case 'quote':
                     $useView = $this->params()->fromQuery('view', false);
-                    $quotes = $useView ? $this->quote->fetchAllViews() : $this->quote->fetchAll();
+                    $quotes = $useView ? $this->quote->fetchAllViews($location) : $this->quote->fetchAll();
                     $view = new JsonModel($quotes);
                     return $view;
             }
@@ -77,6 +92,12 @@ class IndexController extends AbstractActionController
     public function projectAction()
     {
         $user = $this->userService->getCurrentUser();
+
+        if ($user['p2q_system_role'] === 'guest') {
+            $view = new ViewModel();
+            $view->setTemplate('error/permission');
+            return $view;
+        }
 
         $table = $this->params()->fromRoute('table', 'own');
 
@@ -115,6 +136,13 @@ class IndexController extends AbstractActionController
     public function approvalAction()
     {
         $user = $this->userService->getCurrentUser();
+
+        if ($user['p2q_system_role'] === 'guest' || $user['p2q_system_role'] === 'sales') {
+            $view = new ViewModel();
+            $view->setTemplate('error/permission');
+            return $view;
+        }
+
         $table = $this->params()->fromRoute('table', 'approved');
         $waitingTableCount = $this->quote->countApproval(Quote::WAITING_APPROVAL);
         $approvedTableCount = $this->quote->countApproval(Quote::APPROVED);
@@ -152,10 +180,16 @@ class IndexController extends AbstractActionController
     public function architectAction()
     {
         $user = $this->userService->getCurrentUser();
+        if ($user['p2q_system_role'] === 'guest') {
+            $view = new ViewModel();
+            $view->setTemplate('error/permission');
+            return $view;
+        }
+
         $table = $this->params()->fromRoute('table', 'all');
 
         $admin = false;
-        if ($user['p2q_system_role'] === 'admin' || $user['approve_id'] !== null) {
+        if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') {
             $admin = true;
         }
 
@@ -178,6 +212,53 @@ class IndexController extends AbstractActionController
         ]);
 
         // If HTMX request, skip layout
+        if ($this->getRequest()->getHeader('HX-Request')) {
+            $viewModel->setTerminal(true);
+        }
+
+        return $viewModel;
+    }
+
+    public function opportunitiesAction()
+    {
+        $user = $this->userService->getCurrentUser();
+        if ($user['p2q_system_role'] === 'guest') {
+            $view = new ViewModel();
+            $view->setTemplate('error/permission');
+            return $view;
+        }
+
+        $viewModel = new ViewModel([
+            'user' => $user,
+        ]);
+
+        if ($this->getRequest()->getHeader('HX-Request')) {
+            $viewModel->setTerminal(true);
+        }
+
+        return $viewModel;
+    }
+
+    public function quotesAction()
+    {
+        $user = $this->userService->getCurrentUser();
+        $location = $this->getLocationModel()->fetchLocationIdFromCompany(DEFAULT_COMPANY);
+
+        $table = $this->params()->fromRoute('table', 'quote'); // default to project
+
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            switch ($table) {
+                case 'quote':
+                    $quotes = $this->quote->fetchAllViews($location);
+                    $view = new JsonModel($quotes);
+                    return $view;
+            }
+        }
+
+        $viewModel = new ViewModel([
+            'user' => $user,
+        ]);
+
         if ($this->getRequest()->getHeader('HX-Request')) {
             $viewModel->setTerminal(true);
         }

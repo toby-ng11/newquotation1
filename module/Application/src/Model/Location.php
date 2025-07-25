@@ -39,10 +39,13 @@ class Location
         }
 
         $select = $this->location->getSql()->select()
-        ->columns(['location_id'])
-        ->where(['company_id' => $company_id])
-        ->order('location_id ASC');
+            ->columns(['location_id'])
+            ->where(['company_id' => $company_id])
+            ->order('location_id ASC');
 
-        return $this->location->selectWith($select)->toArray();
+        $result = $this->location->selectWith($select)->toArray();
+
+        // Extract just the IDs
+        return array_map(fn($row) => (int) $row['location_id'], $result);
     }
 }

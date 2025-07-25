@@ -4,10 +4,9 @@ namespace Application\Controller;
 
 use Application\Model\Specifier;
 use Exception;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 
-class SpecifierController extends AbstractActionController
+class SpecifierController extends BaseController
 {
     protected $specifier;
 
@@ -49,7 +48,7 @@ class SpecifierController extends AbstractActionController
             ]);
         }
 
-        return $this->notFoundAction();
+        return $this->abort404();
     }
 
     public function createAction()
@@ -122,7 +121,7 @@ class SpecifierController extends AbstractActionController
             }
         }
 
-        return $this->notFoundAction();
+        return $this->abort404();
     }
 
     public function deleteAction()
@@ -161,6 +160,6 @@ class SpecifierController extends AbstractActionController
             }
         }
 
-        return $this->notFoundAction();
+        return $this->abort404();
     }
 }

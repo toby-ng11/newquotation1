@@ -30,7 +30,7 @@ interface Project {
     project_id_ext: string;
     project_name: string;
     owner_id: string;
-    shared_id: string;
+    shared_users: string;
     reed: string;
     created_at: {
         date: string;
@@ -134,7 +134,7 @@ export default function ProjectTable() {
             meta: 'Owner',
         },
         {
-            accessorKey: 'shared_id',
+            accessorKey: 'shared_users',
             header: ({ column }) => <DataTableColumnHeader column={column} title="Shared" />,
             filterFn: 'arrIncludesSome',
             meta: 'Shared',

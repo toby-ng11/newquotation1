@@ -1,26 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-export interface Project {
+export interface Quote {
     id: string;
-    project_id_ext: string;
+    project_id: string;
     project_name: string;
-    owner_id: string;
-    shared_users: string;
-    reed: string;
-    quote_count: string,
+    customer_name: string;
+    contact_full_name: string;
+    quote_status: string;
+    created_by: string;
     created_at: { date: string };
-    due_date: { date: string };
-    architect_name: string;
-    market_segment_desc: string;
-    status_desc: string;
+    expire_date: { date: string };
+    ship_required_date: { date: string };
 }
 
-export function useProjects(view = true) {
-    return useQuery<Project[]>({
+export function useQuotesQuote(view = true) {
+    return useQuery<Quote[]>({
         queryKey: ['projects', view], // caches by view type
         queryFn: async () => {
-            const res = await axios.get('/index/project/own?view=true', {
+            const res = await axios.get('/index/quotes/quote', {
                 params: { view },
                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
             });
