@@ -1,3 +1,4 @@
+
 import { DataTableColumnHeader } from '@/components/table-header';
 import { DataTablePagination } from '@/components/table-pagination';
 import { DataTableLoadingSpinner } from '@/components/table-spinner';
@@ -26,7 +27,6 @@ import { useEffect, useRef, useState } from 'react';
 
 interface Project {
     id: string;
-    legacy_id: string;
     project_id_ext: string;
     project_name: string;
     owner_id: string;
@@ -103,16 +103,11 @@ export default function OwnProjectTable() {
         {
             accessorKey: 'id',
             header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
-            cell: ({ row }) => {
-                const id = row.getValue<number>('id');
-                const legacyId = row.original.legacy_id; // Make sure your data includes this field
-                const displayId = id <= 500 ? legacyId : id;
-                return (
-                    <a href={`/project/${id}/edit`} className="text-blue-500 dark:text-blue-300">
-                        {displayId}
-                    </a>
-                );
-            },
+            cell: ({ row }) => (
+                <a href={'/project/' + row.getValue('id') + '/edit'} className="text-blue-500 dark:text-blue-300">
+                    {row.getValue('id')}
+                </a>
+            ),
             enableHiding: false,
             meta: 'ID',
         },

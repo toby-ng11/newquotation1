@@ -40,7 +40,7 @@ $sidebarTemplate = 'sidebar/default';
             <nav class="main-nav hidden text-[13px] lg:flex" id="leftSide">
                 <ul id="menu" class="nav nav-wrapper lg:flex lg:items-center lg:justify-around lg:gap-2 lg:p-0" x-data="navUnderline()" x-init="init">
                     <?php if ($this->escapeHtml($user['p2q_system_role']) == 'admin') { ?>
-                        <li class="top-level-entry-container lg:w-20">
+                        <li class="top-level-entry-container lg:w-25">
                             <a href="/index/admin"
                                 hx-get="/index/admin"
                                 hx-target="#content"
@@ -54,7 +54,20 @@ $sidebarTemplate = 'sidebar/default';
                         </li>
                     <?php } ?>
 
-                    <li class="top-level-entry-container lg:w-20">
+                    <li class="top-level-entry-container lg:w-25">
+                        <a href="/index/opportunities"
+                            hx-get="/index/opportunities"
+                            hx-target="#content"
+                            hx-swap="innerHTML"
+                            hx-push-url="true"
+                            @click.prevent="setActive($event); loadSidebar('/sidebar/home')"
+                            @mouseenter="setHover($event)"
+                            @mouseleave="clearHover()"
+                            title="Opportunities Dashboard"
+                            class="top-level-entry<?= $action === 'opportunities' ? ' active' : '' ?>">Opportunity</a>
+                    </li>
+
+                    <li class="top-level-entry-container lg:w-25">
                         <a href="/index/project"
                             hx-get="/index/project"
                             hx-target="#content"
@@ -68,7 +81,7 @@ $sidebarTemplate = 'sidebar/default';
                     </li>
 
                     <?php if ($this->escapeHtml($user['approve_id']) ?? '' != null) { ?>
-                        <li class="top-level-entry-container lg:w-20">
+                        <li class="top-level-entry-container lg:w-25">
                             <a href="/index/approval"
                                 hx-get="/index/approval"
                                 hx-target="#content"
@@ -82,7 +95,7 @@ $sidebarTemplate = 'sidebar/default';
                         </li>
                     <?php } ?>
 
-                    <li class="top-level-entry-container lg:w-20">
+                    <li class="top-level-entry-container lg:w-25">
                         <a href="/index/architect"
                             hx-get="/index/architect"
                             hx-target="#content"
@@ -93,6 +106,45 @@ $sidebarTemplate = 'sidebar/default';
                             @mouseleave="clearHover()"
                             title="Architect Dashboard"
                             class="top-level-entry<?= $action === 'architect' ? ' active' : '' ?>">Architect</a>
+                    </li>
+
+                    <li class="top-level-entry-container lg:w-25">
+                        <a href="/index/quotes"
+                            hx-get="/index/quotes"
+                            hx-target="#content"
+                            hx-swap="innerHTML"
+                            hx-push-url="true"
+                            @click.prevent="setActive($event); loadSidebar('/sidebar/home')"
+                            @mouseenter="setHover($event)"
+                            @mouseleave="clearHover()"
+                            title="Quote Dashboard"
+                            class="top-level-entry<?= $action === 'quotes' ? ' active' : '' ?>">Quote</a>
+                    </li>
+
+                    <li class="top-level-entry-container lg:w-25">
+                        <a href="/index/customers"
+                            hx-get="/index/customers"
+                            hx-target="#content"
+                            hx-swap="innerHTML"
+                            hx-push-url="true"
+                            @click.prevent="setActive($event); loadSidebar('/sidebar/home')"
+                            @mouseenter="setHover($event)"
+                            @mouseleave="clearHover()"
+                            title="Customer Dashboard"
+                            class="top-level-entry<?= $action === 'customers' ? ' active' : '' ?>">Customer</a>
+                    </li>
+
+                    <li class="top-level-entry-container lg:w-25">
+                        <a href="/index/items"
+                            hx-get="/index/items"
+                            hx-target="#content"
+                            hx-swap="innerHTML"
+                            hx-push-url="true"
+                            @click.prevent="setActive($event); loadSidebar('/sidebar/home')"
+                            @mouseenter="setHover($event)"
+                            @mouseleave="clearHover()"
+                            title="Items Dashboard"
+                            class="top-level-entry<?= $action === 'items' ? ' active' : '' ?>">Item</a>
                     </li>
                 </ul>
 

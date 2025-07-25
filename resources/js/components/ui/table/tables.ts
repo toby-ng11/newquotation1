@@ -1536,7 +1536,6 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 dataSrc: '',
             } as AjaxSettings,
             processing: true,
-            responsive: true,
             //serverSide: true, // experimetal: server-side processing
             columns: [
                 {
@@ -1604,6 +1603,11 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 topEnd: null,
                 bottomStart: null,
                 bottomEnd: null,
+            },
+            scrollX: true,
+            fixedColumns: {
+                start: 1,
+                end: 1,
             },
         }));
     },

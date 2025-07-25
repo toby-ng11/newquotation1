@@ -8,7 +8,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Http\Response\Stream;
 use Laminas\View\Model\{ViewModel, JsonModel};
 use Application\Service\UserService;
-use Application\Model\{Address, Project, Quote, Location, Item, Note, Architect, Specifier, Customer};
+use Application\Model\{Address, Project, Quote, Location, Item, Note, Architect, Specifier, Customer, ProjectShare};
 use Application\Service\PdfExportService;
 
 class ProjectController extends AbstractActionController
@@ -23,6 +23,7 @@ class ProjectController extends AbstractActionController
     protected $address;
     protected $specifier;
     protected $customer;
+    protected $projectShare;
 
     public function __construct(
         UserService $userService,
@@ -34,7 +35,8 @@ class ProjectController extends AbstractActionController
         Architect $architect,
         Address $address,
         Specifier $specifier,
-        Customer $customer
+        Customer $customer,
+        ProjectShare $projectShare
     ) {
         $this->userService = $userService;
         $this->pdfExportService = $pdfExportService;
@@ -46,6 +48,7 @@ class ProjectController extends AbstractActionController
         $this->specifier = $specifier;
         $this->address = $address;
         $this->customer = $customer;
+        $this->projectShare = $projectShare;
     }
 
     public function indexAction()
@@ -156,9 +159,12 @@ class ProjectController extends AbstractActionController
 
         $owner = false;
 
+        $isShareExists = $this->projectShare->isShareExists($project_id, $user['id']);
+
         if (
-            $user['id'] == $project['owner_id'] ||
-            $user['p2q_system_role'] == 'admin' ||
+            $isShareExists ||
+            $user['id'] === $project['owner_id'] ||
+            $user['p2q_system_role'] === 'admin' ||
             $user['approve_id'] !== null
         ) {
             $owner = true;
@@ -322,6 +328,19 @@ class ProjectController extends AbstractActionController
         // ✅ Redirect to avoid template rendering
         return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
     }
+
+    public function sharesAction()
+    {
+        $request = $this->getRequest();
+        if ($request->isXmlHttpRequest()) {
+            $projectId = $this->params()->fromRoute('id');
+            $shareTable = $this->projectShare->fetchDataTables($projectId);
+            $view = new JsonModel($shareTable);
+            return $view;
+        }
+        return $this->getResponse()->setStatusCode(404);
+    }
+
 
     public function itemsAction()
     {

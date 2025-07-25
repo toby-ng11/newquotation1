@@ -4,7 +4,7 @@ $locations = $this->locations;
 $projectStatus = $this->projectStatus;
 $marketSegment = $this->marketSegment;
 $architect = $this->architect;
-$architectID = $architect['architect_id'];
+$architectID = $architect['id'];
 $this->headTitle('Edit Architect: ' . $architectID . ' - ' . $architect['architect_name']);
 echo $this->headTitle();
 $address = $this->address;
@@ -71,8 +71,8 @@ $specifierList = $this->specifierList;
                                     <option value="">-- Choose architect type --</option>
                                     <?php foreach ($this->architectType as $a) { ?>
                                         <option
-                                            value='<?= $this->escapeHtml($a['architect_type_id']) ?>'
-                                            <?= $a['architect_type_id'] === ($architect['architect_type_id'] ?? '') ? 'selected' : ''
+                                            value='<?= $this->escapeHtml($a['id']) ?>'
+                                            <?= $a['id'] === ($architect['architect_type_id'] ?? '') ? 'selected' : ''
                                             ?>>
                                             <?= $a['architect_type_desc'] ?>
                                         </option>

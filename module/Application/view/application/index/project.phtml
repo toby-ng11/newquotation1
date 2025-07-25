@@ -5,11 +5,6 @@ echo $this->headTitle();
 
 $user = $this->user;
 $company = DEFAULT_COMPANY;
-$ownTableCount = $this->ownTableCount;
-$assignTableCount = $this->assignTableCount;
-$otherTableCount = $this->otherTableCount;
-$quoteTableCount = $this->quoteTableCount;
-$noteTableCount = $this->noteTableCount;
 ?>
 
 <!-- Title area -->
@@ -127,11 +122,3 @@ $noteTableCount = $this->noteTableCount;
         </nav>
     </aside>
 </div>
-
-<script>
-    window.ownTableCount = <?= $ownTableCount ?>;
-    window.assignTableCount = <?= $assignTableCount ?>;
-    window.otherTableCount = <?= $otherTableCount ?>;
-    window.quoteTableCount = <?= $quoteTableCount ?>;
-    window.noteTableCount = <?= $noteTableCount ?>;
-</script>

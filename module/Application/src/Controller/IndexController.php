@@ -79,11 +79,6 @@ class IndexController extends AbstractActionController
         $user = $this->userService->getCurrentUser();
 
         $table = $this->params()->fromRoute('table', 'own');
-        $ownTableCount = $this->project->countOwnProjects($user['id']);
-        $assignTableCount = $this->project->countAssignedProjects($user['id']);
-        $otherTableCount = $this->project->countOtherUsersProjects($user['id']);
-        $quoteTableCount = $this->quote->countOwnQuotes($user['id']);
-        $noteTableCount = $this->note->countOwnNotes($user['id']);
 
         if ($this->getRequest()->isXmlHttpRequest()) {
             switch ($table) {
@@ -107,11 +102,6 @@ class IndexController extends AbstractActionController
 
         $viewModel = new ViewModel([
             'user' => $user,
-            'ownTableCount' => $ownTableCount,
-            'assignTableCount' => $assignTableCount,
-            'otherTableCount' => $otherTableCount,
-            'quoteTableCount' => $quoteTableCount,
-            'noteTableCount' => $noteTableCount
         ]);
 
         // If HTMX request, skip layout

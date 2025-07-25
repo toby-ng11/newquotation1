@@ -14,14 +14,13 @@ export interface Project {
     architect_name: string;
     market_segment_desc: string;
     status_desc: string;
-    legacy_id: string;
 }
 
 export function useProjects(view = true) {
     return useQuery<Project[]>({
         queryKey: ['projects', view], // caches by view type
         queryFn: async () => {
-            const res = await axios.get('/index/project/own', {
+            const res = await axios.get('/index/project/own?view=true', {
                 params: { view },
                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
             });

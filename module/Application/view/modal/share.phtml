@@ -1,8 +1,6 @@
 <div
     x-data="shareModal()"
-    x-init="
-		    window.shareModalComponent = $data;
-            document.getElementById('widget-btn-add-shared-user').addEventListener('click', () => open = true);"
+    x-init="window.shareModalComponent = $data;"
     x-effect="
             if (open) {
                 document.body.classList.add('overflow-hidden');
@@ -29,13 +27,13 @@
                 </h2>
                 <p
                     class="text-muted-foreground text-sm"
-                    x-text="isEditing ? 'Edit user's permission' : 'Add a shared user and their permission.'">
+                    x-text="isEditing ? 'Edit users permission' : 'Add a shared user and their permission.'">
                 </p>
             </div>
 
             <div class="text-popover-foreground flex h-full w-full flex-col overflow-hidden">
-                <div class="max-h-[400px] scroll-py-1 overflow-x-hidden overflow-y-auto no-scrollbar min-h-80 scroll-pt-2 scroll-pb-1.5">
-                    <form id="share-form" @submit.prevent="submitForm">
+                <div class="max-h-[400px] scroll-py-1 overflow-x-hidden overflow-y-auto no-scrollbar min-h-20 scroll-pt-2 scroll-pb-1.5">
+                    <form id="share-form" @submit.prevent="submitForm" class="form">
                         <div class="flex flex-col gap-4 md:gap-6 md:grid md:grid-cols-2">
                             <input type="hidden" id="project_share_id" name="project_share_id" />
 
@@ -46,7 +44,7 @@
 
                             <div class="grid gap-2">
                                 <label for="role">Role</label>
-                                <select id="role" name="role" data-default-options="<option value='viewer'>Viewer</option>">
+                                <select id="role" name="role">
                                     <option value='viewer'>Viewer</option>
                                     <option value='editor'>Editor</option>
                                 </select>

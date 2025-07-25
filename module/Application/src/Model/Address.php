@@ -93,13 +93,7 @@ class Address
         ];
 
         try {
-            $this->address->update(
-                $info,
-                [
-                    'addressable_id' => $id,
-                    'addressable_type' => 'App\Models\Architect',
-                ]
-            );
+            $this->address->update($info, ['id' => $id]);
             return $id;
         } catch (Exception $e) {
             error_log("Address\update: Database Update Error: " . $e->getMessage());
@@ -169,13 +163,7 @@ class Address
         ];
 
         try {
-            $this->address->update(
-                $info,
-                [
-                    'addressable_id' => $id,
-                    'addressable_type' => 'App\Models\Specifier'
-                ]
-            );
+            $this->address->update($info, ['id' => $id]);
             return $id;
         } catch (Exception $e) {
             error_log("Address\editSpecifierAddress: Database Update Error: " . $e->getMessage());

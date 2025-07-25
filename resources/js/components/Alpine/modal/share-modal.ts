@@ -22,8 +22,8 @@ async function initShare() {
             const editBtn = target.closest('.project-share-edit') as HTMLAnchorElement;
             const projectShareId = editBtn.dataset.id as string;
 
-            if (window.projectShareModalComponent && projectShareId) {
-                window.projectShareModalComponent.editShare(projectShareId);
+            if (window.shareModalComponent && projectShareId) {
+                window.shareModalComponent.editShare(projectShareId);
             }
         }
     });

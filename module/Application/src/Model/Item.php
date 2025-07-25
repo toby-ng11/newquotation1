@@ -36,7 +36,6 @@ class Item
         }
 
         $user = $this->userService->getCurrentUser();
-        error_log(print_r($data, true));
 
         $info = [
             'item_code'             => $data['item_code'],

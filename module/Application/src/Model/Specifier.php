@@ -94,7 +94,7 @@ class Specifier
         }
 
         try {
-            $this->specifier->update($info, ['specifier_id' => $id]);
+            $this->specifier->update($info, ['id' => $id]);
             return $id;
         } catch (Exception $e) {
             error_log("Specifer\update:Database Update Error: " . $e->getMessage());

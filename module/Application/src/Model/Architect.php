@@ -111,7 +111,7 @@ class Architect
         }
 
         try {
-            $this->architect->update($info, ['architect_id' => $id]);
+            $this->architect->update($info, ['id' => $id]);
             return $id;
         } catch (Exception $e) {
             error_log("Architect\update: Database Update Error: " . $e->getMessage());

@@ -21,7 +21,7 @@ export function initAlpine() {
         Alpine.data('noteModal', noteModal);
         Alpine.data('addressModal', addressModal);
         Alpine.data('specifierModal', specifierModal);
-        Alpine.data('projectShareModal', shareModal);
+        Alpine.data('shareModal', shareModal);
     });
 
     Alpine.start();

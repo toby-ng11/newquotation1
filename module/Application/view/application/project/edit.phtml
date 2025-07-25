@@ -29,7 +29,7 @@ $projectRequiredDate = $project['require_date'];
 <!-- Main content wrapper -->
 <div class="h-full flex flex-1 flex-col gap-4 p-8">
     <h1 class="font-mono text-5xl font-semibold tracking-wide uppercase">Project</h1>
-    <p class="text-muted-foreground">Editting project #<?= $this->escapeHtml($projectID) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
+    <p class="text-muted-foreground">Editting project #<?= $this->escapeHtml($project['project_id_ext']) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
 
     <!-- Form -->
     <div class="flex flex-col gap-4 md:gap-6">
@@ -137,15 +137,6 @@ $projectRequiredDate = $project['require_date'];
                                     value="<?= $this->escapeHtml($projectRequiredDate?->format('Y-m-d')) ?>" />
                             </div>
 
-                            <?php if ($user['approve_id'] != null) { ?>
-                                <div class="grid gap-2 form-worksheet-owner">
-                                    <label for="shared_id">Share Worksheet</label>
-                                    <input id="shared_id" name="shared_id" type="text" value="" />
-                                </div>
-                            <?php } else { ?>
-                                <input type="hidden" id="shared_id" name="shared_id" value=" "/>
-                            <?php } ?>
-
                             <div class="grid gap-2">
                                 <label for="project_id_ext">Project ID</label>
                                 <input id="project_id_ext" type="text" name='project_id_ext'
@@ -211,6 +202,43 @@ $projectRequiredDate = $project['require_date'];
             </form>
         </div>
 
+        <div class="fade-in-up">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <p class="leading-none font-semibold text-lg">Share</p>
+                    </div>
+                    <div class="widget-button">
+                        <?php if ($owner) { ?>
+                            <button type="button"
+                                title="Add new shared user"
+                                class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                                id="widget-btn-add-shared-user"
+                                x-on:click="window.shareModalComponent.open = true"
+                                data-tooltip="Share this project with another user">
+                                <i data-lucide="plus"></i>
+                                SHARE
+                            </button>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="line"></div>
+
+                <div class="widget-section">
+                    <table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap"
+                        id="project-share-table" data-init="projectShare">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <div class="fade-in-up" aria-labelledby="architect-information">
             <div class="widget-table bg-widget-background rounded-xl p-6">
                 <div class="widget-header">
@@ -264,7 +292,7 @@ $projectRequiredDate = $project['require_date'];
                                             type="hidden"
                                             name='architect_id'
                                             id='architect_id'
-                                            value="<?= $this->escapeHtml($architect['architect_id'] ?? '') ?>" />
+                                            value="<?= $this->escapeHtml($architect['id'] ?? '') ?>" />
                                     </div>
 
                                     <div class="grid gap-2">
@@ -319,7 +347,7 @@ $projectRequiredDate = $project['require_date'];
                                         type="hidden"
                                         name='address_id'
                                         id='address_id'
-                                        value="<?= $this->escapeHtml($address['address_id'] ?? '') ?>">
+                                        value="<?= $this->escapeHtml($address['id'] ?? '') ?>">
                                     <div class="grid gap-2 ">
                                         <label for="address_list">Address List</label>
                                         <select name='address_list' id='address_list'>
@@ -327,8 +355,8 @@ $projectRequiredDate = $project['require_date'];
                                             <?php if (!empty($addressList)):
                                                 foreach ($addressList as $a): ?>
                                                     <option
-                                                        value="<?= $this->escapeHtml($a['address_id']) ?>"
-                                                        <?= $a['address_id'] === $project['architect_address_id'] ? 'selected' : '' ?>>
+                                                        value="<?= $this->escapeHtml($a['id']) ?>"
+                                                        <?= $a['id'] === $project['architect_address_id'] ? 'selected' : '' ?>>
                                                         <?= $this->escapeHtml($a['name']) ?>
                                                     </option>
                                             <?php endforeach;
@@ -451,7 +479,7 @@ $projectRequiredDate = $project['require_date'];
                                         type="hidden"
                                         id='specifier_address_id'
                                         name="specifier_address_id"
-                                        value="<?= $this->escapeHtml($specifierAddress['address_id'] ?? '') ?>" />
+                                        value="<?= $this->escapeHtml($specifierAddress['id'] ?? '') ?>" />
 
                                     <div class="grid gap-2 ">
                                         <label for="specifier_name">Specifier</label>
@@ -666,6 +694,8 @@ $projectRequiredDate = $project['require_date'];
             </div>
         </div>
     </div>
+
+    <?= $this->render('modal/share'); ?>
 
     <?= $this->render('modal/item'); ?>
 

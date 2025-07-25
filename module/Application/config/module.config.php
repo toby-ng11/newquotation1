@@ -229,7 +229,14 @@ return [
                     $container->get(Model\Architect::class),
                     $container->get(Model\Address::class),
                     $container->get(Model\Specifier::class),
-                    $container->get(Model\Customer::class)
+                    $container->get(Model\Customer::class),
+                    $container->get(Model\ProjectShare::class)
+                );
+            },
+            Controller\ProjectShareController::class => function ($container) {
+                return new Controller\ProjectShareController(
+                    $container->get(Model\ProjectShare::class),
+                    $container
                 );
             },
             Controller\QuoteController::class => function ($container) {
@@ -378,6 +385,7 @@ return [
                     $dbAdapter,
                     new TableGateway('projects', $dbAdapter),
                     new TableGateway('p2q_view_projects', $dbAdapter),
+                    new TableGateway('p2q_view_projects_lite', $dbAdapter),
                     new TableGateway('p2q_view_projects_share', $dbAdapter),
                     $container
                 );

@@ -58,7 +58,7 @@ async function initArchitect() {
         minLength: 2,
         renderItem: (item) => `
     <div class="autocomplete-item">
-      <strong>${item.architect_id} - ${item.architect_name}</strong><br>
+      <strong>${item.id} - ${item.architect_name}</strong><br>
       <span>${item.architect_rep_id} - ${item.company_id}</span>
     </div>`,
         extraSelectActions: [
@@ -66,7 +66,7 @@ async function initArchitect() {
                 const searchOverlay = document.getElementById('search-overlay') as HTMLElement;
                 searchOverlay.classList.remove('active');
                 document.body.classList.remove('overflow-hidden');
-                window.location.href = `/architect/${item.architect_id}/edit`;
+                window.location.href = `/architect/${item.id}/edit`;
             },
         ],
     });

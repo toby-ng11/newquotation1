@@ -43,11 +43,13 @@
                                 <label for="location_id">Centura Location</label>
                                 <select name="location_id" id="location_id">
                                     <?php foreach ($locations as $l) { ?>
-                                        <option value='<?= $this->escapeHtml($l['location_id']) ?>' <?php if (
-                                                                                                        $l['location_id'] === DEFAULT_LOCATION_ID
-) {
-                                                                                                        echo 'selected';
-                                                       } ?>><?= $l['branch_description'] ?></option>
+                                        <option
+                                            value='<?= $this->escapeHtml($l['location_id']) ?>'
+                                            <?php if ($l['location_id'] === DEFAULT_LOCATION_ID) {
+                                                echo 'selected';
+                                            } ?>>
+                                            <?= $l['branch_description'] ?>
+                                        </option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -57,7 +59,7 @@
                                 <select required name="status" id='status'>
                                     <option value="">-- Select stage --</option>
                                     <?php foreach ($projectStatus as $s) { ?>
-                                        <option value='<?= $this->escapeHtml($s['status_id']) ?>'><?= $s['status_desc'] ?></option>
+                                        <option value='<?= $this->escapeHtml($s['id']) ?>'><?= $s['status_desc'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -67,7 +69,7 @@
                                 <select required name="market_segment_id" id='market_segment_id'>
                                     <option value="">-- Choose market segment --</option>
                                     <?php foreach ($marketSegment as $s) { ?>
-                                        <option value='<?= $this->escapeHtml($s['market_segment_id']) ?>'><?= $s['market_segment_desc'] ?></option>
+                                        <option value='<?= $this->escapeHtml($s['id']) ?>'><?= $s['market_segment_desc'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -103,10 +105,10 @@
                                 <select name='address_id' id='address_id'>
                                     <?php if (! empty($addressList)) :
                                         foreach ($addressList as $a) : ?>
-                                            <option value='<?= $this->escapeHtml($a['address_id']) ?>'>
+                                            <option value='<?= $this->escapeHtml($a['id']) ?>'>
                                                 <?= $a['name'] . ' - ' . $a['phys_address1'] ?>
                                             </option>
-                                        <?php endforeach;
+                                    <?php endforeach;
                                     endif; ?>
                                 </select>
                             </div>
@@ -116,10 +118,10 @@
                                 <select name='specifier_id' id='specifier_id'>
                                     <?php if (! empty($specifierList)) :
                                         foreach ($specifierList as $spec) : ?>
-                                            <option value='<?= $this->escapeHtml($spec['specifier_id']) ?>'>
+                                            <option value='<?= $this->escapeHtml($spec['id']) ?>'>
                                                 <?= $spec['first_name'] . ' ' . $spec['last_name'] ?>
                                             </option>
-                                        <?php endforeach;
+                                    <?php endforeach;
                                     endif; ?>
                                 </select>
                             </div>

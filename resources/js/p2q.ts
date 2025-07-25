@@ -36,10 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initSearchBox();
     initTables();
     initFlatpickr();
-    initCustomer();
     initShare();
     initItem();
     initNote();
+    initCustomer();
     initProject();
     initQuote();
     initArchitectForm();

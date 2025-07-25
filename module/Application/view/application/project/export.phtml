@@ -128,7 +128,7 @@
         <h1>PROJECT INFO</h1>
 
         <h2><?= $this->escapeHtml($project['project_name']) ?></h2>
-        <p>Project #<?= $this->escapeHtml($project['id']) ?> at <?= $this->escapeHtml($project['project_address']) ?></p>
+        <p>Project #<?= $this->escapeHtml($project['project_id_ext']) ?> at <?= $this->escapeHtml($project['project_address']) ?></p>
         <p>Created on <?= $this->escapeHtml($project['created_at']->format('M j, Y')) ?></p>
         <p>Required on <?= $this->escapeHtml($project['require_date']->format('M j, Y')) ?></p>
         <p>Due on <?= $this->escapeHtml($project['due_date']->format('M j, Y')) ?></p>
@@ -146,7 +146,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><?= $architect['architect_id'] ? 'Architect #' . $this->escapeHtml($architect['architect_id']) : '' ?></td>
+                                    <td><?= $architect['id'] ? 'Architect #' . $this->escapeHtml($architect['id']) : '' ?></td>
                                 </tr>
                                 <tr>
                                     <td><?= $this->escapeHtml($architect['architect_name']) ?></td>
@@ -187,7 +187,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Specifier #<?= $this->escapeHtml($specifier['specifier_id']) ?></td>
+                                    <td>Specifier #<?= $this->escapeHtml($specifier['id']) ?></td>
                                 </tr>
                                 <tr>
                                     <td><?= $this->escapeHtml($specifier['first_name']) . ' ' . $this->escapeHtml($specifier['last_name']) ?></td>
@@ -310,7 +310,7 @@
                         <tr>
                             <td style="text-align:left">
                                 <div class="item-id">
-                                    <?= $this->escapeHtml($i['item_id']) ?>
+                                    <?= $this->escapeHtml($i['item_code']) ?>
                                 </div>
                                 <div class="item-desc">
                                     <span class='break'>
@@ -323,10 +323,10 @@
                             </td>
                             <td><?= $this->escapeHtml($i['quantity']) ?></td>
                             <td><?= '$' . $this->escapeHtml($i['unit_price']) ?></td>
-                            <td><?= $this->escapeHtml($i['uom']) ?></td>
-                            <td style='text-align:right;'><?= '$' . $this->escapeHtml(number_format($i['subtotal'], 2)) ?></td>
+                            <td><?= $this->escapeHtml($i['unit_of_measure']) ?></td>
+                            <td style='text-align:right;'><?= '$' . $this->escapeHtml(number_format($i['total_price'], 2)) ?></td>
                         </tr>
-                                    <?php $subtotal += $i['subtotal'] == null ? 0 : $i['subtotal'];
+                                    <?php $subtotal += $i['total_price'] == null ? 0 : $i['total_price'];
                     endforeach;
                 endif;
                 ?>

@@ -15,6 +15,7 @@ class Project
     protected $adapter;
     protected $project;
     protected $p2q_view_projects;
+    protected $p2q_view_projects_lite;
     protected $p2q_view_projects_share;
     protected $container;
 
@@ -22,12 +23,14 @@ class Project
         Adapter $adapter,
         TableGateway $project,
         TableGateway $p2q_view_projects,
+        TableGateway $p2q_view_projects_lite,
         TableGateway $p2q_view_projects_share,
         ContainerInterface $container
     ) {
         $this->adapter = $adapter;
         $this->project = $project;
         $this->p2q_view_projects = $p2q_view_projects;
+        $this->p2q_view_projects_lite = $p2q_view_projects_lite;
         $this->p2q_view_projects_share = $p2q_view_projects_share;
         $this->container = $container;
     }
@@ -300,7 +303,7 @@ class Project
 
     public function fetchAllViews()
     {
-        return $this->p2q_view_projects->select();
+        return $this->p2q_view_projects_lite->select();
     }
 
     public function fetchById($id)
@@ -318,14 +321,11 @@ class Project
         }
 
         $sql = new Sql($this->adapter);
-
-        $select = $sql->select('p2q_view_projects')
-            ->where(['owner_id' => $user_id])
-            ->order('id DESC');
+        $select = $sql->select('p2q_view_projects_lite')
+            ->where(['owner_id' => $user_id]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
-        $result = $statement->execute();
-        return $result;
+        return $statement->execute();
     }
 
     public function countOwnProjects($user_id): int

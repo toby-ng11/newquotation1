@@ -221,10 +221,10 @@ async function initArchitectForm() {
     </div>`,
         extraSelectActions: [
             (item) => {
-                if (item.architect_id) {
-                    getArchitectById(item.architect_id);
-                    getAddress(item.architect_id);
-                    getSpecifier(item.architect_id);
+                if (item.id) {
+                    getArchitectById(item.id);
+                    getAddress(item.id);
+                    getSpecifier(item.id);
                 }
             },
         ],
@@ -244,6 +244,8 @@ async function initArchitectForm() {
                     const fieldName = field.id;
                     field.value = architect[fieldName] || '';
                 });
+
+                architectIDField.value = architect.id;
 
                 const companyField = document.getElementById('architect_company_id') as HTMLSelectElement;
                 if (companyField) companyField.value = architect.company_id || '';
@@ -284,8 +286,8 @@ async function initArchitectForm() {
 
                 addresses.forEach((item: Record<string, any>) => {
                     const option = document.createElement('option');
-                    option.value = item.address_id;
-                    option.textContent = item.name;
+                    option.value = item.id;
+                    option.textContent = item.name + ' - ' + item.phys_address1;
                     addressDropdown.appendChild(option);
                 });
 
@@ -316,6 +318,10 @@ async function initArchitectForm() {
                     const fieldName = field.id;
                     field.value = address[fieldName] || '';
                 });
+
+                const addressIdField = document.getElementById('address_id') as HTMLInputElement;
+                addressIdField.value = address.id;
+
                 const addressNickname = document.getElementById('address_name') as HTMLInputElement;
                 if (addressNickname) addressNickname.value = address.name || '';
             }
@@ -328,7 +334,7 @@ async function initArchitectForm() {
         if (!id) return;
 
         try {
-            const response = await fetch(`/architect/${id}/fetchspecs`);
+            const response = await fetch(`/architect/${id}/specifiers`);
             if (!response.ok) throw new Error('Network response was not ok');
 
             const specifiers = await response.json();
@@ -348,7 +354,7 @@ async function initArchitectForm() {
 
             specifiers.forEach((item: Record<string, any>) => {
                 const option = document.createElement('option');
-                option.value = item.specifier_id;
+                option.value = item.id;
                 option.textContent = `${item.first_name} ${item.last_name}`;
                 specifierDropdown.appendChild(option);
             });
@@ -377,7 +383,7 @@ async function initArchitectForm() {
 
             if (specifier) {
                 const fieldMap = {
-                    specifier_id: 'specifier_id',
+                    specifier_id: 'id',
                     specifier_address_id: 'address_id',
                     specifier_first_name: 'first_name',
                     specifier_last_name: 'last_name',

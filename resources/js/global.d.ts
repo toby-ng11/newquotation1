@@ -8,7 +8,7 @@ type NoteModalComponent = {
     closeModal: () => void;
 }
 
-type ProjectShareModalComponent = {
+type shareModalComponent = {
     open: boolean;
     isEditing: boolean;
     submitForm: () => Promise<void>;
@@ -61,6 +61,6 @@ declare global {
         addressModalComponent?: AddressModalComponent;
         itemModalComponent?: ItemModalComponent;
         customerModalComponent?: CustomerModalComponent;
-        projectShareModalComponent?: ProjectShareModalComponent;
+        shareModalComponent?: shareModalComponent;
     }
 }

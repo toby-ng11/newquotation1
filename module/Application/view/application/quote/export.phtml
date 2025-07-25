@@ -179,7 +179,7 @@
             </tr>
             <tr>
                 <td><?= $this->escapeHtml($quote['id']) ?></td>
-                <td><?= $this->escapeHtml($project['id']) ?></td>
+                <td><?= $this->escapeHtml($project['project_id_ext']) ?></td>
                 <td><?= $this->escapeHtml($quote['created_at']->format('Y-m-d')) ?></td>
                 <td><?= $this->escapeHtml($quote['expire_date']->format('Y-m-d')) ?></td>
                 <td><?= $quote['ship_required_date'] && $quote['ship_required_date'] > new DateTime('2000-01-01')

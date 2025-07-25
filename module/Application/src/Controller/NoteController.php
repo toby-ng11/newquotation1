@@ -124,10 +124,10 @@ class NoteController extends AbstractActionController
                 return new JsonModel([
                     'success' => true,
                     'note' => [
-                        'note_title' => $note['note_title'],
-                        'project_note' => $note['project_note'],
+                        'note_title' => $note['title'],
+                        'project_note' => $note['content'],
                         'next_action' => $note['next_action'],
-                        'follow_up_date' => $note['follow_up_date'],
+                        'follow_up_date' => $note['notify_at'],
                     ],
                 ]);
             } catch (\Exception $e) {
