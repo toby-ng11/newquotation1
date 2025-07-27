@@ -320,4 +320,31 @@ class Item
                 return false;
         }
     }
+
+    public function fetchItemQuoteTable($company = DEFAULT_COMPANY)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select('p2q_view_quote_items_full')
+            ->columns([
+                'id',
+                'item_code',
+                'item_desc',
+                'quantity',
+                'unit_price',
+                'unit_of_measure',
+                'total_price',
+                'note',
+                'quote_id',
+                'customer_name',
+                'contact_full_name',
+                'project_name',
+                'stockstatus'
+            ])
+            ->where(['company_id' => $company])
+            ->order('id DESC');
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+        return $result;
+    }
 }

@@ -1,10 +1,12 @@
 import { DataTableViewOptions } from '@/components/table-column-toggle';
 import { DataTableFacetedFilter, getColumnOptions } from '@/components/table-faceted-filter';
+import DialogQuoteSearchByItem from '@/components/table/quote-search-by-item';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Table } from '@tanstack/react-table';
 import { PlusCircle } from 'lucide-react';
+import { ReactNode } from 'react';
 
 interface FacetedFilterConfig {
     columnId: string;
@@ -18,6 +20,8 @@ interface DataTableToolbarProps<TData> {
     onAddClick?: () => void;
     searchColumn?: string;
     searchPlaceholder?: string;
+    searchByItem?: boolean;
+    customFilter?: ReactNode;
 }
 
 export function DataTableToolbar<TData>({
@@ -27,13 +31,17 @@ export function DataTableToolbar<TData>({
     onAddClick,
     searchColumn = 'project_name',
     searchPlaceholder = 'Filter...',
+    searchByItem = false,
+    customFilter,
 }: DataTableToolbarProps<TData>) {
     const searchCol = table.getColumn(searchColumn);
 
     return (
         <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center gap-2">
-                {searchCol && (
+                {customFilter}
+
+                {!customFilter && searchCol && (
                     <Input
                         placeholder={searchPlaceholder}
                         value={(searchCol.getFilterValue() as string) ?? ''}
@@ -74,14 +82,21 @@ export function DataTableToolbar<TData>({
                 </>
             </div>
 
-            <div className="flex items-center gap-4">
-                <DataTableViewOptions table={table} />
-                {showAddButton && (
-                    <Button className="text-white" size="sm" onClick={onAddClick}>
-                        <PlusCircle className="mr-1 size-4" /> Add Project
-                    </Button>
-                )}
-            </div>
+            {searchByItem ? (
+                <div className="flex items-center gap-4">
+                    <DataTableViewOptions table={table} />
+                    <DialogQuoteSearchByItem />
+                </div>
+            ) : (
+                <div className="flex items-center gap-4">
+                    <DataTableViewOptions table={table} />
+                    {showAddButton && (
+                        <Button className="text-white" size="sm" onClick={onAddClick}>
+                            <PlusCircle className="mr-1 size-4" /> Add Project
+                        </Button>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

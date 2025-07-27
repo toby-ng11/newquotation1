@@ -108,7 +108,7 @@ $sidebarTemplate = 'sidebar/default';
                             class="top-level-entry<?= $action === 'architect' ? ' active' : '' ?>">Architect</a>
                     </li>
 
-                    <li class="top-level-entry-container lg:w-25">
+                    <li class="top-level-entry-container lg:w-30">
                         <a href="/index/quotes"
                             hx-get="/index/quotes"
                             hx-target="#content"
@@ -118,7 +118,7 @@ $sidebarTemplate = 'sidebar/default';
                             @mouseenter="setHover($event)"
                             @mouseleave="clearHover()"
                             title="Quote Dashboard"
-                            class="top-level-entry<?= $action === 'quotes' ? ' active' : '' ?>">Quote</a>
+                            class="top-level-entry<?= $action === 'quotes' ? ' active' : '' ?>">Quoted Items</a>
                     </li>
                 </ul>
 

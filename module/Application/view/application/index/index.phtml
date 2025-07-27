@@ -49,12 +49,12 @@ $isSales   = $role === 'sales';
         <?php endif; ?>
 
         <a href="/index/quotes" class="feature fade-in-up bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
-            <h2 class="mb-2 text-xl">Quotes</h2>
-            <p class="text-sm">Search through quotes, customers and items. All in Quotes Dashboard.</p>
+            <h2 class="mb-2 text-xl">Quoted Items</h2>
+            <p class="text-sm">Search through quotes, customers and items.</p>
         </a>
 
         <?php if ($isAdmin || $isManager || $isSales): ?>
-            <a href="/project" class="feature fade-in-up bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
+            <a href="/project/new" class="feature fade-in-up bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
                 <h2 class="mb-2 text-xl">New Project</h2>
                 <p class="text-sm">
                     Kickstart your next project with our easy-to-use project creation tools and templates.

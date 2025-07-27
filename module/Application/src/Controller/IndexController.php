@@ -7,7 +7,7 @@ namespace Application\Controller;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Service\UserService;
-use Application\Model\{Architect, Location, Project, Quote, Note};
+use Application\Model\{Architect, Item, Location, Project, Quote, Note};
 use Psr\Container\ContainerInterface;
 
 class IndexController extends BaseController
@@ -38,6 +38,11 @@ class IndexController extends BaseController
     public function getLocationModel()
     {
         return $this->container->get(Location::class);
+    }
+
+    public function getItemModel()
+    {
+        return $this->container->get(Item::class);
     }
 
     public function indexAction()
@@ -242,14 +247,13 @@ class IndexController extends BaseController
     public function quotesAction()
     {
         $user = $this->userService->getCurrentUser();
-        $location = $this->getLocationModel()->fetchLocationIdFromCompany(DEFAULT_COMPANY);
 
-        $table = $this->params()->fromRoute('table', 'quote'); // default to project
+        $table = $this->params()->fromRoute('table', 'items'); // default to items table
 
         if ($this->getRequest()->isXmlHttpRequest()) {
             switch ($table) {
-                case 'quote':
-                    $quotes = $this->quote->fetchAllViews($location);
+                case 'items':
+                    $quotes = $this->getItemModel()->fetchItemQuoteTable();
                     $view = new JsonModel($quotes);
                     return $view;
             }

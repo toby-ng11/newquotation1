@@ -64,6 +64,18 @@ return [
                         'id'     => '[0-9]+',
                     ]
                 ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'new' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/new',
+                            'defaults' => [
+                                'action' => 'new',
+                            ]
+                        ],
+                    ]
+                ]
             ],
             'project-share' => [
                 'type' => Segment::class,

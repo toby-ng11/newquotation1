@@ -2,8 +2,7 @@ import { DataTableColumnHeader } from '@/components/table-header';
 import { DataTablePagination } from '@/components/table-pagination';
 import { DataTableLoadingSpinner } from '@/components/table-spinner';
 import { DataTableToolbar } from '@/components/table-toolbar';
-import { DataTableProjectOptions } from '@/components/table/project-options';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useQuotesQuote } from '@/hooks/quotes-dash-quote-table';
 import {
@@ -25,16 +24,17 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
 export interface Quote {
-    id: string;
-    project_id: string;
+    id: number;
+    item_code: string;
+    item_desc: string;
+    quantity: number;
+    unit_price: number;
+    unit_of_measure: string;
+    total_price: number;
     project_name: string;
     customer_name: string;
     contact_full_name: string;
-    quote_status: string;
-    created_by: string;
-    created_at: { date: string };
-    expire_date: { date: string };
-    ship_required_date: { date: string };
+    quote_id: string;
 }
 
 const multiValueFilter: FilterFn<Quote> = (row, columnId, filterValue) => {
@@ -44,12 +44,13 @@ const multiValueFilter: FilterFn<Quote> = (row, columnId, filterValue) => {
 };
 
 export default function QuotesQuoteTable() {
-    const { data: projects = [], isLoading, refetch } = useQuotesQuote(true);
-    const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: true }]);
+    const { data: quotedItems = [], isLoading } = useQuotesQuote(true);
+    const [sorting, setSorting] = useState<SortingState>([{ id: 'quote_id', desc: true }]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [isReady, setIsReady] = useState(false);
     const lastSavedVisibility = useRef<VisibilityState>({});
+    const [globalFilter, setGlobalFilter] = useState('');
 
     // Restore saved visibility
     useEffect(() => {
@@ -76,53 +77,48 @@ export default function QuotesQuoteTable() {
 
     const columns: ColumnDef<Quote>[] = [
         {
-            id: 'select',
-            header: ({ table }) => (
-                <div className="flex items-center justify-center">
-                    <Checkbox
-                        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-                        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                        aria-label="Select all"
-                    />
-                </div>
-            ),
+            accessorKey: 'quote_id',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Quote ID" />,
             cell: ({ row }) => (
-                <div className="flex items-center justify-center">
-                    <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />
-                </div>
+                <a className="min-w-[80px] text-blue-500 hover:underline" href={`/quote/${row.original.quote_id}/edit`}>
+                    {row.original.quote_id}
+                </a>
             ),
-            enableSorting: false,
             enableHiding: false,
         },
         {
-            accessorKey: 'id',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
-            cell: ({ row }) => {
-                const id = row.getValue<number>('id');
-                return (
-                    <a href={`/quote/${id}/edit`} className="text-blue-500 dark:text-blue-300">
-                        {id}
-                    </a>
-                );
-            },
+            accessorKey: 'item_code',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="SKU" />,
+            cell: ({ row }) => <div className="min-w-[100px]">{row.getValue('item_code')}</div>,
             enableHiding: false,
-            meta: 'ID',
         },
         {
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Project ID" />,
-            accessorKey: 'project_id',
-            meta: 'Project ID',
+            accessorKey: 'item_desc',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
+            cell: ({ row }) => <div className="max-w-[250px] min-w-[250px] truncate">{row.getValue('item_desc')}</div>,
+            meta: 'Description',
         },
         {
-            accessorKey: 'project_name',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
-            cell: ({ row }) => <div className="max-w-[300px] min-w-[300px] truncate">{row.getValue('project_name')}</div>,
-            meta: 'Name',
+            accessorKey: 'quantity',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="QTY" />,
+            cell: ({ row }) => <div className="min-w-[80px]">{row.getValue('quantity')}</div>,
+            meta: 'Quantity',
+        },
+        {
+            accessorKey: 'unit_price',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Unit Price" />,
+            cell: ({ getValue }) => <div className="min-w-[100px]">${Number(getValue()).toFixed(2)}</div>,
+            meta: 'Unit Price',
+        },
+        {
+            accessorKey: 'total_price',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Total" />,
+            cell: ({ getValue }) => <div className="min-w-[100px]">${Number(getValue()).toFixed(2)}</div>,
+            meta: 'Total',
         },
         {
             accessorKey: 'customer_name',
             header: ({ column }) => <DataTableColumnHeader column={column} title="Customer" />,
-            cell: ({ row }) => <div className="max-w-[300px] min-w-[300px] truncate">{row.getValue('customer_name')}</div>,
             filterFn: 'arrIncludesSome',
             meta: 'Customer',
         },
@@ -133,61 +129,15 @@ export default function QuotesQuoteTable() {
             meta: 'Contact',
         },
         {
-            accessorKey: 'quote_status',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Quote Status" />,
-            meta: 'Quote Status',
-        },
-        {
-            accessorKey: 'created_by',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Created By" />,
-            meta: 'Created By',
-        },
-        {
-            id: 'created_at',
-            accessorFn: (row) => row.created_at?.date,
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Created At" />,
-            cell: ({ row }) => new Date(row.getValue('created_at')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
-            sortingFn: 'datetime',
-            meta: 'Created At',
-        },
-        {
-            id: 'expire_date',
-            accessorFn: (row) => row.expire_date?.date,
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Expire Date" />,
-            cell: ({ row }) => new Date(row.getValue('expire_date')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
-            sortingFn: 'datetime',
-            meta: 'Expire Date',
-        },
-        {
-            id: 'ship_required_date',
-            accessorFn: (row) => row.ship_required_date?.date,
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Tender Closing Date" />,
-            cell: ({ row }) => new Date(row.getValue('ship_required_date')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
-            sortingFn: 'datetime',
-            meta: 'Tender Closing Date',
-        },
-        {
-            accessorKey: 'options',
-            header: () => null,
-            cell: ({ row }) => {
-                const projectId = row.original.id; // adjust based on your data shape
-
-                return (
-                    <DataTableProjectOptions
-                        rowId={projectId}
-                        onEdit={(id) => console.log('Edit', id)}
-                        onCopy={(id) => console.log('Copy', id)}
-                        onFavorite={(id) => console.log('Favorite', id)}
-                        onDelete={() => refetch()}
-                    />
-                );
-            },
-            enableHiding: false,
+            accessorKey: 'project_name',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Project Name" />,
+            filterFn: 'arrIncludesSome',
+            meta: 'Project Name',
         },
     ];
 
     const table = useReactTable({
-        data: projects,
+        data: quotedItems,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -198,82 +148,101 @@ export default function QuotesQuoteTable() {
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         onColumnVisibilityChange: setColumnVisibility,
+        onGlobalFilterChange: setGlobalFilter,
         state: {
             sorting,
             columnFilters,
             columnVisibility,
+            globalFilter,
         },
         filterFns: {
             multi: multiValueFilter,
         },
+        globalFilterFn: (row, columnId, filterValue) => {
+            const search = filterValue.toLowerCase();
+            return row.original.item_code?.toLowerCase().includes(search) || row.original.item_desc?.toLowerCase().includes(search);
+        },
+        initialState: {
+            pagination: {
+                pageSize: 15,
+            },
+        },
     });
 
     return (
-        <div>
+        <>
             <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
                 <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl font-semibold tracking-tight">All Quotes</h2>
-                    <p className="text-muted-foreground">Here's the list of all customers and their quotes.</p>
+                    <h2 className="text-2xl font-semibold tracking-tight">All Quoted Items</h2>
+                    <p className="text-muted-foreground">Here's the list of quoted items.</p>
                 </div>
-                <div className="flex flex-col gap-4">
-                    <DataTableToolbar
-                        table={table}
-                        searchColumn="project_name"
-                        searchPlaceholder="Filter quote names..."
-                        showAddButton
-                        onAddClick={() => console.log('Add clicked')}
-                        facetedFilters={[
-                            { columnId: 'customer_name', title: 'Customer' },
-                            { columnId: 'contact_full_name', title: 'Contact' },
-                        ]}
-                    />
 
+                <div className="flex flex-col gap-4">
                     {!isLoading ? (
-                        <div className="overflow-hidden rounded-md border">
-                            <Table>
-                                <TableHeader className="bg-muted sticky top-0 z-10 [&_tr]:border-b">
-                                    {table.getHeaderGroups().map((headerGroup) => (
-                                        <TableRow key={headerGroup.id}>
-                                            {headerGroup.headers.map((header) => {
-                                                return (
-                                                    <TableHead key={header.id} colSpan={header.colSpan}>
-                                                        {header.isPlaceholder
-                                                            ? null
-                                                            : flexRender(header.column.columnDef.header, header.getContext())}
-                                                    </TableHead>
-                                                );
-                                            })}
-                                        </TableRow>
-                                    ))}
-                                </TableHeader>
-                                <TableBody>
-                                    {table.getRowModel().rows?.length ? (
-                                        table.getRowModel().rows.map((row) => (
-                                            <TableRow key={row.id}>
-                                                {row.getVisibleCells().map((cell) => (
-                                                    <TableCell key={cell.id} className="p-2 text-left whitespace-nowrap">
-                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                    </TableCell>
-                                                ))}
+                        <>
+                            <DataTableToolbar
+                                table={table}
+                                customFilter={
+                                    <Input
+                                        placeholder="Search SKU or Description..."
+                                        value={globalFilter}
+                                        onChange={(e) => setGlobalFilter(e.target.value)}
+                                        className="h-8 w-[250px]"
+                                    />
+                                }
+                                facetedFilters={[
+                                    { columnId: 'customer_name', title: 'Customer' },
+                                    { columnId: 'contact_full_name', title: 'Contact' },
+                                    { columnId: 'project_name', title: 'Project' },
+                                ]}
+                            />
+
+                            <div className="overflow-hidden rounded-md border">
+                                <Table>
+                                    <TableHeader className="bg-muted sticky top-0 z-10 [&_tr]:border-b">
+                                        {table.getHeaderGroups().map((headerGroup) => (
+                                            <TableRow key={headerGroup.id}>
+                                                {headerGroup.headers.map((header) => {
+                                                    return (
+                                                        <TableHead key={header.id} colSpan={header.colSpan}>
+                                                            {header.isPlaceholder
+                                                                ? null
+                                                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                                        </TableHead>
+                                                    );
+                                                })}
                                             </TableRow>
-                                        ))
-                                    ) : (
-                                        <TableRow>
-                                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                No quotes found.
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </div>
+                                        ))}
+                                    </TableHeader>
+                                    <TableBody>
+                                        {table.getRowModel().rows?.length ? (
+                                            table.getRowModel().rows.map((row) => (
+                                                <TableRow key={row.id}>
+                                                    {row.getVisibleCells().map((cell) => (
+                                                        <TableCell key={cell.id} className="p-2 text-left whitespace-nowrap">
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </TableCell>
+                                                    ))}
+                                                </TableRow>
+                                            ))
+                                        ) : (
+                                            <TableRow>
+                                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                                    No quotes found.
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        </>
                     ) : (
                         <DataTableLoadingSpinner />
                     )}
                 </div>
 
-                <DataTablePagination table={table} />
+                <DataTablePagination table={table} hasSelect={false} />
             </div>
-        </div>
+        </>
     );
 }

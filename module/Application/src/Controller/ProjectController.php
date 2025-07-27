@@ -58,7 +58,7 @@ class ProjectController extends BaseController
             return $this->createAction();
         }
 
-        return $this->newAction();
+        return $this->abort404();
     }
 
     public function createAction()

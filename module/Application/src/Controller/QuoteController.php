@@ -70,9 +70,7 @@ class QuoteController extends BaseController
             return $this->createAction();
         }
 
-        if ($request->isGet() && $this->params()->fromRoute('id')) {
-            return $this->viewAction();
-        }
+        return $this->abort404();
     }
 
     public function createAction()
@@ -172,7 +170,7 @@ class QuoteController extends BaseController
 
     public function deleteAction()
     {
-
+        $user = $this->getUserService()->getCurrentUser();
         $quote_id = (int) $this->params()->fromRoute('id');
 
         if (! $quote_id) {
@@ -186,6 +184,10 @@ class QuoteController extends BaseController
 
             if ($this->getRequest()->isXmlHttpRequest()) {
                 return new JsonModel(['success' => $result]);
+            }
+
+            if ($user['p2q_system_role'] === 'guest') {
+               return $this->redirect()->toRoute('dashboard', ['action' => 'quotes']);
             }
 
             return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
