@@ -1,5 +1,11 @@
 <?php
 $user = $this->userHelper();
+$role = $this->escapeHtml($user['p2q_system_role']) ?? '';
+
+$isAdmin   = $role === 'admin';
+$isManager = $role === 'manager';
+$isSales   = $role === 'sales';
+$isGuest   = $role === 'guest';
 $controller = $this->currentController ?? '';
 $action = $this->currentAction ?? '';
 
@@ -39,7 +45,7 @@ $sidebarTemplate = 'sidebar/default';
 
             <nav class="main-nav hidden text-[13px] lg:flex" id="leftSide">
                 <ul id="menu" class="nav nav-wrapper lg:flex lg:items-center lg:justify-around lg:gap-2 lg:p-0" x-data="navUnderline()" x-init="init">
-                    <?php if ($this->escapeHtml($user['p2q_system_role']) == 'admin') { ?>
+                    <?php if ($isAdmin) { ?>
                         <li class="top-level-entry-container lg:w-25">
                             <a href="/index/admin"
                                 hx-get="/index/admin"
@@ -52,8 +58,9 @@ $sidebarTemplate = 'sidebar/default';
                                 title="Admin Dashboard"
                                 class="top-level-entry<?= $action === 'admin' ? ' active' : '' ?>">Admin</a>
                         </li>
-                    <?php } ?>
+                    <?php }
 
+                    if (! $isGuest): ?>
                     <li class="top-level-entry-container lg:w-25">
                         <a href="/index/opportunities"
                             hx-get="/index/opportunities"
@@ -67,6 +74,7 @@ $sidebarTemplate = 'sidebar/default';
                             class="top-level-entry<?= $action === 'opportunities' ? ' active' : '' ?>">Opportunities</a>
                     </li>
 
+
                     <li class="top-level-entry-container lg:w-25">
                         <a href="/index/project"
                             hx-get="/index/project"
@@ -79,8 +87,9 @@ $sidebarTemplate = 'sidebar/default';
                             title="Project Dashboard"
                             class="top-level-entry<?= $action === 'project' ? ' active' : '' ?>">Project</a>
                     </li>
+                    <?php endif;
 
-                    <?php if ($this->escapeHtml($user['approve_id']) ?? '' != null) { ?>
+                    if ($isAdmin || $isManager): ?>
                         <li class="top-level-entry-container lg:w-25">
                             <a href="/index/approval"
                                 hx-get="/index/approval"
@@ -93,8 +102,9 @@ $sidebarTemplate = 'sidebar/default';
                                 title="Approve Dashboard"
                                 class="top-level-entry<?= $action === 'approval' ? ' active' : '' ?>">Approval</a>
                         </li>
-                    <?php } ?>
+                    <?php endif;
 
+                    if (! $isGuest): ?>
                     <li class="top-level-entry-container lg:w-25">
                         <a href="/index/architect"
                             hx-get="/index/architect"
@@ -107,6 +117,7 @@ $sidebarTemplate = 'sidebar/default';
                             title="Architect Dashboard"
                             class="top-level-entry<?= $action === 'architect' ? ' active' : '' ?>">Architect</a>
                     </li>
+                    <?php endif; ?>
 
                     <li class="top-level-entry-container lg:w-30">
                         <a href="/index/quotes"
@@ -151,8 +162,9 @@ $sidebarTemplate = 'sidebar/default';
                         <li class="submenu-header">
                             <div class="submenu-item">
                                 <div class="submenu-content-container">
-                                    <div class="submenu-item-heading">
-                                        Signed in as <?php echo $this->escapeHtml($user['id']) ?? ''; ?>
+                                    <div class="submenu-item-heading flex flex-col items-center gap-2">
+                                        <p>Signed in as <?= $this->escapeHtml($user['id']) ?? ''; ?></p>
+                                        <p><?= strtoupper($role) ; ?></p>
                                     </div>
                                 </div>
                             </div>

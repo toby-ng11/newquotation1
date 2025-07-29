@@ -1323,6 +1323,10 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'id',
                     render: function (data) {
+                        if (window.isGuest) {
+                            return null;
+                        }
+
                         const buttons = [];
                         buttons.push(`
                             <a href="#" title="Edit this item" class="item-edit" data-id="${data}">

@@ -54,7 +54,8 @@ type CustomerModalComponent = {
 
 declare global {
     interface Window {
-        isOwner: boolean;
+        isOwner: boolean; // project/edit.phtml
+        isGuest: boolean; //quote/edit.phtml
         Alpine: any;
         noteModalComponent?: NoteModalComponent;
         specifierModalComponent?: SpecifierModalComponent;

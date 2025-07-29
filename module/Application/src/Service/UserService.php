@@ -33,6 +33,8 @@ class UserService
             'role' => $userData['role'],
             'role_uid' => $userData['role_uid'],
             'p2q_system_role' => $userData['p2q_system_role'],
+            'default_company' => $userData['default_company'],
+            'default_location_id' => $userData['default_location_id'],
         ];
 
         return $session->user;

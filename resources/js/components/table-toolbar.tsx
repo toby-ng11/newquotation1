@@ -22,6 +22,7 @@ interface DataTableToolbarProps<TData> {
     searchPlaceholder?: string;
     searchByItem?: boolean;
     customFilter?: ReactNode;
+    searchAfterFilter?: boolean;
 }
 
 export function DataTableToolbar<TData>({
@@ -33,15 +34,16 @@ export function DataTableToolbar<TData>({
     searchPlaceholder = 'Filter...',
     searchByItem = false,
     customFilter,
+    searchAfterFilter = false,
 }: DataTableToolbarProps<TData>) {
     const searchCol = table.getColumn(searchColumn);
 
     return (
         <div className="flex items-center justify-between">
             <div className="flex flex-1 items-center gap-2">
-                {customFilter}
+                {customFilter && !searchAfterFilter}
 
-                {!customFilter && searchCol && (
+                {!customFilter && !searchAfterFilter && searchCol && (
                     <Input
                         placeholder={searchPlaceholder}
                         value={(searchCol.getFilterValue() as string) ?? ''}
@@ -80,6 +82,17 @@ export function DataTableToolbar<TData>({
                         </Popover>
                     </div>
                 </>
+
+                {customFilter && searchAfterFilter}
+
+                {!customFilter && searchAfterFilter && searchCol && (
+                    <Input
+                        placeholder={searchPlaceholder}
+                        value={(searchCol.getFilterValue() as string) ?? ''}
+                        onChange={(event) => searchCol.setFilterValue(event.target.value)}
+                        className="h-8 w-[150px] lg:w-[250px]"
+                    />
+                )}
             </div>
 
             {searchByItem ? (

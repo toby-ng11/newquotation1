@@ -50,7 +50,7 @@ const multiValueFilter: FilterFn<Project> = (row, columnId, filterValue) => {
 };
 
 export default function ProjectTable() {
-    const { data: projects = [], isLoading, refetch } = useProjects(true);
+    const { data: projects = [], isLoading, isRefetching, refetch } = useProjects(true);
     const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: true }]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -59,7 +59,7 @@ export default function ProjectTable() {
 
     // Restore saved visibility
     useEffect(() => {
-        axios.get('/lapi/preferences/projectTableColumnVisibility').then((res) => {
+        axios.get('/api/preferences/projectTableColumnVisibility').then((res) => {
             setColumnVisibility(res.data || {});
             lastSavedVisibility.current = res.data;
             setIsReady(true);
@@ -73,7 +73,7 @@ export default function ProjectTable() {
         const previous = JSON.stringify(lastSavedVisibility.current);
 
         if (current !== previous) {
-            axios.post('/lapi/preferences/projectTableColumnVisibility', {
+            axios.post('/api/preferences/projectTableColumnVisibility', {
                 value: columnVisibility,
             });
             lastSavedVisibility.current = columnVisibility;
@@ -103,7 +103,7 @@ export default function ProjectTable() {
         {
             accessorKey: 'id',
             header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
-             cell: ({ row }) => {
+            cell: ({ row }) => {
                 const id = row.getValue<number>('id');
                 const legacyId = row.original.legacy_id; // Make sure your data includes this field
                 const displayId = id <= 500 ? legacyId : id;
@@ -287,6 +287,12 @@ export default function ProjectTable() {
                         </div>
                     ) : (
                         <DataTableLoadingSpinner />
+                    )}
+
+                    {isRefetching && (
+                        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-sm transition-opacity">
+                            <span className="h-6 w-6 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
+                        </div>
                     )}
                 </div>
 

@@ -1,14 +1,20 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 const roots = new WeakMap<HTMLElement, ReturnType<typeof createRoot>>();
 const queryClient = new QueryClient();
 
+declare global {
+  interface Window {
+    __TANSTACK_QUERY_CLIENT__:
+      import("@tanstack/query-core").QueryClient;
+  }
+}
+
 const mounts = [
     { id: 'project-table', loader: () => import('@/components/table/admin/project-table') },
     { id: 'project-own-projects-table', loader: () => import('@/components/table/project/own-projects') },
-    { id: 'quotes-dash-quote-table', loader: () => import('@/components/table/quotes/quote-table') },
+    { id: 'quoted-item-dashboard', loader: () => import('@/pages/quoted-item/dashboard') },
 ];
 
 function mountAllTables() {
@@ -21,11 +27,9 @@ function mountAllTables() {
             loader().then((module) => {
                 const Component = module.default;
                 root.render(
-                    <React.Suspense fallback={<div>Loading table...</div>}>
-                        <QueryClientProvider client={queryClient}>
-                            <Component />
-                        </QueryClientProvider>
-                    </React.Suspense>,
+                    <QueryClientProvider client={queryClient}>
+                        <Component />
+                    </QueryClientProvider>,
                 );
             });
         }

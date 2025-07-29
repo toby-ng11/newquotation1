@@ -86,7 +86,7 @@ async function initItem() {
     }
 
     uomDropdown?.addEventListener('change', () => {
-        const itemIDField = document.getElementById('item_id') as HTMLInputElement;
+        const itemIDField = document.getElementById('item_code') as HTMLInputElement;
         window.itemModalComponent?.getP21Price(itemIDField.value, uomDropdown.value);
     });
 }

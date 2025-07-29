@@ -13,6 +13,7 @@ export interface QuoteItem {
     customer_name: string;
     contact_full_name: string;
     quote_id: string;
+    note: string;
 }
 
 export function useQuotesQuote(view = true) {

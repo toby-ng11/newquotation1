@@ -12,49 +12,49 @@ $isSales   = $role === 'sales';
         <p class="mt-0 mr-auto mb-0 ml-auto">Your all-in-one platform for managing projects, approvals, and architectural collaboration with ease and efficiency.</p>
     </section>
 
-    <section class="features welcome-page fade-in-up grid grid-cols-[repeat(auto-fit,_minmax(250px,_1fr))] gap-4 px-4 py-6">
+    <section class="features welcome-page fade-in-up flex flex-wrap items-center justify-center gap-4 px-4 py-6">
         <?php if ($isAdmin) : ?>
-            <a href="/index/admin" class="feature fade-in-up bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
+            <a href="/index/admin" class="feature fade-in-up w-100 h-35 bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
                 <h2 class="mb-2 text-xl">Admin</h2>
                 <p class="text-sm">Gain full control over user roles, permissions, and platform settings through the Admin Portal.</p>
             </a>
         <?php endif;
 
         if ($isAdmin || $isManager || $isSales): ?>
-            <a href="/index/opportunities" class="feature fade-in-up bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
+            <a href="/index/opportunities" class="feature fade-in-up w-100 h-35 bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
                 <h2 class="mb-2 text-xl">Opportunities</h2>
                 <p class="text-sm">Create and edit the opportunities, which can be converted to projects later.</p>
             </a>
         <?php endif;
 
         if ($isAdmin || $isManager || $isSales): ?>
-            <a href="/index/project" class="feature fade-in-up bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
+            <a href="/index/project" class="feature fade-in-up w-100 h-35 bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
                 <h2 class="mb-2 text-xl">Projects</h2>
                 <p class="text-sm">Streamline your project workflows, track progress, and stay organized with our intuitive tools.</p>
             </a>
         <?php endif;
 
         if ($isAdmin || $isManager) : ?>
-            <a href="/index/approval" class="feature fade-in-up bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
+            <a href="/index/approval" class="feature fade-in-up w-100 h-35 bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
                 <h2 class="mb-2 text-xl">Approval</h2>
                 <p class="text-sm">Easily manage approvals and ensure every step is properly authorized and documented.</p>
             </a>
         <?php endif;
 
         if ($isAdmin || $isManager || $isSales): ?>
-            <a href="/index/architect" class="feature fade-in-up bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
+            <a href="/index/architect" class="feature fade-in-up w-100 h-35 bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
                 <h2 class="mb-2 text-xl">Architects</h2>
                 <p class="text-sm">Connect and collaborate with architects seamlessly to ensure design accuracy and quality.</p>
             </a>
         <?php endif; ?>
 
-        <a href="/index/quotes" class="feature fade-in-up bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
+        <a href="/index/quotes" class="feature fade-in-up w-100 h-35 bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
             <h2 class="mb-2 text-xl">Quoted Items</h2>
             <p class="text-sm">Search through quotes, customers and items.</p>
         </a>
 
         <?php if ($isAdmin || $isManager || $isSales): ?>
-            <a href="/project/new" class="feature fade-in-up bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
+            <a href="/project/new" class="feature fade-in-up w-100 h-35 bg-widget-background block max-w-md cursor-pointer rounded-xl p-6 text-inherit no-underline opacity-0 shadow-lg transition ease-in-out">
                 <h2 class="mb-2 text-xl">New Project</h2>
                 <p class="text-sm">
                     Kickstart your next project with our easy-to-use project creation tools and templates.

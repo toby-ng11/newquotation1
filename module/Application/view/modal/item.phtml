@@ -2,7 +2,7 @@
     x-data="itemModal()"
     x-init="
 		    window.itemModalComponent = $data;
-            document.getElementById('widget-btn-add-item').addEventListener('click', () => open = true);"
+            document.getElementById('widget-btn-add-item')?.addEventListener('click', () => open = true);"
     x-effect="
             if (open) {
                 document.body.classList.add('overflow-hidden');

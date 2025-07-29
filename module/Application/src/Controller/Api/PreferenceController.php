@@ -4,10 +4,9 @@ namespace Application\Controller\Api;
 
 use Application\Model\UserPreferenceTable;
 use Application\Service\UserService;
-use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\JsonModel;
 
-class PreferenceController extends AbstractActionController
+class PreferenceController extends ApiController
 {
     protected $userService;
     protected $userPreferenceTable;

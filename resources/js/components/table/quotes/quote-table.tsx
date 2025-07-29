@@ -2,7 +2,6 @@ import { DataTableColumnHeader } from '@/components/table-header';
 import { DataTablePagination } from '@/components/table-pagination';
 import { DataTableLoadingSpinner } from '@/components/table-spinner';
 import { DataTableToolbar } from '@/components/table-toolbar';
-import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useQuotesQuote } from '@/hooks/quotes-dash-quote-table';
 import {
@@ -35,6 +34,7 @@ export interface Quote {
     customer_name: string;
     contact_full_name: string;
     quote_id: string;
+    note: string;
 }
 
 const multiValueFilter: FilterFn<Quote> = (row, columnId, filterValue) => {
@@ -44,7 +44,7 @@ const multiValueFilter: FilterFn<Quote> = (row, columnId, filterValue) => {
 };
 
 export default function QuotesQuoteTable() {
-    const { data: quotedItems = [], isLoading } = useQuotesQuote(true);
+    const { data: quotedItems = [], isLoading, isRefetching } = useQuotesQuote(true);
     const [sorting, setSorting] = useState<SortingState>([{ id: 'quote_id', desc: true }]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -54,7 +54,7 @@ export default function QuotesQuoteTable() {
 
     // Restore saved visibility
     useEffect(() => {
-        axios.get('/lapi/preferences/quotesQuoteTableColumnVisibility').then((res) => {
+        axios.get('/api/preferences/quotesQuoteTableColumnVisibility').then((res) => {
             setColumnVisibility(res.data || {});
             lastSavedVisibility.current = res.data;
             setIsReady(true);
@@ -68,7 +68,7 @@ export default function QuotesQuoteTable() {
         const previous = JSON.stringify(lastSavedVisibility.current);
 
         if (current !== previous) {
-            axios.post('/lapi/preferences/quotesQuoteTableColumnVisibility', {
+            axios.post('/api/preferences/quotesQuoteTableColumnVisibility', {
                 value: columnVisibility,
             });
             lastSavedVisibility.current = columnVisibility;
@@ -111,10 +111,16 @@ export default function QuotesQuoteTable() {
             meta: 'Unit Price',
         },
         {
-            accessorKey: 'total_price',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Total" />,
-            cell: ({ getValue }) => <div className="min-w-[100px]">${Number(getValue()).toFixed(2)}</div>,
-            meta: 'Total',
+            accessorKey: 'note',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Note" />,
+            cell: ({ row }) => <div className="max-w-[250px] min-w-[250px] truncate">{row.getValue('note')}</div>,
+            meta: 'Description',
+        },
+        {
+            accessorKey: 'project_name',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Project Name" />,
+            filterFn: 'arrIncludesSome',
+            meta: 'Project Name',
         },
         {
             accessorKey: 'customer_name',
@@ -123,16 +129,10 @@ export default function QuotesQuoteTable() {
             meta: 'Customer',
         },
         {
-            accessorKey: 'contact_full_name',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Contact" />,
-            filterFn: 'arrIncludesSome',
-            meta: 'Contact',
-        },
-        {
-            accessorKey: 'project_name',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Project Name" />,
-            filterFn: 'arrIncludesSome',
-            meta: 'Project Name',
+            accessorKey: 'total_price',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Total" />,
+            cell: ({ getValue }) => <div className="min-w-[100px]">${Number(getValue()).toFixed(2)}</div>,
+            meta: 'Total',
         },
     ];
 
@@ -158,9 +158,11 @@ export default function QuotesQuoteTable() {
         filterFns: {
             multi: multiValueFilter,
         },
-        globalFilterFn: (row, columnId, filterValue) => {
-            const search = filterValue.toLowerCase();
-            return row.original.item_code?.toLowerCase().includes(search) || row.original.item_desc?.toLowerCase().includes(search);
+        globalFilterFn: (row, _, filterValue) => {
+            return (
+                row.original.customer_name?.toLowerCase().includes(filterValue.customer.toLowerCase()) &&
+                row.original.note?.toLowerCase().includes(filterValue.item_note.toLowerCase())
+            );
         },
         initialState: {
             pagination: {
@@ -182,19 +184,14 @@ export default function QuotesQuoteTable() {
                         <>
                             <DataTableToolbar
                                 table={table}
-                                customFilter={
-                                    <Input
-                                        placeholder="Search SKU or Description..."
-                                        value={globalFilter}
-                                        onChange={(e) => setGlobalFilter(e.target.value)}
-                                        className="h-8 w-[250px]"
-                                    />
-                                }
+                                searchColumn="note"
+                                searchPlaceholder="Search quoted item note..."
                                 facetedFilters={[
-                                    { columnId: 'customer_name', title: 'Customer' },
-                                    { columnId: 'contact_full_name', title: 'Contact' },
-                                    { columnId: 'project_name', title: 'Project' },
+                                    { columnId: 'customer_name', title: 'Customer Filter' },
+                                    { columnId: 'item_code', title: 'SKU Filter' },
+                                    { columnId: 'project_name', title: 'Project Filter' },
                                 ]}
+                                searchAfterFilter={true}
                             />
 
                             <div className="overflow-hidden rounded-md border">
@@ -238,6 +235,12 @@ export default function QuotesQuoteTable() {
                         </>
                     ) : (
                         <DataTableLoadingSpinner />
+                    )}
+
+                    {isRefetching && (
+                        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-sm transition-opacity">
+                            <span className="h-6 w-6 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
+                        </div>
                     )}
                 </div>
 

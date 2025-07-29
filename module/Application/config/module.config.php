@@ -199,18 +199,44 @@ return [
                     ],
                 ],
             ],
-            'lapi-preferences' => [
-                'type' => Segment::class,
+            'api' => [
+                'type' => Literal::class,
                 'options' => [
-                    'route' => '/lapi/preferences[/:key]',
+                    'route' => '/api',
                     'constraints' => [
                         'key' => '[a-zA-Z][a-zA-Z0-9_-]*',
                     ],
                     'defaults' => [
-                        'controller' => Controller\Api\PreferenceController::class,
+                        'controller' => Controller\Api\ApiController::class,
                         'action' => 'index',
                     ],
                 ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'api-preferences' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/preferences[/:key]',
+                            'constraints' => [
+                                'key' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ],
+                            'defaults' => [
+                                'controller' => Controller\Api\PreferenceController::class,
+                                'action' => 'index',
+                            ]
+                        ],
+                    ],
+                    'api-user' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route'    => '/user',
+                            'defaults' => [
+                                'controller' => Controller\Api\UserController::class,
+                                'action'     => 'me',
+                            ],
+                        ],
+                    ],
+                ]
             ],
         ],
     ],
@@ -263,12 +289,6 @@ return [
                     $container->get(Model\User::class)
                 );
             },
-            Controller\Api\PreferenceController::class => function ($container) {
-                return new Controller\Api\PreferenceController(
-                    $container->get(Service\UserService::class),
-                    $container->get(Model\UserPreferenceTable::class),
-                );
-            },
             Controller\CustomerController::class => function ($container) {
                 return new Controller\CustomerController(
                     $container->get(Model\Customer::class)
@@ -302,6 +322,17 @@ return [
             Controller\AddressController::class => function ($container) {
                 return new Controller\AddressController(
                     $container->get(Model\Address::class)
+                );
+            },
+            Controller\Api\PreferenceController::class => function ($container) {
+                return new Controller\Api\PreferenceController(
+                    $container->get(Service\UserService::class),
+                    $container->get(Model\UserPreferenceTable::class),
+                );
+            },
+            Controller\Api\UserController::class => function ($container) {
+                return new Controller\Api\UserController(
+                    $container->get(Service\UserService::class),
                 );
             },
         ],
