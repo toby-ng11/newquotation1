@@ -35,12 +35,12 @@ class IndexController extends BaseController
         $this->container = $container;
     }
 
-    public function getLocationModel()
+    public function getLocationModel(): Location
     {
         return $this->container->get(Location::class);
     }
 
-    public function getItemModel()
+    public function getItemModel(): Item
     {
         return $this->container->get(Item::class);
     }

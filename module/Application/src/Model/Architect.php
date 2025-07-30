@@ -26,22 +26,22 @@ class Architect
         $this->container = $container;
     }
 
-    public function getProject()
+    public function getProject(): Project
     {
         return $this->container->get(Project::class);
     }
 
-    public function getAddress()
+    public function getAddress(): Address
     {
         return $this->container->get(Address::class);
     }
 
-    public function getSpecifier()
+    public function getSpecifier(): Specifier
     {
         return $this->container->get(Specifier::class);
     }
 
-    public function getUserService()
+    public function getUserService(): UserService
     {
         return $this->container->get(UserService::class);
     }

@@ -3,6 +3,7 @@
 namespace Application\Model;
 
 use Application\Helper\InputValidator;
+use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\Select;
 
@@ -20,7 +21,7 @@ class Location
         $select = $this->location->getSql()->select()
             ->order('location_id ASC');
 
-        return $this->location->selectWith($select)->toArray();
+        return $this->location->selectWith($select);
     }
 
     public function fetchAllCompanies()
@@ -29,7 +30,7 @@ class Location
             ->columns(['company_id', 'company_name'])
             ->quantifier(Select::QUANTIFIER_DISTINCT)
             ->order('company_id ASC');
-        return $this->location->selectWith($select)->toArray();
+        return $this->location->selectWith($select);
     }
 
     public function fetchLocationIdFromCompany($company_id)
@@ -43,7 +44,9 @@ class Location
             ->where(['company_id' => $company_id])
             ->order('location_id ASC');
 
-        $result = $this->location->selectWith($select)->toArray();
+        /** @var ResultSet $rowset */
+        $rowset = $this->location->selectWith($select);
+        $result = $rowset->toArray();
 
         // Extract just the IDs
         return array_map(fn($row) => (int) $row['location_id'], $result);

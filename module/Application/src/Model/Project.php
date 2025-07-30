@@ -36,27 +36,27 @@ class Project
         $this->container = $container;
     }
 
-    public function getArchitect()
+    public function getArchitect(): Architect
     {
         return $this->container->get(Architect::class);
     }
 
-    public function getAddress()
+    public function getAddress(): Address
     {
         return $this->container->get(Address::class);
     }
 
-    public function getSpecifier()
+    public function getSpecifier(): Specifier
     {
         return $this->container->get(Specifier::class);
     }
 
-    public function getQuote()
+    public function getQuote(): Quote
     {
         return $this->container->get(Quote::class);
     }
 
-    public function getUserService()
+    public function getUserService(): UserService
     {
         return $this->container->get(UserService::class);
     }
@@ -89,9 +89,9 @@ class Project
 
 
         if ($architect && empty($data['architect_id']) && ! empty($data['architect_name'])) {
-            $info['architect_id'] =
-                $architect['id'] ? $this->getArchitect()->edit($data, $architect['id']) :
-                $this->getArchitect()->add($data);
+            $info['architect_id'] = $this->getArchitect()->edit($data, $architect['id']);
+        } elseif (empty($data['architect_id']) && ! empty($data['architect_name'])) {
+            $info['architect_id'] = $this->getArchitect()->add($data);
         } elseif (! empty($data['architect_id'])) {
             $info['architect_id'] = $this->getArchitect()->edit($data, $data['architect_id']);
         } else {
@@ -113,13 +113,7 @@ class Project
 
         // Case: user typed in address but no address_id given
         if (empty($data['address_id']) && $hasAddressData) {
-            // Attempt to match a global existing address using key fields
-            $existingAddress = $this->getAddress()->findByPhysicalAddressFuzzy($data['phys_address1'], $data['phys_postal_code']);
-
-            if (! empty($existingAddress)) {
-                // Update global matched address
-                $info['architect_address_id'] = $this->getAddress()->edit($data, $existingAddress['id']);
-            } elseif (! empty($architectAddress)) {
+            if (! empty($architectAddress)) {
                 // Update the existing address tied to the architect
                 $info['architect_address_id'] = $this->getAddress()->edit($data, $architectAddress['id']);
             } else {
@@ -134,9 +128,11 @@ class Project
         }
 
         if (empty($data['specifier_id']) && ! empty($data['specifier_first_name'])) {
-            $info['specifier_id'] = $this->getSpecifier()->add($data, $info['architect_id']);
+            $newSpecifierId = $this->getSpecifier()->add($data, $info['architect_id']);
+            $info['specifier_id'] = $newSpecifierId;
         } elseif (! empty($data['specifier_id'])) {
-            $info['specifier_id'] = $this->getSpecifier()->edit($data, $data['specifier_id']);
+            $editSpecifierId = $this->getSpecifier()->edit($data, $data['specifier_id']);
+            $info['specifier_id'] = $editSpecifierId;
         } else {
             $info['specifier_id'] = null;
         }

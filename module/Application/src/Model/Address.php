@@ -27,7 +27,7 @@ class Address
         $this->container = $container;
     }
 
-    public function getUserService()
+    public function getUserService(): UserService
     {
         return $this->container->get(UserService::class);
     }
@@ -188,39 +188,6 @@ class Address
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
         return $result;
-    }
-
-    public function findByPhysicalAddressFuzzy($address1, $postalCode)
-    {
-        if (! InputValidator::isValidData($address1) || ! InputValidator::isValidData($postalCode)) {
-            return false;
-        }
-
-        $sql = new Sql($this->adapter);
-
-        $select = $sql->select('p2q_view_address');
-        $select->where
-            ->isNull('deleted_at')
-            ->equalTo('phys_postal_code', trim($postalCode));
-
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $results = $statement->execute()->current();
-
-        $address1 = strtolower(trim($address1));
-        $highestScore = 0;
-        $bestMatch = null;
-
-        foreach ($results as $row) {
-            $rowAddress1 = strtolower(trim($row['phys_address1']));
-            similar_text($address1, $rowAddress1, $percent);
-
-            if ($percent > $highestScore && $percent >= 85) { // threshold can be tuned
-                $highestScore = $percent;
-                $bestMatch = $row;
-            }
-        }
-
-        return $bestMatch;
     }
 
     public function fetchSpecifierAddress($specifier_id)

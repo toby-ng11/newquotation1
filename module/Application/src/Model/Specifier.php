@@ -26,12 +26,12 @@ class Specifier
         $this->container = $container;
     }
 
-    public function getAddress()
+    public function getAddress(): Address
     {
         return $this->container->get(Address::class);
     }
 
-    public function getUserSerive()
+    public function getUserSerive(): UserService
     {
         return $this->container->get(UserService::class);
     }

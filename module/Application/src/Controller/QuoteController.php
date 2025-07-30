@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Application\Controller;
 
+use Application\Model\{Customer, Item, Location, Project, Quote};
+use Application\Service\{PdfExportService, UserService};
 use Laminas\Http\Response\Stream;
 use Laminas\View\Model\{ViewModel, JsonModel};
 use Psr\Container\ContainerInterface;
-use Application\Model\Quote;
 
 class QuoteController extends BaseController
 {
@@ -27,39 +28,39 @@ class QuoteController extends BaseController
         $this->container = $container;
     }
 
-    public function getUserService()
+    public function getUserService(): UserService
     {
-        return $this->container->get(\Application\Service\UserService::class);
+        return $this->container->get(UserService::class);
     }
 
-    public function getPdfExportService()
+    public function getPdfExportService(): PdfExportService
     {
-        return $this->container->get(\Application\Service\PdfExportService::class);
+        return $this->container->get(PdfExportService::class);
     }
 
-    public function getQuoteModel()
+    public function getQuoteModel(): Quote
     {
-        return $this->container->get(\Application\Model\Quote::class);
+        return $this->container->get(Quote::class);
     }
 
-    public function getProjectModel()
+    public function getProjectModel(): Project
     {
-        return $this->container->get(\Application\Model\Project::class);
+        return $this->container->get(Project::class);
     }
 
-    public function getLocationModel()
+    public function getLocationModel(): Location
     {
-        return $this->container->get(\Application\Model\Location::class);
+        return $this->container->get(Location::class);
     }
 
-    public function getItemModel()
+    public function getItemModel(): Item
     {
-        return $this->container->get(\Application\Model\Item::class);
+        return $this->container->get(Item::class);
     }
 
-    public function getCustomerModel()
+    public function getCustomerModel(): Customer
     {
-        return $this->container->get(\Application\Model\Customer::class);
+        return $this->container->get(Customer::class);
     }
 
     public function indexAction()

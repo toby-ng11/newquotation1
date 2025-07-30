@@ -2,15 +2,16 @@
 
 namespace Application\Model;
 
-use Laminas\Db\Adapter\Adapter;
-use Laminas\Db\TableGateway\TableGatewayInterface;
-use Laminas\Db\TableGateway\TableGateway;
-use Laminas\Db\Sql\{Sql, Expression};
-use Laminas\Db\Adapter\Exception\ErrorException;
-use Application\Service\UserService;
-use Psr\Container\ContainerInterface;
 use Application\Controller\QuoteController;
 use Application\Helper\InputValidator;
+use Application\Service\UserService;
+use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\Adapter\Driver\ResultInterface;
+use Laminas\Db\Adapter\Exception\ErrorException;
+use Laminas\Db\Sql\{Sql, Expression};
+use Laminas\Db\TableGateway\TableGatewayInterface;
+use Laminas\Db\TableGateway\TableGateway;
+use Psr\Container\ContainerInterface;
 
 class Quote
 {
@@ -243,28 +244,30 @@ class Quote
 
     public function fetchById($quote_id)
     {
-        return $this->p2q_view_quote_x_project_x_oe->select(['id' => $quote_id])->current();
+        /** @var ResultInterface $rowset */
+        $rowset = $this->p2q_view_quote_x_project_x_oe->select(['id' => $quote_id]);
+        $row = $rowset->current();
+        return $row;
     }
 
     public function fetchAll()
     {
-        return $this->quote->select()->toArray();
+        return $this->quote->select();
     }
 
     public function fetchAllViews($location)
     {
         if ($location) {
             return $this->p2q_view_quote_x_project_x_oe
-                ->select(['centura_location_id' => $location])
-                ->toArray();
+                ->select(['centura_location_id' => $location]);
         }
 
-        return $this->p2q_view_quote_x_project_x_oe->select()->toArray();
+        return $this->p2q_view_quote_x_project_x_oe->select();
     }
 
     public function fetchOwnQuotes($user_id)
     {
-        return $this->p2q_view_quote_x_project_x_oe->select(['created_by' => $user_id])->toArray();
+        return $this->p2q_view_quote_x_project_x_oe->select(['created_by' => $user_id]);
     }
 
     public function fetchApprovalTable($table)

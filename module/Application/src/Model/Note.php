@@ -2,8 +2,8 @@
 
 namespace Application\Model;
 
+use Laminas\Db\Adapter\Driver\ResultInterface;
 use Laminas\Db\TableGateway\TableGateway;
-use Laminas\Db\Sql\Select;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\{Sql, Expression};
 use Exception;
@@ -121,6 +121,7 @@ class Note
             return false;
         }
 
+        /**  @var ResultInterface $result */
         $result = $this->project_note->select(['id' => $id]);
         return $result->current();
     }

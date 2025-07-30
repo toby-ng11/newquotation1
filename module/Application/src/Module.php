@@ -28,7 +28,10 @@ class Module implements ConfigProviderInterface
         $sessionManager = $serviceManager->get(SessionManager::class);
         Container::setDefaultManager($sessionManager);
 
+        /** @var User $userModel */
         $userModel = $serviceManager->get(User::class);
+
+        /** @var Location $locationModel */
         $locationModel = $serviceManager->get(Location::class);
         $name = str_replace(['CENTURA\\', 'centura\\'], '', $_SERVER['REMOTE_USER'] ?? '');
         $user = $userModel->fetchsalebyid($name);

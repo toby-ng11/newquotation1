@@ -3,6 +3,7 @@
 namespace Application\Model;
 
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\Adapter\Driver\ResultInterface;
 use Laminas\Db\TableGateway\TableGatewayInterface;
 use Laminas\Db\Sql\Sql;
 use Application\Helper\InputValidator;
@@ -25,7 +26,10 @@ class User
         if (! InputValidator::isValidData($username)) {
             return false;
         }
-        return $this->P21_Users->select(['id' => $username])->current();
+
+        /**  @var ResultInterface $rowset */
+        $rowset = $this->P21_Users->select(['id' => $username]);
+        return $rowset->current();
     }
 
     public function fetchUserIdByPattern($pattern, $limit = 10)

@@ -6,6 +6,7 @@ use Application\Helper\InputValidator;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\Adapter\Driver\ResultInterface;
 use Laminas\Db\Sql\{Sql, Expression};
 use Exception;
 use Application\Service\UserService;
@@ -189,9 +190,11 @@ class Item
 
         switch ($sheetType) {
             case 'project':
+                /** @var ResultInterface $result */
                 $result = $this->project_items->select(['id' => $item_uid]);
                 break;
             case 'quote':
+                /** @var ResultInterface $result */
                 $result = $this->quote_items->select(['id' => $item_uid]);
                 break;
             default:
@@ -306,7 +309,7 @@ class Item
                         'project_id' => $id,
                         'deleted_at IS NULL'
                     ]);
-                return $this->project_items->selectWith($select)->toArray();
+                return $this->project_items->selectWith($select);
                 break;
             case 'quote':
                 $select = $this->quote_items->getSql()->select()
@@ -314,7 +317,7 @@ class Item
                         'quote_id' => $id,
                         'deleted_at IS NULL'
                     ]);
-                return $this->quote_items->selectWith($select)->toArray();
+                return $this->quote_items->selectWith($select);
                 break;
             default:
                 return false;
