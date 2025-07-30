@@ -2,8 +2,7 @@
     x-data="customerModal()"
     x-init="
         window.customerModalComponent = $data;
-        document.getElementById('widget-btn-add-quote')?.addEventListener('click', () => open = true);
-        document.getElementById('options-btn-add-quote')?.addEventListener('click', () => open = true);"
+        document.getElementById('widget-btn-add-quote')?.addEventListener('click', () => open = true);"
     x-effect="
             if (open) {
                 document.body.classList.add('overflow-hidden');
@@ -24,15 +23,21 @@
             class="bg-background ring-neutral fixed z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-xl border border-none bg-clip-padding p-6 shadow-2xl ring-4 ring-neutral-200/80 sm:max-w-5xl sm:max-h-screen dark:bg-neutral-900 dark:ring-neutral-800"
             x-transition>
             <div class="flex flex-col gap-2 text-center sm:text-left">
-                <h2 class="leading-none font-semibold text-lg">Add quote</h2>
-                <p class="text-muted-foreground text-sm">Add a customer and contact for this quote.</p>
+                <h2
+                    class="leading-none font-semibold text-lg"
+                    x-text="isEditing ? 'Edit customer' : 'Make quote'">
+                </h2>
+                <p
+                    class="text-muted-foreground text-sm"
+                    x-text="isEditing ? 'Edit customer and contact for this quote.' : 'Make a quote for this project.'">
+                </p>
             </div>
 
             <div class="text-popover-foreground flex h-full w-full flex-col overflow-hidden">
                 <div class="max-h-[400px] scroll-py-1 overflow-x-hidden overflow-y-auto no-scrollbar min-h-80 scroll-pt-2 scroll-pb-1.5">
                     <form id="make-quote-form" @submit.prevent="submitForm" class="form">
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-                            <input type="hidden" id="customer_id" name="customer_id" value="">
+                            <input type="hidden" id="customer_id" value="">
                             <input type="hidden" id="contact_id" name="contact_id" value="">
                             <div class="grid gap-2 required-field">
                                 <label for="customer_name">Customer</label>
@@ -61,53 +66,53 @@
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="first_name">First Name</label>
-                                <input type="text" id="first_name">
+                                <label for="contact_first_name">First Name</label>
+                                <input type="text" id="contact_first_name">
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="last_name">Last Name</label>
-                                <input type="text" id="last_name">
+                                <label for="contact_last_name">Last Name</label>
+                                <input type="text" id="contact_last_name">
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="phys_address1">Address 1</label>
-                                <input type="text" id="phys_address1">
+                                <label for="contact_phys_address1">Address 1</label>
+                                <input type="text" id="contact_phys_address1">
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="phys_address2">Address 2</label>
-                                <input type="text" id="phys_address2">
+                                <label for="contact_phys_address2">Address 2</label>
+                                <input type="text" id="contact_phys_address2">
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="phys_city">City</label>
-                                <input type="text" id="phys_city">
+                                <label for="contact_phys_city">City</label>
+                                <input type="text" id="contact_phys_city">
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="phys_state">Province</label>
-                                <input type="text" id="phys_state">
+                                <label for="contact_phys_state">Province</label>
+                                <input type="text" id="contact_phys_state">
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="phys_postal_code">Postal Code</label>
-                                <input type="text" id="phys_postal_code">
+                                <label for="contact_phys_postal_code">Postal Code</label>
+                                <input type="text" id="contact_phys_postal_code">
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="phys_country">Country</label>
-                                <input type="text" id="phys_country">
+                                <label for="contact_phys_country">Country</label>
+                                <input type="text" id="contact_phys_country">
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="central_phone_number">Phone Number</label>
-                                <input type="text" id="central_phone_number" class="maskPhoneExt">
+                                <label for="contact_central_phone_number">Phone Number</label>
+                                <input type="text" id="contact_central_phone_number" class="maskPhoneExt">
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="email_address">Email</label>
-                                <input type="text" id="email_address">
+                                <label for="contact_email_address">Email</label>
+                                <input type="text" id="contact_email_address">
                             </div>
                         </div>
                     </form>
@@ -119,8 +124,8 @@
                         type="submit"
                         class="btn bg-blue-500 hover:bg-blue-500/90 dark:bg-blue-400 hover:dark:bg-blue-400/90"
                         form="make-quote-form"
-                        id="customer-make-quote-btn">
-                        Make Quote
+                        id="customer-make-quote-btn"
+                        x-text="isEditing ? 'Save' : 'Make quote'">
                     </button>
                 </div>
             </div>

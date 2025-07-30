@@ -87,4 +87,22 @@ class CustomerController extends BaseController
 
         return $this->abort404();
     }
+
+    public function customerAction() {
+        $request = $this->getRequest();
+
+        if ($request->isXmlHttpRequest()) {
+            $contact_id = $this->params()->fromRoute('id', null);
+
+            if (empty($contact_id)) {
+                return new JsonModel(['error' => 'Contact ID is required']);
+            }
+
+            $contact = $this->customer->fetchCustomerByContact($contact_id);
+
+            return new JsonModel($contact);
+        }
+
+        return $this->abort404();
+    }
 }

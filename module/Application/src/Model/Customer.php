@@ -3,7 +3,7 @@
 namespace Application\Model;
 
 use Application\Helper\InputValidator;
-use Laminas\Db\TableGateway\TableGatewayInterface;
+use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Sql;
@@ -17,8 +17,8 @@ class Customer
 
     public function __construct(
         Adapter $adapter,
-        TableGatewayInterface $P21_customers_x_address,
-        TableGatewayInterface $P21_customers_x_address_x_contacts
+        TableGateway $P21_customers_x_address,
+        TableGateway $P21_customers_x_address_x_contacts
     ) {
         $this->adapter = $adapter;
         $this->P21_customers_x_address = $P21_customers_x_address;
@@ -87,6 +87,7 @@ class Customer
 
         $sql = new Sql($this->adapter);
         $select = $sql->select('P21_customers_x_address_x_contacts')
+            ->columns(['customer_id'])
             ->where(['company_id' => $company, 'contact_id' => $contact_id]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -127,6 +128,7 @@ class Customer
             ])
             ->where(['contact_id' => $contact_id]);
 
+        /** @var ResultSet $result */
         $result = $this->P21_customers_x_address_x_contacts->selectWith($select);
         return $result->current() ? $result->current()->getArrayCopy() : null;
     }

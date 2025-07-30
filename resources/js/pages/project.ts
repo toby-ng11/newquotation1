@@ -66,7 +66,7 @@ async function initProject() {
                 const data = await response.json();
 
                 if (data.success) {
-                    window.location.href = '/index/home';
+                    window.location.href = '/index/project';
                 } else {
                     alert(data.message || 'Failed to delete the project.');
                 }

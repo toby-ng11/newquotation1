@@ -49,7 +49,7 @@ type CustomerModalComponent = {
     submitForm: () => Promise<void>;
     closeModal: () => void;
     getCustomerContacts: (customerID: string) => Promise<void>;
-    getContactInfo: () => Promise<void>;
+    getContactInfo: (contactId? : string | null) => Promise<void>;
 };
 
 declare global {

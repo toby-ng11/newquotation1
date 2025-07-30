@@ -263,7 +263,7 @@ class Architect
 
         $sql = new Sql($this->adapter);
         $select = $sql->select('p2q_view_architect_ranking')
-            ->where(['owner_id' => $user_id])
+            ->where(['created_by' => $user_id])
             ->order('total_projects DESC')
             ->limit(5)->offset(0);
 

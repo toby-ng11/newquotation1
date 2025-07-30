@@ -5,6 +5,7 @@ namespace Application\Model;
 use Application\Helper\InputValidator;
 use Application\Service\UserService;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\{Sql, Expression, Select};
 use Psr\Container\ContainerInterface;
@@ -87,7 +88,7 @@ class Project
         $architectAddress = $this->getAddress()->fetchAddressesByArchitect($architect['id'] ?? null);
 
 
-        if (empty($data['architect_id']) && ! empty($data['architect_name'])) {
+        if ($architect && empty($data['architect_id']) && ! empty($data['architect_name'])) {
             $info['architect_id'] =
                 $architect['id'] ? $this->getArchitect()->edit($data, $architect['id']) :
                 $this->getArchitect()->add($data);
@@ -298,7 +299,7 @@ class Project
 
     public function fetchAll()
     {
-        return $this->project->select()->toArray();
+        return $this->project->select();
     }
 
     public function fetchAllViews()
@@ -311,7 +312,12 @@ class Project
         if (! InputValidator::isValidId($id)) {
             return false;
         }
-        return $this->p2q_view_projects->select(['id' => $id])->current();
+
+        $id = (int) $id;
+        /** @var ResultSet $rowset */
+        $rowset = $this->p2q_view_projects->select(['id' => $id]);
+        $row = $rowset->current();
+        return $row;
     }
 
     public function fetchOwnProjects($user_id)
@@ -351,7 +357,7 @@ class Project
             return false;
         }
 
-        return $this->p2q_view_projects_share->select(['shared_user' => $user_id])->toArray();
+        return $this->p2q_view_projects_share->select(['shared_user' => $user_id]);
     }
 
     public function countAssignedProjects($user_id)
@@ -461,7 +467,7 @@ class Project
         }
 
         $sql = new Sql($this->adapter);
-        $select = $sql->select('quote')
+        $select = $sql->select('quotes')
             ->columns(['total' => new Expression('COUNT(*)')])
             ->where(['project_id' => $project_id]);
 

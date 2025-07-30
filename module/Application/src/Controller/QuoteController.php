@@ -105,19 +105,28 @@ class QuoteController extends BaseController
 
         if ($request->isPost()) {
             $quote_id = $this->params()->fromRoute('id');
-            $data = $this->params()->fromPost();
+            $contact_id = $this->params()->fromQuery('contact');
 
-            $result = $this->getQuoteModel()->edit($data, $quote_id);
+            if ($contact_id) {
+                $result = $this->getQuoteModel()->editContact($contact_id, $quote_id);
+            } else {
+                $data = $this->params()->fromPost();
+                $result = $this->getQuoteModel()->edit($data, $quote_id);
+            }
 
             if ($result) {
-                //$this->flashMessenger()->addSuccessMessage("Project saved successfully.");
-                return $this->redirect()->toRoute('quote', [
-                    'action' => 'edit',
-                    'id' => $quote_id
+                $this->flashMessenger()->addSuccessMessage("Saved changes!");
+                return new JsonModel([
+                    'success' => $result,
+                    'message' => 'Saved changes!',
+                    'quote_id' => $quote_id,
                 ]);
             } else {
                 //$this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
-                return false;
+                return new JsonModel([
+                    'success' => $result,
+                    'message' => 'Failed to edit quote.',
+                ]);
             }
         }
 
@@ -187,7 +196,7 @@ class QuoteController extends BaseController
             }
 
             if ($user['p2q_system_role'] === 'guest') {
-               return $this->redirect()->toRoute('dashboard', ['action' => 'quotes']);
+                return $this->redirect()->toRoute('dashboard', ['action' => 'quotes']);
             }
 
             return $this->redirect()->toRoute('dashboard', ['action' => 'home']);

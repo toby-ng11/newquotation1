@@ -9,6 +9,31 @@ const contactDropdown = document.getElementById('contact_name') as HTMLSelectEle
 async function initCustomer() {
     const { setupAutoComplete } = await import('@/components/autocomplete');
 
+    // Add quote from quote page button
+    const addAnotherQuoteBtn = document.getElementById('widget-btn-add-quote') as HTMLButtonElement;
+    if (addAnotherQuoteBtn) {
+        addAnotherQuoteBtn.addEventListener('click', () => {
+            if (window.customerModalComponent) {
+                window.customerModalComponent.open = true;
+                window.customerModalComponent.isEditing = false;
+            }
+        });
+    }
+
+    // Widget Edit button
+    const customerEditBtn = document.getElementById('edit-quote-customer') as HTMLButtonElement;
+    if (customerEditBtn) {
+        customerEditBtn.addEventListener('click', () => {
+            const contactIdInput = document.getElementById('contact_id') as HTMLInputElement;
+            const contactId = customerEditBtn.dataset.id as string;
+            if (window.customerModalComponent && contactIdInput) {
+                window.customerModalComponent.open = true;
+                window.customerModalComponent.isEditing = true;
+                window.customerModalComponent.getContactInfo(contactId);
+            }
+        });
+    }
+
     const customerNameInput = document.getElementById('customer_name') as HTMLInputElement;
     if (customerNameInput) {
         setupAutoComplete({
@@ -37,7 +62,6 @@ async function initCustomer() {
             extraSelectActions: [
                 (item) => {
                     if (item.customer_id) {
-                        console.log('clicked!');
                         window.customerModalComponent?.getCustomerContacts(item.customer_id);
                     }
                 },
@@ -93,7 +117,7 @@ function customerModal() {
             showLoading();
 
             try {
-                const response = await fetch('/quote', {
+                const response = await fetch(this.isEditing ? `/quote/${sheetID}/edit?contact=${contactID}` : '/quote', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -105,6 +129,8 @@ function customerModal() {
                 const result = await response.json();
 
                 if (result.success && result.quote_id) {
+                    resetForm(form);
+                    this.open = false;
                     window.location.href = `/quote/${result.quote_id}/edit`;
                 } else {
                     console.error('Quote creation error:', result);
@@ -118,7 +144,6 @@ function customerModal() {
                 hideLoading();
             }
         },
-
         closeModal() {
             const form = document.getElementById('make-quote-form') as HTMLFormElement;
             resetForm(form);
@@ -152,9 +177,9 @@ function customerModal() {
             }
         },
 
-        async getContactInfo() {
+        async getContactInfo(contactId?: string | null) {
             const contactSelect = document.getElementById('contact_name') as HTMLSelectElement;
-            const contactID = contactSelect?.value;
+            const contactID = contactId ?? contactSelect?.value?.trim();
             if (!contactID) return;
 
             try {
@@ -164,8 +189,10 @@ function customerModal() {
                 if (!res.ok) throw new Error(`Server returned ${res.status}`);
                 const data = await res.json();
 
+                const contactIdInput = document.getElementById('contact_id') as HTMLInputElement;
+                contactIdInput.value = data['contact_id'];
+
                 const fields = [
-                    'contact_id',
                     'first_name',
                     'last_name',
                     'phys_address1',
@@ -179,13 +206,66 @@ function customerModal() {
                 ];
 
                 fields.forEach((field) => {
+                    const input = document.getElementById(`contact_${field}`) as HTMLInputElement;
+                    if (input) {
+                        input.value = data[field] || '';
+                    }
+                });
+
+                if (this.isEditing) this.getCustomerForEdit(contactID);
+            } catch (err: any) {
+                showFlashMessage(`Failed to fetch contact info: ${err.message}`, false);
+            }
+        },
+        async getCustomerForEdit(contactId: string) {
+            try {
+                const res = await fetch(`/customer/${contactId}/customer`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
+                if (!res.ok) throw new Error(`Server returned ${res.status}`);
+                const data = await res.json();
+
+                const fields = ['customer_id', 'customer_name', 'company_id', 'salesrep_full_name'];
+
+                fields.forEach((field) => {
                     const input = document.getElementById(`${field}`) as HTMLInputElement;
                     if (input) {
                         input.value = data[field] || '';
                     }
                 });
+
+                const customerId = data['customer_id'];
+
+                await this.getCustomerContactsEdit(customerId, contactId);
             } catch (err: any) {
-                showFlashMessage(`Failed to fetch contact info: ${err.message}`, false);
+                showFlashMessage(`Failed to fetch customer: ${err.message}`, false);
+            }
+        },
+        async getCustomerContactsEdit(customerId: string, contactId: string) {
+            if (!customerId) return;
+
+            try {
+                const res = await fetch(`/customer/${customerId}/contacts`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                });
+                if (!res.ok) throw new Error(`Server returned ${res.status}`);
+                const data: { contact_id: string; contact_full_name: string }[] = await res.json();
+
+                const contactSelect = document.getElementById('contact_name') as HTMLSelectElement;
+
+                contactSelect.innerHTML = '';
+
+                data.forEach((item) => {
+                    const option = document.createElement('option');
+                    option.value = item.contact_id;
+                    option.textContent = item.contact_full_name;
+                    if (item.contact_id === contactId) {
+                        option.selected = true;
+                    }
+                    contactSelect.appendChild(option);
+                });
+            } catch (err: any) {
+                showFlashMessage(`Failed to fetch contacts: ${err.message}`, false);
             }
         },
     };

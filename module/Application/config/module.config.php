@@ -199,6 +199,28 @@ return [
                     ],
                 ],
             ],
+            'opportunity' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/opportunities',
+                    'defaults' => [
+                        'controller' => Controller\OpportunityController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'new' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/new',
+                            'defaults' => [
+                                'action' => 'new',
+                            ]
+                        ],
+                    ]
+                ]
+            ],
             'api' => [
                 'type' => Literal::class,
                 'options' => [

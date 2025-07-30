@@ -10,6 +10,7 @@ use Laminas\Db\Adapter\Exception\ErrorException;
 use Application\Service\UserService;
 use Psr\Container\ContainerInterface;
 use Application\Controller\QuoteController;
+use Application\Helper\InputValidator;
 
 class Quote
 {
@@ -192,6 +193,29 @@ class Quote
                     break;
             }
         }
+
+        try {
+            $this->quote->update($info, ['id' => $quote_id]);
+            return true;
+        } catch (ErrorException $e) {
+            error_log("Quote/edit:Database Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function editContact($contact_id, $quote_id)
+    {
+        if (! InputValidator::isValidId($contact_id) || ! InputValidator::isValidId($quote_id)) {
+            return false;
+        }
+
+        $user = $this->getUserService()->getCurrentUser();
+
+        $info = [
+            'contact_id'         => $contact_id,
+            'updated_at'         => new Expression('GETDATE()'),
+            'updated_by'         => $user['id'],
+        ];
 
         try {
             $this->quote->update($info, ['id' => $quote_id]);

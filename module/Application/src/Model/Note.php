@@ -40,9 +40,7 @@ class Note
             'content' => trim($data['project_note']),
             'next_action' => trim($data['next_action']),
             'created_at' => new Expression('GETDATE()'),
-            'updated_at' => new Expression('GETDATE()'),
             'created_by' => $user['id'],
-            'updated_by' => $user['id'],
             'notify_at' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null
         ];
 
@@ -165,9 +163,9 @@ class Note
         $sql = new Sql($this->adapter);
         $select = $sql->select('project_notes');
         $select->where([
-            "follow_up_date <= GETDATE()",
-            "follow_up_date > DATEADD(MINUTE, -1, GETDATE())",
-            "(notified_flag IS NULL OR notified_flag != 'Y')",
+            "notify_at <= GETDATE()",
+            "notify_at > DATEADD(MINUTE, -1, GETDATE())",
+            "(is_notified IS NULL OR is_notified = 'N')",
             'deleted_at IS NOT NULL'
         ]);
 
@@ -185,7 +183,7 @@ class Note
 
         $sql = new Sql($this->adapter);
         $update = $sql->update('project_notes');
-        $update->set(['notified_flag' => 'Y']);
+        $update->set(['is_notified' => 'Y']);
         $update->where(['id' => $noteId]);
 
         $statement = $sql->prepareStatementForSqlObject($update);
