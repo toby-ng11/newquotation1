@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Laminas\Db\Adapter\AdapterInterface;
-use Laminas\View\Model\JsonModel;
 use Application\Model\User;
 
 class UserController extends BaseController
@@ -37,10 +36,10 @@ class UserController extends BaseController
         $limit = (int) $this->params()->fromQuery('limit', 10);
 
         if (empty($pattern)) {
-            return new JsonModel(['error' => 'Pattern is required']);
+            return json_encode(['error' => 'Pattern is required']);
         }
 
         $users = $this->user->fetchUserIdByPattern($pattern, $limit);
-        return new JsonModel($users);
+        return json_encode($users);
     }
 }

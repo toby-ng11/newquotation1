@@ -2,7 +2,6 @@
 
 namespace Application\Controller;
 
-use Laminas\View\Model\JsonModel;
 use Application\Model\Customer;
 
 class CustomerController extends BaseController
@@ -23,12 +22,12 @@ class CustomerController extends BaseController
             $limit = $this->params()->fromQuery('limit', 10);
 
             if (empty($pattern)) {
-                return new JsonModel(['error' => 'Pattern is required']);
+                return json_encode(['error' => 'Pattern is required']);
             }
 
             $customer = $this->customer->fetchCustomerByPattern($pattern, $limit);
 
-            return new JsonModel($customer);
+            return json_encode($customer);
         }
         return $this->abort404();
     }
@@ -41,12 +40,12 @@ class CustomerController extends BaseController
             $id = $this->params()->fromRoute('id', null);
 
             if (empty($id)) {
-                return new JsonModel(['error' => 'ID is required']);
+                return json_encode(['error' => 'ID is required']);
             }
 
             $customer = $this->customer->fetchCustomerById($id);
 
-            return new JsonModel($customer);
+            return json_encode($customer);
         }
         return $this->abort404();
     }
@@ -59,12 +58,12 @@ class CustomerController extends BaseController
             $customer_id = $this->params()->fromRoute('id', null);
 
             if (empty($customer_id)) {
-                return new JsonModel(['error' => 'Customer ID is required']);
+                return json_encode(['error' => 'Customer ID is required']);
             }
 
             $contacts = $this->customer->fetchContactsByCustomer($customer_id);
 
-            return new JsonModel($contacts);
+            return json_encode($contacts);
         }
         return $this->abort404();
     }
@@ -77,12 +76,12 @@ class CustomerController extends BaseController
             $contact_id = $this->params()->fromRoute('id', null);
 
             if (empty($contact_id)) {
-                return new JsonModel(['error' => 'Contact ID is required']);
+                return json_encode(['error' => 'Contact ID is required']);
             }
 
             $contact = $this->customer->fetchContactByID($contact_id);
 
-            return new JsonModel($contact);
+            return json_encode($contact);
         }
 
         return $this->abort404();
@@ -95,12 +94,12 @@ class CustomerController extends BaseController
             $contact_id = $this->params()->fromRoute('id', null);
 
             if (empty($contact_id)) {
-                return new JsonModel(['error' => 'Contact ID is required']);
+                return json_encode(['error' => 'Contact ID is required']);
             }
 
             $contact = $this->customer->fetchCustomerByContact($contact_id);
 
-            return new JsonModel($contact);
+            return json_encode($contact);
         }
 
         return $this->abort404();

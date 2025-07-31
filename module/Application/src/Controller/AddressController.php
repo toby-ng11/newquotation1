@@ -4,8 +4,6 @@ namespace Application\Controller;
 
 use Application\Model\Address;
 use Exception;
-use Laminas\View\Model\ViewModel;
-use Laminas\View\Model\JsonModel;
 
 class AddressController extends BaseController
 {
@@ -31,13 +29,13 @@ class AddressController extends BaseController
                 $address = $this->address->fetchAddressesById($addressID);
 
                 if (! $address) {
-                    return new JsonModel([
+                    return json_encode([
                         'success' => false,
                         'message' => 'Address not found.'
                     ]);
                 }
 
-                return new JsonModel([
+                return json_encode([
                     'success' => true,
                     'address' => [
                         'address_name' => $address['name'],
@@ -76,7 +74,7 @@ class AddressController extends BaseController
             }
 
             if (! $architect_id || empty($data['phys_address1'])) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Missing required fields: ' . implode(', ', $missingFields)
                 ]);
@@ -85,13 +83,13 @@ class AddressController extends BaseController
             try {
                 $result = $this->address->add($data, $architect_id);
 
-                return new JsonModel([
+                return json_encode([
                     'success' => true,
                     'message' => 'Address added!',
                     'note_id' => $result
                 ]);
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to add address.',
                     'error' => $e->getMessage()
@@ -108,7 +106,7 @@ class AddressController extends BaseController
         $address_id = $this->params()->fromRoute('id');
 
         if (! $address_id) {
-            return new JsonModel([
+            return json_encode([
                 'success' => false,
                 'message' => 'Missing address ID.'
             ]);
@@ -120,13 +118,13 @@ class AddressController extends BaseController
             try {
                 $result = $this->address->edit($data, $address_id);
 
-                return new JsonModel([
+                return json_encode([
                     'success' => true,
                     'message' => 'Address saved!',
                     'note_id' => $result
                 ]);
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to edit address.',
                     'error' => $e->getMessage()
@@ -143,7 +141,7 @@ class AddressController extends BaseController
         $request = $this->getRequest();
 
         if (! $address_id || ! $request->isXmlHttpRequest()) {
-            return new JsonModel([
+            return json_encode([
                 'success' => false,
                 'message' => 'Invalid request.',
             ]);
@@ -154,18 +152,18 @@ class AddressController extends BaseController
                 $result = $this->address->delete($address_id);
 
                 if ($result) {
-                    return new JsonModel([
+                    return json_encode([
                         'success' => true,
                         'message' => 'Address deleted!',
                     ]);
                 } else {
-                    return new JsonModel([
+                    return json_encode([
                         'success' => false,
                         'message' => 'Failed to delete address.',
                     ]);
                 }
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to delete address.',
                     'error' => $e->getMessage()

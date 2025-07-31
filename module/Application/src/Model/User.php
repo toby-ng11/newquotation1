@@ -14,7 +14,7 @@ class User
     protected $adapter;
 
     public function __construct(
-        Adapter $adapter, // can you either one, i just use Adapter for debugging and clearer query
+        Adapter $adapter,
         TableGatewayInterface $P21_Users
     ) {
         $this->adapter = $adapter;

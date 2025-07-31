@@ -3,10 +3,9 @@
 namespace Application\Controller;
 
 use Application\Model\MarketSegment;
-use Laminas\View\Model\JsonModel;
 use Psr\Container\ContainerInterface;
 
-class MarketSegmentControllerr extends BaseController
+class MarketSegmentController extends BaseController
 {
     protected $container;
 
@@ -24,7 +23,7 @@ class MarketSegmentControllerr extends BaseController
     public function getList()
     {
         $table = $this->getMarketSegmentModel()->fetchAll();
-        return new JsonModel([
+        return json_encode([
             'success' => true,
             'data' => iterator_to_array($table),
         ]);
@@ -38,7 +37,7 @@ class MarketSegmentControllerr extends BaseController
             return $this->abort404();
         }
 
-        return new JsonModel([
+        return json_encode([
             'success' => true,
             'role_override' => $row,
         ]);
@@ -48,7 +47,7 @@ class MarketSegmentControllerr extends BaseController
     public function create($data)
     {
         $result = $this->getMarketSegmentModel()->create($data);
-        return new JsonModel([
+        return json_encode([
             'success' => $result !== false,
             'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
         ]);
@@ -58,7 +57,7 @@ class MarketSegmentControllerr extends BaseController
     public function update($id, $data)
     {
         $result = $this->getMarketSegmentModel()->update($id, $data);
-        return new JsonModel([
+        return json_encode([
             'success' => $result !== false,
             'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
         ]);
@@ -68,7 +67,7 @@ class MarketSegmentControllerr extends BaseController
     public function delete($id)
     {
         $result = $this->getMarketSegmentModel()->delete($id);
-        return new JsonModel([
+        return json_encode([
             'success' => $result !== false,
             'message' => $result ? 'Role override deleted!' : 'Error! Please check log for more details.',
         ]);

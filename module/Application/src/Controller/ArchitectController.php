@@ -2,7 +2,7 @@
 
 namespace Application\Controller;
 
-use Laminas\View\Model\{ViewModel, JsonModel};
+use Laminas\View\Model\ViewModel;
 use Application\Model\{Architect, Specifier, Address, Location, Project};
 use Application\Service\UserService;
 use Exception;
@@ -48,12 +48,12 @@ class ArchitectController extends BaseController
             }
 
             if (empty($pattern)) {
-                return new JsonModel(['error' => 'Pattern is required']);
+                return json_encode(['error' => 'Pattern is required']);
             }
 
             $architect = $this->architect->fetchArchitectByPattern($admin, $pattern, $user['id']);
 
-            return new JsonModel($architect);
+            return json_encode($architect);
         }
 
         return $this->abort404();
@@ -68,7 +68,7 @@ class ArchitectController extends BaseController
             $data = $this->params()->fromPost();
 
             if (! $architect_id) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Missing required fields: Architect ID'
                 ]);
@@ -77,12 +77,12 @@ class ArchitectController extends BaseController
             $result = $this->architect->edit($data, $architect_id);
 
             if ($result) {
-                return new JsonModel([
+                return json_encode([
                     'success' => true,
                     'message' => 'Architect updated successfully!',
                 ]);
             } else {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Save failed. Please try again.',
                 ]);
@@ -133,7 +133,7 @@ class ArchitectController extends BaseController
             $architect_id = (int) $this->params()->fromRoute('id');
 
             if (! $architect_id) {
-                return new JsonModel(['success' => false, 'message' => 'Missing architect ID']);
+                return json_encode(['success' => false, 'message' => 'Missing architect ID']);
             }
 
             try {
@@ -141,17 +141,17 @@ class ArchitectController extends BaseController
 
                 if ($result) {
                     $this->flashMessenger()->addSuccessMessage("Architect deleted!");
-                    return new JsonModel([
+                    return json_encode([
                         'success' => true,
                     ]);
                 } else {
-                    return new JsonModel([
+                    return json_encode([
                         'success' => false,
                         'message' => 'Failed to delete architect.',
                     ]);
                 }
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to delete architect.',
                     'error' => $e->getMessage()
@@ -167,7 +167,7 @@ class ArchitectController extends BaseController
         if ($request->isXmlHttpRequest()) {
             $architect_id = $this->params()->fromRoute('id');
             $specifiers = $this->specifier->fetchSpecifiersByArchitect($architect_id);
-            $view = new JsonModel($specifiers);
+            $view = json_encode($specifiers);
             return $view;
         }
         return $this->abort404();
@@ -180,12 +180,12 @@ class ArchitectController extends BaseController
             $id = $this->params()->fromRoute('id', null);
 
             if (empty($id)) {
-                return new JsonModel(['error' => 'ID is required']);
+                return json_encode(['error' => 'ID is required']);
             }
 
             $architect = $this->architect->fetchArchitectById($id);
 
-            return new JsonModel($architect);
+            return json_encode($architect);
         }
         return $this->abort404();
     }
@@ -197,12 +197,12 @@ class ArchitectController extends BaseController
             $id = $this->params()->fromRoute('id', null);
 
             if (empty($id)) {
-                return new JsonModel(['error' => 'ID is required']);
+                return json_encode(['error' => 'ID is required']);
             }
 
             $address = $this->address->fetchAddressesByArchitect($id);
 
-            return new JsonModel($address);
+            return json_encode($address);
         }
         return $this->abort404();
     }
@@ -214,12 +214,12 @@ class ArchitectController extends BaseController
             $id = $this->params()->fromRoute('id', null);
 
             if (empty($id)) {
-                return new JsonModel(['error' => 'ID is required']);
+                return json_encode(['error' => 'ID is required']);
             }
 
             $address = $this->address->fetchAddressesById($id);
 
-            return new JsonModel($address);
+            return json_encode($address);
         }
         return $this->abort404();
     }
@@ -231,12 +231,12 @@ class ArchitectController extends BaseController
             $id = $this->params()->fromRoute('id', null);
 
             if (empty($id)) {
-                return new JsonModel(['error' => 'ID is required']);
+                return json_encode(['error' => 'ID is required']);
             }
 
             $architect = $this->specifier->fetchSpecifiersByArchitect($id);
 
-            return new JsonModel($architect);
+            return json_encode($architect);
         }
         return $this->abort404();
     }
@@ -248,12 +248,12 @@ class ArchitectController extends BaseController
             $id = $this->params()->fromRoute('id', null);
 
             if (empty($id)) {
-                return new JsonModel(['error' => 'ID is required']);
+                return json_encode(['error' => 'ID is required']);
             }
 
             $architect = $this->specifier->fetchSpecifierById($id);
 
-            return new JsonModel($architect);
+            return json_encode($architect);
         }
         return $this->abort404();
     }
@@ -267,7 +267,7 @@ class ArchitectController extends BaseController
         $selectedIDsArray = $selectedIDs ? explode(',', $selectedIDs) : null;
 
         if (empty($id)) {
-            return new JsonModel(['error' => 'ID is required']);
+            return json_encode(['error' => 'ID is required']);
         }
 
         $projects = $this->architect->fetchProjectsByArchitect($id, $selectedIDsArray);
@@ -348,7 +348,7 @@ class ArchitectController extends BaseController
         }
 
         if ($this->getRequest()->isXmlHttpRequest()) {
-            return new JsonModel($projects);
+            return json_encode($projects);
         }
 
         return $this->abort404();

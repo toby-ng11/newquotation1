@@ -4,7 +4,6 @@ namespace Application\Controller;
 
 use Application\Model\Specifier;
 use Exception;
-use Laminas\View\Model\JsonModel;
 
 class SpecifierController extends BaseController
 {
@@ -29,13 +28,13 @@ class SpecifierController extends BaseController
             $specifier = $this->specifier->fetchSpecifierById($specifierID);
 
             if (! $specifier) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Specifier not found.'
                 ]);
             }
 
-            return new JsonModel([
+            return json_encode([
                 'success' => true,
                 'specifier' => [
                     'first_name' => $specifier['first_name'],
@@ -66,7 +65,7 @@ class SpecifierController extends BaseController
         }
 
         if (! $architect_id || empty($data['specifier_first_name'])) {
-            return new JsonModel([
+            return json_encode([
                 'success' => false,
                 'message' => 'Missing required fields: ' . implode(', ', $missingFields)
             ]);
@@ -75,13 +74,13 @@ class SpecifierController extends BaseController
         try {
             $result = $this->specifier->add($data, $architect_id);
 
-            return new JsonModel([
+            return json_encode([
                 'success' => true,
                 'message' => 'Specifier added!',
                 'note_id' => $result
             ]);
         } catch (Exception $e) {
-            return new JsonModel([
+            return json_encode([
                 'success' => false,
                 'message' => 'Failed to add specifier.',
                 'error' => $e->getMessage()
@@ -95,7 +94,7 @@ class SpecifierController extends BaseController
         $specifier_id = $this->params()->fromRoute('id');
 
         if (! $specifier_id) {
-            return new JsonModel([
+            return json_encode([
                 'success' => false,
                 'message' => 'Missing specifier ID.'
             ]);
@@ -107,13 +106,13 @@ class SpecifierController extends BaseController
             try {
                 $result = $this->specifier->edit($data, $specifier_id);
 
-                return new JsonModel([
+                return json_encode([
                     'success' => true,
                     'message' => 'Specifier saved!',
                     'note_id' => $result
                 ]);
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to edit specifier.',
                     'error' => $e->getMessage()
@@ -130,7 +129,7 @@ class SpecifierController extends BaseController
         $request = $this->getRequest();
 
         if (! $specifier_id || ! $request->isXmlHttpRequest()) {
-            return new JsonModel([
+            return json_encode([
                 'success' => false,
                 'message' => 'Invalid request.',
             ]);
@@ -141,18 +140,18 @@ class SpecifierController extends BaseController
                 $result = $this->specifier->delete($specifier_id);
 
                 if ($result) {
-                    return new JsonModel([
+                    return json_encode([
                         'success' => true,
                         'message' => 'Specifier deleted!',
                     ]);
                 } else {
-                    return new JsonModel([
+                    return json_encode([
                         'success' => false,
                         'message' => 'Failed to delete specifier.',
                     ]);
                 }
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to delete specifier.',
                     'error' => $e->getMessage()

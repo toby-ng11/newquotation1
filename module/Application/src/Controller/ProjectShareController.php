@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Application\Model\ProjectShare;
 use Application\Service\UserService;
 use Exception;
-use Laminas\View\Model\JsonModel;
 use Psr\Container\ContainerInterface;
 
 class ProjectShareController extends BaseController
@@ -38,13 +37,13 @@ class ProjectShareController extends BaseController
             $project_share = $this->project_share->fetchByID($projectShareId);
 
             if (! $project_share) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'No shared user found.'
                 ]);
             }
 
-            return new JsonModel([
+            return json_encode([
                 'success' => true,
                 'project_share' => [
                     'shared_user' => $project_share['shared_user'],
@@ -71,7 +70,7 @@ class ProjectShareController extends BaseController
             }
 
             if (! $project_id || empty($data['shared_user'])) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Missing required fields: ' . implode(', ', $missingFields)
                 ]);
@@ -80,7 +79,7 @@ class ProjectShareController extends BaseController
             $user = $this->getUserService()->getCurrentUser();
 
             if ($user['id'] === $data['shared_user']) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => "You can't share a project with yourself!",
                 ]);
@@ -89,7 +88,7 @@ class ProjectShareController extends BaseController
             $isShareExists = $this->project_share->isShareExists($project_id, $data['shared_user']);
 
             if ($isShareExists) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'This user is already shared!',
                 ]);
@@ -98,12 +97,12 @@ class ProjectShareController extends BaseController
             try {
                 $result = $this->project_share->add($data, $project_id);
 
-                return new JsonModel([
+                return json_encode([
                     'success' => true,
                     'message' => 'Share successfully!',
                 ]);
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to share project',
                     'error' => $e->getMessage()
@@ -119,7 +118,7 @@ class ProjectShareController extends BaseController
         $projects_share_id = $this->params()->fromRoute('id');
 
         if (! $projects_share_id) {
-            return new JsonModel([
+            return json_encode([
                 'success' => false,
                 'message' => 'Missing ID.'
             ]);
@@ -131,13 +130,13 @@ class ProjectShareController extends BaseController
             try {
                 $result = $this->project_share->edit($data, $projects_share_id);
 
-                return new JsonModel([
+                return json_encode([
                     'success' => true,
                     'message' => 'Saved change!',
                     'note_id' => $result
                 ]);
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to edit share.',
                     'error' => $e->getMessage()
@@ -154,7 +153,7 @@ class ProjectShareController extends BaseController
         $request = $this->getRequest();
 
         if (! $projects_share_id || ! $request->isXmlHttpRequest()) {
-            return new JsonModel([
+            return json_encode([
                 'success' => false,
                 'message' => 'Invalid request.',
             ]);
@@ -165,18 +164,18 @@ class ProjectShareController extends BaseController
                 $result = $this->project_share->delete($projects_share_id);
 
                 if ($result) {
-                    return new JsonModel([
+                    return json_encode([
                         'success' => true,
                         'message' => 'Saved change!',
                     ]);
                 } else {
-                    return new JsonModel([
+                    return json_encode([
                         'success' => false,
                         'message' => 'Failed to delete share.',
                     ]);
                 }
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to delete share.',
                     'error' => $e->getMessage()

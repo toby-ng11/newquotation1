@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Application\Controller;
 
 use Laminas\View\Model\ViewModel;
-use Laminas\View\Model\JsonModel;
 use Application\Service\UserService;
 use Application\Model\{
     Architect,
@@ -103,25 +102,25 @@ class IndexController extends BaseController
                 case 'project':
                     $useView = $this->params()->fromQuery('view', false);
                     $projects = $useView ? $this->project->fetchAllViews() : $this->project->fetchAll();
-                    $view = new JsonModel($projects);
+                    $view = json_encode($projects);
                     return $view;
                 case 'quote':
                     $useView = $this->params()->fromQuery('view', false);
                     $quotes = $useView ? $this->quote->fetchAllViews($location) : $this->quote->fetchAll();
-                    $view = new JsonModel($quotes);
+                    $view = json_encode($quotes);
                     return $view;
                 case 'roleoverride':
                     $setRole = $this->getRoleOverride()->fetchAll();
-                    return new JsonModel($setRole);
+                    return json_encode($setRole);
                 case 'users':
                     $setRole = $this->getP21UsersTable()->fetchAll();
-                    return new JsonModel($setRole);
+                    return json_encode($setRole);
                 case 'market-segment':
                     $setRole = $this->getMarketSegmentModel()->fetchAll();
-                    return new JsonModel($setRole);
+                    return json_encode($setRole);
                 case 'statuses':
                     $setRole = $this->getStatusModel()->fetchAll();
-                    return new JsonModel($setRole);
+                    return json_encode($setRole);
             }
         }
 
@@ -153,19 +152,19 @@ class IndexController extends BaseController
             switch ($table) {
                 case 'own':
                     $TableView = $this->project->fetchOwnProjects($user['id']);
-                    return new JsonModel($TableView);
+                    return json_encode($TableView);
                 case 'assigned':
                     $TableView = $this->project->fetchAssignedProjects($user['id']);
-                    return new JsonModel($TableView);
+                    return json_encode($TableView);
                 case 'other':
                     $TableView = $this->project->fetchOtherUsersProjects($user['id']);
-                    return new JsonModel($TableView);
+                    return json_encode($TableView);
                 case 'quote':
                     $TableView = $this->quote->fetchOwnQuotes($user['id']);
-                    return new JsonModel($TableView);
+                    return json_encode($TableView);
                 case 'note':
                     $TableView = $this->note->fetchOwnNotes($user['id']);
-                    return new JsonModel($TableView);
+                    return json_encode($TableView);
             }
         }
 
@@ -200,13 +199,13 @@ class IndexController extends BaseController
             switch ($table) {
                 case 'waiting':
                     $TableView = $this->quote->fetchApprovalTable(Quote::WAITING_APPROVAL);
-                    return new JsonModel($TableView);
+                    return json_encode($TableView);
                 case 'approved':
                     $TableView = $this->quote->fetchApprovalTable(Quote::APPROVED);
-                    return new JsonModel($TableView);
+                    return json_encode($TableView);
                 case 'disapproved':
                     $TableView = $this->quote->fetchApprovalTable(Quote::DISAPPROVED);
-                    return new JsonModel($TableView);
+                    return json_encode($TableView);
             }
         }
 
@@ -245,10 +244,10 @@ class IndexController extends BaseController
             switch ($table) {
                 case 'all':
                     $TableView = $this->architect->fetchAllTable($admin, $user['id']);
-                    return new JsonModel($TableView);
+                    return json_encode($TableView);
                 case 'topfive':
                     $TableView = $this->architect->fetchTopFiveTable($user['id']);
-                    return new JsonModel($TableView);
+                    return json_encode($TableView);
             }
         }
 
@@ -297,7 +296,7 @@ class IndexController extends BaseController
             switch ($table) {
                 case 'items':
                     $quotes = $this->getItemModel()->fetchItemQuoteTable();
-                    $view = new JsonModel($quotes);
+                    $view = json_encode($quotes);
                     return $view;
             }
         }

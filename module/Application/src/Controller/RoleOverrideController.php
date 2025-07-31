@@ -3,7 +3,6 @@
 namespace Application\Controller;
 
 use Application\Model\RoleOverride;
-use Laminas\View\Model\JsonModel;
 use Psr\Container\ContainerInterface;
 
 class RoleOverrideController extends BaseController
@@ -24,7 +23,7 @@ class RoleOverrideController extends BaseController
     public function getList()
     {
         $table = $this->getRoleOverrideModel()->fetchAll();
-        return new JsonModel([
+        return json_encode([
             'success' => true,
             'data' => iterator_to_array($table),
         ]);
@@ -38,7 +37,7 @@ class RoleOverrideController extends BaseController
             return $this->abort404();
         }
 
-        return new JsonModel([
+        return json_encode([
             'success' => true,
             'role_override' => $row,
         ]);
@@ -48,7 +47,7 @@ class RoleOverrideController extends BaseController
     public function create($data)
     {
         $result = $this->getRoleOverrideModel()->create($data);
-        return new JsonModel([
+        return json_encode([
             'success' => $result !== false,
             'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
         ]);
@@ -58,7 +57,7 @@ class RoleOverrideController extends BaseController
     public function update($id, $data)
     {
         $result = $this->getRoleOverrideModel()->update($id, $data);
-        return new JsonModel([
+        return json_encode([
             'success' => $result !== false,
             'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
         ]);
@@ -68,7 +67,7 @@ class RoleOverrideController extends BaseController
     public function delete($id)
     {
         $result = $this->getRoleOverrideModel()->delete($id);
-        return new JsonModel([
+        return json_encode([
             'success' => $result !== false,
             'message' => $result ? 'Role override deleted!' : 'Error! Please check log for more details.',
         ]);
