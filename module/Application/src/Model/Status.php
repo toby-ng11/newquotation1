@@ -2,4 +2,4 @@
 
 namespace Application\Model;
 
-class Status extends BaseModel {}
+class Status extends Model {}

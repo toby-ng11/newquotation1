@@ -51,7 +51,8 @@ class NoteController extends BaseController
             }
 
             try {
-                $result = $this->note->add($data, $id);
+                $data['project_id'] = $id;
+                $result = $this->note->create($data);
 
                 return new JsonModel([
                     'success' => true,
@@ -92,7 +93,7 @@ class NoteController extends BaseController
             }
 
             try {
-                $result = $this->note->edit($data, $id);
+                $result = $this->note->update($data, $id);
 
                 return new JsonModel([
                     'success' => true,

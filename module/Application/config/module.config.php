@@ -234,6 +234,18 @@ return [
                     ],
                 ],
             ],
+            'market-segment' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/market-segment[/:id]',
+                    'constraints' => [
+                        'id' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\MarketSegmentController::class,
+                    ],
+                ],
+            ],
             'api' => [
                 'type' => Literal::class,
                 'options' => [
@@ -502,18 +514,7 @@ return [
             },
             Model\Note::class => function ($container) {
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
-                return new Model\Note(
-                    $dbAdapter,
-                    $container->get(Service\UserService::class),
-                    new TableGateway('project_notes', $dbAdapter)
-                );
-            },
-            Model\View\P21User::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
-                return new Model\View\P21User(
-                    new TableGateway('P21_Users', $dbAdapter),
-
-                );
+                return new Model\Note($dbAdapter);
             },
             Service\MailerService::class => function ($container) {
                 $config = $container->get('config');

@@ -33,7 +33,7 @@ class MarketSegmentControllerr extends BaseController
     // GET /enpoint/:id
     public function get($id)
     {
-        $row = $this->getMarketSegmentModel()->fetchById($id);
+        $row = $this->getMarketSegmentModel()->find($id);
         if (! $row) {
             return $this->abort404();
         }
@@ -50,7 +50,7 @@ class MarketSegmentControllerr extends BaseController
         $result = $this->getMarketSegmentModel()->create($data);
         return new JsonModel([
             'success' => $result !== false,
-            'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
+            'message' => $result ? 'Market segment added!' : 'Error! Please check log for more details.',
         ]);
     }
 
@@ -60,7 +60,7 @@ class MarketSegmentControllerr extends BaseController
         $result = $this->getMarketSegmentModel()->update($id, $data);
         return new JsonModel([
             'success' => $result !== false,
-            'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
+            'message' => $result ? 'Saved successfully!' : 'Error! Please check log for more details.',
         ]);
     }
 
@@ -70,7 +70,7 @@ class MarketSegmentControllerr extends BaseController
         $result = $this->getMarketSegmentModel()->delete($id);
         return new JsonModel([
             'success' => $result !== false,
-            'message' => $result ? 'Role override deleted!' : 'Error! Please check log for more details.',
+            'message' => $result ? 'Deleted successfully!' : 'Error! Please check log for more details.',
         ]);
     }
 }

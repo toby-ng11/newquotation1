@@ -2,4 +2,4 @@
 
 namespace Application\Model;
 
-class MarketSegment extends BaseModel {}
+class MarketSegment extends Model {}
