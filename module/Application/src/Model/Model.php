@@ -2,6 +2,7 @@
 
 namespace Application\Model;
 
+use Application\Service\UserService;
 use Doctrine\Inflector\InflectorFactory;
 use Exception;
 use Laminas\Db\Adapter\Adapter;
@@ -9,10 +10,13 @@ use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\Sql\Expression;
 use Laminas\Db\TableGateway\TableGateway;
 
-class BaseModel
+class Model
 {
     /** @var TableGateway */
     protected $tableGateway;
+
+    /** @var UserService */
+    protected $userService;
 
     /**
      * The table associated with the model.
@@ -28,18 +32,18 @@ class BaseModel
      */
     protected $primaryKey;
 
-    protected $userService;
+    /** Indicate the table should be tracked. Require table to have "created_by" and "updated_by". */
+    protected $userTracked = false;
 
-    /** Define if the table shoule be timestamped. */
+    /** Indicate the table should be timestamped. Require table to have "created_at" and "updated_at". */
     protected $timestamps = false;
 
-    /** Define if the table shoule be soft deleted. */
+    /** Indicate the table should be soft deleted. */
     protected $softDeletes  = false;
 
-    /** If UserService is defined, "created_by" and "updated_by" will be auto updated. */
     public function __construct(
         Adapter $adapter,
-        $userService = null
+        UserService $userService,
     ) {
         $this->table = $this->table ?? $this->inferTableName();
         $this->primaryKey = $this->primaryKey ?? 'id';
@@ -67,12 +71,12 @@ class BaseModel
         return $this->tableGateway->select($criteria);
     }
 
-    public function fetchAll()
+    public function all()
     {
         return $this->tableGateway->select();
     }
 
-    public function fetchById($id)
+    public function find($id)
     {
         /** @var ResultSet */
         $rowset = $this->tableGateway->select([$this->primaryKey => $id]);
@@ -105,9 +109,10 @@ class BaseModel
 
     public function delete($id)
     {
-        if ($this->userService) {
+        if ($this->userTracked && $this->softDeletes) {
             $user = $this->userService->getCurrentUser();
             $data['updated_by'] = $user['id'];
+            $data['deleted_at'] = new Expression('GETDATE()');
         }
 
         if ($this->softDeletes) {
@@ -129,15 +134,13 @@ class BaseModel
 
     protected function prepareDataForCreate($data)
     {
-        if ($this->userService) {
+        if ($this->userTracked) {
             $user = $this->userService->getCurrentUser();
             $data['created_by'] = $user['id'];
         }
 
         if ($this->timestamps) {
-            $data = [
-                'created_at' => new Expression('GETDATE()'),
-            ];
+            $data['created_at'] = new Expression('GETDATE()');
         }
 
         return $data;
@@ -145,15 +148,13 @@ class BaseModel
 
     protected function prepareDataForUpdate($data, $id)
     {
-        if ($this->userService) {
+        if ($this->userTracked) {
             $user = $this->userService->getCurrentUser();
             $data['updated_by'] = $user['id'];
         }
 
         if ($this->timestamps) {
-            $data = [
-                'updated_at' => new Expression('GETDATE()'),
-            ];
+            $data['updated_at'] = new Expression('GETDATE()');
         }
 
         return $data;

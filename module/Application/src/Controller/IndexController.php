@@ -110,16 +110,16 @@ class IndexController extends BaseController
                     $view = json_encode($quotes);
                     return $view;
                 case 'roleoverride':
-                    $setRole = $this->getRoleOverride()->fetchAll();
+                    $setRole = $this->getRoleOverride()->all();
                     return json_encode($setRole);
                 case 'users':
-                    $setRole = $this->getP21UsersTable()->fetchAll();
+                    $setRole = $this->getP21UsersTable()->all();
                     return json_encode($setRole);
                 case 'market-segment':
-                    $setRole = $this->getMarketSegmentModel()->fetchAll();
+                    $setRole = $this->getMarketSegmentModel()->all();
                     return json_encode($setRole);
                 case 'statuses':
-                    $setRole = $this->getStatusModel()->fetchAll();
+                    $setRole = $this->getStatusModel()->all();
                     return json_encode($setRole);
             }
         }

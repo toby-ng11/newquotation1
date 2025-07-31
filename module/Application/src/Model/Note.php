@@ -3,99 +3,46 @@
 namespace Application\Model;
 
 use Laminas\Db\Adapter\Driver\ResultInterface;
-use Laminas\Db\TableGateway\TableGateway;
-use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\{Sql, Expression};
-use Exception;
-use Application\Service\UserService;
 use Application\Helper\InputValidator;
+use Laminas\Db\Adapter\Adapter;
 
-class Note
+class Note extends Model
 {
-    protected $adapter;
-    protected $userService;
-    protected $project_note;
+    protected $timestamps = true;
+    protected $userTracked = true;
 
-    public function __construct(
-        Adapter $adapter,
-        UserService $userService,
-        TableGateway $project_note
-    ) {
+    protected $adapter;
+
+    public function __construct(Adapter $adapter)
+    {
         $this->adapter = $adapter;
-        $this->userService = $userService;
-        $this->project_note = $project_note;
     }
 
-    public function add($data, $project_id)
+    protected function prepareDataForCreate($data)
     {
-        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($project_id)) {
-            return false;
-        }
-
-        $user = $this->userService->getCurrentUser();
-
         $info = [
-            'project_id' => $project_id,
             'title' => trim($data['note_title']),
             'content' => trim($data['project_note']),
             'next_action' => trim($data['next_action']),
-            'created_at' => new Expression('GETDATE()'),
-            'created_by' => $user['id'],
             'notify_at' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null
         ];
 
-        try {
-            $this->project_note->insert($info);
-            return $this->project_note->getLastInsertValue();
-        } catch (Exception $e) {
-            error_log("Note\add:Database Insert Error: " . $e->getMessage());
-            return false;
-        }
+        $info = parent::prepareDataForCreate($info);
+        return $info;
     }
 
-    public function edit($data, $note_id)
+    protected function prepareDataForUpdate($data, $id)
     {
-        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($note_id)) {
-            return false;
-        }
-
-        $user = $this->userService->getCurrentUser();
-
         $info = [
             'title' => trim($data['note_title']),
             'content' => trim($data['project_note']),
             'next_action' => trim($data['next_action']),
-            'notify_at' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null,
-            'updated_at' => new Expression('GETDATE()'),
-            'updated_by' => $user['id'],
+            'notify_at' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null
         ];
 
-        try {
-            $this->project_note->update($info, ['id ' => $note_id]);
-            return $note_id;
-        } catch (Exception $e) {
-            error_log("Note\add:Database Edit Error: " . $e->getMessage());
-            return false;
-        }
-    }
-
-    public function delete($note_id)
-    {
-        if (! InputValidator::isValidId($note_id)) {
-            return false;
-        }
-
-        $info = [
-            'deleted_at' => new Expression('GETDATE()'),
-        ];
-
-        try {
-            $this->project_note->update($info, ['id ' => $note_id]);
-            return $note_id;
-        } catch (Exception $e) {
-            error_log("Note\add:Database Delete Error: " . $e->getMessage());
-            return false;
-        }
+        $info = parent::prepareDataForUpdate($info, $id);
+        return $info;
     }
 
     public function fetchDataTables($id)
@@ -121,9 +68,7 @@ class Note
             return false;
         }
 
-        /**  @var ResultInterface $result */
-        $result = $this->project_note->select(['id' => $id]);
-        return $result->current();
+        return $this->find($id);
     }
 
     public function fetchOwnNotes($user_id)

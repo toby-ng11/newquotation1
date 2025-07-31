@@ -22,7 +22,7 @@ class RoleOverrideController extends BaseController
     // GET /role-override
     public function getList()
     {
-        $table = $this->getRoleOverrideModel()->fetchAll();
+        $table = $this->getRoleOverrideModel()->all();
         return json_encode([
             'success' => true,
             'data' => iterator_to_array($table),
@@ -32,7 +32,7 @@ class RoleOverrideController extends BaseController
     // GET /role-override/:id
     public function get($id)
     {
-        $row = $this->getRoleOverrideModel()->fetchById($id);
+        $row = $this->getRoleOverrideModel()->find($id);
         if (! $row) {
             return $this->abort404();
         }
