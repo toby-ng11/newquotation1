@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Application\Model\RoleOverride;
 use Laminas\Mvc\Application;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -510,8 +511,7 @@ return [
             Model\RoleOverride::class => function ($container) {
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
                 return new Model\RoleOverride(
-                    new TableGateway('role_overrides', $dbAdapter),
-
+                    $dbAdapter
                 );
             },
             Model\View\P21User::class => function ($container) {
