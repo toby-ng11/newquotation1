@@ -7,7 +7,17 @@ namespace Application\Controller;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Service\UserService;
-use Application\Model\{Architect, Item, Location, Project, Quote, Note, RoleOverride};
+use Application\Model\{
+    Architect,
+    Item,
+    Location,
+    MarketSegment,
+    Project,
+    Quote,
+    Note,
+    RoleOverride,
+    Status
+};
 use Application\Model\View\P21User;
 use Psr\Container\ContainerInterface;
 
@@ -56,6 +66,16 @@ class IndexController extends BaseController
         return $this->container->get(P21User::class);
     }
 
+    public function getMarketSegmentModel(): MarketSegment
+    {
+        return $this->container->get(MarketSegment::class);
+    }
+
+    public function getStatusModel(): Status
+    {
+        return $this->container->get(Status::class);
+    }
+
     public function indexAction()
     {
         $user = $this->userService->getCurrentUser();
@@ -95,6 +115,12 @@ class IndexController extends BaseController
                     return new JsonModel($setRole);
                 case 'users':
                     $setRole = $this->getP21UsersTable()->fetchAll();
+                    return new JsonModel($setRole);
+                case 'market-segment':
+                    $setRole = $this->getMarketSegmentModel()->fetchAll();
+                    return new JsonModel($setRole);
+                case 'statuses':
+                    $setRole = $this->getStatusModel()->fetchAll();
                     return new JsonModel($setRole);
             }
         }

@@ -220,6 +220,104 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             },
         });
     },
+    adminMarketSegment: () => {
+        return (adminRoleOverrideTable = new DataTable('#admin-market-segments-table', {
+            ajax: {
+                url: '/index/admin/market-segment',
+                dataSrc: '',
+            } as AjaxSettings,
+            processing: true,
+            columns: [
+                {
+                    data: 'market_segment_desc',
+                    render(data, _, row) {
+                        const cell = document.createElement('div') as HTMLDivElement;
+                        cell.classList.add('flex', 'items-center', 'justify-between');
+
+                        const cellText = document.createElement('div');
+                        cellText.textContent = data;
+                        cell.appendChild(cellText);
+
+                        const btnGroup = document.createElement('div');
+                        btnGroup.classList.add('flex', 'items-center', 'gap-2');
+
+                        btnGroup.appendChild(createActionButton(Pencil, 'market-segment-edit', row.user_id, 'Edit'));
+                        btnGroup.appendChild(createActionButton(Trash2, 'market-segment-delete', row.user_id, 'Delete'));
+
+                        cell.appendChild(btnGroup);
+                        return cell;
+                    },
+                },
+            ],
+            columnDefs: [
+                {
+                    targets: '_all',
+                    className: 'dt-head-center',
+                },
+            ],
+            order: [[0, 'asc']],
+            scrollX: true,
+            layout: {
+                topStart: null,
+                topEnd: null,
+                bottomStart: 'search',
+            },
+        }));
+    },
+    adminStatuses: () => {
+        return (adminRoleOverrideTable = new DataTable('#admin-statuses-table', {
+            ajax: {
+                url: '/index/admin/statuses',
+                dataSrc: '',
+            } as AjaxSettings,
+            processing: true,
+            columns: [
+                {
+                    data: 'status_desc',
+                    render(data, _, row) {
+                        const cell = document.createElement('div') as HTMLDivElement;
+                        cell.classList.add('flex', 'items-center', 'justify-between');
+
+                        const cellText = document.createElement('div');
+                        cellText.textContent = data;
+                        cell.appendChild(cellText);
+
+                        const btnGroup = document.createElement('div');
+                        btnGroup.classList.add('flex', 'items-center', 'gap-2');
+
+                        btnGroup.appendChild(createActionButton(Pencil, 'statuses-edit', row.user_id, 'Edit'));
+                        btnGroup.appendChild(createActionButton(Trash2, 'statuses-delete', row.user_id, 'Delete'));
+
+                        cell.appendChild(btnGroup);
+                        return cell;
+                    },
+                },
+                {
+                    data: 'project_flag'
+                },
+                {
+                    data: 'quote_flag',
+                }
+            ],
+            columnDefs: [
+                {
+                    targets: '_all',
+                    className: 'dt-head-center',
+                },
+                {
+                    targets: [1, 2],
+                    className: 'dt-body-center',
+                },
+            ],
+            order: [[0, 'asc']],
+            scrollX: true,
+            layout: {
+                topStart: null,
+                topEnd: null,
+                bottomStart: 'search',
+            },
+        }));
+    },
     adminRoleOverride: () => {
         return (adminRoleOverrideTable = new DataTable('#admin-all-role-override-table', {
             ajax: {
@@ -314,6 +412,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             ],
             order: [[0, 'asc']],
             scrollX: true,
+            responsive: true,
             layout: {
                 topStart: function () {
                     let info = document.createElement('div');

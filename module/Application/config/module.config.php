@@ -508,12 +508,6 @@ return [
                     new TableGateway('project_notes', $dbAdapter)
                 );
             },
-            Model\RoleOverride::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
-                return new Model\RoleOverride(
-                    $dbAdapter
-                );
-            },
             Model\View\P21User::class => function ($container) {
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
                 return new Model\View\P21User(

@@ -9,7 +9,7 @@ class RoleOverride extends BaseModel
     protected function prepareDataForCreate($data)
     {
         $info = [
-            'user_id' => $data['ro_user_id'],
+            'user_id' => ! empty(trim($data['ro_user_id'])) ? trim($data['ro_user_id']) : null,
             'override_role' => $data['ro_role'],
         ];
 

@@ -6,7 +6,7 @@ use Application\Model\MarketSegment;
 use Laminas\View\Model\JsonModel;
 use Psr\Container\ContainerInterface;
 
-class RoleOverrideController extends BaseController
+class MarketSegmentControllerr extends BaseController
 {
     protected $container;
 
