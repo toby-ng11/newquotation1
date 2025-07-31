@@ -6,6 +6,7 @@ import { initAddress } from '@/components/Alpine/modal/address-modal';
 import { initCustomer } from '@/components/Alpine/modal/customer-modal';
 import { initItem } from '@/components/Alpine/modal/item-modal';
 import { initNote } from '@/components/Alpine/modal/note-modal';
+import { initRoleOverride } from '@/components/Alpine/modal/role-override-modal';
 import { initShare } from '@/components/Alpine/modal/share-modal';
 import { initSpecifier } from '@/components/Alpine/modal/specifier-modal';
 import { initAlpine } from '@/components/Alpine/p2q-init';
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSearchBox();
     initTables();
     initFlatpickr();
+    initRoleOverride();
     initShare();
     initItem();
     initNote();

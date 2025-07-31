@@ -3,6 +3,7 @@
 namespace Application\Model;
 
 use Application\Helper\InputValidator;
+use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\Select;
 use Laminas\Db\Adapter\Adapter;
@@ -309,7 +310,9 @@ class Item
                         'project_id' => $id,
                         'deleted_at IS NULL'
                     ]);
-                return $this->project_items->selectWith($select);
+                /** @var ResultSet $rowset */
+                $rowset = $this->project_items->selectWith($select);
+                return $rowset->toArray();
                 break;
             case 'quote':
                 $select = $this->quote_items->getSql()->select()
@@ -317,7 +320,9 @@ class Item
                         'quote_id' => $id,
                         'deleted_at IS NULL'
                     ]);
-                return $this->quote_items->selectWith($select);
+                /** @var ResultSet $rowset */
+                $rowset = $this->quote_items->selectWith($select);
+                return $rowset->toArray();
                 break;
             default:
                 return false;
@@ -343,7 +348,7 @@ class Item
                 'project_name',
                 'stockstatus'
             ])
-            ->where(['company_id' => $company])
+            ->where(['company_id' => $company, 'approved_by IS NOT NULL'])
             ->order('id DESC');
 
         $statement = $sql->prepareStatementForSqlObject($select);

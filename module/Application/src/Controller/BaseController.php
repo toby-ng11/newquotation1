@@ -4,14 +4,14 @@ namespace Application\Controller;
 
 use Laminas\Http\Request;
 use Laminas\Http\Response;
-use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractRestfulController;
 use Laminas\View\Model\ViewModel;
 
 /**
  * @method Request getRequest()
  * @method Response getResponse()
  */
-abstract class BaseController extends AbstractActionController
+abstract class BaseController extends AbstractRestfulController
 {
     /**
      * Render 404 page

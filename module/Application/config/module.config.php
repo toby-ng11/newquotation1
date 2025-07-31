@@ -221,6 +221,18 @@ return [
                     ]
                 ]
             ],
+            'role-override' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/role-override[/:id]',
+                    'constraints' => [
+                        'id' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\RoleOverrideController::class,
+                    ],
+                ],
+            ],
             'api' => [
                 'type' => Literal::class,
                 'options' => [
@@ -344,6 +356,11 @@ return [
             Controller\AddressController::class => function ($container) {
                 return new Controller\AddressController(
                     $container->get(Model\Address::class)
+                );
+            },
+            Controller\RoleOverrideController::class => function ($container) {
+                return new Controller\RoleOverrideController(
+                    $container
                 );
             },
             Controller\Api\PreferenceController::class => function ($container) {
@@ -488,6 +505,20 @@ return [
                     $dbAdapter,
                     $container->get(Service\UserService::class),
                     new TableGateway('project_notes', $dbAdapter)
+                );
+            },
+            Model\RoleOverride::class => function ($container) {
+                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+                return new Model\RoleOverride(
+                    new TableGateway('role_overrides', $dbAdapter),
+
+                );
+            },
+            Model\View\P21User::class => function ($container) {
+                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+                return new Model\View\P21User(
+                    new TableGateway('P21_Users', $dbAdapter),
+
                 );
             },
             Service\MailerService::class => function ($container) {

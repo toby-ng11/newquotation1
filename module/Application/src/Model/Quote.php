@@ -8,6 +8,7 @@ use Application\Service\UserService;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Adapter\Driver\ResultInterface;
 use Laminas\Db\Adapter\Exception\ErrorException;
+use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\Sql\{Sql, Expression};
 use Laminas\Db\TableGateway\TableGatewayInterface;
 use Laminas\Db\TableGateway\TableGateway;
@@ -37,17 +38,17 @@ class Quote
         $this->container = $container;
     }
 
-    public function getUserService()
+    public function getUserService(): UserService
     {
         return $this->container->get(UserService::class);
     }
 
-    public function getItem()
+    public function getItem(): Item
     {
         return $this->container->get(Item::class);
     }
 
-    public function getProject()
+    public function getProject(): Project
     {
         return $this->container->get(Project::class);
     }
@@ -252,22 +253,31 @@ class Quote
 
     public function fetchAll()
     {
-        return $this->quote->select();
+        /** @var ResultSet $rowset */
+        $rowset = $this->quote->select();
+        return $rowset->toArray();
     }
 
     public function fetchAllViews($location)
     {
         if ($location) {
-            return $this->p2q_view_quote_x_project_x_oe
+
+            /** @var ResultSet $rowset */
+            $rowset = $this->p2q_view_quote_x_project_x_oe
                 ->select(['centura_location_id' => $location]);
+            return $rowset->toArray();
         }
 
-        return $this->p2q_view_quote_x_project_x_oe->select();
+        /** @var ResultSet $rowset */
+        $rowset = $this->p2q_view_quote_x_project_x_oe->select();
+        return $rowset->toArray();
     }
 
     public function fetchOwnQuotes($user_id)
     {
-        return $this->p2q_view_quote_x_project_x_oe->select(['created_by' => $user_id]);
+        /** @var ResultSet $rowset */
+        $rowset = $this->p2q_view_quote_x_project_x_oe->select(['created_by' => $user_id]);
+        return $rowset->toArray();
     }
 
     public function fetchApprovalTable($table)

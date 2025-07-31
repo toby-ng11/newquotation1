@@ -249,17 +249,19 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                 } ?>
 
                 <div class="feature fade-in-up bg-widget-background rounded-xl p-6 shadow-lg">
-                    <div class="absolute top-4 right-4 z-10">
-                        <button
-                            type="button"
-                            title="Edit Customer"
-                            class="btn-sm-outline shadow-sm"
-                            id="edit-quote-customer"
-                            data-id="<?= $this->escapeHtml($quote['contact_id']) ?>">
-                            <i data-lucide="pencil"></i>
-                            Edit
-                        </button>
-                    </div>
+                    <?php if (! $isGuest): ?>
+                        <div class="absolute top-4 right-4 z-10">
+                            <button
+                                type="button"
+                                title="Edit Customer"
+                                class="btn-sm-outline shadow-sm"
+                                id="edit-quote-customer"
+                                data-id="<?= $this->escapeHtml($quote['contact_id']) ?>">
+                                <i data-lucide="pencil"></i>
+                                Edit
+                            </button>
+                        </div>
+                    <?php endif; ?>
 
                     <div class="flex gap-4">
                         <div class="flex flex-col w-[50%] gap-6 border-r pr-2">

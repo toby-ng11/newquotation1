@@ -19,6 +19,54 @@ $user = $this->user;
     </header>
 
     <div class="flex flex-col gap-4 md:gap-6">
+        <div class="fade-in-up">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <p class="leading-none font-semibold text-lg">Role Override</p>
+                    </div>
+                    <div class="widget-button">
+                            <button type="button"
+                                title="Add new shared user"
+                                class="btn-sm-icon-outline shadow-sm text-muted-foreground"
+                                id="widget-btn-add-role-override-user"
+                                x-on:click="window.roleOverrideModalComponent.open = true"
+                                data-tooltip="Override a user role">
+                                <i data-lucide="plus"></i>
+                            </button>
+                    </div>
+                </div>
+
+                <div class="line"></div>
+
+                <table width="100%" class="sTable display nowrap" id="admin-all-role-override-table" data-init="adminRoleOverride">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div class="fade-in-up">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
+                <table width="100%" class="sTable display nowrap" id="admin-all-users-table" data-init="adminUsers">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Location</th>
+                            <th>Role</th>
+                            <th>P2Q Role</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
         <div id="project-table" class="fade-in-up"></div>
 
         <div class="fade-in-up" aria-labelledby="all_quotes">
@@ -39,18 +87,7 @@ $user = $this->user;
                 </table>
             </div>
         </div>
-
-        <div class="fade-in-up">
-            <div class="widget-table bg-widget-background rounded-xl p-6">
-                <table width="100%" class="sTable display nowrap" id="admin-all-role-override-table" data-init="adminRoleOverride">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Role</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-        </div>
     </div>
 </div>
+
+<?= $this->render('modal/role-override'); ?>

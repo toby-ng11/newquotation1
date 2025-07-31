@@ -39,7 +39,7 @@ class User
         }
         $sql = new Sql($this->adapter, 'P21_Users');
         $select = $sql->select()
-            ->columns(['id', 'name']);
+            ->columns(['id', 'name', 'p2q_system_role']);
 
         $select->where->nest()
             ->like('id', $pattern . '%')

@@ -7,7 +7,8 @@ namespace Application\Controller;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Service\UserService;
-use Application\Model\{Architect, Item, Location, Project, Quote, Note};
+use Application\Model\{Architect, Item, Location, Project, Quote, Note, RoleOverride};
+use Application\Model\View\P21User;
 use Psr\Container\ContainerInterface;
 
 class IndexController extends BaseController
@@ -45,6 +46,16 @@ class IndexController extends BaseController
         return $this->container->get(Item::class);
     }
 
+    public function getRoleOverride(): RoleOverride
+    {
+        return $this->container->get(RoleOverride::class);
+    }
+
+    public function getP21UsersTable(): P21User
+    {
+        return $this->container->get(P21User::class);
+    }
+
     public function indexAction()
     {
         $user = $this->userService->getCurrentUser();
@@ -79,6 +90,12 @@ class IndexController extends BaseController
                     $quotes = $useView ? $this->quote->fetchAllViews($location) : $this->quote->fetchAll();
                     $view = new JsonModel($quotes);
                     return $view;
+                case 'roleoverride':
+                    $setRole = $this->getRoleOverride()->fetchAll();
+                    return new JsonModel($setRole);
+                case 'users':
+                    $setRole = $this->getP21UsersTable()->fetchAll();
+                    return new JsonModel($setRole);
             }
         }
 

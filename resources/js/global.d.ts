@@ -8,6 +8,14 @@ type NoteModalComponent = {
     closeModal: () => void;
 }
 
+type roleOverrideModalComponent = {
+    open: boolean;
+    isEditing: boolean;
+    submitForm: () => Promise<void>;
+    editRoleOverride: (roleOverrideId : string) => Promise<void>;
+    closeModal: () => void;
+}
+
 type shareModalComponent = {
     open: boolean;
     isEditing: boolean;
@@ -63,5 +71,6 @@ declare global {
         itemModalComponent?: ItemModalComponent;
         customerModalComponent?: CustomerModalComponent;
         shareModalComponent?: shareModalComponent;
+        roleOverrideModalComponent? : roleOverrideModalComponent;
     }
 }

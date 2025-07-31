@@ -7,6 +7,8 @@ import 'datatables.net-select-dt';
 import { architectID, projectID, sheetID, sheetType } from '@/components/init';
 import { createElement, Pencil, Trash2 } from 'lucide';
 
+let adminRoleOverrideTable: Api<any>;
+let adminAllUsersTable: Api<any>;
 let projectNoteTable: Api<any>;
 let itemTable: Api<any>;
 let projectShareTable: Api<any>;
@@ -14,10 +16,12 @@ let architectProjectsTable: Api<any>;
 let architectAddressesTable: Api<any>;
 let architectSpecifiersTable: Api<any>;
 
-function createActionButton(icon: any, className: string, dataId: string): HTMLButtonElement {
+function createActionButton(icon: any, className: string, dataId: string, title: string): HTMLButtonElement {
     const btn = document.createElement('button');
     btn.dataset.id = dataId;
-    btn.classList.add(className, 'btn-sm-icon-outline');
+    btn.title = title;
+    btn.type = 'button';
+    btn.classList.add(className, 'btn-sm-icon-outline', 'text-muted-foreground', 'shadow-sm');
     btn.appendChild(createElement(icon));
     return btn;
 }
@@ -215,6 +219,110 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 bottomStart: 'pageLength',
             },
         });
+    },
+    adminRoleOverride: () => {
+        return (adminRoleOverrideTable = new DataTable('#admin-all-role-override-table', {
+            ajax: {
+                url: '/index/admin/roleoverride',
+                dataSrc: '',
+            } as AjaxSettings,
+            processing: true,
+            columns: [
+                {
+                    data: 'user_id',
+                },
+                {
+                    data: 'override_role',
+                    render(data, _, row) {
+                        const cell = document.createElement('div') as HTMLDivElement;
+                        cell.classList.add('flex', 'items-center', 'justify-between');
+
+                        const cellText = document.createElement('div');
+                        cellText.textContent = data;
+                        cell.appendChild(cellText);
+
+                        const btnGroup = document.createElement('div');
+                        btnGroup.classList.add('flex', 'items-center', 'gap-2');
+
+                        btnGroup.appendChild(createActionButton(Pencil, 'role-override-edit', row.user_id, 'Edit'));
+                        btnGroup.appendChild(createActionButton(Trash2, 'role-override-delete', row.user_id, 'Delete'));
+
+                        cell.appendChild(btnGroup);
+                        return cell;
+                    },
+                },
+            ],
+            columnDefs: [
+                {
+                    targets: '_all',
+                    className: 'dt-head-center',
+                },
+                {
+                    targets: [0],
+                    className: 'dt-body-center',
+                },
+            ],
+            //"responsive": true,
+            order: {
+                name: 'user_id',
+                dir: 'desc',
+            },
+            scrollX: true,
+            layout: {
+                topStart: null,
+                topEnd: null,
+                bottomStart: 'search',
+            },
+        }));
+    },
+    adminUsers: () => {
+        return (adminAllUsersTable = new DataTable('#admin-all-users-table', {
+            ajax: {
+                url: '/index/admin/users',
+                dataSrc: '',
+            } as AjaxSettings,
+            processing: true,
+            columns: [
+                {
+                    data: 'id',
+                },
+                {
+                    data: 'name',
+                },
+                {
+                    data: 'default_company',
+                },
+                {
+                    data: 'default_location_id',
+                },
+                {
+                    data: 'role',
+                },
+                {
+                    data: 'p2q_system_role',
+                },
+            ],
+            columnDefs: [
+                {
+                    targets: '_all',
+                    className: 'dt-head-center',
+                },
+                {
+                    targets: [0, 2, 3, 5],
+                    className: 'dt-body-center',
+                },
+            ],
+            order: [[0, 'asc']],
+            scrollX: true,
+            layout: {
+                topStart: function () {
+                    let info = document.createElement('div');
+                    info.innerHTML = '<p class="leading-none font-semibold text-lg">All Users</p>';
+                    return info;
+                },
+                bottomStart: 'pageLength',
+            },
+        }));
     },
     /* ------ HOME PORTAL ------ */
     homeOwnProject: () => {
@@ -1239,8 +1347,8 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                         const btnGroup = document.createElement('div');
                         btnGroup.classList.add('flex', 'items-center', 'gap-2');
 
-                        btnGroup.appendChild(createActionButton(Pencil, 'project-share-edit', data));
-                        btnGroup.appendChild(createActionButton(Trash2, 'project-share-delete', data));
+                        btnGroup.appendChild(createActionButton(Pencil, 'project-share-edit', data, 'Edit'));
+                        btnGroup.appendChild(createActionButton(Trash2, 'project-share-delete', data, 'Delete'));
 
                         return btnGroup;
                     },
@@ -1755,4 +1863,13 @@ document.getElementById('export-selected')?.addEventListener('click', function (
     window.location.href = url;
 });
 
-export { architectAddressesTable, architectProjectsTable, architectSpecifiersTable, itemTable, projectNoteTable, projectShareTable };
+export {
+    adminAllUsersTable,
+    adminRoleOverrideTable,
+    architectAddressesTable,
+    architectProjectsTable,
+    architectSpecifiersTable,
+    itemTable,
+    projectNoteTable,
+    projectShareTable,
+};

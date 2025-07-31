@@ -21,7 +21,9 @@ class Location
         $select = $this->location->getSql()->select()
             ->order('location_id ASC');
 
-        return $this->location->selectWith($select);
+        /** @var ResultSet $rowset */
+        $rowset = $this->location->selectWith($select);
+        return $rowset->toArray();
     }
 
     public function fetchAllCompanies()
@@ -30,7 +32,10 @@ class Location
             ->columns(['company_id', 'company_name'])
             ->quantifier(Select::QUANTIFIER_DISTINCT)
             ->order('company_id ASC');
-        return $this->location->selectWith($select);
+
+        /** @var ResultSet $rowset */
+        $rowset = $this->location->selectWith($select);
+        return $rowset->toArray();
     }
 
     public function fetchLocationIdFromCompany($company_id)
