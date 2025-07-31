@@ -3,7 +3,6 @@
 namespace Application\Controller\Api;
 
 use Application\Service\UserService;
-use Laminas\View\Model\JsonModel;
 
 class UserController extends ApiController
 {
@@ -18,10 +17,10 @@ class UserController extends ApiController
         $user = $this->userService->getCurrentUser();
 
         if (! $user) {
-            return new JsonModel(['error' => 'Unauthorized',]);
+            return json_encode(['error' => 'Unauthorized',]);
         }
 
-        return new JsonModel([
+        return json_encode([
             'id'         => $user['id'],
             'first_name' => $user['first_name'],
             'last_name'  => $user['last_name'],

@@ -2,9 +2,8 @@
 
 namespace Application\Controller;
 
-use Laminas\View\Model\JsonModel;
-use Exception;
 use Application\Model\Note;
+use Exception;
 
 class NoteController extends BaseController
 {
@@ -44,7 +43,7 @@ class NoteController extends BaseController
             }
 
             if (! $id || empty($data['project_note'])) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Missing required fields: ' . implode(', ', $missingFields)
                 ]);
@@ -53,13 +52,13 @@ class NoteController extends BaseController
             try {
                 $result = $this->note->add($data, $id);
 
-                return new JsonModel([
+                return json_encode([
                     'success' => true,
                     'message' => 'Note added successfully!',
                     'note_id' => $result
                 ]);
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to add note.',
                     'error' => $e->getMessage()
@@ -75,7 +74,7 @@ class NoteController extends BaseController
         $id = $this->params()->fromRoute('id');
 
         if (! $id) {
-            return new JsonModel([
+            return json_encode([
                 'success' => false,
                 'message' => 'Missing note ID.'
             ]);
@@ -85,7 +84,7 @@ class NoteController extends BaseController
             $data = $this->params()->fromPost();
 
             if (empty($data['project_note'])) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Missing required fields.'
                 ]);
@@ -94,13 +93,13 @@ class NoteController extends BaseController
             try {
                 $result = $this->note->edit($data, $id);
 
-                return new JsonModel([
+                return json_encode([
                     'success' => true,
                     'message' => 'Note edit successfully!',
                     'note_id' => $result
                 ]);
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to edit note.',
                     'error' => $e->getMessage()
@@ -112,13 +111,13 @@ class NoteController extends BaseController
                     $note = $this->note->fetchNote($id);
 
                     if (! $note) {
-                        return new JsonModel([
+                        return json_encode([
                             'success' => false,
                             'message' => 'Note not found.'
                         ]);
                     }
 
-                    return new JsonModel([
+                    return json_encode([
                         'success' => true,
                         'note' => [
                             'note_title' => $note['title'],
@@ -128,7 +127,7 @@ class NoteController extends BaseController
                         ],
                     ]);
                 } catch (\Exception $e) {
-                    return new JsonModel([
+                    return json_encode([
                         'success' => false,
                         'message' => 'Error loading note.',
                         'error' => $e->getMessage()
@@ -148,7 +147,7 @@ class NoteController extends BaseController
             $note_id = $this->params()->fromRoute('id', null);
 
             if (! $note_id) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Missing note ID',
                 ]);
@@ -158,18 +157,18 @@ class NoteController extends BaseController
                 $result = $this->note->delete($note_id);
 
                 if ($result) {
-                    return new JsonModel([
+                    return json_encode([
                         'success' => true,
                         'message' => 'Note deleted successfully.',
                     ]);
                 } else {
-                    return new JsonModel([
+                    return json_encode([
                         'success' => false,
                         'message' => 'Failed to delete note.',
                     ]);
                 }
             } catch (Exception $e) {
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to delete note.',
                     'error' => $e->getMessage()

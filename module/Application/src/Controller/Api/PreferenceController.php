@@ -4,7 +4,6 @@ namespace Application\Controller\Api;
 
 use Application\Model\UserPreferenceTable;
 use Application\Service\UserService;
-use Laminas\View\Model\JsonModel;
 
 class PreferenceController extends ApiController
 {
@@ -28,7 +27,7 @@ class PreferenceController extends ApiController
 
         if ($request->isGet()) {
             $pref = $this->userPreferenceTable->getByUserAndKey($userId, $key);
-            return new JsonModel($pref ? json_decode($pref->value, true) : []);
+            return json_encode($pref ? json_decode($pref->value, true) : []);
         }
 
         if ($request->isPost()) {
@@ -37,9 +36,9 @@ class PreferenceController extends ApiController
 
             $this->userPreferenceTable->updateOrCreate($userId, $key, $value);
 
-            return new JsonModel(['success' => true]);
+            return json_encode(['success' => true]);
         }
 
-        return new JsonModel(['error' => 'Method not allowed']);
+        return json_encode(['error' => 'Method not allowed']);
     }
 }

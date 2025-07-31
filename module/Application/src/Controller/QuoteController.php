@@ -7,7 +7,7 @@ namespace Application\Controller;
 use Application\Model\{Customer, Item, Location, Project, Quote};
 use Application\Service\{PdfExportService, UserService};
 use Laminas\Http\Response\Stream;
-use Laminas\View\Model\{ViewModel, JsonModel};
+use Laminas\View\Model\ViewModel;
 use Psr\Container\ContainerInterface;
 
 class QuoteController extends BaseController
@@ -85,13 +85,13 @@ class QuoteController extends BaseController
 
             if ($quote_id) {
                 $this->flashMessenger()->addSuccessMessage("Quote created successfully!");
-                return new JsonModel([
+                return json_encode([
                     'success' => true,
                     'quote_id' => $quote_id,
                 ]);
             } else {
                 $this->flashMessenger()->addErrorMessage("Create quote failed. Please try again.");
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Failed to create quote.'
                 ]);
@@ -117,14 +117,14 @@ class QuoteController extends BaseController
 
             if ($result) {
                 $this->flashMessenger()->addSuccessMessage("Saved changes!");
-                return new JsonModel([
+                return json_encode([
                     'success' => $result,
                     'message' => 'Saved changes!',
                     'quote_id' => $quote_id,
                 ]);
             } else {
                 //$this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
-                return new JsonModel([
+                return json_encode([
                     'success' => $result,
                     'message' => 'Failed to edit quote.',
                 ]);
@@ -184,7 +184,7 @@ class QuoteController extends BaseController
         $quote_id = (int) $this->params()->fromRoute('id');
 
         if (! $quote_id) {
-            return new JsonModel(['success' => false, 'message' => 'Invalid quote ID']);
+            return json_encode(['success' => false, 'message' => 'Invalid quote ID']);
         }
 
         $result = $this->getQuoteModel()->delete($quote_id);
@@ -193,7 +193,7 @@ class QuoteController extends BaseController
             $this->flashMessenger()->addSuccessMessage("Quote deleted successfully!");
 
             if ($this->getRequest()->isXmlHttpRequest()) {
-                return new JsonModel(['success' => $result]);
+                return json_encode(['success' => $result]);
             }
 
             if ($user['p2q_system_role'] === 'guest') {
@@ -205,7 +205,7 @@ class QuoteController extends BaseController
             $this->flashMessenger()->addErrorMessage("Failed to delete quote. Please try again.");
 
             if ($this->getRequest()->isXmlHttpRequest()) {
-                return new JsonModel(['success' => $result]);
+                return json_encode(['success' => $result]);
             }
 
             return $this->redirect()->toRoute('quote', ['action' => 'edit', 'id' => $quote_id]);
@@ -215,7 +215,7 @@ class QuoteController extends BaseController
     private function updateQuoteStatus($quote_id, $action, $successMsg)
     {
         if (! $quote_id) {
-            return new JsonModel(['success' => false, 'message' => 'Invalid quote ID']);
+            return json_encode(['success' => false, 'message' => 'Invalid quote ID']);
         }
 
         $request = $this->getRequest();
@@ -233,7 +233,7 @@ class QuoteController extends BaseController
                 if (! $isAutoSave) {
                     $this->flashMessenger()->addSuccessMessage($successMsg);
                 }
-                return new JsonModel([
+                return json_encode([
                     'success' => $result,
                     'message' => $result ? $successMsg : 'Failed to update quote.',
                     'redirect' => $this->url()->fromRoute('quote', [
@@ -245,7 +245,7 @@ class QuoteController extends BaseController
         } else {
             if ($request->isXmlHttpRequest()) {
                 $this->flashMessenger()->addErrorMessage("Failed to update quote status. Please try again.");
-                return new JsonModel([
+                return json_encode([
                     'success' => false,
                     'message' => 'Save failed. Please try again.',
                     'redirect' => $this->url()->fromRoute('quote', [
@@ -337,7 +337,7 @@ class QuoteController extends BaseController
             $id = $this->params()->fromRoute('id');
             $sheetType = 'quote';
             $itemTable = $this->getItemModel()->fetchDataTables($id, $sheetType);
-            $view = new JsonModel($itemTable);
+            $view = json_encode($itemTable);
             return $view;
         }
         return $this->getResponse()->setStatusCode(404);
