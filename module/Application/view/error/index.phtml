@@ -3,65 +3,58 @@
  * @var Laminas\View\Renderer\PhpRenderer $this
  */
 ?>
-<h1>An error occurred</h1>
-<h2><?= $this->message ?></h2>
 
-<?php if (! empty($this->display_exceptions)) : ?>
-    <?php if (isset($this->exception) && $this->exception instanceof \Throwable) : ?>
-<hr/>
+<div class="flex flex-col items-center justify-center h-screen text-center px-4 bg-gray-100">
+    <div class="max-w-2xl bg-white shadow-xl rounded-2xl p-8">
+        <div class="text-6xl mb-4 animate-pulse text-red-500">💥</div>
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-2">An error occurred</h1>
+        <p class="text-gray-600 mb-4">
+            <?= $this->escapeHtml($this->message ?: 'Something went wrong on the server.') ?>
+        </p>
 
-<h2>Additional information:</h2>
-<h3><?= get_class($this->exception) ?></h3>
-<dl>
-    <dt>File:</dt>
-    <dd>
-        <pre><?= $this->exception->getFile() ?>:<?= $this->exception->getLine() ?></pre>
-    </dd>
-    <dt>Message:</dt>
-    <dd>
-        <pre><?= $this->escapeHtml($this->exception->getMessage()) ?></pre>
-    </dd>
-    <dt>Stack trace:</dt>
-    <dd>
-        <pre><?= $this->escapeHtml($this->exception->getTraceAsString()) ?></pre>
-    </dd>
-</dl>
+        <?php if (!empty($this->display_exceptions)) : ?>
+            <?php if (isset($this->exception) && $this->exception instanceof \Throwable) : ?>
+                <div class="text-left bg-gray-50 border border-gray-200 rounded-md p-4 overflow-auto max-h-96 text-sm text-gray-800">
+                    <h2 class="font-bold text-lg mb-2">Exception Details</h2>
+                    <p><strong>Type:</strong> <?= get_class($this->exception) ?></p>
+                    <p><strong>File:</strong> <?= $this->exception->getFile() ?>:<?= $this->exception->getLine() ?></p>
+                    <p><strong>Message:</strong> <?= $this->escapeHtml($this->exception->getMessage()) ?></p>
+                    <p><strong>Stack trace:</strong></p>
+                    <pre class="whitespace-pre-wrap"><?= $this->escapeHtml($this->exception->getTraceAsString()) ?></pre>
 
-        <?php if ($ex = $this->exception->getPrevious()) : ?>
-<hr/>
-
-<h2>Previous exceptions:</h2>
-<ul class="list-unstyled">
-            <?php $icount = 0; ?>
-            <?php while ($ex) : ?>
-    <li>
-        <h3><?= get_class($ex) ?></h3>
-        <dl>
-            <dt>File:</dt>
-            <dd>
-                <pre><?= $ex->getFile() ?>:<?= $ex->getLine() ?></pre>
-            </dd>
-            <dt>Message:</dt>
-            <dd>
-                <pre><?= $this->escapeHtml($ex->getMessage()) ?></pre>
-            </dd>
-            <dt>Stack trace:</dt>
-            <dd>
-                <pre><?= $this->escapeHtml($ex->getTraceAsString()) ?></pre>
-            </dd>
-        </dl>
-    </li>
-                <?php
-                $ex = $ex->getPrevious();
-                if (++$icount >= 50) {
-                    echo '<li>There may be more exceptions, but we do not have enough memory to process it.</li>';
-                    break;
-                }
-                ?>
-            <?php endwhile; ?>
-</ul>
+                    <?php if ($ex = $this->exception->getPrevious()) : ?>
+                        <hr class="my-4">
+                        <h3 class="font-semibold mb-2">Previous Exceptions</h3>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <?php $icount = 0; ?>
+                            <?php while ($ex) : ?>
+                                <li>
+                                    <strong><?= get_class($ex) ?></strong><br>
+                                    File: <?= $ex->getFile() ?>:<?= $ex->getLine() ?><br>
+                                    Message: <?= $this->escapeHtml($ex->getMessage()) ?><br>
+                                    <details class="mt-1"><summary class="cursor-pointer text-blue-600">Stack trace</summary>
+                                        <pre class="whitespace-pre-wrap"><?= $this->escapeHtml($ex->getTraceAsString()) ?></pre>
+                                    </details>
+                                </li>
+                                <?php
+                                $ex = $ex->getPrevious();
+                                if (++$icount >= 50) {
+                                    echo '<li><em>Too many exceptions to display...</em></li>';
+                                    break;
+                                }
+                                ?>
+                            <?php endwhile; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
+            <?php else : ?>
+                <p class="text-sm text-gray-500 italic mt-4">No exception available.</p>
+            <?php endif; ?>
         <?php endif; ?>
-    <?php else : ?>
-        <h3>No Exception available</h3>
-    <?php endif; ?>
-<?php endif; ?>
+
+        <a href="/"
+           class="mt-6 inline-block rounded-lg bg-gradient-to-r from-red-600 to-orange-600 px-6 py-2 text-white text-sm font-semibold shadow hover:from-red-700 hover:to-orange-700 transition">
+            🔁 Try Again / Go Home
+        </a>
+    </div>
+</div>

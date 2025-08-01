@@ -12,7 +12,7 @@ $user = $this->user;
         <?= $this->partial('components/greeting'); ?>
 
         <div class="flex items-center justify-between ">
-            <p class="text-muted-foreground">Here's all projects and quotes</p>
+            <p class="text-muted-foreground">Welcome to Admin Dashboard.</p>
 
             <?= $this->partial('components/new-project-btn'); ?>
         </div>
@@ -20,21 +20,19 @@ $user = $this->user;
 
     <div class="flex flex-col gap-4 md:gap-6">
         <div class="grid grid-cols-1 gap-3 lg:grid-cols-3">
-            <div class="fade-in-up widget-table bg-widget-background rounded-xl p-6">
-                <div class="widget-header">
-                    <div class="widget-title">
-                        <p class="leading-none font-semibold text-lg">Market Segments</p>
-                    </div>
-                    <div class="widget-button">
-                        <button type="button"
-                            title="Add new shared user"
-                            class="btn-sm-icon-outline shadow-sm text-muted-foreground"
-                            id="widget-btn-add-role-override-user"
-                            x-on:click="window.roleOverrideModalComponent.open = true"
-                            data-tooltip="Override a user role">
-                            <i data-lucide="plus"></i>
-                        </button>
-                    </div>
+            <div class="fade-in-up widget-table flex flex-col gap-2 bg-widget-background rounded-xl p-6">
+                <p class="leading-none font-semibold text-2xl tracking-tight">Market Segments</p>
+                <p class="text-muted-foreground text-sm">Project segments can be added or editted here.</p>
+
+                <div class="absolute top-4 right-4 z-10">
+                    <button type="button"
+                        title="Add new shared user"
+                        class="btn-sm-icon-outline shadow-sm text-muted-foreground"
+                        id="widget-btn-add-role-override-user"
+                        x-on:click="window.roleOverrideModalComponent.open = true"
+                        data-tooltip="Override a user role">
+                        <i data-lucide="plus"></i>
+                    </button>
                 </div>
 
                 <div class="line"></div>
@@ -48,21 +46,18 @@ $user = $this->user;
                 </table>
             </div>
 
-            <div class="fade-in-up widget-table bg-widget-background rounded-xl p-6">
-                <div class="widget-header">
-                    <div class="widget-title">
-                        <p class="leading-none font-semibold text-lg">Project & Quote Statuses</p>
-                    </div>
-                    <div class="widget-button">
-                        <button type="button"
-                            title="Add new shared user"
-                            class="btn-sm-icon-outline shadow-sm text-muted-foreground"
-                            id="widget-btn-add-role-override-user"
-                            x-on:click="window.roleOverrideModalComponent.open = true"
-                            data-tooltip="Override a user role">
-                            <i data-lucide="plus"></i>
-                        </button>
-                    </div>
+            <div class="fade-in-up widget-table flex flex-col gap-2 bg-widget-background rounded-xl p-6">
+                <p class="leading-none font-semibold text-2xl tracking-tight">Project & Quote Statuses</p>
+                <p class="text-muted-foreground text-sm">Customize the statuses for opportunity, project and quote.</p>
+                <div class="absolute top-4 right-4 z-10">
+                    <button type="button"
+                        title="Add new shared user"
+                        class="btn-sm-icon-outline shadow-sm text-muted-foreground"
+                        id="widget-btn-add-role-override-user"
+                        x-on:click="window.roleOverrideModalComponent.open = true"
+                        data-tooltip="Override a user role">
+                        <i data-lucide="plus"></i>
+                    </button>
                 </div>
 
                 <div class="line"></div>
@@ -78,21 +73,19 @@ $user = $this->user;
                 </table>
             </div>
 
-            <div class="fade-in-up widget-table bg-widget-background rounded-xl p-6">
-                <div class="widget-header">
-                    <div class="widget-title">
-                        <p class="leading-none font-semibold text-lg">Role Override</p>
-                    </div>
-                    <div class="widget-button">
-                        <button type="button"
-                            title="Add new shared user"
-                            class="btn-sm-icon-outline shadow-sm text-muted-foreground"
-                            id="widget-btn-add-role-override-user"
-                            x-on:click="window.roleOverrideModalComponent.open = true"
-                            data-tooltip="Override a user role">
-                            <i data-lucide="plus"></i>
-                        </button>
-                    </div>
+            <div class="fade-in-up widget-table flex flex-col gap-2 bg-widget-background rounded-xl p-6">
+                <p class="leading-none font-semibold text-2xl tracking-tight">Role Override</p>
+                <p class="text-muted-foreground text-sm">Override a user's role. All default role are shown in <strong>All Users</strong> table.</p>
+
+                <div class="absolute top-4 right-4 z-10">
+                    <button type="button"
+                        title="Add new shared user"
+                        class="btn-sm-icon-outline shadow-sm text-muted-foreground"
+                        id="widget-btn-add-role-override-user"
+                        x-on:click="window.roleOverrideModalComponent.open = true"
+                        data-tooltip="Override a user role">
+                        <i data-lucide="plus"></i>
+                    </button>
                 </div>
 
                 <div class="line"></div>

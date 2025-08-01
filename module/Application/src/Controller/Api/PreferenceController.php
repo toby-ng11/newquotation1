@@ -27,7 +27,7 @@ class PreferenceController extends ApiController
 
         if ($request->isGet()) {
             $pref = $this->userPreferenceTable->getByUserAndKey($userId, $key);
-            return json_encode($pref ? json_decode($pref->value, true) : []);
+            return $this->json($pref ? json_decode($pref->value, true) : []);
         }
 
         if ($request->isPost()) {
@@ -36,9 +36,9 @@ class PreferenceController extends ApiController
 
             $this->userPreferenceTable->updateOrCreate($userId, $key, $value);
 
-            return json_encode(['success' => true]);
+            return $this->json(['success' => true]);
         }
 
-        return json_encode(['error' => 'Method not allowed']);
+        return $this->json(['error' => 'Method not allowed']);
     }
 }
