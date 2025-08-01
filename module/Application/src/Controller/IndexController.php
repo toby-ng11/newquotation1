@@ -28,7 +28,6 @@ class IndexController extends BaseController
     protected $quote;
     protected $note;
     protected $architect;
-    protected $container;
 
     public function __construct(
         UserService $userService,
@@ -43,37 +42,7 @@ class IndexController extends BaseController
         $this->quote = $quote;
         $this->note = $note;
         $this->architect = $architect;
-        $this->container = $container;
-    }
-
-    public function getLocationModel(): Location
-    {
-        return $this->container->get(Location::class);
-    }
-
-    public function getItemModel(): Item
-    {
-        return $this->container->get(Item::class);
-    }
-
-    public function getRoleOverride(): RoleOverride
-    {
-        return $this->container->get(RoleOverride::class);
-    }
-
-    public function getP21UsersTable(): P21User
-    {
-        return $this->container->get(P21User::class);
-    }
-
-    public function getMarketSegmentModel(): MarketSegment
-    {
-        return $this->container->get(MarketSegment::class);
-    }
-
-    public function getStatusModel(): Status
-    {
-        return $this->container->get(Status::class);
+        parent::__construct($container);
     }
 
     public function indexAction()
@@ -111,16 +80,16 @@ class IndexController extends BaseController
                     $view = $this->json($quotes);
                     return $view;
                 case 'roleoverride':
-                    $setRole = $this->getRoleOverride()->fetchAll();
+                    $setRole = $this->getRoleOverrideModel()->all();
                     return $this->json($setRole);
                 case 'users':
-                    $setRole = $this->getP21UsersTable()->fetchAll();
+                    $setRole = $this->getP21UserModel()->all();
                     return $this->json($setRole);
                 case 'market-segment':
-                    $setRole = $this->getMarketSegmentModel()->fetchAll();
+                    $setRole = $this->getMarketSegmentModel()->all();
                     return $this->json($setRole);
                 case 'statuses':
-                    $setRole = $this->getStatusModel()->fetchAll();
+                    $setRole = $this->getStatusModel()->all();
                     return $this->json($setRole);
             }
         }

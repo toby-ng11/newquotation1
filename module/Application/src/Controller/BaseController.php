@@ -16,6 +16,7 @@ use Application\Model\RoleOverride;
 use Application\Model\Specifier;
 use Application\Model\Status;
 use Application\Model\User;
+use Application\Model\View\P21User;
 use Application\Service\UserService;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -131,6 +132,11 @@ abstract class BaseController extends AbstractRestfulController
     public function getP21LocationModel(): Location
     {
         return $this->container->get(Location::class);
+    }
+
+    public function getP21UserModel(): P21User
+    {
+        return $this->container->get(P21User::class);
     }
 
     public function getUserService(): UserService

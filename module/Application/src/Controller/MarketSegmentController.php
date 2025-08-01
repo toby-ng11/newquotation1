@@ -6,7 +6,7 @@ use Application\Model\MarketSegment;
 use Laminas\View\Model\JsonModel;
 use Psr\Container\ContainerInterface;
 
-class MarketSegmentControllerr extends BaseController
+class MarketSegmentController extends BaseController
 {
     protected $container;
 
@@ -23,7 +23,7 @@ class MarketSegmentControllerr extends BaseController
     // GET /enpoint
     public function getList()
     {
-        $table = $this->getMarketSegmentModel()->fetchAll();
+        $table = $this->getMarketSegmentModel()->all();
         return new JsonModel([
             'success' => true,
             'data' => iterator_to_array($table),
