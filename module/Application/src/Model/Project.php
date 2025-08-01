@@ -295,12 +295,14 @@ class Project
 
     public function fetchAll()
     {
-        return $this->project->select();
+        $rowset = $this->project->select();
+        return iterator_to_array($rowset, true);
     }
 
     public function fetchAllViews()
     {
-        return $this->p2q_view_projects_lite->select();
+        $rowset = $this->p2q_view_projects_lite->select();
+        return iterator_to_array($rowset, true);
     }
 
     public function fetchById($id)
@@ -327,7 +329,7 @@ class Project
             ->where(['owner_id' => $user_id]);
 
         $statement = $sql->prepareStatementForSqlObject($select);
-        return $statement->execute();
+        return iterator_to_array($statement->execute(), true);
     }
 
     public function countOwnProjects($user_id): int
@@ -352,8 +354,9 @@ class Project
         if (! InputValidator::isValidData($user_id)) {
             return false;
         }
-
-        return $this->p2q_view_projects_share->select(['shared_user' => $user_id]);
+        /** @var ResultSet $rowset */
+        $rowset = $this->p2q_view_projects_share->select(['shared_user' => $user_id]);
+        return $rowset->toArray();
     }
 
     public function countAssignedProjects($user_id)
@@ -389,7 +392,7 @@ class Project
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function countOtherUsersProjects($user_id, $company_id = DEFAULT_COMPANY)

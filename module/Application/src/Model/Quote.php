@@ -253,31 +253,26 @@ class Quote
 
     public function fetchAll()
     {
-        /** @var ResultSet $rowset */
         $rowset = $this->quote->select();
-        return $rowset->toArray();
+        return iterator_to_array($rowset, true);
     }
 
     public function fetchAllViews($location)
     {
         if ($location) {
-
-            /** @var ResultSet $rowset */
             $rowset = $this->p2q_view_quote_x_project_x_oe
                 ->select(['centura_location_id' => $location]);
-            return $rowset->toArray();
+            return iterator_to_array($rowset, true);
         }
 
-        /** @var ResultSet $rowset */
         $rowset = $this->p2q_view_quote_x_project_x_oe->select();
-        return $rowset->toArray();
+        return iterator_to_array($rowset, true);
     }
 
     public function fetchOwnQuotes($user_id)
     {
-        /** @var ResultSet $rowset */
         $rowset = $this->p2q_view_quote_x_project_x_oe->select(['created_by' => $user_id]);
-        return $rowset->toArray();
+        return iterator_to_array($rowset, true);
     }
 
     public function fetchApprovalTable($table)
@@ -301,7 +296,7 @@ class Quote
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function countApproval($table)

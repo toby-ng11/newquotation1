@@ -62,14 +62,16 @@ class BaseModel
         return $this->table;
     }
 
-    public function findBy(array $criteria)
+    public function findBy($where = []): array
     {
-        return $this->tableGateway->select($criteria);
+        $rowset =  $this->tableGateway->select($where);
+        return iterator_to_array($rowset, true);
     }
 
     public function fetchAll()
     {
-        return $this->tableGateway->select();
+        $rowset = $this->tableGateway->select();
+        return iterator_to_array($rowset, true);
     }
 
     public function fetchById($id)
