@@ -40,7 +40,7 @@ class MarketSegmentControllerr extends BaseController
 
         return new JsonModel([
             'success' => true,
-            'role_override' => $row,
+            'market_segment' => $row,
         ]);
     }
 
