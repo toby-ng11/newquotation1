@@ -33,10 +33,12 @@ class RoleOverrideController extends BaseController
     public function get($id)
     {
         $row = $this->getRoleOverrideModel()->find($id);
+        $row = $this->getRoleOverrideModel()->find($id);
         if (! $row) {
             return $this->abort404();
         }
 
+        return json_encode([
         return json_encode([
             'success' => true,
             'role_override' => $row,
@@ -48,6 +50,7 @@ class RoleOverrideController extends BaseController
     {
         $result = $this->getRoleOverrideModel()->create($data);
         return json_encode([
+        return json_encode([
             'success' => $result !== false,
             'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
         ]);
@@ -58,6 +61,7 @@ class RoleOverrideController extends BaseController
     {
         $result = $this->getRoleOverrideModel()->update($id, $data);
         return json_encode([
+        return json_encode([
             'success' => $result !== false,
             'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
         ]);
@@ -67,6 +71,7 @@ class RoleOverrideController extends BaseController
     public function delete($id)
     {
         $result = $this->getRoleOverrideModel()->delete($id);
+        return json_encode([
         return json_encode([
             'success' => $result !== false,
             'message' => $result ? 'Role override deleted!' : 'Error! Please check log for more details.',

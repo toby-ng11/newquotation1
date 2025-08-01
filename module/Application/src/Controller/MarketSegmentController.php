@@ -6,6 +6,7 @@ use Application\Model\MarketSegment;
 use Psr\Container\ContainerInterface;
 
 class MarketSegmentController extends BaseController
+class MarketSegmentController extends BaseController
 {
     protected $container;
 
@@ -33,12 +34,15 @@ class MarketSegmentController extends BaseController
     public function get($id)
     {
         $row = $this->getMarketSegmentModel()->find($id);
+        $row = $this->getMarketSegmentModel()->find($id);
         if (! $row) {
             return $this->abort404();
         }
 
         return json_encode([
+        return json_encode([
             'success' => true,
+            'market_segment' => $row,
             'market_segment' => $row,
         ]);
     }
@@ -48,7 +52,9 @@ class MarketSegmentController extends BaseController
     {
         $result = $this->getMarketSegmentModel()->create($data);
         return json_encode([
+        return json_encode([
             'success' => $result !== false,
+            'message' => $result ? 'Market segment added!' : 'Error! Please check log for more details.',
             'message' => $result ? 'Market segment added!' : 'Error! Please check log for more details.',
         ]);
     }
@@ -58,7 +64,9 @@ class MarketSegmentController extends BaseController
     {
         $result = $this->getMarketSegmentModel()->update($id, $data);
         return json_encode([
+        return json_encode([
             'success' => $result !== false,
+            'message' => $result ? 'Saved successfully!' : 'Error! Please check log for more details.',
             'message' => $result ? 'Saved successfully!' : 'Error! Please check log for more details.',
         ]);
     }
@@ -68,7 +76,9 @@ class MarketSegmentController extends BaseController
     {
         $result = $this->getMarketSegmentModel()->delete($id);
         return json_encode([
+        return json_encode([
             'success' => $result !== false,
+            'message' => $result ? 'Deleted successfully!' : 'Error! Please check log for more details.',
             'message' => $result ? 'Deleted successfully!' : 'Error! Please check log for more details.',
         ]);
     }
