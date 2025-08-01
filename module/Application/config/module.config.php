@@ -200,27 +200,18 @@ return [
                     ],
                 ],
             ],
-            'opportunity' => [
-                'type' => Literal::class,
+            'opportunities' => [
+                'type' => Segment::class,
                 'options' => [
-                    'route'    => '/opportunities',
+                    'route'    => '/opportunities[/:id]',
+                    'constraints' => [
+                        'id' => '[0-9]+',
+                    ],
                     'defaults' => [
                         'controller' => Controller\OpportunityController::class,
-                        'action'     => 'index',
+                        'action'     => 'view',
                     ],
                 ],
-                'may_terminate' => true,
-                'child_routes' => [
-                    'new' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route' => '/new',
-                            'defaults' => [
-                                'action' => 'new',
-                            ]
-                        ],
-                    ]
-                ]
             ],
             'role-override' => [
                 'type' => Segment::class,
@@ -303,6 +294,9 @@ return [
                 return new Controller\SidebarController(
                     $container->get(Service\UserService::class)
                 );
+            },
+            Controller\OpportunityController::class => function ($container) {
+                return new Controller\OpportunityController($container);
             },
             Controller\ProjectController::class => function ($container) {
                 return new Controller\ProjectController(

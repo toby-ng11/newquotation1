@@ -39,7 +39,7 @@ class MarketSegmentController extends BaseController
 
         return json_encode([
             'success' => true,
-            'role_override' => $row,
+            'market_segment' => $row,
         ]);
     }
 
