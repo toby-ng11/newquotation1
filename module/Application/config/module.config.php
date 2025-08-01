@@ -200,27 +200,18 @@ return [
                     ],
                 ],
             ],
-            'opportunity' => [
-                'type' => Literal::class,
+            'opportunities' => [
+                'type' => Segment::class,
                 'options' => [
-                    'route'    => '/opportunities',
+                    'route'    => '/opportunities[/:id]',
+                    'constraints' => [
+                        'id' => '[0-9]+',
+                    ],
                     'defaults' => [
                         'controller' => Controller\OpportunityController::class,
-                        'action'     => 'index',
+                        'action'     => 'view',
                     ],
                 ],
-                'may_terminate' => true,
-                'child_routes' => [
-                    'new' => [
-                        'type' => Literal::class,
-                        'options' => [
-                            'route' => '/new',
-                            'defaults' => [
-                                'action' => 'new',
-                            ]
-                        ],
-                    ]
-                ]
             ],
             'role-override' => [
                 'type' => Segment::class,
@@ -231,6 +222,18 @@ return [
                     ],
                     'defaults' => [
                         'controller' => Controller\RoleOverrideController::class,
+                    ],
+                ],
+            ],
+            'market-segment' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/market-segment[/:id]',
+                    'constraints' => [
+                        'id' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\MarketSegmentController::class,
                     ],
                 ],
             ],
@@ -291,6 +294,9 @@ return [
                 return new Controller\SidebarController(
                     $container->get(Service\UserService::class)
                 );
+            },
+            Controller\OpportunityController::class => function ($container) {
+                return new Controller\OpportunityController($container);
             },
             Controller\ProjectController::class => function ($container) {
                 return new Controller\ProjectController(
@@ -502,18 +508,7 @@ return [
             },
             Model\Note::class => function ($container) {
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
-                return new Model\Note(
-                    $dbAdapter,
-                    $container->get(Service\UserService::class),
-                    new TableGateway('project_notes', $dbAdapter)
-                );
-            },
-            Model\View\P21User::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
-                return new Model\View\P21User(
-                    new TableGateway('P21_Users', $dbAdapter),
-
-                );
+                return new Model\Note($dbAdapter);
             },
             Service\MailerService::class => function ($container) {
                 $config = $container->get('config');

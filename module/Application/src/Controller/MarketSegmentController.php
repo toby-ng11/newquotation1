@@ -22,8 +22,8 @@ class MarketSegmentController extends BaseController
     // GET /enpoint
     public function getList()
     {
-        $table = $this->getMarketSegmentModel()->fetchAll();
-        return json_encode([
+        $table = $this->getMarketSegmentModel()->all();
+        return new JsonModel([
             'success' => true,
             'data' => iterator_to_array($table),
         ]);
@@ -32,14 +32,14 @@ class MarketSegmentController extends BaseController
     // GET /enpoint/:id
     public function get($id)
     {
-        $row = $this->getMarketSegmentModel()->fetchById($id);
+        $row = $this->getMarketSegmentModel()->find($id);
         if (! $row) {
             return $this->abort404();
         }
 
         return json_encode([
             'success' => true,
-            'role_override' => $row,
+            'market_segment' => $row,
         ]);
     }
 
@@ -49,7 +49,7 @@ class MarketSegmentController extends BaseController
         $result = $this->getMarketSegmentModel()->create($data);
         return json_encode([
             'success' => $result !== false,
-            'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
+            'message' => $result ? 'Market segment added!' : 'Error! Please check log for more details.',
         ]);
     }
 
@@ -59,7 +59,7 @@ class MarketSegmentController extends BaseController
         $result = $this->getMarketSegmentModel()->update($id, $data);
         return json_encode([
             'success' => $result !== false,
-            'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
+            'message' => $result ? 'Saved successfully!' : 'Error! Please check log for more details.',
         ]);
     }
 
@@ -69,7 +69,7 @@ class MarketSegmentController extends BaseController
         $result = $this->getMarketSegmentModel()->delete($id);
         return json_encode([
             'success' => $result !== false,
-            'message' => $result ? 'Role override deleted!' : 'Error! Please check log for more details.',
+            'message' => $result ? 'Deleted successfully!' : 'Error! Please check log for more details.',
         ]);
     }
 }

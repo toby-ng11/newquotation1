@@ -32,7 +32,7 @@ class RoleOverrideController extends BaseController
     // GET /role-override/:id
     public function get($id)
     {
-        $row = $this->getRoleOverrideModel()->fetchById($id);
+        $row = $this->getRoleOverrideModel()->find($id);
         if (! $row) {
             return $this->abort404();
         }

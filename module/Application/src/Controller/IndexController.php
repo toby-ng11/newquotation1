@@ -27,7 +27,6 @@ class IndexController extends BaseController
     protected $quote;
     protected $note;
     protected $architect;
-    protected $container;
 
     public function __construct(
         UserService $userService,
@@ -42,37 +41,7 @@ class IndexController extends BaseController
         $this->quote = $quote;
         $this->note = $note;
         $this->architect = $architect;
-        $this->container = $container;
-    }
-
-    public function getLocationModel(): Location
-    {
-        return $this->container->get(Location::class);
-    }
-
-    public function getItemModel(): Item
-    {
-        return $this->container->get(Item::class);
-    }
-
-    public function getRoleOverride(): RoleOverride
-    {
-        return $this->container->get(RoleOverride::class);
-    }
-
-    public function getP21UsersTable(): P21User
-    {
-        return $this->container->get(P21User::class);
-    }
-
-    public function getMarketSegmentModel(): MarketSegment
-    {
-        return $this->container->get(MarketSegment::class);
-    }
-
-    public function getStatusModel(): Status
-    {
-        return $this->container->get(Status::class);
+        parent::__construct($container);
     }
 
     public function indexAction()
@@ -102,25 +71,25 @@ class IndexController extends BaseController
                 case 'project':
                     $useView = $this->params()->fromQuery('view', false);
                     $projects = $useView ? $this->project->fetchAllViews() : $this->project->fetchAll();
-                    $view = json_encode($projects);
+                    $view = $this->json($projects);
                     return $view;
                 case 'quote':
                     $useView = $this->params()->fromQuery('view', false);
                     $quotes = $useView ? $this->quote->fetchAllViews($location) : $this->quote->fetchAll();
-                    $view = json_encode($quotes);
+                    $view = $this->json($quotes);
                     return $view;
                 case 'roleoverride':
-                    $setRole = $this->getRoleOverride()->fetchAll();
-                    return json_encode($setRole);
+                    $setRole = $this->getRoleOverrideModel()->all();
+                    return $this->json($setRole);
                 case 'users':
-                    $setRole = $this->getP21UsersTable()->fetchAll();
-                    return json_encode($setRole);
+                    $setRole = $this->getP21UserModel()->all();
+                    return $this->json($setRole);
                 case 'market-segment':
-                    $setRole = $this->getMarketSegmentModel()->fetchAll();
-                    return json_encode($setRole);
+                    $setRole = $this->getMarketSegmentModel()->all();
+                    return $this->json($setRole);
                 case 'statuses':
-                    $setRole = $this->getStatusModel()->fetchAll();
-                    return json_encode($setRole);
+                    $setRole = $this->getStatusModel()->all();
+                    return $this->json($setRole);
             }
         }
 
@@ -152,19 +121,19 @@ class IndexController extends BaseController
             switch ($table) {
                 case 'own':
                     $TableView = $this->project->fetchOwnProjects($user['id']);
-                    return json_encode($TableView);
+                    return $this->json($TableView);
                 case 'assigned':
                     $TableView = $this->project->fetchAssignedProjects($user['id']);
-                    return json_encode($TableView);
+                    return $this->json($TableView);
                 case 'other':
                     $TableView = $this->project->fetchOtherUsersProjects($user['id']);
-                    return json_encode($TableView);
+                    return $this->json($TableView);
                 case 'quote':
                     $TableView = $this->quote->fetchOwnQuotes($user['id']);
-                    return json_encode($TableView);
+                    return $this->json($TableView);
                 case 'note':
                     $TableView = $this->note->fetchOwnNotes($user['id']);
-                    return json_encode($TableView);
+                    return $this->json($TableView);
             }
         }
 
@@ -199,13 +168,13 @@ class IndexController extends BaseController
             switch ($table) {
                 case 'waiting':
                     $TableView = $this->quote->fetchApprovalTable(Quote::WAITING_APPROVAL);
-                    return json_encode($TableView);
+                    return $this->json($TableView);
                 case 'approved':
                     $TableView = $this->quote->fetchApprovalTable(Quote::APPROVED);
-                    return json_encode($TableView);
+                    return $this->json($TableView);
                 case 'disapproved':
                     $TableView = $this->quote->fetchApprovalTable(Quote::DISAPPROVED);
-                    return json_encode($TableView);
+                    return $this->json($TableView);
             }
         }
 
@@ -244,10 +213,10 @@ class IndexController extends BaseController
             switch ($table) {
                 case 'all':
                     $TableView = $this->architect->fetchAllTable($admin, $user['id']);
-                    return json_encode($TableView);
+                    return $this->json($TableView);
                 case 'topfive':
                     $TableView = $this->architect->fetchTopFiveTable($user['id']);
-                    return json_encode($TableView);
+                    return $this->json($TableView);
             }
         }
 
@@ -296,7 +265,7 @@ class IndexController extends BaseController
             switch ($table) {
                 case 'items':
                     $quotes = $this->getItemModel()->fetchItemQuoteTable();
-                    $view = json_encode($quotes);
+                    $view = $this->json($quotes);
                     return $view;
             }
         }

@@ -2,7 +2,7 @@
 
 namespace Application\Model;
 
-class RoleOverride extends BaseModel
+class RoleOverride extends Model
 {
     protected $primaryKey = 'user_id';
 
@@ -23,7 +23,7 @@ class RoleOverride extends BaseModel
             'override_role' => $data['ro_role'],
         ];
 
-        $info = parent::prepareDataForCreate($info);
+        $info = parent::prepareDataForUpdate($info, $id);
         return $info;
     }
 }

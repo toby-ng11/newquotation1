@@ -2,4 +2,4 @@
 
 namespace Application\Model;
 
-class Status extends Model {}
+class Opportunity extends Model {}

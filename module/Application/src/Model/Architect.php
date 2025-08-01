@@ -232,7 +232,7 @@ class Architect
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function countAllArchitects($admin, $user_id)
@@ -269,7 +269,7 @@ class Architect
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchProjectsByArchitect($id, $selectedIDs = null)

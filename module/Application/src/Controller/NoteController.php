@@ -50,7 +50,8 @@ class NoteController extends BaseController
             }
 
             try {
-                $result = $this->note->add($data, $id);
+                $data['project_id'] = $id;
+                $result = $this->note->create($data);
 
                 return json_encode([
                     'success' => true,
@@ -91,7 +92,7 @@ class NoteController extends BaseController
             }
 
             try {
-                $result = $this->note->edit($data, $id);
+                $result = $this->note->update($data, $id);
 
                 return json_encode([
                     'success' => true,

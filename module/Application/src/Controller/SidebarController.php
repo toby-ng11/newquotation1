@@ -2,9 +2,10 @@
 
 namespace Application\Controller;
 
+use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
-class SidebarController extends BaseController
+class SidebarController extends AbstractActionController
 {
     public function homeAction()
     {
