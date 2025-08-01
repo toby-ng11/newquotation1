@@ -160,7 +160,7 @@ class Architect
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchArchitectById($id)
@@ -176,7 +176,7 @@ class Architect
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchArchitectType()
@@ -188,7 +188,7 @@ class Architect
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchArchitectByPattern($admin, $pattern, $user_id, $limit = 10, $company = DEFAULT_COMPANY)
@@ -214,7 +214,7 @@ class Architect
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchAllTable($admin, $user_id)
@@ -289,6 +289,6 @@ class Architect
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 }

@@ -5,34 +5,35 @@ namespace Application\Model;
 use Laminas\Db\Adapter\Driver\ResultInterface;
 use Laminas\Db\Sql\{Sql, Expression};
 use Application\Helper\InputValidator;
+use Application\Service\UserService;
+use Error;
 use Laminas\Db\Adapter\Adapter;
 
-class Note extends Model
+class ProjectNote extends Model
 {
     protected $timestamps = true;
     protected $userTracked = true;
 
-    protected $adapter;
-
-    public function __construct(Adapter $adapter)
+    public function __construct(Adapter $adapter, UserService $userService)
     {
-        $this->adapter = $adapter;
+        parent::__construct($adapter, $userService);
     }
 
-    protected function prepareDataForCreate($data)
+    protected function prepareDataForCreate($data = [])
     {
         $info = [
             'title' => trim($data['note_title']),
             'content' => trim($data['project_note']),
             'next_action' => trim($data['next_action']),
-            'notify_at' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null
+            'notify_at' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null,
+            'project_id' => $data['project_id'],
         ];
 
         $info = parent::prepareDataForCreate($info);
         return $info;
     }
 
-    protected function prepareDataForUpdate($data, $id)
+    protected function prepareDataForUpdate($id = 0, $data = [])
     {
         $info = [
             'title' => trim($data['note_title']),
@@ -41,7 +42,7 @@ class Note extends Model
             'notify_at' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null
         ];
 
-        $info = parent::prepareDataForUpdate($info, $id);
+        $info = parent::prepareDataForUpdate($id, $info);
         return $info;
     }
 
@@ -50,8 +51,8 @@ class Note extends Model
         if (! InputValidator::isValidId($id)) {
             return false;
         }
-
-        $sql = new Sql($this->adapter);
+        $adapter = $this->tableGateway->getAdapter();
+        $sql = new Sql($adapter);
         $select = $sql->select('p2q_view_project_note')
             ->where([
                 'project_id' => $id
@@ -59,7 +60,7 @@ class Note extends Model
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchNote($id)
@@ -77,7 +78,8 @@ class Note extends Model
             return false;
         }
 
-        $sql = new Sql($this->adapter);
+        $adapter = $this->tableGateway->getAdapter();
+        $sql = new Sql($adapter);
         $select = $sql->select('p2q_view_project_note')
             ->where([
                 'created_by' => $user_id
@@ -93,7 +95,8 @@ class Note extends Model
         if (! InputValidator::isValidData($user_id)) {
             return false;
         }
-        $sql = new Sql($this->adapter);
+        $adapter = $this->tableGateway->getAdapter();
+        $sql = new Sql($adapter);
         $select = $sql->select();
         $select->from('p2q_view_project_note')
             ->columns(['total' => new Expression('COUNT(*)')])
@@ -106,19 +109,12 @@ class Note extends Model
 
     public function fetchPendingFollowUps()
     {
-        $sql = new Sql($this->adapter);
-        $select = $sql->select('project_notes');
-        $select->where([
+        return $this->findBy([
             "notify_at <= GETDATE()",
             "notify_at > DATEADD(MINUTE, -1, GETDATE())",
             "(is_notified IS NULL OR is_notified = 'N')",
             'deleted_at IS NOT NULL'
         ]);
-
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $result = $statement->execute();
-
-        return iterator_to_array($result);
     }
 
     public function markReminderSent($noteId)
@@ -127,12 +123,6 @@ class Note extends Model
             return false;
         }
 
-        $sql = new Sql($this->adapter);
-        $update = $sql->update('project_notes');
-        $update->set(['is_notified' => 'Y']);
-        $update->where(['id' => $noteId]);
-
-        $statement = $sql->prepareStatementForSqlObject($update);
-        return $statement->execute();
+        return $this->update(['is_notified' => 'Y'], $noteId);
     }
 }

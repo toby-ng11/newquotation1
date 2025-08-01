@@ -78,14 +78,14 @@ class Model
         return iterator_to_array($rowset, true);
     }
 
-    public function find($id)
+    public function find($id = 0)
     {
         /** @var ResultSet */
         $rowset = $this->tableGateway->select([$this->primaryKey => $id]);
         return $rowset->current();
     }
 
-    public function create($data)
+    public function create($data = [])
     {
         try {
             $data = $this->prepareDataForCreate($data);
@@ -97,11 +97,11 @@ class Model
         }
     }
 
-    public function update($id, $data)
+    public function update($whereId = 0, $data = [])
     {
         try {
-            $data = $this->prepareDataForUpdate($data, $id);
-            $this->tableGateway->update($data, [$this->primaryKey => $id]);
+            $data = $this->prepareDataForUpdate($whereId, $data);
+            $this->tableGateway->update($data, [$this->primaryKey => $whereId]);
             return true;
         } catch (Exception $e) {
             error_log(sprintf('%s create(): Database Update Error: %s', static::class, $e->getMessage()));
@@ -134,7 +134,7 @@ class Model
         }
     }
 
-    protected function prepareDataForCreate($data)
+    protected function prepareDataForCreate($data = [])
     {
         if ($this->userTracked) {
             $user = $this->userService->getCurrentUser();
@@ -148,7 +148,7 @@ class Model
         return $data;
     }
 
-    protected function prepareDataForUpdate($data, $id)
+    protected function prepareDataForUpdate($id = 0, $data = [])
     {
         if ($this->userTracked) {
             $user = $this->userService->getCurrentUser();

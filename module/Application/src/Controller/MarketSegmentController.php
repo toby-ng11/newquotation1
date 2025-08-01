@@ -3,9 +3,9 @@
 namespace Application\Controller;
 
 use Application\Model\MarketSegment;
+use Laminas\View\Model\JsonModel;
 use Psr\Container\ContainerInterface;
 
-class MarketSegmentController extends BaseController
 class MarketSegmentController extends BaseController
 {
     protected $container;
@@ -34,15 +34,12 @@ class MarketSegmentController extends BaseController
     public function get($id)
     {
         $row = $this->getMarketSegmentModel()->find($id);
-        $row = $this->getMarketSegmentModel()->find($id);
         if (! $row) {
             return $this->abort404();
         }
 
-        return json_encode([
-        return json_encode([
+        return $this->json([
             'success' => true,
-            'market_segment' => $row,
             'market_segment' => $row,
         ]);
     }
@@ -51,10 +48,8 @@ class MarketSegmentController extends BaseController
     public function create($data)
     {
         $result = $this->getMarketSegmentModel()->create($data);
-        return json_encode([
-        return json_encode([
+        return $this->json([
             'success' => $result !== false,
-            'message' => $result ? 'Market segment added!' : 'Error! Please check log for more details.',
             'message' => $result ? 'Market segment added!' : 'Error! Please check log for more details.',
         ]);
     }
@@ -63,10 +58,8 @@ class MarketSegmentController extends BaseController
     public function update($id, $data)
     {
         $result = $this->getMarketSegmentModel()->update($id, $data);
-        return json_encode([
-        return json_encode([
+        return $this->json([
             'success' => $result !== false,
-            'message' => $result ? 'Saved successfully!' : 'Error! Please check log for more details.',
             'message' => $result ? 'Saved successfully!' : 'Error! Please check log for more details.',
         ]);
     }
@@ -75,10 +68,8 @@ class MarketSegmentController extends BaseController
     public function delete($id)
     {
         $result = $this->getMarketSegmentModel()->delete($id);
-        return json_encode([
-        return json_encode([
+        return $this->json([
             'success' => $result !== false,
-            'message' => $result ? 'Deleted successfully!' : 'Error! Please check log for more details.',
             'message' => $result ? 'Deleted successfully!' : 'Error! Please check log for more details.',
         ]);
     }

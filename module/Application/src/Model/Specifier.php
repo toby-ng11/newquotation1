@@ -134,7 +134,7 @@ class Specifier
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchSpecifierById($id)

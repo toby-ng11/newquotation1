@@ -18,7 +18,7 @@ class OpportunityController extends BaseController
     public function getList()
     {
         $table = $this->getOpportunityModel()->all();
-        return json_encode([
+        return $this->json([
             'success' => true,
             'data' => iterator_to_array($table),
         ]);
@@ -32,7 +32,7 @@ class OpportunityController extends BaseController
             return $this->abort404();
         }
 
-        return json_encode([
+        return $this->json([
             'success' => true,
             'opportinity' => $row,
         ]);
@@ -42,17 +42,17 @@ class OpportunityController extends BaseController
     public function create($data)
     {
         $result = $this->getOpportunityModel()->create($data);
-        return json_encode([
+        return $this->json([
             'success' => $result !== false,
             'message' => $result ? 'Market segment added!' : 'Error! Please check log for more details.',
         ]);
     }
 
     // PUT /enpoint/:id
-    public function update($id, $data)
+    public function update($data, $id)
     {
-        $result = $this->getOpportunityModel()->update($id, $data);
-        return json_encode([
+        $result = $this->getOpportunityModel()->update($data, $id);
+        return $this->json([
             'success' => $result !== false,
             'message' => $result ? 'Saved successfully!' : 'Error! Please check log for more details.',
         ]);
@@ -62,7 +62,7 @@ class OpportunityController extends BaseController
     public function delete($id)
     {
         $result = $this->getOpportunityModel()->delete($id);
-        return json_encode([
+        return $this->json([
             'success' => $result !== false,
             'message' => $result ? 'Deleted successfully!' : 'Error! Please check log for more details.',
         ]);

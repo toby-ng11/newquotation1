@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Application;
 
-use Application\Model\RoleOverride;
-use Laminas\Mvc\Application;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Laminas\ServiceManager\Factory\InvokableFactory;
@@ -158,7 +156,7 @@ return [
                     ],
                 ],
             ],
-            'note' => [
+            'project-note' => [
                 'type' => Segment::class,
                 'options' => [
                     'route'    => '/note[/:id[/:action]]',
@@ -167,7 +165,7 @@ return [
                         'id'     => '[0-9]+',
                     ],
                     'defaults' => [
-                        'controller' => Controller\NoteController::class,
+                        'controller' => Controller\ProjectNoteController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -285,7 +283,7 @@ return [
                     $container->get(Service\UserService::class),
                     $container->get(Model\Project::class),
                     $container->get(Model\Quote::class),
-                    $container->get(Model\Note::class),
+                    $container->get(Model\ProjectNote::class),
                     $container->get(Model\Architect::class),
                     $container
                 );
@@ -305,7 +303,7 @@ return [
                     $container->get(Model\Project::class),
                     $container->get(Model\Location::class),
                     $container->get(Model\Item::class),
-                    $container->get(Model\Note::class),
+                    $container->get(Model\ProjectNote::class),
                     $container->get(Model\Architect::class),
                     $container->get(Model\Address::class),
                     $container->get(Model\Specifier::class),
@@ -350,9 +348,9 @@ return [
                     $container->get(Model\Item::class)
                 );
             },
-            Controller\NoteController::class => function ($container) {
-                return new Controller\NoteController(
-                    $container->get(Model\Note::class)
+            Controller\ProjectNoteController::class => function ($container) {
+                return new Controller\ProjectNoteController(
+                    $container->get(Model\ProjectNote::class)
                 );
             },
             Controller\SpecifierController::class => function ($container) {
@@ -506,9 +504,12 @@ return [
                     new TableGateway('quote_items', $dbAdapter),
                 );
             },
-            Model\Note::class => function ($container) {
+            Model\ProjectNote::class => function ($container) {
                 $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
-                return new Model\Note($dbAdapter);
+                return new Model\ProjectNote(
+                    $dbAdapter,
+                    $container->get(Service\UserService::class),
+                );
             },
             Service\MailerService::class => function ($container) {
                 $config = $container->get('config');
@@ -522,7 +523,7 @@ return [
             },
             \Twig\Environment::class => function ($container) {
                 $loader = new \Twig\Loader\FilesystemLoader([
-                    __DIR__ . '/../view/email',
+                    __DIR__ . '\..\view\email',
                 ]);
                 $twig = new \Twig\Environment($loader, [
                     'cache' => false, // Set a writable path like '/data/cache/twig' in production

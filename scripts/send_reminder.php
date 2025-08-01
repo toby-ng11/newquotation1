@@ -5,7 +5,7 @@ ini_set('implicit_flush', 1);
 ob_implicit_flush(true);
 
 use Application\Service\MailerService;
-use Application\Model\Note;
+use Application\Model\ProjectNote;
 use Application\Model\Project;
 
 // Include your Laminas app bootstrap (update as needed)
@@ -19,8 +19,8 @@ $serviceManager = $app->getServiceManager();
 $config = $serviceManager->get('config');
 $siteUrl = $config['site']['url'] ?? 'https://localhost';
 
-/** @var \Application\Model\Note $noteTable */
-$noteTable = $serviceManager->get(Note::class);
+/** @var \Application\Model\ProjectNote $noteTable */
+$noteTable = $serviceManager->get(ProjectNote::class);
 /** @var \Application\Model\Project $project */
 $projectTable = $serviceManager->get(Project::class);
 /** @var \Application\Service\MailerSerive $mailer */

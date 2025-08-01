@@ -12,8 +12,6 @@ use Psr\Container\ContainerInterface;
 
 class QuoteController extends BaseController
 {
-    protected $container;
-
     public const ACTION_SAVE         = 1;
     public const ACTION_SUBMIT       = 2;
     public const ACTION_SUBMIT_AGAIN = 3;
@@ -25,42 +23,7 @@ class QuoteController extends BaseController
 
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
-    }
-
-    public function getUserService(): UserService
-    {
-        return $this->container->get(UserService::class);
-    }
-
-    public function getPdfExportService(): PdfExportService
-    {
-        return $this->container->get(PdfExportService::class);
-    }
-
-    public function getQuoteModel(): Quote
-    {
-        return $this->container->get(Quote::class);
-    }
-
-    public function getProjectModel(): Project
-    {
-        return $this->container->get(Project::class);
-    }
-
-    public function getLocationModel(): Location
-    {
-        return $this->container->get(Location::class);
-    }
-
-    public function getItemModel(): Item
-    {
-        return $this->container->get(Item::class);
-    }
-
-    public function getCustomerModel(): Customer
-    {
-        return $this->container->get(Customer::class);
+        parent::__construct($container);
     }
 
     public function indexAction()
@@ -85,13 +48,13 @@ class QuoteController extends BaseController
 
             if ($quote_id) {
                 $this->flashMessenger()->addSuccessMessage("Quote created successfully!");
-                return json_encode([
+                return $this->json([
                     'success' => true,
                     'quote_id' => $quote_id,
                 ]);
             } else {
                 $this->flashMessenger()->addErrorMessage("Create quote failed. Please try again.");
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Failed to create quote.'
                 ]);
@@ -117,14 +80,14 @@ class QuoteController extends BaseController
 
             if ($result) {
                 $this->flashMessenger()->addSuccessMessage("Saved changes!");
-                return json_encode([
+                return $this->json([
                     'success' => $result,
                     'message' => 'Saved changes!',
                     'quote_id' => $quote_id,
                 ]);
             } else {
                 //$this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
-                return json_encode([
+                return $this->json([
                     'success' => $result,
                     'message' => 'Failed to edit quote.',
                 ]);
@@ -184,7 +147,7 @@ class QuoteController extends BaseController
         $quote_id = (int) $this->params()->fromRoute('id');
 
         if (! $quote_id) {
-            return json_encode(['success' => false, 'message' => 'Invalid quote ID']);
+            return $this->json(['success' => false, 'message' => 'Invalid quote ID']);
         }
 
         $result = $this->getQuoteModel()->delete($quote_id);
@@ -193,7 +156,7 @@ class QuoteController extends BaseController
             $this->flashMessenger()->addSuccessMessage("Quote deleted successfully!");
 
             if ($this->getRequest()->isXmlHttpRequest()) {
-                return json_encode(['success' => $result]);
+                return $this->json(['success' => $result]);
             }
 
             if ($user['p2q_system_role'] === 'guest') {
@@ -205,7 +168,7 @@ class QuoteController extends BaseController
             $this->flashMessenger()->addErrorMessage("Failed to delete quote. Please try again.");
 
             if ($this->getRequest()->isXmlHttpRequest()) {
-                return json_encode(['success' => $result]);
+                return $this->json(['success' => $result]);
             }
 
             return $this->redirect()->toRoute('quote', ['action' => 'edit', 'id' => $quote_id]);
@@ -215,7 +178,7 @@ class QuoteController extends BaseController
     private function updateQuoteStatus($quote_id, $action, $successMsg)
     {
         if (! $quote_id) {
-            return json_encode(['success' => false, 'message' => 'Invalid quote ID']);
+            return $this->json(['success' => false, 'message' => 'Invalid quote ID']);
         }
 
         $request = $this->getRequest();
@@ -233,7 +196,7 @@ class QuoteController extends BaseController
                 if (! $isAutoSave) {
                     $this->flashMessenger()->addSuccessMessage($successMsg);
                 }
-                return json_encode([
+                return $this->json([
                     'success' => $result,
                     'message' => $result ? $successMsg : 'Failed to update quote.',
                     'redirect' => $this->url()->fromRoute('quote', [
@@ -245,7 +208,7 @@ class QuoteController extends BaseController
         } else {
             if ($request->isXmlHttpRequest()) {
                 $this->flashMessenger()->addErrorMessage("Failed to update quote status. Please try again.");
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Save failed. Please try again.',
                     'redirect' => $this->url()->fromRoute('quote', [
@@ -337,7 +300,7 @@ class QuoteController extends BaseController
             $id = $this->params()->fromRoute('id');
             $sheetType = 'quote';
             $itemTable = $this->getItemModel()->fetchDataTables($id, $sheetType);
-            $view = json_encode($itemTable);
+            $view = $this->json($itemTable);
             return $view;
         }
         return $this->getResponse()->setStatusCode(404);
@@ -353,7 +316,7 @@ class QuoteController extends BaseController
         $contact = $this->getCustomerModel()->fetchContactById($quote['contact_id']);
         $quoteType = $this->getQuoteModel()->fetchQuoteType();
         $items = $this->getItemModel()->fetchDataTables($quote_id, 'quote');
-        $branches = $this->getLocationModel()->fetchAllBranches();
+        $branches = $this->getP21LocationModel()->fetchAllBranches();
         $approvalUsers = $this->getUserService()->fetchaAllApprovalID();
 
         $data = [

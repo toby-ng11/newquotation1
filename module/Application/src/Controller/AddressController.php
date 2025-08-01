@@ -29,13 +29,13 @@ class AddressController extends BaseController
                 $address = $this->address->fetchAddressesById($addressID);
 
                 if (! $address) {
-                    return json_encode([
+                    return $this->json([
                         'success' => false,
                         'message' => 'Address not found.'
                     ]);
                 }
 
-                return json_encode([
+                return $this->json([
                     'success' => true,
                     'address' => [
                         'address_name' => $address['name'],
@@ -74,7 +74,7 @@ class AddressController extends BaseController
             }
 
             if (! $architect_id || empty($data['phys_address1'])) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Missing required fields: ' . implode(', ', $missingFields)
                 ]);
@@ -83,13 +83,13 @@ class AddressController extends BaseController
             try {
                 $result = $this->address->add($data, $architect_id);
 
-                return json_encode([
+                return $this->json([
                     'success' => true,
                     'message' => 'Address added!',
                     'note_id' => $result
                 ]);
             } catch (Exception $e) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Failed to add address.',
                     'error' => $e->getMessage()
@@ -106,7 +106,7 @@ class AddressController extends BaseController
         $address_id = $this->params()->fromRoute('id');
 
         if (! $address_id) {
-            return json_encode([
+            return $this->json([
                 'success' => false,
                 'message' => 'Missing address ID.'
             ]);
@@ -118,13 +118,13 @@ class AddressController extends BaseController
             try {
                 $result = $this->address->edit($data, $address_id);
 
-                return json_encode([
+                return $this->json([
                     'success' => true,
                     'message' => 'Address saved!',
                     'note_id' => $result
                 ]);
             } catch (Exception $e) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Failed to edit address.',
                     'error' => $e->getMessage()
@@ -141,7 +141,7 @@ class AddressController extends BaseController
         $request = $this->getRequest();
 
         if (! $address_id || ! $request->isXmlHttpRequest()) {
-            return json_encode([
+            return $this->json([
                 'success' => false,
                 'message' => 'Invalid request.',
             ]);
@@ -152,18 +152,18 @@ class AddressController extends BaseController
                 $result = $this->address->delete($address_id);
 
                 if ($result) {
-                    return json_encode([
+                    return $this->json([
                         'success' => true,
                         'message' => 'Address deleted!',
                     ]);
                 } else {
-                    return json_encode([
+                    return $this->json([
                         'success' => false,
                         'message' => 'Failed to delete address.',
                     ]);
                 }
             } catch (Exception $e) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Failed to delete address.',
                     'error' => $e->getMessage()

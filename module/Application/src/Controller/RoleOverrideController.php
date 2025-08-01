@@ -2,28 +2,20 @@
 
 namespace Application\Controller;
 
-use Application\Model\RoleOverride;
 use Psr\Container\ContainerInterface;
 
 class RoleOverrideController extends BaseController
 {
-    protected $container;
-
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
-    }
-
-    public function getRoleOverrideModel(): RoleOverride
-    {
-        return $this->container->get(RoleOverride::class);
+        parent::__construct($container);
     }
 
     // GET /role-override
     public function getList()
     {
-        $table = $this->getRoleOverrideModel()->fetchAll();
-        return json_encode([
+        $table = $this->getRoleOverrideModel()->all();
+        return $this->json([
             'success' => true,
             'data' => iterator_to_array($table),
         ]);
@@ -33,13 +25,11 @@ class RoleOverrideController extends BaseController
     public function get($id)
     {
         $row = $this->getRoleOverrideModel()->find($id);
-        $row = $this->getRoleOverrideModel()->find($id);
         if (! $row) {
             return $this->abort404();
         }
 
-        return json_encode([
-        return json_encode([
+        return $this->json([
             'success' => true,
             'role_override' => $row,
         ]);
@@ -49,10 +39,9 @@ class RoleOverrideController extends BaseController
     public function create($data)
     {
         $result = $this->getRoleOverrideModel()->create($data);
-        return json_encode([
-        return json_encode([
+        return $this->json([
             'success' => $result !== false,
-            'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
+            'message' => $result !== false ? 'Role overridden!' : 'Error! Please check log for more details.',
         ]);
     }
 
@@ -60,10 +49,9 @@ class RoleOverrideController extends BaseController
     public function update($id, $data)
     {
         $result = $this->getRoleOverrideModel()->update($id, $data);
-        return json_encode([
-        return json_encode([
+        return $this->json([
             'success' => $result !== false,
-            'message' => $result ? 'Role overridden!' : 'Error! Please check log for more details.',
+            'message' => $result !== false ? 'Role overridden!' : 'Error! Please check log for more details.',
         ]);
     }
 
@@ -71,10 +59,9 @@ class RoleOverrideController extends BaseController
     public function delete($id)
     {
         $result = $this->getRoleOverrideModel()->delete($id);
-        return json_encode([
-        return json_encode([
+        return $this->json([
             'success' => $result !== false,
-            'message' => $result ? 'Role override deleted!' : 'Error! Please check log for more details.',
+            'message' => $result !== false ? 'Role override deleted!' : 'Error! Please check log for more details.',
         ]);
     }
 }

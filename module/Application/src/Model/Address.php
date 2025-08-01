@@ -187,7 +187,7 @@ class Address
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchSpecifierAddress($specifier_id)
@@ -206,7 +206,7 @@ class Address
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchAddressesById($id)
@@ -222,6 +222,6 @@ class Address
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
-        return $result;
+        return iterator_to_array($result, true);
     }
 }

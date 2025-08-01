@@ -5,7 +5,7 @@ namespace Application\Controller;
 use Laminas\Http\Response\Stream;
 use Laminas\View\Model\ViewModel;
 use Application\Service\UserService;
-use Application\Model\{Address, Project, Location, Item, Note, Architect, Specifier, Customer, ProjectShare};
+use Application\Model\{Address, Project, Location, Item, Architect, Specifier, Customer, ProjectNote, ProjectShare};
 use Application\Service\PdfExportService;
 
 class ProjectController extends BaseController
@@ -28,7 +28,7 @@ class ProjectController extends BaseController
         Project $project,
         Location $location,
         Item $item,
-        Note $note,
+        ProjectNote $note,
         Architect $architect,
         Address $address,
         Specifier $specifier,
@@ -71,7 +71,7 @@ class ProjectController extends BaseController
             if ($project_id) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
                     $this->flashMessenger()->addSuccessMessage("Project created successfully!");
-                    return json_encode([
+                    return $this->json([
                         'success' => true,
                         'message' => 'Project created successfully!',
                         'redirect' => $this->url()->fromRoute('project', [
@@ -87,7 +87,7 @@ class ProjectController extends BaseController
             } else {
                 if ($this->getRequest()->isXmlHttpRequest()) {
                     $this->flashMessenger()->addErrorMessage("Failed to create project. Please try again!");
-                    return json_encode([
+                    return $this->json([
                         'success' => false,
                         'message' => 'Failed to create project. Please try again!',
                         'redirect' => $this->url()->fromRoute('project', ['action' => 'index'])
@@ -136,7 +136,7 @@ class ProjectController extends BaseController
                         $this->flashMessenger()->addSuccessMessage("Project saved successfully!");
                     }
 
-                    return json_encode([
+                    return $this->json([
                         'success' => true,
                         'message' => 'Project saved successfully.',
                         'redirect' => $this->url()->fromRoute('project', [
@@ -152,7 +152,7 @@ class ProjectController extends BaseController
                 ]);
             } else {
                 if ($request->isXmlHttpRequest()) {
-                    return json_encode([
+                    return $this->json([
                         'success' => false,
                         'message' => 'Save failed. Please try again.',
                         'redirect' => $this->url()->fromRoute('project', [
@@ -247,7 +247,7 @@ class ProjectController extends BaseController
             $data = $this->params()->fromPost();
 
             if (! $project_id) {
-                return json_encode(['success' => false, 'message' => 'Invalid project ID']);
+                return $this->json(['success' => false, 'message' => 'Invalid project ID']);
             }
 
             $result = $this->project->editArchitect($data, $project_id);
@@ -261,7 +261,7 @@ class ProjectController extends BaseController
                         $this->flashMessenger()->addSuccessMessage("Project saved successfully!");
                     }
 
-                    return json_encode([
+                    return $this->json([
                         'success' => true,
                         'message' => 'Project saved successfully.',
                         'redirect' => $this->url()->fromRoute('project', [
@@ -276,7 +276,7 @@ class ProjectController extends BaseController
                 ]);
             } else {
                 if ($request->isXmlHttpRequest()) {
-                    return json_encode([
+                    return $this->json([
                         'success' => false,
                         'message' => 'Save failed. Please try again.',
                         'redirect' => $this->url()->fromRoute('project', [
@@ -299,7 +299,7 @@ class ProjectController extends BaseController
             $project_id = (int) $this->params()->fromRoute('id');
 
             if (! $project_id) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Invalid project ID'
                 ]);
@@ -313,7 +313,7 @@ class ProjectController extends BaseController
                 $this->flashMessenger()->addErrorMessage("Delete failed. Please try again.");
             }
 
-            return json_encode([
+            return $this->json([
                 'success' => (bool) $result,
                 'message' => $result ? 'Project deleted successfully!' : 'Delete failed. Please try again.'
             ]);
@@ -328,7 +328,7 @@ class ProjectController extends BaseController
         if ($request->isXmlHttpRequest()) {
             $projectId = $this->params()->fromRoute('id');
             $shareTable = $this->projectShare->fetchDataTables($projectId);
-            $view = json_encode($shareTable);
+            $view = $this->json($shareTable);
             return $view;
         }
         return $this->abort404();
@@ -342,7 +342,7 @@ class ProjectController extends BaseController
             $id = $this->params()->fromRoute('id');
             $sheetType = 'project';
             $itemTable = $this->item->fetchDataTables($id, $sheetType);
-            $view = json_encode($itemTable);
+            $view = $this->json($itemTable);
             return $view;
         }
         return $this->abort404();
@@ -354,7 +354,7 @@ class ProjectController extends BaseController
         if ($request->isXmlHttpRequest()) {
             $id = $this->params()->fromRoute('id');
             $noteTable = $this->note->fetchDataTables($id);
-            $view = json_encode($noteTable);
+            $view = $this->json($noteTable);
             return $view;
         }
         return $this->abort404();
@@ -366,7 +366,7 @@ class ProjectController extends BaseController
         if ($request->isXmlHttpRequest()) {
             $project_id = $this->params()->fromRoute('id');
             $projectQuotes = $this->project->fetchQuoteByProject($project_id);
-            $view = json_encode($projectQuotes);
+            $view = $this->json($projectQuotes);
             return $view;
         }
         return $this->abort404();

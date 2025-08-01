@@ -29,7 +29,7 @@ class ItemController extends BaseController
 
             if ($pattern) {
                 $item = $this->item->fetchItemsByPattern($pattern, $limit);
-                return json_encode($item);
+                return $this->json($item);
             }
 
             // fetch item from Quotation DB
@@ -38,7 +38,7 @@ class ItemController extends BaseController
                 $sheetType = $this->params()->fromQuery('type', null);
 
                 if (! $sheetType) {
-                    return json_encode([
+                    return $this->json([
                         'message' => 'Sheet type is required',
                     ]);
                 }
@@ -46,13 +46,13 @@ class ItemController extends BaseController
                 $item = $this->item->fetchItemByUID($itemUID, $sheetType);
 
                 if (! $item) {
-                    return json_encode([
+                    return $this->json([
                         'success' => false,
                         'message' => 'Item not found.'
                     ]);
                 }
 
-                return json_encode([
+                return $this->json([
                     'success' => true,
                     'item' => [
                         'item_code' => $item['item_code'],
@@ -64,7 +64,7 @@ class ItemController extends BaseController
                 ]);
             }
 
-            return json_encode([
+            return $this->json([
                 'message' => 'No item ID or pattern provided',
             ]);
         }
@@ -81,7 +81,7 @@ class ItemController extends BaseController
             $data = $this->params()->fromPost();
 
             if (! $id || empty($data['item_code'])) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Missing required fields.'
                 ]);
@@ -90,13 +90,13 @@ class ItemController extends BaseController
             try {
                 $result = $this->item->add($data, $id, $sheetType);
 
-                return json_encode([
+                return $this->json([
                     'success' => true,
                     'message' => 'Item added successfully!',
                     'item_id' => $result
                 ]);
             } catch (Exception $e) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Failed to add item.',
                     'error' => $e->getMessage()
@@ -113,7 +113,7 @@ class ItemController extends BaseController
         $item_uid = $this->params()->fromRoute('id', null);
 
         if (! $item_uid) {
-            return json_encode([
+            return $this->json([
                 'success' => false,
                 'message' => 'Missing item UID.'
             ]);
@@ -126,13 +126,13 @@ class ItemController extends BaseController
             try {
                 $result = $this->item->edit($data, $item_uid, $sheetType);
 
-                return json_encode([
+                return $this->json([
                     'success' => true,
                     'message' => 'Item saved!',
                     'item_id' => $result
                 ]);
             } catch (Exception $e) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Failed to edit item.',
                     'error' => $e->getMessage()
@@ -152,7 +152,7 @@ class ItemController extends BaseController
             $sheetType = $this->params()->fromQuery('type', null);
 
             if (! $item_uid) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Missing item UID.'
                 ]);
@@ -161,13 +161,13 @@ class ItemController extends BaseController
             $item = $this->item->fetchItemByUID($item_uid, $sheetType);
 
             if (! $item) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Item not found.'
                 ]);
             }
 
-            return json_encode([
+            return $this->json([
                 'success' => true,
                 'data' => $item
             ]);
@@ -184,7 +184,7 @@ class ItemController extends BaseController
             $sheetType = $this->params()->fromQuery('type', null);
 
             if (! $item_uid) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Missing item UID.'
                 ]);
@@ -193,13 +193,13 @@ class ItemController extends BaseController
             try {
                 $result = $this->item->delete($item_uid, $sheetType);
 
-                return json_encode([
+                return $this->json([
                     'success' => true,
                     'message' => 'Item deleted!',
                     'item_id' => $result
                 ]);
             } catch (Exception $e) {
-                return json_encode([
+                return $this->json([
                     'success' => false,
                     'message' => 'Failed to delete item.',
                     'error' => $e->getMessage()
@@ -218,12 +218,12 @@ class ItemController extends BaseController
             $item_id = $this->params()->fromRoute('id', null);
 
             if (empty($item_id)) {
-                return json_encode(['error' => 'Pattern is required']);
+                return $this->json(['error' => 'Pattern is required']);
             }
 
             $uom = $this->item->fetchUomByItemId($item_id);
 
-            return json_encode($uom);
+            return $this->json($uom);
         }
         return $this->abort404();
     }
@@ -238,12 +238,12 @@ class ItemController extends BaseController
             $uom = $this->params()->fromQuery('uom', null);
 
             if (empty($item_id) || empty($uom)) {
-                return json_encode(['error' => 'Pattern is required']);
+                return $this->json(['error' => 'Pattern is required']);
             }
 
             $price = $this->item->fetchItemPrice($item_id, $uom, true);
 
-            return json_encode($price);
+            return $this->json($price);
         }
         return $this->abort404();
     }
@@ -258,12 +258,12 @@ class ItemController extends BaseController
             $sheetType = $this->params()->fromQuery('type', null);
 
             if (empty($item_uid) || empty($sheetType)) {
-                return json_encode(['error' => 'Pattern is required']);
+                return $this->json(['error' => 'Pattern is required']);
             }
 
             $price = $this->item->fetchItemPrice($item_uid, null, false, $sheetType);
 
-            return json_encode($price);
+            return $this->json($price);
         }
         return $this->abort404();
     }

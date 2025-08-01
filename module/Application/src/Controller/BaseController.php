@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-declare(strict_types=1);
-
 namespace Application\Controller;
 
 use Application\Model\Architect;
@@ -11,9 +9,9 @@ use Application\Model\Customer;
 use Application\Model\Item;
 use Application\Model\Location;
 use Application\Model\MarketSegment;
-use Application\Model\Note;
 use Application\Model\Opportunity;
 use Application\Model\Project;
+use Application\Model\ProjectNote;
 use Application\Model\ProjectShare;
 use Application\Model\Quote;
 use Application\Model\RoleOverride;
@@ -21,6 +19,7 @@ use Application\Model\Specifier;
 use Application\Model\Status;
 use Application\Model\User;
 use Application\Model\View\P21User;
+use Application\Service\PdfExportService;
 use Application\Service\UserService;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
@@ -33,6 +32,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * @method Request getRequest()
  * @method Response getResponse()
+ *
+ * @method Project getProjectModel()
+ * @method Architect getArchitectModel()
+ * @method Specifier getSpecifierModel()
  */
 abstract class BaseController extends AbstractRestfulController
 {
@@ -88,9 +91,9 @@ abstract class BaseController extends AbstractRestfulController
         return $this->container->get(MarketSegment::class);
     }
 
-    public function getNoteModel(): Note
+    public function getNoteModel(): ProjectNote
     {
-        return $this->container->get(Note::class);
+        return $this->container->get(ProjectNote::class);
     }
 
     public function getOpportunityModel(): Opportunity
@@ -146,6 +149,11 @@ abstract class BaseController extends AbstractRestfulController
     public function getUserService(): UserService
     {
         return $this->container->get(UserService::class);
+    }
+
+    public function getPdfExportService(): PdfExportService
+    {
+        return $this->container->get(PdfExportService::class);
     }
 
     protected function json($data, int $status = 200, array $headers = []): Response

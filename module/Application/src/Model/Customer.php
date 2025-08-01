@@ -37,7 +37,7 @@ class Customer
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchCustomerByPattern($pattern, $limit = 10, $company = DEFAULT_COMPANY)
@@ -61,7 +61,7 @@ class Customer
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchContactsByCustomer($customer_id)
@@ -76,7 +76,7 @@ class Customer
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchCustomerByContact($contact_id, $company = DEFAULT_COMPANY)

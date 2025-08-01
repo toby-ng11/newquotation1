@@ -180,7 +180,7 @@ class Item
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchItemByUID($item_uid, $sheetType)
@@ -222,7 +222,7 @@ class Item
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchItemPrice($item_id, $uom, $fromP21, $sheetType = '', $location = DEFAULT_LOCATION_ID)
@@ -294,7 +294,7 @@ class Item
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function fetchExistItems($id, $sheetType)

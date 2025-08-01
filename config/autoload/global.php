@@ -13,15 +13,6 @@
  */
 
 return [
-    'db' => [
-        'driver' => 'Pdo',
-        'dsn'    => 'sqlsrv:Server=tor-cloud-sql;Database=QUOTATION',
-        'driver_options' => [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::SQLSRV_ATTR_ENCODING => PDO::SQLSRV_ENCODING_UTF8,
-            PDO::SQLSRV_ATTR_FETCHES_DATETIME_TYPE => true
-        ],
-    ],
     'session_config' => [
         'cookie_lifetime' => 86400, // 1 days in seconds
         'gc_maxlifetime' => 864000, // Garbage collection max lifetime

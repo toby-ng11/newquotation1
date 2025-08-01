@@ -14,6 +14,7 @@ use Application\Model\{
     Project,
     Quote,
     Note,
+    ProjectNote,
     RoleOverride,
     Status
 };
@@ -32,7 +33,7 @@ class IndexController extends BaseController
         UserService $userService,
         Project $project,
         Quote $quote,
-        Note $note,
+        ProjectNote $note,
         Architect $architect,
         ContainerInterface $container
     ) {

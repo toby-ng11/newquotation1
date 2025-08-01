@@ -36,10 +36,10 @@ class UserController extends BaseController
         $limit = (int) $this->params()->fromQuery('limit', 10);
 
         if (empty($pattern)) {
-            return json_encode(['error' => 'Pattern is required']);
+            return $this->json(['error' => 'Pattern is required']);
         }
 
         $users = $this->user->fetchUserIdByPattern($pattern, $limit);
-        return json_encode($users);
+        return $this->json($users);
     }
 }

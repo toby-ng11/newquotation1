@@ -6,7 +6,7 @@ class RoleOverride extends Model
 {
     protected $primaryKey = 'user_id';
 
-    protected function prepareDataForCreate($data)
+    protected function prepareDataForCreate($data = [])
     {
         $info = [
             'user_id' => ! empty(trim($data['ro_user_id'])) ? trim($data['ro_user_id']) : null,
@@ -17,13 +17,13 @@ class RoleOverride extends Model
         return $info;
     }
 
-    protected function prepareDataForUpdate($data, $id)
+    protected function prepareDataForUpdate($id = 0, $data = [])
     {
         $info = [
             'override_role' => $data['ro_role'],
         ];
 
-        $info = parent::prepareDataForUpdate($info, $id);
+        $info = parent::prepareDataForUpdate($id, $info);
         return $info;
     }
 }
