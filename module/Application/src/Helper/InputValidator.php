@@ -19,12 +19,12 @@ class InputValidator
         return $digitsValidator->isValid($id) && $minValidator->isValid($id);
     }
 
-    public static function isValidData(array|null $data): bool
+    public static function isValidData(mixed $data): bool
     {
         return (new NotEmpty())->isValid($data);
     }
 
-    public static function isValidPattern(string|null $pattern): bool
+    public static function isValidPattern(mixed $pattern): bool
     {
         return (new NotEmpty())->isValid($pattern);
     }

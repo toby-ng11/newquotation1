@@ -33,14 +33,23 @@ class Model
      */
     protected $primaryKey;
 
-    /** Indicate the table should be tracked. Require table to have "created_by" and "updated_by". */
-    protected bool $userTracked = false;
+    /** Indicate the table should be tracked. Require table to have "created_by" and "updated_by".
+     *
+     * @var bool
+     */
+    protected $userTracked = false;
 
-    /** Indicate the table should be timestamped. Require table to have "created_at" and "updated_at". */
-    protected bool $timestamps = false;
+    /** Indicate the table should be timestamped. Require table to have "created_at" and "updated_at".
+     *
+     * @var bool
+     */
+    protected $timestamps = false;
 
-    /** Indicate the table should be soft deleted. */
-    protected bool $softDeletes  = false;
+    /** Indicate the table should be soft deleted.
+     *
+     * @var bool
+     */
+    protected $softDeletes  = false;
 
     public function __construct(
         Adapter $adapter,
@@ -112,7 +121,7 @@ class Model
     public function update(int $whereId, array $data): bool
     {
         try {
-            $data = $this->prepareDataForUpdate($whereId, $data);
+            $data = $this->prepareDataForUpdate($data, $whereId);
             $this->tableGateway->update($data, [$this->getKey() => $whereId]);
             return true;
         } catch (Exception $e) {
@@ -162,7 +171,7 @@ class Model
         return $data;
     }
 
-    protected function prepareDataForUpdate(int $id = 0, array $data): array
+    protected function prepareDataForUpdate(array $data, int $id = 0): array
     {
         if ($this->userTracked) {
             $user = $this->userService->getCurrentUser();

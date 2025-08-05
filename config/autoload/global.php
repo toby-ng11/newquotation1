@@ -12,15 +12,36 @@
  * file.
  */
 
+use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\TableGateway\TableGateway;
+use Laminas\Session\Config\SessionConfig;
+use Laminas\Session\SaveHandler\DbTableGateway;
+use Laminas\Session\SaveHandler\DbTableGatewayOptions;
+use Psr\Container\ContainerInterface;
+
 return [
     'session_config' => [
         'cookie_lifetime' => 86400, // 1 days in seconds
         'gc_maxlifetime' => 864000, // Garbage collection max lifetime
+        'name' => 'app_session',
+        'config_class' => SessionConfig::class,
     ],
     'service_manager' => [
         'factories' => [
             Laminas\Db\Adapter\Adapter::class => Laminas\Db\Adapter\AdapterServiceFactory::class,
-            Laminas\Session\Config\ConfigInterface::class => Laminas\Session\Service\SessionConfigFactory::class
+            Laminas\Session\Config\ConfigInterface::class => Laminas\Session\Service\SessionConfigFactory::class,
+            'SessionSaveHandler' => function (ContainerInterface $container) {
+                $adapter = $container->get(Adapter::class);
+                $tableGateway = new TableGateway('sessions', $adapter);
+                $dbOptions = new DbTableGatewayOptions([
+                    'idColumn' => 'id',
+                    'nameColumn'     => 'name',
+                    'modifiedColumn' => 'modified',
+                    'lifetimeColumn' => 'lifetime',
+                    'dataColumn'     => 'data',
+                ]);
+                return new DbTableGateway($tableGateway, $dbOptions);
+            },
         ],
         'validators' => [
             \Laminas\Session\Validator\RemoteAddr::class,

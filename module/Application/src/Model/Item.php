@@ -297,7 +297,7 @@ class Item
         return iterator_to_array($result, true);
     }
 
-    public function fetchExistItems($id, $sheetType)
+    public function fetchExistItems(int|null $id, string $sheetType)
     {
         if (! InputValidator::isValidData($sheetType) || ! InputValidator::isValidId($id)) {
             return false;
@@ -313,7 +313,6 @@ class Item
                 /** @var ResultSet $rowset */
                 $rowset = $this->project_items->selectWith($select);
                 return $rowset->toArray();
-                break;
             case 'quote':
                 $select = $this->quote_items->getSql()->select()
                     ->where([
@@ -323,7 +322,6 @@ class Item
                 /** @var ResultSet $rowset */
                 $rowset = $this->quote_items->selectWith($select);
                 return $rowset->toArray();
-                break;
             default:
                 return false;
         }

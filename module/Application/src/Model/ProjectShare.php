@@ -134,9 +134,9 @@ class ProjectShare
         return $result;
     }
 
-    public function isShareExists($projectId, $userId)
+    public function isShareExists(int $projectId, string $userId): bool
     {
-        if (! InputValidator::isValidData($projectId) || ! InputValidator::isValidData($userId)) {
+        if (! InputValidator::isValidId($projectId) || ! InputValidator::isValidPattern($userId)) {
             return false;
         }
 

@@ -75,7 +75,7 @@ class User
         return iterator_to_array($result, true);
     }
 
-    public function fetchaAllApprovalID(string|null $company = Defaults::company()): array
+    public function fetchaAllApprovalID(string|null $company = DEFAULT_COMPANY): array
     {
         if ($company === null) {
             return [];

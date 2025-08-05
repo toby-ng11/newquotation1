@@ -19,7 +19,7 @@ class ProjectNote extends Model
         parent::__construct($adapter, $userService);
     }
 
-    protected function prepareDataForCreate($data = [])
+    protected function prepareDataForCreate(array $data): array
     {
         $info = [
             'title' => trim($data['note_title']),
@@ -33,7 +33,7 @@ class ProjectNote extends Model
         return $info;
     }
 
-    protected function prepareDataForUpdate($id = 0, $data = [])
+    protected function prepareDataForUpdate(array $data, int $id = 0): array
     {
         $info = [
             'title' => trim($data['note_title']),
@@ -42,7 +42,7 @@ class ProjectNote extends Model
             'notify_at' => ! empty($data['follow_up_date']) ? $data['follow_up_date'] : null
         ];
 
-        $info = parent::prepareDataForUpdate($id, $info);
+        $info = parent::prepareDataForUpdate($info, $id);
         return $info;
     }
 

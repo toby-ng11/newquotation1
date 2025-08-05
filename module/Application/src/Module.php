@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Application;
 
 use Application\Config\Defaults;
+use Laminas\Http\Response;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Session\Container;
 use Laminas\Session\SessionManager;
 use Laminas\ModuleManager\Feature\ConfigProviderInterface;
+use Laminas\Session\SaveHandler\SaveHandlerInterface;
 use Application\Model\User;
 use Application\Model\Location;
 
@@ -25,14 +27,18 @@ class Module implements ConfigProviderInterface
     {
         $serviceManager = $e->getApplication()->getServiceManager();
 
-        /** @var SessionManager $sessionManager */
         $sessionManager = $serviceManager->get(SessionManager::class);
+
+        /** @var SaveHandlerInterface $saveHandler */
+        $saveHandler = $serviceManager->get('SessionSaveHandler');
+
+        $sessionManager->setSaveHandler($saveHandler);
+        $sessionManager->start();
+
         Container::setDefaultManager($sessionManager);
 
-        /** @var User $userModel */
         $userModel = $serviceManager->get(User::class);
 
-        /** @var Location $locationModel */
         $locationModel = $serviceManager->get(Location::class);
         $name = str_replace(['CENTURA\\', 'centura\\'], '', $_SERVER['REMOTE_USER'] ?? '');
         $user = $userModel->fetchsalebyid($name);
@@ -51,7 +57,8 @@ class Module implements ConfigProviderInterface
 
         Defaults::set($default_company, $location_id);
 
-        $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function ($e) {
+        $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $e) {
+            /** @var Response $response */
             $response = $e->getResponse();
             $headers = $response->getHeaders();
 
@@ -66,7 +73,9 @@ class Module implements ConfigProviderInterface
                 return;
             }
 
+            /** @var string $controller */
             $controller = $routeMatch->getParam('controller');
+            /** @var string $action */
             $action     = $routeMatch->getParam('action');
 
             $viewModel = $e->getViewModel();
