@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Laminas\Db\Adapter\Adapter;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\Db\TableGateway\TableGateway;
+use Psr\Container\ContainerInterface;
 
 return [
     'router' => [
@@ -278,7 +280,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => function ($container) {
+            Controller\IndexController::class => function (ContainerInterface $container) {
                 return new Controller\IndexController(
                     $container->get(Service\UserService::class),
                     $container->get(Model\Project::class),
@@ -288,15 +290,13 @@ return [
                     $container
                 );
             },
-            Controller\SidebarController::class => function ($container) {
-                return new Controller\SidebarController(
-                    $container->get(Service\UserService::class)
-                );
+            Controller\SidebarController::class => function () {
+                return new Controller\SidebarController();
             },
-            Controller\OpportunityController::class => function ($container) {
+            Controller\OpportunityController::class => function (ContainerInterface $container) {
                 return new Controller\OpportunityController($container);
             },
-            Controller\ProjectController::class => function ($container) {
+            Controller\ProjectController::class => function (ContainerInterface $container) {
                 return new Controller\ProjectController(
                     $container->get(Service\UserService::class),
                     $container->get(Service\PdfExportService::class),
@@ -311,29 +311,29 @@ return [
                     $container->get(Model\ProjectShare::class)
                 );
             },
-            Controller\ProjectShareController::class => function ($container) {
+            Controller\ProjectShareController::class => function (ContainerInterface $container) {
                 return new Controller\ProjectShareController(
                     $container->get(Model\ProjectShare::class),
                     $container
                 );
             },
-            Controller\QuoteController::class => function ($container) {
+            Controller\QuoteController::class => function (ContainerInterface $container) {
                 return new Controller\QuoteController(
                     $container
                 );
             },
-            Controller\UserController::class => function ($container) {
+            Controller\UserController::class => function (ContainerInterface $container) {
                 return new Controller\UserController(
-                    $container->get('Laminas\Db\Adapter\Adapter'),
+                    $container->get(Adapter::class),
                     $container->get(Model\User::class)
                 );
             },
-            Controller\CustomerController::class => function ($container) {
+            Controller\CustomerController::class => function (ContainerInterface $container) {
                 return new Controller\CustomerController(
                     $container->get(Model\Customer::class)
                 );
             },
-            Controller\ArchitectController::class => function ($container) {
+            Controller\ArchitectController::class => function (ContainerInterface $container) {
                 return new Controller\ArchitectController(
                     $container->get(Service\UserService::class),
                     $container->get(Model\Architect::class),
@@ -343,38 +343,38 @@ return [
                     $container->get(Model\Project::class)
                 );
             },
-            Controller\ItemController::class => function ($container) {
+            Controller\ItemController::class => function (ContainerInterface $container) {
                 return new Controller\ItemController(
                     $container->get(Model\Item::class)
                 );
             },
-            Controller\ProjectNoteController::class => function ($container) {
+            Controller\ProjectNoteController::class => function (ContainerInterface $container) {
                 return new Controller\ProjectNoteController(
                     $container->get(Model\ProjectNote::class)
                 );
             },
-            Controller\SpecifierController::class => function ($container) {
+            Controller\SpecifierController::class => function (ContainerInterface $container) {
                 return new Controller\SpecifierController(
                     $container->get(Model\Specifier::class)
                 );
             },
-            Controller\AddressController::class => function ($container) {
+            Controller\AddressController::class => function (ContainerInterface $container) {
                 return new Controller\AddressController(
                     $container->get(Model\Address::class)
                 );
             },
-            Controller\RoleOverrideController::class => function ($container) {
+            Controller\RoleOverrideController::class => function (ContainerInterface $container) {
                 return new Controller\RoleOverrideController(
                     $container
                 );
             },
-            Controller\Api\PreferenceController::class => function ($container) {
+            Controller\Api\PreferenceController::class => function (ContainerInterface $container) {
                 return new Controller\Api\PreferenceController(
                     $container->get(Service\UserService::class),
                     $container->get(Model\UserPreferenceTable::class),
                 );
             },
-            Controller\Api\UserController::class => function ($container) {
+            Controller\Api\UserController::class => function (ContainerInterface $container) {
                 return new Controller\Api\UserController(
                     $container->get(Service\UserService::class),
                 );
@@ -411,64 +411,64 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            Service\UserService::class => function ($container) {
+            Service\UserService::class => function (ContainerInterface $container) {
                 return new Service\UserService(
                     $container->get(Model\User::class)
                 );
             },
-            Model\User::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\User::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\User(
                     $dbAdapter,
                     new TableGateway('P21_Users', $dbAdapter)
                 );
             },
-            Model\UserPreferenceTable::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\UserPreferenceTable::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\UserPreferenceTable(
                     new TableGateway('user_preferences', $dbAdapter)
                 );
             },
-            Model\Location::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\Location::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\Location(
                     new TableGateway('P21_Location_x_Branch', $dbAdapter)
                 );
             },
-            Model\Architect::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\Architect::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\Architect(
                     $dbAdapter,
                     new TableGateway('architects', $dbAdapter),
                     $container
                 );
             },
-            Model\Specifier::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\Specifier::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\Specifier(
                     $dbAdapter,
                     new TableGateway('specifiers', $dbAdapter),
                     $container,
                 );
             },
-            Model\Address::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\Address::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\Address(
                     $dbAdapter,
                     new TableGateway('addresses', $dbAdapter),
                     $container
                 );
             },
-            Model\Customer::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\Customer::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\Customer(
                     $dbAdapter,
                     new TableGateway('P21_customers_x_address', $dbAdapter),
                     new TableGateway('P21_customers_x_address_x_contacts', $dbAdapter)
                 );
             },
-            Model\Project::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\Project::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\Project(
                     $dbAdapter,
                     new TableGateway('projects', $dbAdapter),
@@ -478,16 +478,16 @@ return [
                     $container
                 );
             },
-            Model\ProjectShare::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\ProjectShare::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\ProjectShare(
                     $dbAdapter,
                     new TableGateway('project_shares', $dbAdapter),
                     $container
                 );
             },
-            Model\Quote::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\Quote::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\Quote(
                     $dbAdapter,
                     new TableGateway('quotes', $dbAdapter),
@@ -495,8 +495,8 @@ return [
                     $container
                 );
             },
-            Model\Item::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\Item::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\Item(
                     $dbAdapter,
                     $container->get(Service\UserService::class),
@@ -504,14 +504,14 @@ return [
                     new TableGateway('quote_items', $dbAdapter),
                 );
             },
-            Model\ProjectNote::class => function ($container) {
-                $dbAdapter = $container->get('Laminas\Db\Adapter\Adapter');
+            Model\ProjectNote::class => function (ContainerInterface $container) {
+                $dbAdapter = $container->get(Adapter::class);
                 return new Model\ProjectNote(
                     $dbAdapter,
                     $container->get(Service\UserService::class),
                 );
             },
-            Service\MailerService::class => function ($container) {
+            Service\MailerService::class => function (ContainerInterface $container) {
                 $config = $container->get('config');
                 $twig = $container->get(\Twig\Environment::class);
 
@@ -521,7 +521,7 @@ return [
                     $twig,
                 );
             },
-            \Twig\Environment::class => function ($container) {
+            \Twig\Environment::class => function () {
                 $loader = new \Twig\Loader\FilesystemLoader([
                     __DIR__ . '\..\view\email',
                 ]);

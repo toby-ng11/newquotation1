@@ -3,6 +3,7 @@
 namespace Application\Model;
 
 use Application\Service\UserService;
+use ArrayObject;
 use Doctrine\Inflector\InflectorFactory;
 use Exception;
 use Laminas\Db\Adapter\Adapter;
@@ -28,18 +29,18 @@ class Model
     /**
      * The primary key for the model.
      *
-     * @var string
+     * @var string|null
      */
     protected $primaryKey;
 
     /** Indicate the table should be tracked. Require table to have "created_by" and "updated_by". */
-    protected $userTracked = false;
+    protected bool $userTracked = false;
 
     /** Indicate the table should be timestamped. Require table to have "created_at" and "updated_at". */
-    protected $timestamps = false;
+    protected bool $timestamps = false;
 
     /** Indicate the table should be soft deleted. */
-    protected $softDeletes  = false;
+    protected bool $softDeletes  = false;
 
     public function __construct(
         Adapter $adapter,
@@ -61,31 +62,42 @@ class Model
         return InflectorFactory::create()->build()->pluralize($snake);
     }
 
-    public function getTable()
+    public function getTable(): string
     {
-        return $this->table;
+        return $this->table ?? $this->inferTableName();
     }
 
-    public function findBy($where = []): array
+    public function getKey(): string
+    {
+        return $this->primaryKey ?? 'id';
+    }
+
+    public function findBy(array $where): array
     {
         $rowset =  $this->tableGateway->select($where);
         return iterator_to_array($rowset, true);
     }
 
-    public function all()
+    public function all(): array
     {
         $rowset = $this->tableGateway->select();
         return iterator_to_array($rowset, true);
     }
 
-    public function find($id = 0)
+    public function find(mixed $id = 0): array
     {
         /** @var ResultSet */
-        $rowset = $this->tableGateway->select([$this->primaryKey => $id]);
-        return $rowset->current();
+        $rowset = $this->tableGateway->select([$this->getKey() => $id]);
+
+        $row = $rowset->current();
+        if ($row instanceof ArrayObject) {
+            return $row->getArrayCopy();
+        }
+
+        return is_array($row) ? $row : [];
     }
 
-    public function create($data = [])
+    public function create(array $data): int|false
     {
         try {
             $data = $this->prepareDataForCreate($data);
@@ -97,11 +109,11 @@ class Model
         }
     }
 
-    public function update($whereId = 0, $data = [])
+    public function update(int $whereId, array $data): bool
     {
         try {
             $data = $this->prepareDataForUpdate($whereId, $data);
-            $this->tableGateway->update($data, [$this->primaryKey => $whereId]);
+            $this->tableGateway->update($data, [$this->getKey() => $whereId]);
             return true;
         } catch (Exception $e) {
             error_log(sprintf('%s create(): Database Update Error: %s', static::class, $e->getMessage()));
@@ -109,8 +121,10 @@ class Model
         }
     }
 
-    public function delete($id)
+    public function delete(mixed $id): bool
     {
+        $data = [];
+
         if ($this->userTracked && $this->softDeletes) {
             $user = $this->userService->getCurrentUser();
             $data['updated_by'] = $user['id'];
@@ -123,9 +137,9 @@ class Model
 
         try {
             if ($this->softDeletes) {
-                $this->tableGateway->update([$data], [$this->primaryKey => $id]);
+                $this->tableGateway->update([$data], [$this->getKey() => $id]);
             } else {
-                $this->tableGateway->delete([$this->primaryKey => $id]);
+                $this->tableGateway->delete([$this->getKey() => $id]);
             }
             return true;
         } catch (Exception $e) {
@@ -134,7 +148,7 @@ class Model
         }
     }
 
-    protected function prepareDataForCreate($data = [])
+    protected function prepareDataForCreate(array $data): array
     {
         if ($this->userTracked) {
             $user = $this->userService->getCurrentUser();
@@ -148,7 +162,7 @@ class Model
         return $data;
     }
 
-    protected function prepareDataForUpdate($id = 0, $data = [])
+    protected function prepareDataForUpdate(int $id = 0, array $data): array
     {
         if ($this->userTracked) {
             $user = $this->userService->getCurrentUser();

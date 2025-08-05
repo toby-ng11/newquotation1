@@ -2,3 +2,5 @@ vendor/
 tmp/
 node_modules/
 public/build/
+.idea/
+.psalm-cache/

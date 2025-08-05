@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Application\Config\Defaults;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Session\Container;
 use Laminas\Session\SessionManager;
@@ -20,11 +21,11 @@ class Module implements ConfigProviderInterface
         return $config;
     }
 
-    public function onBootstrap(MvcEvent $e)
+    public function onBootstrap(MvcEvent $e): void
     {
         $serviceManager = $e->getApplication()->getServiceManager();
 
-        // Initialize session
+        /** @var SessionManager $sessionManager */
         $sessionManager = $serviceManager->get(SessionManager::class);
         Container::setDefaultManager($sessionManager);
 
@@ -36,12 +37,19 @@ class Module implements ConfigProviderInterface
         $name = str_replace(['CENTURA\\', 'centura\\'], '', $_SERVER['REMOTE_USER'] ?? '');
         $user = $userModel->fetchsalebyid($name);
 
+        /** @var string|null $default_company */
         $default_company = $_GET['company'] ?? ($user['default_company'] ?? null);
+
+        /** @var array|false $company */
         $company = $locationModel->fetchLocationIdFromCompany($default_company);
+
+        /** @var string|null $location_id */
         $location_id = $company['location_id'] ?? ($user['default_location_id'] ?? null);
 
         define("DEFAULT_COMPANY", $default_company);
         define("DEFAULT_LOCATION_ID", $location_id);
+
+        Defaults::set($default_company, $location_id);
 
         $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function ($e) {
             $response = $e->getResponse();

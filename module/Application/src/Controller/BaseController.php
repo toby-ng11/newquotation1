@@ -4,28 +4,11 @@ declare(strict_types=1);
 
 namespace Application\Controller;
 
-use Application\Model\Architect;
-use Application\Model\Customer;
-use Application\Model\Item;
-use Application\Model\Location;
-use Application\Model\MarketSegment;
-use Application\Model\Opportunity;
-use Application\Model\Project;
-use Application\Model\ProjectNote;
-use Application\Model\ProjectShare;
-use Application\Model\Quote;
-use Application\Model\RoleOverride;
-use Application\Model\Specifier;
-use Application\Model\Status;
-use Application\Model\User;
-use Application\Model\View\P21User;
-use Application\Service\PdfExportService;
-use Application\Service\UserService;
+use Application\Traits\HasModels;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractRestfulController;
 use Laminas\View\Model\ViewModel;
-use Mpdf\Tag\Address;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -33,30 +16,36 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * @method Request getRequest()
  * @method Response getResponse()
  *
- * @method Project getProjectModel()
- * @method Architect getArchitectModel()
- * @method Specifier getSpecifierModel()
+ * @property \Laminas\Mvc\Controller\PluginManager $plugins
+ * @property \Laminas\Http\Request $request
+ * @property \Laminas\Http\Response $response
+ * @property \Laminas\Mvc\MvcEvent $event
+ * @property \Laminas\EventManager\EventManagerInterface $events
  */
 abstract class BaseController extends AbstractRestfulController
 {
+    use HasModels;
+
     /**
      * Render 404 page
      *
-     * @return void
+     * @return ViewModel
      */
-    protected function abort403()
+    protected function abort403(): ViewModel
     {
-        return (new ViewModel())->setTemplate('error/permission');
+        $view = new ViewModel();
+        return $view->setTemplate('error/permission');
     }
 
     /**
      * Render 403 page
      *
-     * @return void
+     * @return ViewModel
      */
     protected function abort404()
     {
-        return (new ViewModel())->setTemplate('error/not-found');
+        $view = new ViewModel();
+        return $view->setTemplate('error/not-found');
     }
 
     protected ContainerInterface $container;
@@ -64,96 +53,6 @@ abstract class BaseController extends AbstractRestfulController
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-    }
-
-    public function getAddressModel(): Address
-    {
-        return $this->container->get(Address::class);
-    }
-
-    public function getArchitectModel(): Architect
-    {
-        return $this->container->get(Architect::class);
-    }
-
-    public function getCustomerModel(): Customer
-    {
-        return $this->container->get(Customer::class);
-    }
-
-    public function getItemModel(): Item
-    {
-        return $this->container->get(Item::class);
-    }
-
-    public function getMarketSegmentModel(): MarketSegment
-    {
-        return $this->container->get(MarketSegment::class);
-    }
-
-    public function getNoteModel(): ProjectNote
-    {
-        return $this->container->get(ProjectNote::class);
-    }
-
-    public function getOpportunityModel(): Opportunity
-    {
-        return $this->container->get(Opportunity::class);
-    }
-
-    public function getProjectModel(): Project
-    {
-        return $this->container->get(Project::class);
-    }
-
-    public function getProjectShareModel(): ProjectShare
-    {
-        return $this->container->get(ProjectShare::class);
-    }
-
-    public function getQuoteModel(): Quote
-    {
-        return $this->container->get(Quote::class);
-    }
-
-    public function getRoleOverrideModel(): RoleOverride
-    {
-        return $this->container->get(RoleOverride::class);
-    }
-
-    public function getSpecifierModel(): Specifier
-    {
-        return $this->container->get(Specifier::class);
-    }
-
-    public function getStatusModel(): Status
-    {
-        return $this->container->get(Status::class);
-    }
-
-    public function getUserModel(): User
-    {
-        return $this->container->get(User::class);
-    }
-
-    public function getP21LocationModel(): Location
-    {
-        return $this->container->get(Location::class);
-    }
-
-    public function getP21UserModel(): P21User
-    {
-        return $this->container->get(P21User::class);
-    }
-
-    public function getUserService(): UserService
-    {
-        return $this->container->get(UserService::class);
-    }
-
-    public function getPdfExportService(): PdfExportService
-    {
-        return $this->container->get(PdfExportService::class);
     }
 
     protected function json($data, int $status = 200, array $headers = []): Response

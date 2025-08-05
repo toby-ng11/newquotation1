@@ -7,11 +7,9 @@ use Psr\Container\ContainerInterface;
 
 class OpportunityController extends BaseController
 {
-    protected $container;
-
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
+        parent::__construct($container);
     }
 
     // GET /enpoint
@@ -123,7 +121,7 @@ class OpportunityController extends BaseController
         return new ViewModel([
             'id' => $project_id,
             'user' => $user,
-            'project' => $project,
+            'opportunity' => $opportunity,
             'company' => $company,
             'location' => $location,
             'status' => $status,

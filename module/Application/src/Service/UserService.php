@@ -14,6 +14,20 @@ class UserService
         $this->userModel = $userModel;
     }
 
+    /**
+     * @return array{
+     *     id: string,
+     *     first_name: string,
+     *     last_name: string,
+     *     name: string,
+     *     email_address: string,
+     *     role: string,
+     *     role_uid: string,
+     *     p2q_system_role: string,
+     *     default_company: string,
+     *     default_location_id: string
+     * }
+     */
     public function getCurrentUser()
     {
         // Fetch Windows username
@@ -24,23 +38,21 @@ class UserService
 
         // Store in session
         $session = new UserSession();
-        $session->user = [
-            'id' => $userData['id'],
-            'first_name' => $userData['first_name'],
-            'last_name' => $userData['last_name'],
-            'name' => $userData['name'],
-            'email' => $userData['email_address'],
-            'role' => $userData['role'],
-            'role_uid' => $userData['role_uid'],
-            'p2q_system_role' => $userData['p2q_system_role'],
-            'default_company' => $userData['default_company'],
-            'default_location_id' => $userData['default_location_id'],
+        return $session->user = [
+            'id' => (string) $userData['id'],
+            'first_name' => (string) $userData['first_name'],
+            'last_name' => (string) $userData['last_name'],
+            'name' => (string) $userData['name'],
+            'email_address' => (string) $userData['email_address'],
+            'role' => (string) $userData['role'],
+            'role_uid' => (string) $userData['role_uid'],
+            'p2q_system_role' => (string) $userData['p2q_system_role'],
+            'default_company' => (string) $userData['default_company'],
+            'default_location_id' =>  (string)$userData['default_location_id'],
         ];
-
-        return $session->user;
     }
 
-    public function fetchaAllApprovalID()
+    public function fetchaAllApprovalID(): array
     {
         $id = $this->userModel->fetchaAllApprovalID();
         return $id;

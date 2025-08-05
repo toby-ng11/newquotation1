@@ -71,7 +71,7 @@ function DataTableProjectOptions({ rowId, onEdit, onCopy, onFavorite, onDelete }
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete the project
+                            This action cannot be undone. This will permanently delete the project.
                             <span className="font-medium"> #{rowId}</span>.
                         </AlertDialogDescription>
                     </AlertDialogHeader>

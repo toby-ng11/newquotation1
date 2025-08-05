@@ -2,11 +2,13 @@
 
 namespace Application\Model;
 
+use Application\Config\Defaults;
 use Laminas\Db\Adapter\Adapter;
-use Laminas\Db\Adapter\Driver\ResultInterface;
+use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGatewayInterface;
 use Laminas\Db\Sql\Sql;
 use Application\Helper\InputValidator;
+use ArrayObject;
 
 class User
 {
@@ -21,21 +23,40 @@ class User
         $this->P21_Users = $P21_Users;
     }
 
-    public function fetchsalebyid($username)
+    /**
+     * @return array{
+     *     id: string,
+     *     first_name: string,
+     *     last_name: string,
+     *     name: string,
+     *     email_address: string,
+     *     role: string,
+     *     role_uid: string,
+     *     p2q_system_role: string,
+     *     default_company: string,
+     *     default_location_id: string
+     * } | array
+     */
+    public function fetchsalebyid(string $username): array
     {
-        if (! InputValidator::isValidData($username)) {
-            return false;
+        if (! InputValidator::isValidPattern($username)) {
+            return ['Not valid data.'];
         }
 
-        /**  @var ResultInterface $rowset */
+        /**  @var ResultSet $rowset */
         $rowset = $this->P21_Users->select(['id' => $username]);
-        return $rowset->current();
+        $row = $rowset->current();
+        if ($row instanceof ArrayObject) {
+            return $row->getArrayCopy();
+        }
+
+        return is_array($row) ? $row : [];
     }
 
-    public function fetchUserIdByPattern($pattern, $limit = 10)
+    public function fetchUserIdByPattern(string $pattern, int $limit = 10): array
     {
         if (! InputValidator::isValidPattern($pattern)) {
-            return false;
+            return [];
         }
         $sql = new Sql($this->adapter, 'P21_Users');
         $select = $sql->select()
@@ -54,8 +75,12 @@ class User
         return iterator_to_array($result, true);
     }
 
-    public function fetchaAllApprovalID($company = DEFAULT_COMPANY)
+    public function fetchaAllApprovalID(string|null $company = Defaults::company()): array
     {
+        if ($company === null) {
+            return [];
+        }
+
         $sql = new Sql($this->adapter, 'P21_Users');
         $select = $sql->select()
             ->columns(['id', 'name', 'default_company'])

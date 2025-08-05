@@ -11,12 +11,12 @@ class UserSession extends Container
         parent::__construct('UserSession');
     }
 
-    public function setUserData(array $userData)
+    public function setUserData(array $userData): void
     {
         $this->user = $userData;
     }
 
-    public function getUserData()
+    public function getUserData(): mixed
     {
         return $this->user ?? null;
     }

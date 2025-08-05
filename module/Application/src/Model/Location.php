@@ -16,7 +16,7 @@ class Location
         $this->location = $location;
     }
 
-    public function fetchAllBranches()
+    public function fetchAllBranches(): array
     {
         $select = $this->location->getSql()->select()
             ->order('location_id ASC');
@@ -26,7 +26,7 @@ class Location
         return $rowset->toArray();
     }
 
-    public function fetchAllCompanies()
+    public function fetchAllCompanies(): array
     {
         $select = $this->location->getSql()->select()
             ->columns(['company_id', 'company_name'])
@@ -38,10 +38,10 @@ class Location
         return $rowset->toArray();
     }
 
-    public function fetchLocationIdFromCompany($company_id)
+    public function fetchLocationIdFromCompany(string|null $company_id): array
     {
-        if (! InputValidator::isValidData($company_id)) {
-            return false;
+        if (! InputValidator::isValidPattern($company_id)) {
+            return [];
         }
 
         $select = $this->location->getSql()->select()

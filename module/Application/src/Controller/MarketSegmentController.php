@@ -2,36 +2,28 @@
 
 namespace Application\Controller;
 
-use Application\Model\MarketSegment;
-use Laminas\View\Model\JsonModel;
+use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 
 class MarketSegmentController extends BaseController
 {
-    protected $container;
-
     public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
+        parent::__construct($container);
     }
 
-    public function getMarketSegmentModel(): MarketSegment
-    {
-        return $this->container->get(MarketSegment::class);
-    }
-
-    // GET /enpoint
+    // GET /endpoint
     public function getList()
     {
         $table = $this->getMarketSegmentModel()->all();
-        return new JsonModel([
+        return $this->json([
             'success' => true,
-            'data' => iterator_to_array($table),
+            'data' => $table,
         ]);
     }
 
-    // GET /enpoint/:id
-    public function get($id)
+    // GET /endpoint/:id
+    public function get(mixed $id)
     {
         $row = $this->getMarketSegmentModel()->find($id);
         if (! $row) {
@@ -44,19 +36,27 @@ class MarketSegmentController extends BaseController
         ]);
     }
 
-    // POST /enpoint
-    public function create($data)
+    // POST /endpoint
+    public function create(mixed $data)
     {
+        if (! is_array($data)) {
+            throw new InvalidArgumentException('Expected array in create()');
+        }
+
         $result = $this->getMarketSegmentModel()->create($data);
         return $this->json([
             'success' => $result !== false,
-            'message' => $result ? 'Market segment added!' : 'Error! Please check log for more details.',
+            'message' => $result !== false ? 'Market segment added!' : 'Error! Please check log for more details.',
         ]);
     }
 
-    // PUT /enpoint/:id
-    public function update($id, $data)
+    // PUT /endpoint/:id
+    public function update(mixed $id, mixed $data)
     {
+        if (! is_array($data) || ! is_int($id)) {
+            throw new InvalidArgumentException('Unexpected params type in update()');
+        }
+
         $result = $this->getMarketSegmentModel()->update($id, $data);
         return $this->json([
             'success' => $result !== false,
@@ -64,8 +64,8 @@ class MarketSegmentController extends BaseController
         ]);
     }
 
-    // DELETE /enpoint/:id
-    public function delete($id)
+    // DELETE /endpoint/:id
+    public function delete(mixed $id)
     {
         $result = $this->getMarketSegmentModel()->delete($id);
         return $this->json([
