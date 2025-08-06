@@ -382,10 +382,15 @@ class Project
             return false;
         }
 
+        $user = $this->getUserService()->getCurrentUser();
+
         $sql = new Sql($this->adapter);
 
-        $select = $sql->select('p2q_view_projects')
-            ->where(['company_id' => $company_id]);
+        $select = $sql->select('p2q_view_projects');
+
+        if ($user['p2q_system_role'] !== 'admin' && $user['p2q_system_role'] !== 'manager') {
+            $select->where(['company_id' => $company_id]);
+        }
 
         $select->where->notEqualTo('owner_id', $user_id);
         $select->order('id DESC');

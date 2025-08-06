@@ -31,14 +31,20 @@ class UserService
     public function getCurrentUser()
     {
         // Fetch Windows username
-        $userName = str_replace(['CENTURA\\', 'centura\\'], '', $_SERVER['REMOTE_USER'] ?? '');
+        $session = new UserSession();
+        $user = $session->getUserData();
+        $userName = $user['id'] ?? null;
+
+        if ($userName === null) {
+            return null; // or throw exception
+        }
 
         // Fetch user details from the database
         $userData = $this->userModel->fetchsalebyid($userName);
 
         // Store in session
         $session = new UserSession();
-        return $session->user = [
+        $session->setUserData([
             'id' => (string) $userData['id'],
             'first_name' => (string) $userData['first_name'],
             'last_name' => (string) $userData['last_name'],
@@ -48,8 +54,10 @@ class UserService
             'role_uid' => (string) $userData['role_uid'],
             'p2q_system_role' => (string) $userData['p2q_system_role'],
             'default_company' => (string) $userData['default_company'],
-            'default_location_id' =>  (string)$userData['default_location_id'],
-        ];
+            'default_location_id' => (string) $userData['default_location_id'],
+        ]);
+
+        return $session->getUserData();
     }
 
     public function fetchaAllApprovalID(): array

@@ -1,0 +1,71 @@
+<?php
+echo $this->doctype();
+
+$manifestPath = __DIR__ . '/../../../../public/build/.vite/manifest.json';
+if (! file_exists($manifestPath)) {
+    throw new \RuntimeException('Vite manifest file not found: ' . $manifestPath);
+}
+$manifest = json_decode(file_get_contents($manifestPath), true);
+
+function vite_asset(string $entry, array $manifest): string
+{
+    if (! isset($manifest[$entry])) {
+        return '';
+    }
+
+    $html = '';
+    $entryInfo = $manifest[$entry];
+
+    // Load CSS
+    if (! empty($entryInfo['css'])) {
+        foreach ($entryInfo['css'] as $css) {
+            $html .= '<link rel="stylesheet" href="/build/' . $css . '">' . PHP_EOL;
+        }
+    }
+
+    // Load main JS
+    $html .= '<script type="module" src="/build/' . $entryInfo['file'] . '"></script>' . PHP_EOL;
+
+    return $html;
+}
+?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="light">
+
+<head>
+    <?php echo $this->headTitle('P2Q - Login'); ?>
+    <?php echo $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        //->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ->appendName('description', 'Project to Quote'); ?>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico.png">
+    <link href="/css/index.css" rel="stylesheet" type="text/css">
+    <link href="/build/main.css" rel="stylesheet">
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    <!-- jMigrate CDN -->
+    <script src="https://code.jquery.com/jquery-migrate-3.4.1.js"></script>
+
+    <!-- jQuery UI CDN -->
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+
+    <script>
+        (function() {
+            const theme = localStorage.getItem("theme");
+            if (theme === "dark" || theme === "light") {
+                document.documentElement.className = theme;
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <div id="root">
+        <?php echo $this->layout()->content; ?>
+    </div>
+
+    <?= vite_asset('app.tsx', $manifest) ?>
+    <?= vite_asset('p2q.ts', $manifest) ?>
+
+</html>

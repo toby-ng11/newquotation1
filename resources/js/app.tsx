@@ -15,6 +15,7 @@ const mounts = [
     { id: 'project-table', loader: () => import('@/components/table/admin/project-table') },
     { id: 'project-own-projects-table', loader: () => import('@/components/table/project/own-projects') },
     { id: 'quoted-item-dashboard', loader: () => import('@/pages/quoted-item/dashboard') },
+    { id: 'login-page', loader: () => import('@/pages/auth/login') },
 ];
 
 function mountAllTables() {

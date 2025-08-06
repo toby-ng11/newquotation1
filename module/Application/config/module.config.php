@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Application\Service\LdapAuthService;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -14,6 +15,26 @@ use Psr\Container\ContainerInterface;
 return [
     'router' => [
         'routes' => [
+            'login' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/login',
+                    'defaults' => [
+                        'controller' => Controller\AuthController::class,
+                        'action' => 'login',
+                    ],
+                ],
+            ],
+            'logout' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/logout',
+                    'defaults' => [
+                        'controller' => Controller\AuthController::class,
+                        'action' => 'logout',
+                    ],
+                ],
+            ],
             'home' => [
                 'type' => Literal::class,
                 'options' => [
@@ -280,6 +301,10 @@ return [
     ],
     'controllers' => [
         'factories' => [
+            Controller\AuthController::class => function (ContainerInterface $container) {
+                $authService = $container->get(Service\LdapAuthService::class);
+                return new Controller\AuthController($authService);
+            },
             Controller\IndexController::class => function (ContainerInterface $container) {
                 return new Controller\IndexController(
                     $container->get(Service\UserService::class),
@@ -391,6 +416,7 @@ return [
         'template_map' => [
             'layout/layout'           => __DIR__ . '/../view/layout/default.phtml',
             'layout/nonheader'        => __DIR__ . '/../view/layout/nonheader.phtml',
+            'layout/login'            => __DIR__ . '/../view/layout/login.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ],
@@ -411,6 +437,10 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            Service\LdapAuthService::class => function (ContainerInterface $container) {
+                $config = $container->get('config');
+                return new Service\LdapAuthService($config['ldap']['default']);
+            },
             Service\UserService::class => function (ContainerInterface $container) {
                 return new Service\UserService(
                     $container->get(Model\User::class)

@@ -13,11 +13,11 @@ class UserSession extends Container
 
     public function setUserData(array $userData): void
     {
-        $this->user = $userData;
+        $this->offsetSet('user', $userData);
     }
 
     public function getUserData(): mixed
     {
-        return $this->user ?? null;
+        return $this->offsetGet('user') ?? null;
     }
 }

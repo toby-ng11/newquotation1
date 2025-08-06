@@ -48,7 +48,8 @@ abstract class BaseController extends AbstractRestfulController
         return $view->setTemplate('error/not-found');
     }
 
-    protected ContainerInterface $container;
+    /** @var Container $container */
+    protected  $container;
 
     public function __construct(ContainerInterface $container)
     {

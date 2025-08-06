@@ -263,7 +263,7 @@ class Item
         return $result->current();
     }
 
-    public function fetchDataTables($project_id, $sheetType, $location = DEFAULT_LOCATION_ID)
+    public function fetchDataTables($project_id, $sheetType)
     {
         if (! InputValidator::isValidData($sheetType) || ! InputValidator::isValidId($project_id)) {
             return false;
@@ -275,7 +275,6 @@ class Item
             case 'project':
                 $select = $sql->select('p2q_view_project_items')
                     ->where([
-                        'location_id' => $location,
                         'project_id' => $project_id
                     ])
                     ->order('id DESC');
@@ -283,7 +282,6 @@ class Item
             case 'quote':
                 $select = $sql->select('p2q_view_quote_items')
                     ->where([
-                        'location_id' => $location,
                         'quote_id' => $project_id
                     ])
                     ->order('id DESC');

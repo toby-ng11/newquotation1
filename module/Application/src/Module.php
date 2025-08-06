@@ -13,6 +13,7 @@ use Laminas\ModuleManager\Feature\ConfigProviderInterface;
 use Laminas\Session\SaveHandler\SaveHandlerInterface;
 use Application\Model\User;
 use Application\Model\Location;
+use Application\Session\UserSession;
 
 class Module implements ConfigProviderInterface
 {
@@ -33,29 +34,65 @@ class Module implements ConfigProviderInterface
         $saveHandler = $serviceManager->get('SessionSaveHandler');
 
         $sessionManager->setSaveHandler($saveHandler);
-        $sessionManager->start();
+        if (! $sessionManager->sessionExists()) {
+            $sessionManager->start();
+        }
 
         Container::setDefaultManager($sessionManager);
 
-        $userModel = $serviceManager->get(User::class);
+        $eventManager = $e->getApplication()->getEventManager();
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $e) {
+            $route = $e->getRouteMatch();
+            $routeName = $route ? $route->getMatchedRouteName() : null;
 
-        $locationModel = $serviceManager->get(Location::class);
-        $name = str_replace(['CENTURA\\', 'centura\\'], '', $_SERVER['REMOTE_USER'] ?? '');
-        $user = $userModel->fetchsalebyid($name);
+            if (in_array($routeName, ['login', 'logout'])) {
+                return;
+            }
+            $session = new UserSession();
+            $user = $session->getUserData();
+            if (! $user || empty($user['id'])) {
+                // User not logged in — redirect to login
 
-        /** @var string|null $default_company */
-        $default_company = $_GET['company'] ?? ($user['default_company'] ?? null);
+                $request = $e->getRequest();
 
-        /** @var array|false $company */
-        $company = $locationModel->fetchLocationIdFromCompany($default_company);
+                if ($request instanceof \Laminas\Http\PhpEnvironment\Request && $request->isXmlHttpRequest()) {
+                    /** @var Response $response */
+                    $response = $e->getResponse();
+                    $response->setStatusCode(401);
+                    $response->setContent('{"error":"Unauthorized"}');
+                    $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+                    $e->stopPropagation(true);
+                    return $response;
+                }
 
-        /** @var string|null $location_id */
-        $location_id = $company['location_id'] ?? ($user['default_location_id'] ?? null);
 
-        define("DEFAULT_COMPANY", $default_company);
-        define("DEFAULT_LOCATION_ID", $location_id);
+                /** @var Response $response */
+                $response = $e->getResponse();
+                $response->getHeaders()->addHeaderLine('Location', '/login');
+                $response->setStatusCode(302);
+                $e->stopPropagation(true);
+                return $response;
+            }
+        }, 100);
 
-        Defaults::set($default_company, $location_id);
+        $session = new UserSession();
+        $userData = $session->getUserData();
+
+        if ($userData && !empty($userData['id'])) {
+            $userModel = $serviceManager->get(User::class);
+            $locationModel = $serviceManager->get(Location::class);
+
+            $user = $userModel->fetchsalebyid($userData['id']);
+
+            $defaultCompany = $_GET['company'] ?? ($user['default_company'] ?? null);
+            $company = $locationModel->fetchLocationIdFromCompany($defaultCompany);
+            $locationId = $company['location_id'] ?? ($user['default_location_id'] ?? null);
+
+            define('DEFAULT_COMPANY', $defaultCompany);
+            define('DEFAULT_LOCATION_ID', $locationId);
+
+            Defaults::set($defaultCompany, $locationId);
+        }
 
         $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $e) {
             /** @var Response $response */
