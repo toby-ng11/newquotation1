@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Application;
 
 use Application\Config\Defaults;
+use Application\Listener\AuthGuard;
 use Laminas\Http\Response;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Session\Container;
@@ -41,39 +42,9 @@ class Module implements ConfigProviderInterface
         Container::setDefaultManager($sessionManager);
 
         $eventManager = $e->getApplication()->getEventManager();
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $e) {
-            $route = $e->getRouteMatch();
-            $routeName = $route ? $route->getMatchedRouteName() : null;
 
-            if (in_array($routeName, ['login', 'logout'])) {
-                return;
-            }
-            $session = new UserSession();
-            $user = $session->getUserData();
-            if (! $user || empty($user['id'])) {
-                // User not logged in — redirect to login
-
-                $request = $e->getRequest();
-
-                if ($request instanceof \Laminas\Http\PhpEnvironment\Request && $request->isXmlHttpRequest()) {
-                    /** @var Response $response */
-                    $response = $e->getResponse();
-                    $response->setStatusCode(401);
-                    $response->setContent('{"error":"Unauthorized"}');
-                    $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
-                    $e->stopPropagation(true);
-                    return $response;
-                }
-
-
-                /** @var Response $response */
-                $response = $e->getResponse();
-                $response->getHeaders()->addHeaderLine('Location', '/login');
-                $response->setStatusCode(302);
-                $e->stopPropagation(true);
-                return $response;
-            }
-        }, 100);
+        $authGuard = $serviceManager->get(AuthGuard::class);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, $authGuard, 1000);
 
         $session = new UserSession();
         $userData = $session->getUserData();

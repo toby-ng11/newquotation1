@@ -33,7 +33,7 @@ class ProjectNote extends Model
         return $info;
     }
 
-    protected function prepareDataForUpdate(array $data, int $id = 0): array
+    protected function prepareDataForUpdate(array $data, mixed $id = 0): array
     {
         $info = [
             'title' => trim($data['note_title']),

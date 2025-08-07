@@ -41,7 +41,7 @@ function vite_asset(string $entry, array $manifest): string
 
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico.png">
     <link href="/css/index.css" rel="stylesheet">
-    <link href="/build/main.css" rel="stylesheet">
+    <link href="/build/app.css" rel="stylesheet">
     <?php
 //echo $this->headLink();
     ?>
@@ -129,7 +129,7 @@ function vite_asset(string $entry, array $manifest): string
         </div>
     </div>
 
-    <?= vite_asset('app.tsx', $manifest) ?>
+    <?= vite_asset('tables.tsx', $manifest) ?>
     <?= vite_asset('p2q.ts', $manifest) ?>
 </body>
 

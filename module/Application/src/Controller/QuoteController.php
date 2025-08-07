@@ -65,6 +65,7 @@ class QuoteController extends BaseController
 
     public function editAction()
     {
+        $this->layout()->setTemplate('layout/default');
         $request = $this->getRequest(); // for submit edit form
 
         if ($request->isPost()) {

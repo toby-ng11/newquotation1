@@ -106,7 +106,7 @@ class Model
         return is_array($row) ? $row : [];
     }
 
-    public function create(array $data): int|false
+    public function create(array $data): int|string|false
     {
         try {
             $data = $this->prepareDataForCreate($data);
@@ -118,7 +118,7 @@ class Model
         }
     }
 
-    public function update(int $whereId, array $data): bool
+    public function update(mixed $whereId, array $data): bool
     {
         try {
             $data = $this->prepareDataForUpdate($data, $whereId);
@@ -171,7 +171,7 @@ class Model
         return $data;
     }
 
-    protected function prepareDataForUpdate(array $data, int $id = 0): array
+    protected function prepareDataForUpdate(array $data, mixed $id = 0): array
     {
         if ($this->userTracked) {
             $user = $this->userService->getCurrentUser();

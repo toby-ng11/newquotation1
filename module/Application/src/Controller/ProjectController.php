@@ -101,6 +101,8 @@ class ProjectController extends BaseController
 
     public function newAction()
     {
+        $this->layout()->setTemplate('layout/default');
+
         $user = $this->userService->getCurrentUser();
         $company = $this->location->fetchAllCompanies();
         $location = $this->location->fetchAllBranches();
@@ -120,6 +122,7 @@ class ProjectController extends BaseController
 
     public function editAction()
     {
+        $this->layout()->setTemplate('layout/default');
         $request = $this->getRequest(); // for submit edit form
 
         if ($request->isPost()) {

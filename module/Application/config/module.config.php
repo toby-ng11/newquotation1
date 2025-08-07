@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Application;
 
-use Application\Service\LdapAuthService;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -409,9 +408,9 @@ return [
     'view_manager' => [
         'display_not_found_reason' => true,
         'display_exceptions'       => true,
-        'layout'                   => 'layout/default',
+        'layout'                   => 'layout/inertia',
         'doctype'                  => 'HTML5',
-        'not_found_template'       => 'error/404',
+        'not_found_template'       => 'error/not-found',
         'exception_template'       => 'error/index',
         'template_map' => [
             'layout/inertia'          => __DIR__ . '/../view/layout/inertia.phtml',
@@ -437,6 +436,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
+            Listener\AuthGuard::class => InvokableFactory::class,
             Service\LdapAuthService::class => function (ContainerInterface $container) {
                 $config = $container->get('config');
                 return new Service\LdapAuthService($config['ldap']['default']);

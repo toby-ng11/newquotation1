@@ -57,6 +57,7 @@ class IndexController extends BaseController
     public function adminAction()
     {
         $user = $this->userService->getCurrentUser();
+        $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] !== 'admin') {
             $view = new ViewModel();
@@ -109,6 +110,7 @@ class IndexController extends BaseController
     public function projectAction()
     {
         $user = $this->userService->getCurrentUser();
+        $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] === 'guest') {
             $view = new ViewModel();
@@ -153,6 +155,7 @@ class IndexController extends BaseController
     public function approvalAction()
     {
         $user = $this->userService->getCurrentUser();
+        $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] === 'guest' || $user['p2q_system_role'] === 'sales') {
             $view = new ViewModel();
@@ -197,6 +200,8 @@ class IndexController extends BaseController
     public function architectAction()
     {
         $user = $this->userService->getCurrentUser();
+        $this->layout()->setTemplate('layout/default');
+
         if ($user['p2q_system_role'] === 'guest') {
             $view = new ViewModel();
             $view->setTemplate('error/permission');
@@ -239,6 +244,8 @@ class IndexController extends BaseController
     public function opportunitiesAction()
     {
         $user = $this->userService->getCurrentUser();
+        $this->layout()->setTemplate('layout/default');
+
         if ($user['p2q_system_role'] === 'guest') {
             $view = new ViewModel();
             $view->setTemplate('error/permission');
@@ -259,6 +266,7 @@ class IndexController extends BaseController
     public function quotesAction()
     {
         $user = $this->userService->getCurrentUser();
+        $this->layout()->setTemplate('layout/default');
 
         $table = $this->params()->fromRoute('table', 'items'); // default to items table
 

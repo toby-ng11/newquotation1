@@ -1,7 +1,7 @@
 import 'basecoat-css/all';
 import '../css/app.css';
 
-import { mountAllTables, unmountAllTables } from '@/app';
+import { mountAllTables, unmountAllTables } from '@/tables';
 import { initAddress } from '@/components/Alpine/modal/address-modal';
 import { initCustomer } from '@/components/Alpine/modal/customer-modal';
 import { initItem } from '@/components/Alpine/modal/item-modal';

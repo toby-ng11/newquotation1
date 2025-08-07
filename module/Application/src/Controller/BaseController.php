@@ -27,25 +27,27 @@ abstract class BaseController extends AbstractRestfulController
     use HasModels;
 
     /**
-     * Render 404 page
+     * Render 403 page
      *
      * @return ViewModel
      */
     protected function abort403(): ViewModel
     {
+        $this->layout()->setTemplate('error/permission');
         $view = new ViewModel();
-        return $view->setTemplate('error/permission');
+        return $view;
     }
 
     /**
-     * Render 403 page
+     * Render 404 page
      *
      * @return ViewModel
      */
     protected function abort404()
     {
+        $this->layout()->setTemplate('error/not-found');
         $view = new ViewModel();
-        return $view->setTemplate('error/not-found');
+        return $view;
     }
 
     /** @var ContainerInterface|null $container */
