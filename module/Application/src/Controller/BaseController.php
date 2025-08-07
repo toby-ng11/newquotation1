@@ -48,15 +48,15 @@ abstract class BaseController extends AbstractRestfulController
         return $view->setTemplate('error/not-found');
     }
 
-    /** @var Container $container */
-    protected  $container;
+    /** @var ContainerInterface|null $container */
+    protected $container;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(?ContainerInterface $container)
     {
         $this->container = $container;
     }
 
-    protected function json($data, int $status = 200, array $headers = []): Response
+    protected function json(mixed $data, int $status = 200, array $headers = []): Response
     {
         $symfony = new JsonResponse($data, $status, $headers);
 

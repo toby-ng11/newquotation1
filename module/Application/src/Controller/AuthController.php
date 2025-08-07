@@ -45,18 +45,22 @@ class AuthController extends BaseController
             ], 401);
         }
 
-        $this->layout()->setTemplate('layout/react');
+        $this->layout()->setTemplate('layout/inertia');
         $view = new ViewModel();
         return $view;
     }
 
-    public function logoutAction()
+    public function logoutAction(): Response
     {
         $session = new UserSession();
 
         // Destroy session
         $manager = $session->getManager();
-        $manager->getSaveHandler()->destroy($manager->getId());
+
+        /** @var string $id */
+        $id = $manager->getId();
+
+        $manager->getSaveHandler()->destroy($id);
         $manager->destroy();
 
         // Optional: clear just the session container if you want a soft logout

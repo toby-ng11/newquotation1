@@ -84,6 +84,7 @@ class Module implements ConfigProviderInterface
 
             $user = $userModel->fetchsalebyid($userData['id']);
 
+            /** @var string @defaultCompany */
             $defaultCompany = $_GET['company'] ?? ($user['default_company'] ?? null);
             $company = $locationModel->fetchLocationIdFromCompany($defaultCompany);
             $locationId = $company['location_id'] ?? ($user['default_location_id'] ?? null);
@@ -94,7 +95,7 @@ class Module implements ConfigProviderInterface
             Defaults::set($defaultCompany, $locationId);
         }
 
-        $e->getApplication()->getEventManager()->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $e) {
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function (MvcEvent $e) {
             /** @var Response $response */
             $response = $e->getResponse();
             $headers = $response->getHeaders();
@@ -119,18 +120,5 @@ class Module implements ConfigProviderInterface
             $viewModel->setVariable('currentController', $controller);
             $viewModel->setVariable('currentAction', $action);
         }, 100);
-    }
-
-    public function getServiceConfig()
-    {
-        return [
-            'factories' => [
-                Service\UserService::class => function ($container) {
-                    return new Service\UserService(
-                        $container->get(Model\User::class) // Inject User model
-                    );
-                },
-            ],
-        ];
     }
 }

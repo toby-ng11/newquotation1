@@ -10,11 +10,16 @@ use Twig\Environment as Twig;
 
 class MailerService
 {
+    /** @var Mailer $mailer */
     private $mailer;
+
+    /** @var mixed $from */
     private $from;
+
+    /** @var Twig $twig */
     private $twig;
 
-    public function __construct($dsn, $from, Twig $twig)
+    public function __construct(mixed $dsn, mixed $from, Twig $twig)
     {
         $transport = Transport::fromDsn($dsn);
         $this->mailer = new Mailer($transport);
@@ -22,7 +27,7 @@ class MailerService
         $this->twig = $twig;
     }
 
-    public function sendReminderEmail(array $note, string $to, string $subject, string $projectLink)
+    public function sendReminderEmail(array $note, string $to, string $subject, string $projectLink): bool
     {
         $html = $this->twig->render('note-reminder.html.twig', [
             'note_title'   => $note['note_title'],

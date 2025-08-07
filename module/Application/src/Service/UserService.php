@@ -36,7 +36,7 @@ class UserService
         $userName = $user['id'] ?? null;
 
         if ($userName === null) {
-            return null; // or throw exception
+            return; // or throw exception
         }
 
         // Fetch user details from the database
