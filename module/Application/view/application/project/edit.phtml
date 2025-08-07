@@ -1,20 +1,23 @@
 <?php
-$owner = $this->owner;
-$admin = $this->admin;
-$project = $this->project;
-$user = $this->user;
-$architect = $this->architect;
-$address = $this->address;
-$specifier = $this->specifier;
-$specifierAddress = $this->specifierAddress;
-$location = $this->location;
-$company = $this->company;
-$status = $this->status;
-$marketSegment = $this->marketSegment;
-$addressList = $this->addressList;
-$specifierList = $this->specifierList;
-$generalContractor = $this->generalContractor;
-$awardedContractor = $this->awardedContractor;
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ * @var bool $owner
+ * @var bool $admin
+ * @var array $project
+ * @var array $user
+ * @var array $architect
+ * @var array $address
+ * @var array $specifier
+ * @var array $specifierAddress
+ * @var array $location
+ * @var array $company
+ * @var array $status
+ * @var array $marketSegment
+ * @var array $addressList
+ * @var array $specifierList
+ * @var array $generalContractor
+ * @var array $awardedContractor
+ */
 $projectID = $project['id'];
 $this->headTitle('Edit Project: ' . $projectID . ' - ' . $project['project_name']);
 echo $this->headTitle();

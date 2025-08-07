@@ -1,16 +1,19 @@
 <?php
+/** @var Laminas\View\Renderer\PhpRenderer $this
+ *  @var array{component: string, props: array, url: string, version: string} $page
+*/
 echo $this->doctype();
 ?>
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="light">
 
 <head>
-    <?php echo $this->headTitle('P2Q - Login'); ?>
     <?php echo $this->headMeta()
         ->appendName('viewport', 'width=device-width, initial-scale=1.0')
-        //->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
         ->appendName('description', 'Project to Quote'); ?>
+
     <meta charset="utf-8">
+
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico.png">
     <link href="/build/app.css" rel="stylesheet">
     <script type="module" src="/build/app.js" defer></script>

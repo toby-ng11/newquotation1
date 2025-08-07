@@ -1,6 +1,9 @@
-<?php echo $this->doctype();
+<?php
+/** @var Laminas\View\Renderer\PhpRenderer $this */
+echo $this->doctype();
+
 $manifestPath = __DIR__ . '/../../../../public/build/.vite/manifest.json'; // adjust path
-if (! $manifestPath || ! file_exists($manifestPath)) {
+if (! file_exists($manifestPath)) {
     throw new \RuntimeException('Vite manifest file not found: ' . $manifestPath);
 }
 $manifest = json_decode(file_get_contents($manifestPath), true);

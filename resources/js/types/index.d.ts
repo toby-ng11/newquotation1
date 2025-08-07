@@ -8,3 +8,11 @@ export interface User {
     default_company: string;
     default_location_id: string;
 }
+
+export interface SharedData {
+  user: {
+    name: string;
+    p2q_system_role: string;
+  };
+  [key: string]: any;
+}

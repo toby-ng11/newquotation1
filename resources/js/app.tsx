@@ -4,6 +4,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 
 createInertiaApp({
+    title: (title) => title ? `${title} | P2Q` : 'P2Q',
     resolve: name => {
         const pages = import.meta.glob('./pages/**/*.tsx', { eager: true });
         return pages[`./pages/${name}.tsx`];

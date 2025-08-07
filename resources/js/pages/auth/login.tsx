@@ -1,9 +1,11 @@
 import { LoginForm } from '@/components/login-form';
 import { Toaster } from '@/components/ui/sonner';
+import { Head } from '@inertiajs/react';
 
 export default function LoginPage() {
     return (
         <>
+            <Head title="Login" />
             <div className="grid min-h-svh bg-white lg:grid-cols-2 dark:bg-black">
                 <div className="bg-muted relative hidden mask-r-from-30% lg:block">
                     <img

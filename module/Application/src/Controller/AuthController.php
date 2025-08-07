@@ -5,7 +5,6 @@ namespace Application\Controller;
 use Application\Service\LdapAuthService;
 use Application\Session\UserSession;
 use Laminas\Http\Response;
-use Laminas\View\Model\ModelInterface;
 use Laminas\View\Model\ViewModel;
 
 class AuthController extends BaseController
@@ -46,17 +45,7 @@ class AuthController extends BaseController
             ], 401);
         }
 
-        /** @var ModelInterface $model */
-        $model = $this->layout();
-        $model->setVariable('page', [
-            'component' => 'auth/login',
-            'props' => [],
-            'url' => '/login',
-            'version' => null,
-        ]);
-
-        $view = new ViewModel([]);
-        return $view;
+        return $this->inertia('auth/login');
     }
 
     public function logoutAction(): Response

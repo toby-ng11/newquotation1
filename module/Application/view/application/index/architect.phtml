@@ -1,11 +1,13 @@
 <?php
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ * @var array $user
+ * @var int $totalArchitects
+ * @var int $totalCompleteProjects
+ * @var int $totalActiveProjects
+ */
 $this->headTitle('Architect portal');
 echo $this->headTitle();
-
-$user = $this->user;
-$totalArchitects = $this->totalArchitects;
-$totalCompleteProjects = $this->totalCompleteProjects;
-$totalActiveProjects = $this->totalActiveProjects;
 ?>
 
 <div class="h-full flex flex-1 flex-col gap-4 p-8">

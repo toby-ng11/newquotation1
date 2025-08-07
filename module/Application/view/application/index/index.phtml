@@ -1,6 +1,9 @@
 <?php
-$user = $this->user;
-$role = $this->escapeHtml($user['p2q_system_role']);
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ * @var array $user
+ */
+$role = $user['p2q_system_role'];
 
 $isAdmin   = $role === 'admin';
 $isManager = $role === 'manager';

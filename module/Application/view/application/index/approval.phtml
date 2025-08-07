@@ -1,113 +1,105 @@
 <?php
+
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ * @var array $user
+ * @var int $waitingTableCount
+ * @var int $approvedTableCount
+ * @var int $disapprovedTableCount
+ */
 $this->headTitle('Approval portal');
 echo $this->headTitle();
+?>
 
-$user = $this->user;
-$waitingTableCount = $this->waitingTableCount;
-$approvedTableCount = $this->approvedTableCount;
-$disapprovedTableCount = $this->disapprovedTableCount;
+<div class="h-full flex flex-1 flex-col gap-4 p-8">
+    <header>
+        <?= $this->partial('components/greeting'); ?>
+        <p class="text-muted-foreground">Here's the quick summary of approval status.</p>
+    </header>
 
-$maintainenceMode = 0;
-if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
-    <div class="h-full flex flex-1 flex-col gap-4 p-8">
-        <header>
-            <h1>This page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h1>
-        </header>
-    </div>
-<?php } else { ?>
-    <!-- Main page -->
-    <div class="h-full flex flex-1 flex-col gap-4 p-8">
-        <header>
-            <?= $this->partial('components/greeting'); ?>
-            <p class="text-muted-foreground">Here's the quick summary of approval status.</p>
-        </header>
-
-        <div class="flex flex-col gap-4 md:gap-6">
-            <div class="features fade-in-up">
-                <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                    <div class="feature fade-in-up rounded-2xl flex flex-col gap-6 bg-[linear-gradient(142deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
-                        <p class="text-muted-foreground text-sm">Waiting for approval</p>
-                        <p class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($waitingTableCount) ?></p>
-                    </div>
-
-                    <div class="feature fade-in-up rounded-2xl flex flex-col gap-6 bg-[linear-gradient(230deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
-                        <p class="text-muted-foreground text-sm">Approved</p>
-                        <p class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($approvedTableCount) ?></p>
-                    </div>
-
-                    <div class="feature fade-in-up rounded-2xl flex flex-col gap-6 bg-[linear-gradient(105deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
-                        <p class="text-muted-foreground text-sm">Rejected</p>
-                        <p class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($disapprovedTableCount) ?></p>
-                    </div>
+    <div class="flex flex-col gap-4 md:gap-6">
+        <div class="features fade-in-up">
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <div class="feature fade-in-up rounded-2xl flex flex-col gap-6 bg-[linear-gradient(142deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
+                    <p class="text-muted-foreground text-sm">Waiting for approval</p>
+                    <p class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($waitingTableCount) ?></p>
                 </div>
-            </div>
 
-            <div class="fade-in-up" id="waiting-table-section">
-                <div class="widget-table bg-widget-background rounded-xl p-6">
-                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-waiting-table' data-init="approvalWaiting">
-                        <thead>
-                            <tr>
-                                <th>Quote ID</th>
-                                <th>Project Name</th>
-                                <th>Architect</th>
-                                <th>Customer</th>
-                                <th>Taker</th>
-                                <th>Segment</th>
-                                <th>Date</td>
-                                <th>Ship Required Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                    </table>
+                <div class="feature fade-in-up rounded-2xl flex flex-col gap-6 bg-[linear-gradient(230deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
+                    <p class="text-muted-foreground text-sm">Approved</p>
+                    <p class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($approvedTableCount) ?></p>
                 </div>
-            </div>
 
-            <div class="fade-in-up" id="approved-table-section">
-                <div class="widget-table bg-widget-background rounded-xl p-6">
-                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-approved-table' data-init="approvalApproved">
-                        <thead>
-                            <tr>
-                                <th><input type="checkbox" id="select-all" title="Select all approve quotes"></th>
-                                <th>Quote ID</th>
-                                <th>Project Name</th>
-                                <th>Architect</th>
-                                <th>Customer</th>
-                                <th>Taker</th>
-                                <th>Segment</th>
-                                <th>Quote Date</th>
-                                <th>Expire Date</th>
-                                <th>Ship Required Date</th>
-                                <th>Status</th>
-                                <th>P21 OE #</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
-
-            <div class="fade-in-up" id="disapproved-table-section">
-                <div class="widget-table bg-widget-background rounded-xl p-6">
-                    <table width="100%" class="sTable display nowrap" id='dashboard-approve-disapproved-table' data-init="approvalDisapproved">
-                        <thead>
-                            <tr>
-                                <th>Quote ID</th>
-                                <th>Project Name</th>
-                                <th>Architect</th>
-                                <th>Customer</th>
-                                <th>Taker</th>
-                                <th>Segment</th>
-                                <th>Quote Date</th>
-                                <th>Expire Date</th>
-                                <th>Ship Required Date</th>
-                                <th>Status</th>
-                                <th>Edit</th>
-                            </tr>
-                        </thead>
-                    </table>
+                <div class="feature fade-in-up rounded-2xl flex flex-col gap-6 bg-[linear-gradient(105deg,var(--architect-dashboard-bg1)_0%,var(--architect-dashboard-bg2)_50%,var(--architect-dashboard-bg3)_100%)] p-6 shadow-md">
+                    <p class="text-muted-foreground text-sm">Rejected</p>
+                    <p class="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"><?= $this->escapeHtml($disapprovedTableCount) ?></p>
                 </div>
             </div>
         </div>
-    </div>
 
-<?php }
-?>
+        <div class="fade-in-up" id="waiting-table-section">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
+                <table width="100%" class="sTable display nowrap" id='dashboard-approve-waiting-table' data-init="approvalWaiting">
+                    <thead>
+                        <tr>
+                            <th>Quote ID</th>
+                            <th>Project Name</th>
+                            <th>Architect</th>
+                            <th>Customer</th>
+                            <th>Taker</th>
+                            <th>Segment</th>
+                            <th>Date</td>
+                            <th>Ship Required Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div class="fade-in-up" id="approved-table-section">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
+                <table width="100%" class="sTable display nowrap" id='dashboard-approve-approved-table' data-init="approvalApproved">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="select-all" title="Select all approve quotes"></th>
+                            <th>Quote ID</th>
+                            <th>Project Name</th>
+                            <th>Architect</th>
+                            <th>Customer</th>
+                            <th>Taker</th>
+                            <th>Segment</th>
+                            <th>Quote Date</th>
+                            <th>Expire Date</th>
+                            <th>Ship Required Date</th>
+                            <th>Status</th>
+                            <th>P21 OE #</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div class="fade-in-up" id="disapproved-table-section">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
+                <table width="100%" class="sTable display nowrap" id='dashboard-approve-disapproved-table' data-init="approvalDisapproved">
+                    <thead>
+                        <tr>
+                            <th>Quote ID</th>
+                            <th>Project Name</th>
+                            <th>Architect</th>
+                            <th>Customer</th>
+                            <th>Taker</th>
+                            <th>Segment</th>
+                            <th>Quote Date</th>
+                            <th>Expire Date</th>
+                            <th>Ship Required Date</th>
+                            <th>Status</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

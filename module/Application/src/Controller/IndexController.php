@@ -48,8 +48,7 @@ class IndexController extends BaseController
     public function indexAction()
     {
         $user = $this->userService->getCurrentUser();
-        $this->layout()->setTemplate('layout/nonheader');
-        return new ViewModel([
+        return $this->inertia('welcome', [
             'user' => $user
         ]);
     }
