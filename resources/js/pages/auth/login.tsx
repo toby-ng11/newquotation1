@@ -1,5 +1,4 @@
 import { LoginForm } from '@/components/login-form';
-import { Toaster } from '@/components/ui/sonner';
 import { Head } from '@inertiajs/react';
 
 export default function LoginPage() {
@@ -67,7 +66,6 @@ export default function LoginPage() {
                     </div>
                 </div>
             </div>
-            <Toaster position="top-right" richColors />
         </>
     );
 }

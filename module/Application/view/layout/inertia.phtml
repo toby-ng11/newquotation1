@@ -1,11 +1,12 @@
 <?php
+
 /** @var Laminas\View\Renderer\PhpRenderer $this
- *  @var array{component: string, props: array, url: string, version: string} $page
-*/
+ *  @var array{component: string, props: array, url: string, version: string}|null $page
+ */
 echo $this->doctype();
 ?>
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="light">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="<?= $this->escapeHtmlAttr(($appearance ?? 'system') === 'dark' ? 'dark' : '') ?>">
 
 <head>
     <?php echo $this->headMeta()
@@ -20,16 +21,31 @@ echo $this->doctype();
 
     <script>
         (function() {
-            const theme = localStorage.getItem("theme");
-            if (theme === "dark" || theme === "light") {
-                document.documentElement.className = theme;
+            const appearance = '<?= $this->escapeJs($appearance ?? 'system') ?>';
+
+            if (appearance === 'system') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                if (prefersDark) {
+                    document.documentElement.classList.add('dark');
+                }
             }
         })();
     </script>
+
+    <style>
+        html {
+            background-color: oklch(1 0 0);
+        }
+
+        html.dark {
+            background-color: oklch(0.141 0.005 285.823);
+        }
+    </style>
 </head>
 
-<body>
-    <div id="app" data-page='<?= $this->escapeHtmlAttr(json_encode($page)) ?>'></div>
+<body class="font-sans antialiased">
+    <div id="app" data-page='<?= $this->escapeHtmlAttr(json_encode($page ?? '')) ?>'></div>
 </body>
 
 </html>

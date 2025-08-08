@@ -6,6 +6,7 @@ namespace Application;
 
 use Application\Config\Defaults;
 use Application\Listener\AuthGuard;
+use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Session\Container;
@@ -91,5 +92,21 @@ class Module implements ConfigProviderInterface
             $viewModel->setVariable('currentController', $controller);
             $viewModel->setVariable('currentAction', $action);
         }, 100);
+    }
+
+    public function handleAppearance(MvcEvent $event): void
+    {
+        /** @var Request $request */
+        $request = $event->getRequest();
+
+        $cookieTheme = null;
+        $cookies = $request->getCookie();
+
+        if($cookies) {
+            $cookieTheme = $cookies['appearance'] ?? 'system';
+        }
+
+        $viewModel = $event->getViewModel();
+        $viewModel->setVariable('appearance', $cookieTheme);
     }
 }

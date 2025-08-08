@@ -45,7 +45,7 @@ class IndexController extends BaseController
         parent::__construct($container);
     }
 
-    public function indexAction()
+    public function indexAction(): ViewModel
     {
         $user = $this->userService->getCurrentUser();
         return $this->inertia('welcome', [

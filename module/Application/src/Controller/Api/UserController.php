@@ -24,7 +24,7 @@ class UserController extends ApiController
             'id'         => $user['id'],
             'first_name' => $user['first_name'],
             'last_name'  => $user['last_name'],
-            'email'      => $user['email'],
+            'email'      => $user['email_address'],
             'role'       => $user['role'],
             'p2q_system_role' => $user['p2q_system_role'],
         ]);
