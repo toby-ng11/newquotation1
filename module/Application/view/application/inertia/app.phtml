@@ -1,0 +1,18 @@
+<?php
+
+/**
+ * This is an empty view script used exclusively for rendering Inertia pages.
+ *
+ * When a controller returns a ViewModel with this template (application/inertia/app.phtml),
+ * Laminas will use the `layout/inertia.phtml` layout to render the page.
+ *
+ * Why this file exists:
+ * - Prevents Laminas from looking for a standard `.phtml` view for each Inertia route.
+ * - Allows all Inertia routes to share the same HTML structure defined in layout/inertia.phtml.
+ * - Keeps the page body empty because Inertia handles DOM rendering via JavaScript.
+ *
+ * Expected variables:
+ * - $page (array) : The Inertia page object containing `component`, `props`, `url`, and `version`.
+ *
+ * No HTML should be added here — all UI is rendered client-side by Inertia.
+ */

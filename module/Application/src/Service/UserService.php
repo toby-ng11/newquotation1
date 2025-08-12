@@ -4,6 +4,7 @@ namespace Application\Service;
 
 use Application\Model\User;
 use Application\Session\UserSession;
+use RuntimeException;
 
 class UserService
 {
@@ -36,14 +37,13 @@ class UserService
         $userName = $user['id'] ?? null;
 
         if ($userName === null) {
-            return; // or throw exception
+            throw new RuntimeException("User not logged in!");
         }
 
         // Fetch user details from the database
         $userData = $this->userModel->fetchsalebyid($userName);
 
         // Store in session
-        $session = new UserSession();
         $session->setUserData([
             'id' => (string) $userData['id'],
             'first_name' => (string) $userData['first_name'],

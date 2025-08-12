@@ -44,6 +44,19 @@ return [
                     ],
                 ],
             ],
+            'dashboard' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/dashboard[/:action]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\DashboardController::class,
+                        'action'     => 'home',
+                    ],
+                ],
+            ],
             'sidebar' => [
                 'type' => Segment::class,
                 'options' => [
@@ -58,7 +71,7 @@ return [
                     ],
                 ],
             ],
-            'dashboard' => [
+            'index' => [
                 'type' => Segment::class,
                 'options' => [
                     'route'    => '/index[/:action][/:table]',
@@ -303,6 +316,11 @@ return [
             Controller\AuthController::class => function (ContainerInterface $container) {
                 $authService = $container->get(Service\LdapAuthService::class);
                 return new Controller\AuthController($authService);
+            },
+            Controller\DashboardController::class => function (ContainerInterface $container) {
+                return new Controller\DashboardController(
+                    $container
+                );
             },
             Controller\IndexController::class => function (ContainerInterface $container) {
                 return new Controller\IndexController(

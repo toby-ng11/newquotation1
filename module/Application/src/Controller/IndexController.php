@@ -19,6 +19,7 @@ use Application\Model\{
     Status
 };
 use Application\Model\View\P21User;
+use Laminas\Http\Response;
 use Psr\Container\ContainerInterface;
 
 class IndexController extends BaseController
@@ -45,12 +46,9 @@ class IndexController extends BaseController
         parent::__construct($container);
     }
 
-    public function indexAction(): ViewModel
+    public function indexAction(): Response | ViewModel
     {
-        $user = $this->userService->getCurrentUser();
-        return $this->inertia('welcome', [
-            'user' => $user
-        ]);
+        return $this->inertia('welcome');
     }
 
     public function adminAction()

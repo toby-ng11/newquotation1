@@ -100,7 +100,7 @@ class QuoteController extends BaseController
         $quote = $this->getQuoteModel()->fetchById($quote_id);
         if (! $quote || ($quote['deleted_at'])) {
             $this->flashMessenger()->addErrorMessage("This quote is deleted.");
-            return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
+            return $this->redirect()->toRoute('index', ['action' => 'home']);
         }
         $user = $this->getUserService()->getCurrentUser();
         $project = $this->getProjectModel()->fetchById($quote['project_id']);
@@ -161,10 +161,10 @@ class QuoteController extends BaseController
             }
 
             if ($user['p2q_system_role'] === 'guest') {
-                return $this->redirect()->toRoute('dashboard', ['action' => 'quotes']);
+                return $this->redirect()->toRoute('index', ['action' => 'quotes']);
             }
 
-            return $this->redirect()->toRoute('dashboard', ['action' => 'home']);
+            return $this->redirect()->toRoute('index', ['action' => 'home']);
         } else {
             $this->flashMessenger()->addErrorMessage("Failed to delete quote. Please try again.");
 

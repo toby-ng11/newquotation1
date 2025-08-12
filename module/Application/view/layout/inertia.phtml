@@ -1,7 +1,7 @@
 <?php
 
 /** @var Laminas\View\Renderer\PhpRenderer $this
- *  @var array{component: string, props: array, url: string, version: string}|null $page
+ *  @var array{component: string, props: array, url: string, version: string} $page
  */
 echo $this->doctype();
 ?>
@@ -45,7 +45,7 @@ echo $this->doctype();
 </head>
 
 <body class="font-sans antialiased">
-    <div id="app" data-page='<?= $this->escapeHtmlAttr(json_encode($page ?? '')) ?>'></div>
+    <div id="app" data-page='<?= $this->escapeHtmlAttr(json_encode($page)) ?>'></div>
 </body>
 
 </html>

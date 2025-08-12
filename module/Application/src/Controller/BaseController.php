@@ -95,21 +95,61 @@ abstract class BaseController extends AbstractRestfulController
      * @param string $component The name of the Inertia component to render (e.g. 'auth/login').
      * @param array|null $props Optional props to pass to the component (default: empty array).
      * @param string|null $url Optional URL override. If not set, the current request URI will be used.
-     * @return ViewModel A ViewModel that uses the Inertia layout and passes Inertia page data.
+     * @return Response|ViewModel A ViewModel that uses the Inertia layout and passes Inertia page data.
      */
-    protected function inertia(string $component, ?array $props = [], ?string $url = null): ViewModel
+    protected function inertia(string $component, ?array $props = [], ?string $url = null): Response | ViewModel
     {
-        /** @var ModelInterface $model */
-        $model = $this->layout();
-        $model->setVariable('page', [
+        $uri = $this->getRequest()->getUri()->getPath();
+
+        if ($uri === '/login') {
+            $props = $props;
+        } else {
+            $props = array_merge($this->shared(), $props ?? []);
+        }
+
+        $page = [
             'component' => $component,
             'props' => $props,
-            'url' => $url ?? $this->getRequest()->getUriString(),
+            'url' => $url ?? $uri,
             'version' => null,
-        ]);
+        ];
+
+        $request = $this->getRequest();
+
+        // Check for Inertia header
+        if ($request->getHeader('X-Inertia')) {
+            $response = $this->getResponse();
+            $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+            $response->getHeaders()->addHeaderLine('Vary', 'X-Inertia');
+            $response->getHeaders()->addHeaderLine('X-Inertia', 'true');
+            $response->setStatusCode(200);
+            $response->setContent(json_encode($page));
+            return $response;
+        }
+
+        /** @var ModelInterface $model */
+        $model = $this->layout();
+        $model->setVariable('page', $page);
 
         $view = new ViewModel([]);
         $view->setTemplate('application/inertia/app');
         return $view;
+    }
+
+    /**
+     * Define globally shared props for Inertia responses.
+     *
+     * @return array
+     */
+    protected function shared(): array
+    {
+        $userService = $this->getUserService();
+
+        $user = $userService->getCurrentUser();
+
+        return [
+            'user' => $user,
+            // Add more shared data here as needed
+        ];
     }
 }

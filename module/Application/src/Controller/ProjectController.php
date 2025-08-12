@@ -178,7 +178,7 @@ class ProjectController extends BaseController
         $project = $this->project->fetchById($project_id);
         if (! $project || ($project['deleted_at'])) {
             $this->flashMessenger()->addErrorMessage("This project is deleted.");
-            return $this->redirect()->toRoute('dashboard', ['action' => 'project']);
+            return $this->redirect()->toRoute('index', ['action' => 'project']);
         }
         $user = $this->userService->getCurrentUser();
         $location = $this->location->fetchAllBranches();

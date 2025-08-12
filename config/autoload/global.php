@@ -22,7 +22,7 @@ use Psr\Container\ContainerInterface;
 return [
     'session_config' => [
         'cookie_lifetime' => 86400, // 1 days in seconds
-        'gc_maxlifetime' => 86400, // Garbage collection max lifetime
+        'gc_maxlifetime' => 10800, // Garbage collection max lifetime
         'name' => 'app_session',
         'config_class' => SessionConfig::class,
     ],

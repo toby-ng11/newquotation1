@@ -50,6 +50,17 @@ class AuthController extends BaseController
 
     public function logoutAction(): Response
     {
+        $request = $this->getRequest();
+        if (! $request->isPost()) {
+            $response = $this->getResponse();
+            $response->setStatusCode(405);
+            $response->getHeaders()->addHeaderLine('Allow', 'POST');
+            return $response;
+        }
+
+        //$token = $this->params()->fromPost('_token');
+        // if (! $this->csrf->isValid($token)) { return $this->getResponse()->setStatusCode(400); }
+
         $session = new UserSession();
 
         // Destroy session
@@ -61,9 +72,9 @@ class AuthController extends BaseController
         $manager->getSaveHandler()->destroy($id);
         $manager->destroy();
 
-        // Optional: clear just the session container if you want a soft logout
-        // $session->exchangeArray([]);
+        $response = $this->redirect()->toUrl('/login');
+        $response->setStatusCode(303);
 
-        return $this->redirect()->toRoute('login');
+        return $response;
     }
 }

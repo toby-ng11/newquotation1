@@ -92,14 +92,14 @@ class ArchitectController extends BaseController
 
         $architect_id = (int) $this->params()->fromRoute('id');
         if (! $architect_id) {
-            return $this->redirect()->toRoute('dashboard', ['action' => 'architect']);
+            return $this->redirect()->toRoute('index', ['action' => 'architect']);
         }
 
         $architect = $this->architect->fetchArchitectById($architect_id);
 
         if (! $architect) {
             $this->flashMessenger()->addErrorMessage("This architect doesn't exist.");
-            return $this->redirect()->toRoute('dashboard', ['action' => 'architect']);
+            return $this->redirect()->toRoute('index', ['action' => 'architect']);
         }
 
         $user = $this->userService->getCurrentUser();
