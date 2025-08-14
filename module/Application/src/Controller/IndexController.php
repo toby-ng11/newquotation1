@@ -48,7 +48,7 @@ class IndexController extends BaseController
 
     public function indexAction(): Response | ViewModel
     {
-        return $this->inertia('welcome');
+        return $this->render('welcome');
     }
 
     public function adminAction()

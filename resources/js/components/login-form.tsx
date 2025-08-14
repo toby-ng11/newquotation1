@@ -2,31 +2,39 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { FormEvent } from 'react';
+import { type SharedData } from '@/types';
+import { useForm, usePage } from '@inertiajs/react';
 import { toast } from 'sonner';
 
 export function LoginForm({ className, ...props }: React.ComponentProps<'form'>) {
-    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault();
+    const { csrf } = usePage<SharedData>().props;
+    const { data, setData, post, processing, reset, errors } = useForm({
+        username: '',
+        password: '',
+        _token: csrf || '',
+    });
 
-        const form = event.currentTarget;
-        const formData = new FormData(form);
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
 
-        const response = await fetch('login', {
-            method: 'POST',
-            body: formData,
-            credentials: 'include',
+        const formData = new FormData();
+        formData.append('username', data.username);
+        formData.append('password', data.password);
+        formData.append('csrf', data._token);
+
+        post('/login', {
+            preserveScroll: true,
+            onSuccess: () => {
+                reset('password');
+                toast.success('Logged in successfully!');
+            },
+            onError: (errors) => {
+                if (errors.login_error) {
+                    toast.error(errors.login_error);
+                }
+            },
+            onFinish: () => {},
         });
-
-        if (response.redirected) {
-            window.location.href = response.url;
-            return;
-        } else if (response.status === 401) {
-            const data = await response.json();
-            toast.error(data.error || 'Login failed');
-        } else {
-            toast.error('Unexpected error');
-        }
     }
 
     return (
@@ -39,14 +47,31 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'form'>)
                 <div className="grid gap-6">
                     <div className="grid gap-3">
                         <Label htmlFor="username">Username</Label>
-                        <Input id="username" name="username" type="username" placeholder="Your P21 username" required />
+                        <Input
+                            id="username"
+                            name="username"
+                            type="text"
+                            value={data.username}
+                            onChange={(e) => setData('username', e.target.value)}
+                            placeholder="Your P21 username"
+                            required
+                        />
+                        {errors.username && <span className="text-sm text-red-500">{errors.username}</span>}
                     </div>
                     <div className="grid gap-3">
                         <Label htmlFor="password">Password</Label>
-                        <Input id="password" name="password" type="password" placeholder="Windows/P21 password" required />
+                        <Input
+                            id="password"
+                            name="password"
+                            type="password"
+                            value={data.password}
+                            onChange={(e) => setData('password', e.target.value)}
+                            placeholder="Windows/P21 password"
+                            required
+                        />
                     </div>
-                    <Button type="submit" className="w-full">
-                        Login
+                    <Button type="submit" className="w-full" disabled={processing} aria-busy={processing}>
+                        {processing ? 'Logging in…' : 'Login'}
                     </Button>
                 </div>
             </form>

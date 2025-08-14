@@ -15,36 +15,36 @@ class DashboardController extends BaseController
 
     public function homeAction(): Response | ViewModel
     {
-        return $this->inertia('dashboards/home');
+        return $this->render('dashboards/home');
     }
 
     public function adminAction(): Response | ViewModel
     {
-        return $this->inertia('dashboards/admin');
+        return $this->render('dashboards/admin');
     }
 
     public function opportunityAction(): Response | ViewModel
     {
-        return $this->inertia('dashboards/opportunity');
+        return $this->render('dashboards/opportunity');
     }
 
     public function projectAction(): Response | ViewModel
     {
-        return $this->inertia('dashboards/project');
+        return $this->render('dashboards/project');
     }
 
     public function quoteAction(): Response | ViewModel
     {
-        return $this->inertia('dashboards/quote');
+        return $this->render('dashboards/quote');
     }
 
     public function architectAction(): Response | ViewModel
     {
-        return $this->inertia('dashboards/architect');
+        return $this->render('dashboards/architect');
     }
 
     public function quoteditemsAction(): Response | ViewModel
     {
-        return $this->inertia('dashboards/quoted-items');
+        return $this->render('dashboards/quoted-items');
     }
 }

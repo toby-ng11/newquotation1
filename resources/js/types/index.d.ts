@@ -25,6 +25,8 @@ export interface NavItem {
 export interface SharedData {
     auth: Auth;
     user: User;
+    csrf: string;
+    sidebarOpen: boolean;
     ziggy: Config & { location: string };
     [key: string]: any;
 }

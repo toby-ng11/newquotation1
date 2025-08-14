@@ -38,10 +38,20 @@ function FeatureCard({
     return (
         <>
             {inertia ? (
-                <Link href={href} className="bg-primary/10 h-35 w-100 max-w-md rounded-md border p-6 no-underline decoration-inherit shadow-md">
-                    <h2 className="mb-2 text-xl">{title}</h2>
-                    <p className="text-sm">{description}</p>
-                </Link>
+                <motion.div
+                    custom={index}
+                    initial="hidden"
+                    animate="visible"
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={variants}
+                    className="bg-primary/10 h-35 w-100 max-w-md rounded-md border p-6 no-underline decoration-inherit shadow-md"
+                >
+                    <Link href={href}>
+                        <h2 className="mb-2 text-xl">{title}</h2>
+                        <p className="text-sm">{description}</p>
+                    </Link>
+                </motion.div>
             ) : (
                 <motion.a
                     href={href}
@@ -72,8 +82,9 @@ export default function WelcomePage() {
         <>
             <Head title="Welcome" />
             <div className="flex items-center justify-between px-4 py-2">
-                <a href="#" aria-label="Centura Quotation homepage">
-                    <AppLogoIcon className="w-40" />
+                <a href="/" className="flex items-center gap-2 font-semibold">
+                    <AppLogoIcon className="size-7" />
+                    P2Q Portal
                 </a>
 
                 <DropdownMenu>
@@ -91,7 +102,7 @@ export default function WelcomePage() {
             </div>
 
             <div className="mx-4 mt-2 rounded-md bg-linear-to-r from-sky-500 to-blue-500 pt-20 pr-8 pb-20 pl-8 text-center text-white md:mx-20">
-                <h1 className="mb-2 text-4xl">Welcome to Centura Quotation System</h1>
+                <h1 className="mb-2 text-4xl">Welcome to Project to Quote Portal</h1>
                 <p className="mx-auto">
                     Your all-in-one platform for managing projects, approvals, and architectural collaboration with ease and efficiency.
                 </p>

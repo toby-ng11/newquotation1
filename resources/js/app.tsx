@@ -3,8 +3,11 @@ import '../css/app.css';
 import { FloatingThemeProvider } from '@/components/theme-floating-provider';
 import { initializeTheme, ThemeProvider } from '@/hooks/use-appearance';
 import { createInertiaApp } from '@inertiajs/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
+
+const queryClient = new QueryClient();
 
 createInertiaApp({
     title: (title) => (title ? `${title} | P2Q` : 'P2Q'),
@@ -18,8 +21,10 @@ createInertiaApp({
         root.render(
             <ThemeProvider>
                 <FloatingThemeProvider>
-                    <App {...props} />
-                    <Toaster richColors position="top-right" />
+                    <QueryClientProvider client={queryClient}>
+                        <App {...props} />
+                        <Toaster richColors position="top-right" />
+                    </QueryClientProvider>
                 </FloatingThemeProvider>
             </ThemeProvider>,
         );

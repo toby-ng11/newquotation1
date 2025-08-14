@@ -114,7 +114,7 @@ export default function QuotesQuoteTable() {
             accessorKey: 'note',
             header: ({ column }) => <DataTableColumnHeader column={column} title="Note" />,
             cell: ({ row }) => <div className="max-w-[250px] min-w-[250px] truncate">{row.getValue('note')}</div>,
-            meta: 'Description',
+            meta: 'Item Note',
         },
         {
             accessorKey: 'project_name',
@@ -173,78 +173,80 @@ export default function QuotesQuoteTable() {
 
     return (
         <>
-            <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
-                <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl font-semibold tracking-tight">All Quoted Items</h2>
-                    <p className="text-muted-foreground">Here's the list of quoted items.</p>
-                </div>
+            <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border p-4 md:min-h-min">
+                <div className="flex flex-1 flex-col gap-4 p-2 md:w-[calc(max-w-svw)-(w-(--sidebar-width)]">
+                    <div className="flex flex-col gap-1">
+                        <h2 className="text-2xl font-semibold tracking-tight">All Quoted Items</h2>
+                        <p className="text-muted-foreground">Here's the list of quoted items.</p>
+                    </div>
 
-                <div className="flex flex-col gap-4">
-                    {!isLoading ? (
-                        <>
-                            <DataTableToolbar
-                                table={table}
-                                searchColumn="note"
-                                searchPlaceholder="Search quoted item note..."
-                                facetedFilters={[
-                                    { columnId: 'customer_name', title: 'Customer Filter' },
-                                    { columnId: 'item_code', title: 'SKU Filter' },
-                                    { columnId: 'project_name', title: 'Project Filter' },
-                                ]}
-                                searchAfterFilter={true}
-                            />
+                    <div className="flex flex-col gap-4">
+                        {!isLoading ? (
+                            <>
+                                <DataTableToolbar
+                                    table={table}
+                                    searchColumn="note"
+                                    searchPlaceholder="Search quoted item note..."
+                                    facetedFilters={[
+                                        { columnId: 'customer_name', title: 'Customer Filter' },
+                                        { columnId: 'item_code', title: 'SKU Filter' },
+                                        { columnId: 'project_name', title: 'Project Filter' },
+                                    ]}
+                                    searchAfterFilter={true}
+                                />
 
-                            <div className="overflow-hidden rounded-md border">
-                                <Table>
-                                    <TableHeader className="bg-muted sticky top-0 z-10 [&_tr]:border-b">
-                                        {table.getHeaderGroups().map((headerGroup) => (
-                                            <TableRow key={headerGroup.id}>
-                                                {headerGroup.headers.map((header) => {
-                                                    return (
-                                                        <TableHead key={header.id} colSpan={header.colSpan}>
-                                                            {header.isPlaceholder
-                                                                ? null
-                                                                : flexRender(header.column.columnDef.header, header.getContext())}
-                                                        </TableHead>
-                                                    );
-                                                })}
-                                            </TableRow>
-                                        ))}
-                                    </TableHeader>
-                                    <TableBody>
-                                        {table.getRowModel().rows?.length ? (
-                                            table.getRowModel().rows.map((row) => (
-                                                <TableRow key={row.id}>
-                                                    {row.getVisibleCells().map((cell) => (
-                                                        <TableCell key={cell.id} className="p-2 text-left whitespace-nowrap">
-                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                        </TableCell>
-                                                    ))}
+                                <div className="overflow-hidden rounded-md border">
+                                    <Table>
+                                        <TableHeader className="bg-muted sticky top-0 z-10 [&_tr]:border-b">
+                                            {table.getHeaderGroups().map((headerGroup) => (
+                                                <TableRow key={headerGroup.id}>
+                                                    {headerGroup.headers.map((header) => {
+                                                        return (
+                                                            <TableHead key={header.id} colSpan={header.colSpan}>
+                                                                {header.isPlaceholder
+                                                                    ? null
+                                                                    : flexRender(header.column.columnDef.header, header.getContext())}
+                                                            </TableHead>
+                                                        );
+                                                    })}
                                                 </TableRow>
-                                            ))
-                                        ) : (
-                                            <TableRow>
-                                                <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                    No quotes found.
-                                                </TableCell>
-                                            </TableRow>
-                                        )}
-                                    </TableBody>
-                                </Table>
+                                            ))}
+                                        </TableHeader>
+                                        <TableBody>
+                                            {table.getRowModel().rows?.length ? (
+                                                table.getRowModel().rows.map((row) => (
+                                                    <TableRow key={row.id}>
+                                                        {row.getVisibleCells().map((cell) => (
+                                                            <TableCell key={cell.id} className="p-2 text-left whitespace-nowrap">
+                                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                            </TableCell>
+                                                        ))}
+                                                    </TableRow>
+                                                ))
+                                            ) : (
+                                                <TableRow>
+                                                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                                                        No quotes found.
+                                                    </TableCell>
+                                                </TableRow>
+                                            )}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            </>
+                        ) : (
+                            <DataTableLoadingSpinner />
+                        )}
+
+                        {isRefetching && (
+                            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-sm transition-opacity">
+                                <span className="h-6 w-6 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
                             </div>
-                        </>
-                    ) : (
-                        <DataTableLoadingSpinner />
-                    )}
+                        )}
+                    </div>
 
-                    {isRefetching && (
-                        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-sm transition-opacity">
-                            <span className="h-6 w-6 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
-                        </div>
-                    )}
+                    <DataTablePagination table={table} hasSelect={false} />
                 </div>
-
-                <DataTablePagination table={table} hasSelect={false} />
             </div>
         </>
     );

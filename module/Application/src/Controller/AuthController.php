@@ -5,6 +5,8 @@ namespace Application\Controller;
 use Application\Service\LdapAuthService;
 use Application\Session\UserSession;
 use Laminas\Http\Response;
+use Laminas\Session\Container;
+use Laminas\Session\Validator\Csrf;
 use Laminas\View\Model\ViewModel;
 
 class AuthController extends BaseController
@@ -21,12 +23,32 @@ class AuthController extends BaseController
     {
         $request = $this->getRequest();
 
-        if ($request->isPost()) {
-            /** @var string $username */
-            $username = $request->getPost('username');
+        $session = new Container();
+        $validator = new Csrf(['session' => $session]);
+        $hash = $validator->getHash();
 
-            /** @var string $password */
-            $password = $request->getPost('password');
+        if ($request->isPost()) {
+            $rawBody = $request->getContent();
+            $data = json_decode($rawBody, true) ?: [];
+
+            $token = $data['_token'] ?? null;
+
+            if (! $validator->isValid($token)) {
+                $this->share([
+                    'errors' => ['login_error' => 'Session timeouted. Please refresh the page.'],
+                ]);
+                return $this->redirect()->toRoute('login');
+            }
+
+            $username = trim($data['username']);
+            $password = $data['password'];
+
+            if ($username === '') {
+                $this->share([
+                    'errors' => ['username' => 'Username is required.'],
+                ]);
+                return $this->redirect()->toRoute('login');
+            }
 
             $result = $this->authService->authenticate($username, $password);
 
@@ -37,15 +59,19 @@ class AuthController extends BaseController
                     'name' => $username,
                 ]);
 
-                return $this->redirect()->toRoute('home');
+                return $this->redirect()->toUrl('/');
             }
 
-            return $this->json([
-                'error' => 'Invalid credentials.',
-            ], 401);
+            $this->share([
+                'errors' => ['login_error' => 'Invalid credentials.'],
+            ]);
+            $response = $this->redirect()->toRoute('login');
+            return $response;
         }
 
-        return $this->inertia('auth/login');
+        return $this->render('auth/login', [
+            'csrf' => $hash,
+        ]);
     }
 
     public function logoutAction(): Response
@@ -72,7 +98,7 @@ class AuthController extends BaseController
         $manager->getSaveHandler()->destroy($id);
         $manager->destroy();
 
-        $response = $this->redirect()->toUrl('/login');
+        $response = $this->redirect()->toRoute('login');
         $response->setStatusCode(303);
 
         return $response;
