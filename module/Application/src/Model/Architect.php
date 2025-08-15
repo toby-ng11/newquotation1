@@ -9,6 +9,7 @@ use Laminas\Db\Sql\{Sql, Expression};
 use Laminas\Db\TableGateway\TableGateway;
 use Psr\Container\ContainerInterface;
 use Exception;
+use RuntimeException;
 
 class Architect
 {
@@ -148,10 +149,10 @@ class Architect
         }
     }
 
-    public function getByName($name)
+    public function getByName(string $name): array
     {
         if (! InputValidator::isValidData($name)) {
-            return false;
+            throw new RuntimeException("Not valid data.");
         }
 
         $sql = new Sql($this->adapter);
@@ -160,13 +161,18 @@ class Architect
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute()->current();
+
+        if (! $result) {
+            return [];
+        }
+
         return iterator_to_array($result, true);
     }
 
-    public function fetchArchitectById($id)
+    public function fetchArchitectById(mixed $id): array
     {
-        if (! InputValidator::isValidId($id)) {
-            return false;
+        if (! $id) {
+            return [];
         }
 
         $sql = new Sql($this->adapter);

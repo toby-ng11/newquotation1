@@ -4,6 +4,7 @@ import DataTableRefreshDataButton from '@/components/table-refresh-data-button';
 import { DataTableSkeleton } from '@/components/table-skeleton';
 import { DataTableToolbar } from '@/components/table-toolbar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { fetchWithCache } from '@/hooks/use-cache';
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -53,11 +54,13 @@ export default function QuotesQuoteTable() {
     const lastSavedVisibility = useRef<VisibilityState>({});
     const [globalFilter, setGlobalFilter] = useState('');
 
-    const fetchData = async () => {
+    const ENDPOINT = '/index/quotes/items';
+
+    const fetchData = async (force = false) => {
         setIsFetching(false);
         try {
-            const res = await axios.get('/index/quotes/items');
-            setData(res.data);
+            const rows = await fetchWithCache<QuotedItem[]>(ENDPOINT, { ttlMs: 300000, force });
+            setData(rows);
         } finally {
             setIsFetching(true);
         }
@@ -188,7 +191,7 @@ export default function QuotesQuoteTable() {
 
     return (
         <div className="border-sidebar-border/70 dark:border-sidebar-border relative h-full flex-1 overflow-hidden rounded-xl border p-4 md:min-h-min">
-            <DataTableRefreshDataButton fetchTableData={fetchData} isTableReady={isReady} isTableFetching={isFetching} />
+            <DataTableRefreshDataButton fetchTableData={() => fetchData(true)} isTableReady={isReady} isTableFetching={isFetching} />
 
             <div className="flex flex-1 flex-col gap-4 p-2">
                 <div className="flex flex-col gap-1">

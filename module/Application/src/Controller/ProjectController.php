@@ -61,6 +61,7 @@ class ProjectController extends BaseController
 
     public function createAction()
     {
+        $this->layout()->setTemplate('layout/default');
         $request = $this->getRequest();
 
         if ($request->isPost()) {

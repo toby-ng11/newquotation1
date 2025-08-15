@@ -293,11 +293,11 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
-                    data: 'project_flag'
+                    data: 'project_flag',
                 },
                 {
                     data: 'quote_flag',
-                }
+                },
             ],
             columnDefs: [
                 {
@@ -1491,15 +1491,38 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 },
                 {
                     data: 'quantity',
-                    render: function (data) {
+                    render: function (data, _, row) {
                         let qty = Number.parseFloat(data).toFixed(0);
-                        return '<b>' + qty + '</b>';
+                        let qtySF = row.quantity_in_sf ? Number.parseFloat(row.quantity_in_sf).toFixed(2) : null;
+                        let qtyCTN = row.quantity_in_ctn ? Number.parseFloat(row.quantity_in_ctn).toFixed(2) : null;
+
+                        let extras = '';
+                        if (qtySF) {
+                            extras += `<div class="text-muted-foreground italic">${qtySF} SF</div>`;
+                        }
+                        if (qtyCTN) {
+                            extras += `<div class="text-muted-foreground italic">${qtyCTN} CTN</div>`;
+                        }
+
+                        return `<div><b>${qty}</b>${extras}</div>`;
                     },
                 },
                 {
                     data: 'unit_price',
-                    render: function (data) {
-                        return '<b>' + data + '</b>';
+                    render: function (data, _, row) {
+                        let unit_price = Number.parseFloat(data).toFixed(2);
+                        let unit_price_sf = row.price_per_sf ? Number.parseFloat(row.price_per_sf).toFixed(2) : null;
+                        let unit_price_ctn = row.price_per_ctn ? Number.parseFloat(row.price_per_ctn).toFixed(2) : null;
+
+                        let extras = '';
+                        if (unit_price_sf) {
+                            extras += `<div class="text-muted-foreground italic">${unit_price_sf} SF</div>`;
+                        }
+                        if (unit_price_ctn) {
+                            extras += `<div class="text-muted-foreground italic">${unit_price_ctn} CTN</div>`;
+                        }
+
+                        return `<div><b>${unit_price}</b>${extras}</div>`;
                     },
                 },
                 {

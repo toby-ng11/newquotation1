@@ -246,12 +246,12 @@ class Item
                 case 'project':
                     $select = $sql->select('p2q_view_project_items')
                         ->columns(['unit_price'])
-                        ->where(['location_id' => $location, 'id' => $item_id]);
+                        ->where(['id' => $item_id]);
                     break;
                 case 'quote':
                     $select = $sql->select('p2q_view_quote_items')
                         ->columns(['unit_price'])
-                        ->where(['location_id' => $location, 'id' => $item_id]);
+                        ->where(['id' => $item_id]);
                     break;
                 default:
                     return false;

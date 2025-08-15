@@ -116,10 +116,10 @@ class ProjectShare
         return $result;
     }
 
-    public function fetchDataTables($id)
+    public function fetchDataTables(mixed $id): array
     {
-        if (! InputValidator::isValidId($id)) {
-            return false;
+        if (! $id) {
+            return [];
         }
 
         $sql = new Sql($this->adapter);
@@ -131,7 +131,7 @@ class ProjectShare
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
-        return $result;
+        return iterator_to_array($result, true);
     }
 
     public function isShareExists(int $projectId, string $userId): bool

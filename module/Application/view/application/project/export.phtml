@@ -1,3 +1,17 @@
+<?php
+
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ * @var array $project
+ * @var array $architect
+ * @var array $archAddress
+ * @var array $specifier
+ * @var array $generalContractor
+ * @var array $awardedContractor
+ * @var array $items
+ */
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -151,25 +165,27 @@
                                 <tr>
                                     <td><?= $this->escapeHtml($architect['architect_name']) ?></td>
                                 </tr>
-                                <tr>
-                                    <td><?= $this->escapeHtml($archAddress['phys_address1']) .
-                                        ' ' .
-                                        $this->escapeHtml($archAddress['phys_address2']) ?></td>
-                                </tr>
-                                <tr>
-                                    <td><?= $archAddress['phys_city']
-                                        ? $this->escapeHtml($archAddress['phys_city']) . ', ' . $this->escapeHtml($archAddress['phys_state'])
-                                        : $this->escapeHtml($archAddress['phys_state']) ?></td>
-                                </tr>
-                                <tr>
-                                    <td><?= $this->escapeHtml($archAddress['phys_postal_code']) ?></td>
-                                </tr>
-                                <tr>
-                                    <td><?= $this->escapeHtml($archAddress['phys_country']) ?></td>
-                                </tr>
-                                <tr>
-                                    <td><?= $this->escapeHtml($archAddress['email_address']) ?></td>
-                                </tr>
+                                <?php if ($archAddress): ?>
+                                    <tr>
+                                        <td><?= $this->escapeHtml($archAddress['phys_address1']) .
+                                                ' ' .
+                                                $this->escapeHtml($archAddress['phys_address2']) ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><?= $archAddress['phys_city']
+                                                ? $this->escapeHtml($archAddress['phys_city']) . ', ' . $this->escapeHtml($archAddress['phys_state'])
+                                                : $this->escapeHtml($archAddress['phys_state']) ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><?= $this->escapeHtml($archAddress['phys_postal_code']) ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><?= $this->escapeHtml($archAddress['phys_country']) ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td><?= $this->escapeHtml($archAddress['email_address']) ?></td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     <?php endif; ?>
@@ -224,13 +240,13 @@
                                 </tr>
                                 <tr>
                                     <td><?= $this->escapeHtml($generalContractor['phys_address1']) .
-                                        ' ' .
-                                        $this->escapeHtml($generalContractor['phys_address2']) ?></td>
+                                            ' ' .
+                                            $this->escapeHtml($generalContractor['phys_address2']) ?></td>
                                 </tr>
                                 <tr>
                                     <td><?= $this->escapeHtml($generalContractor['phys_city']) .
-                                        ', ' .
-                                        $this->escapeHtml($generalContractor['phys_state']) ?></td>
+                                            ', ' .
+                                            $this->escapeHtml($generalContractor['phys_state']) ?></td>
                                 </tr>
                                 <tr>
                                     <td><?= $this->escapeHtml($generalContractor['phys_postal_code']) ?></td>
@@ -264,13 +280,13 @@
                                 </tr>
                                 <tr>
                                     <td><?= $this->escapeHtml($awardedContractor['phys_address1']) .
-                                        ' ' .
-                                        $this->escapeHtml($awardedContractor['phys_address2']) ?></td>
+                                            ' ' .
+                                            $this->escapeHtml($awardedContractor['phys_address2']) ?></td>
                                 </tr>
                                 <tr>
                                     <td><?= $this->escapeHtml($awardedContractor['phys_city']) .
-                                        ', ' .
-                                        $this->escapeHtml($awardedContractor['phys_state']) ?></td>
+                                            ', ' .
+                                            $this->escapeHtml($awardedContractor['phys_state']) ?></td>
                                 </tr>
                                 <tr>
                                     <td><?= $this->escapeHtml($awardedContractor['phys_postal_code']) ?></td>
@@ -305,7 +321,7 @@
                     <tr>
                         <td colspan="5" style="text-align:center">No items quoted.</td>
                     </tr>
-                <?php else :
+                    <?php else :
                     foreach ($items as $i) : ?>
                         <tr>
                             <td style="text-align:left">
@@ -326,7 +342,7 @@
                             <td><?= $this->escapeHtml($i['unit_of_measure']) ?></td>
                             <td style='text-align:right;'><?= '$' . $this->escapeHtml(number_format($i['total_price'], 2)) ?></td>
                         </tr>
-                                    <?php $subtotal += $i['total_price'] == null ? 0 : $i['total_price'];
+                <?php $subtotal += $i['total_price'] == null ? 0 : $i['total_price'];
                     endforeach;
                 endif;
                 ?>
