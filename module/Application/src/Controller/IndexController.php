@@ -260,30 +260,17 @@ class IndexController extends BaseController
         return $viewModel;
     }
 
-    public function quotesAction()
+    public function quotesAction(): Response
     {
-        $user = $this->userService->getCurrentUser();
-        $this->layout()->setTemplate('layout/default');
-
         $table = $this->params()->fromRoute('table', 'items'); // default to items table
 
-        if ($this->getRequest()->isXmlHttpRequest()) {
-            switch ($table) {
-                case 'items':
-                    $quotes = $this->getItemModel()->fetchItemQuoteTable();
-                    $view = $this->json($quotes);
-                    return $view;
-            }
+        switch ($table) {
+            case 'items':
+                $quotes = $this->getItemModel()->fetchItemQuoteTable();
+                $view = $this->json($quotes);
+                return $view;
+            default:
+                return $this->json([]);
         }
-
-        $viewModel = new ViewModel([
-            'user' => $user,
-        ]);
-
-        if ($this->getRequest()->getHeader('HX-Request')) {
-            $viewModel->setTerminal(true);
-        }
-
-        return $viewModel;
     }
 }

@@ -47,7 +47,7 @@ function FeatureCard({
                     variants={variants}
                     className="bg-primary/10 h-35 w-100 max-w-md rounded-md border p-6 no-underline decoration-inherit shadow-md"
                 >
-                    <Link href={href}>
+                    <Link href={href} prefetch>
                         <h2 className="mb-2 text-xl">{title}</h2>
                         <p className="text-sm">{description}</p>
                     </Link>
@@ -77,6 +77,7 @@ export default function WelcomePage() {
     const isAdmin = role === 'admin';
     const isManager = role === 'manager';
     const isSales = role === 'sales';
+    const isGuest = role === 'guest';
 
     return (
         <>
@@ -87,7 +88,7 @@ export default function WelcomePage() {
                     P2Q Portal
                 </a>
 
-                <DropdownMenu>
+                <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="text-muted-foreground flex items-center gap-2">
                             <CircleUserRound className="h-5 w-5" />
@@ -150,7 +151,13 @@ export default function WelcomePage() {
                         description="Connect and collaborate with architects seamlessly to ensure design accuracy and quality."
                     />
                 )}
-                <FeatureCard index={5} href="/index/quotes" title="Quoted Items" description="Search through quotes, customers and items." />
+                <FeatureCard
+                    index={isGuest ? 1 : 5}
+                    inertia={true}
+                    href="/dashboard/quoted-items"
+                    title="Quoted Items"
+                    description="Search through quotes, customers and items."
+                />
                 {(isAdmin || isManager || isSales) && (
                     <FeatureCard
                         index={6}

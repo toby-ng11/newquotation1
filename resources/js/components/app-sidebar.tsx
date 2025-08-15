@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { SharedData, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, Home, LayoutGrid, List, ShieldCheck } from 'lucide-react';
+import { Home, LayoutGrid, List, ShieldCheck } from 'lucide-react';
 import AppLogo from './app-logo';
 
 function getMainNavItems(userRole: string | null): NavItem[] {
@@ -41,6 +41,16 @@ function getMainNavItems(userRole: string | null): NavItem[] {
         },
     ];
 
+    if (userRole === 'guest') {
+        return [
+            {
+                title: 'Quoted Items',
+                href: '/dashboard/quoted-items',
+                icon: List,
+            },
+        ];
+    }
+
     if (userRole === 'admin') {
         base.unshift({ title: 'Admin', href: '/dashboard/admin', icon: ShieldCheck });
     }
@@ -49,16 +59,7 @@ function getMainNavItems(userRole: string | null): NavItem[] {
 }
 
 const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
+    // add footer item here
 ];
 
 export function AppSidebar() {
