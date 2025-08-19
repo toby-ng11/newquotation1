@@ -32,7 +32,7 @@ return [
             Laminas\Session\Config\ConfigInterface::class => Laminas\Session\Service\SessionConfigFactory::class,
             'SessionSaveHandler' => function (ContainerInterface $container) {
                 $adapter = $container->get(Adapter::class);
-                $tableGateway = new TableGateway('sessions', $adapter);
+                $tableGateway = new TableGateway('laminas_sessions', $adapter);
                 $dbOptions = new DbTableGatewayOptions([
                     'idColumn' => 'id',
                     'nameColumn'     => 'name',

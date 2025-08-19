@@ -341,6 +341,7 @@ class ProjectController extends BaseController
 
     public function itemsAction()
     {
+        $this->layout()->setTemplate('layout/default');
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest()) {
             $id = $this->params()->fromRoute('id');

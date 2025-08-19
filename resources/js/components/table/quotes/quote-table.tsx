@@ -252,13 +252,14 @@ export default function QuotesQuoteTable() {
                                     </TableBody>
                                 </Table>
                             </div>
+                            <DataTablePagination table={table} hasSelect={false} />
                         </>
                     ) : (
                         <DataTableSkeleton rows={15} cols={5} />
                     )}
                 </div>
 
-                <DataTablePagination table={table} hasSelect={false} />
+
             </div>
         </div>
     );

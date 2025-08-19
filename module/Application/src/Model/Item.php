@@ -41,7 +41,7 @@ class Item
 
         $info = [
             'item_code'             => $data['item_code'],
-            'quantity'             => $data['quantity'],
+            'quantity'             => $data['quantity'] ?? 1,
             'note'                 => trim($data['note']),
             'unit_price'           => $data['unit_price'],
             'unit_of_measure'       => $data['unit_of_measure'],
@@ -88,7 +88,7 @@ class Item
 
         $info = [
             'item_code'              => $data['item_code'],
-            'quantity'             => $data['quantity'],
+            'quantity'             => $data['quantity'] ?? 1,
             'note'                 => trim($data['note']),
             'unit_price'           => $data['unit_price'],
             'unit_of_measure'                  => $data['unit_of_measure'],

@@ -230,61 +230,64 @@ export default function ProjectTable() {
                     <p className="text-muted-foreground">Here's the list of all projects across all branches.</p>
                 </div>
                 <div className="flex flex-col gap-4">
-                    <DataTableToolbar
-                        table={table}
-                        searchColumn="project_name"
-                        searchPlaceholder="Filter project names..."
-                        showAddButton
-                        onAddClick={() => console.log('Add clicked')}
-                        facetedFilters={[
-                            { columnId: 'owner_id', title: 'Owner' },
-                            { columnId: 'shared_id', title: 'Shared' },
-                            { columnId: 'reed', title: 'REED' },
-                            { columnId: 'architect_name', title: 'Architect' },
-                            { columnId: 'market_segment_desc', title: 'Market Segment' },
-                            { columnId: 'status_desc', title: 'Status' },
-                        ]}
-                    />
-
                     {!isLoading ? (
-                        <div className="overflow-hidden rounded-md border">
-                            <Table>
-                                <TableHeader className="bg-muted sticky top-0 z-10 [&_tr]:border-b">
-                                    {table.getHeaderGroups().map((headerGroup) => (
-                                        <TableRow key={headerGroup.id}>
-                                            {headerGroup.headers.map((header) => {
-                                                return (
-                                                    <TableHead key={header.id} colSpan={header.colSpan}>
-                                                        {header.isPlaceholder
-                                                            ? null
-                                                            : flexRender(header.column.columnDef.header, header.getContext())}
-                                                    </TableHead>
-                                                );
-                                            })}
-                                        </TableRow>
-                                    ))}
-                                </TableHeader>
-                                <TableBody>
-                                    {table.getRowModel().rows?.length ? (
-                                        table.getRowModel().rows.map((row) => (
-                                            <TableRow key={row.id}>
-                                                {row.getVisibleCells().map((cell) => (
-                                                    <TableCell key={cell.id} className="p-2 text-left whitespace-nowrap">
-                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                    </TableCell>
-                                                ))}
+                        <>
+                            <DataTableToolbar
+                                table={table}
+                                searchColumn="project_name"
+                                searchPlaceholder="Filter project names..."
+                                showAddButton
+                                onAddClick={() => console.log('Add clicked')}
+                                facetedFilters={[
+                                    { columnId: 'owner_id', title: 'Owner' },
+                                    { columnId: 'shared_id', title: 'Shared' },
+                                    { columnId: 'reed', title: 'REED' },
+                                    { columnId: 'architect_name', title: 'Architect' },
+                                    { columnId: 'market_segment_desc', title: 'Market Segment' },
+                                    { columnId: 'status_desc', title: 'Status' },
+                                ]}
+                            />
+
+                            <div className="overflow-hidden rounded-md border">
+                                <Table>
+                                    <TableHeader className="bg-muted sticky top-0 z-10 [&_tr]:border-b">
+                                        {table.getHeaderGroups().map((headerGroup) => (
+                                            <TableRow key={headerGroup.id}>
+                                                {headerGroup.headers.map((header) => {
+                                                    return (
+                                                        <TableHead key={header.id} colSpan={header.colSpan}>
+                                                            {header.isPlaceholder
+                                                                ? null
+                                                                : flexRender(header.column.columnDef.header, header.getContext())}
+                                                        </TableHead>
+                                                    );
+                                                })}
                                             </TableRow>
-                                        ))
-                                    ) : (
-                                        <TableRow>
-                                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                No projects found.
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        </div>
+                                        ))}
+                                    </TableHeader>
+                                    <TableBody>
+                                        {table.getRowModel().rows?.length ? (
+                                            table.getRowModel().rows.map((row) => (
+                                                <TableRow key={row.id}>
+                                                    {row.getVisibleCells().map((cell) => (
+                                                        <TableCell key={cell.id} className="p-2 text-left whitespace-nowrap">
+                                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                        </TableCell>
+                                                    ))}
+                                                </TableRow>
+                                            ))
+                                        ) : (
+                                            <TableRow>
+                                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                                    No projects found.
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                            <DataTablePagination table={table} />
+                        </>
                     ) : (
                         <DataTableLoadingSpinner />
                     )}
@@ -295,8 +298,6 @@ export default function ProjectTable() {
                         </div>
                     )}
                 </div>
-
-                <DataTablePagination table={table} />
             </div>
         </div>
     );

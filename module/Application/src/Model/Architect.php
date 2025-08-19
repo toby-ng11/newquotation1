@@ -152,7 +152,7 @@ class Architect
     public function getByName(string $name): array
     {
         if (! InputValidator::isValidData($name)) {
-            throw new RuntimeException("Not valid data.");
+            return ['Architect name is required.'];
         }
 
         $sql = new Sql($this->adapter);
