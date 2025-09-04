@@ -1,9 +1,23 @@
+<?php
+
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ * @var array $user
+ */
+?>
+
 <div class="h-full flex flex-1 flex-col gap-4 p-8">
     <header>
         <?= $this->partial('components/greeting'); ?>
 
         <div class="flex items-center justify-between ">
-            <p class="text-muted-foreground">You are early! This feature will be ready soon!</p>
+            <p class="text-muted-foreground">Welcome to Opportunity Dashboard.</p>
+
+            <?= $this->partial('components/new-opportunity-btn'); ?>
         </div>
     </header>
+
+    <div id="opportunity-temp"></div>
+
+    <?= $this->render('modal/opportunity'); ?>
 </div>

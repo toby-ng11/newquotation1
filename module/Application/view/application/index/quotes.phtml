@@ -1,1 +1,19 @@
-<div id="quoted-item-dashboard"></div>
+<?php
+
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ * @var array $user
+ */
+?>
+
+<div class="h-full flex flex-1 flex-col gap-4 p-8">
+    <header>
+        <?= $this->partial('components/greeting'); ?>
+
+        <div class="flex items-center justify-between ">
+            <p class="text-muted-foreground">Welcome to the Quote Dashboard.</p>
+        </div>
+    </header>
+
+    <div id="quotes-temp"></div>
+</div>

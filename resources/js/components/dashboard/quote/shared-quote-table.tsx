@@ -6,6 +6,7 @@ import { DataTableProjectOptions } from '@/components/table/project-options';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useTanStackQuery } from '@/hooks/use-query';
+import { Opportunity, Quote } from '@/types';
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -24,36 +25,19 @@ import {
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
-interface Project {
-    id: string;
-    legacy_id: string;
-    project_id_ext: string;
-    project_name: string;
-    owner_id: string;
-    shared_users: string;
-    reed: string;
-    created_at: {
-        date: string;
-    };
-    due_date: {
-        date: string;
-    };
-    architect_name: string;
-    market_segment_desc: string;
-    status_desc: string;
-}
 
-const multiValueFilter: FilterFn<Project> = (row, columnId, filterValue) => {
+const multiValueFilter: FilterFn<Quote> = (row, columnId, filterValue) => {
     if (!Array.isArray(filterValue)) return true;
     const rowValue = row.getValue(columnId);
     return filterValue.includes(rowValue);
 };
 
-export default function ProjectTable() {
-    const ENDPOINT = '/dashboards/admin/projects?view=true';
-    const qKey = ['admin', 'projects'];
+export default function SharedQuotesTable() {
+    const ENDPOINT = '/dashboards/quote/shared';
+    const qKey = ['quote-dash', 'shared'];
+    const columnVisibilityPref = '/api/preferences/quote-shared-table-column-visibility';
 
-    const { data: projects = [], isLoading, isRefetching, refetch } = useTanStackQuery<Project>(ENDPOINT, qKey);
+    const { data: quotes = [], isLoading, isRefetching, refetch } = useTanStackQuery<Quote>(ENDPOINT, qKey);
 
     const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: true }]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -63,7 +47,7 @@ export default function ProjectTable() {
 
     // Restore saved visibility
     useEffect(() => {
-        axios.get('/api/preferences/projectTableColumnVisibility').then((res) => {
+        axios.get(columnVisibilityPref).then((res) => {
             setColumnVisibility(res.data || {});
             lastSavedVisibility.current = res.data;
             setIsReady(true);
@@ -77,14 +61,14 @@ export default function ProjectTable() {
         const previous = JSON.stringify(lastSavedVisibility.current);
 
         if (current !== previous) {
-            axios.post('/api/preferences/projectTableColumnVisibility', {
+            axios.post(columnVisibilityPref, {
                 value: columnVisibility,
             });
             lastSavedVisibility.current = columnVisibility;
         }
     }, [columnVisibility, isReady]);
 
-    const columns: ColumnDef<Project>[] = [
+    const columns: ColumnDef<Opportunity>[] = [
         {
             id: 'select',
             header: ({ table }) => (
@@ -109,11 +93,9 @@ export default function ProjectTable() {
             header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
             cell: ({ row }) => {
                 const id = row.getValue<number>('id');
-                const legacyId = row.original.legacy_id; // Make sure your data includes this field
-                const displayId = id <= 500 ? legacyId : id;
                 return (
-                    <a href={`/project/${id}/edit`} className="text-blue-500 dark:text-blue-300">
-                        {displayId}
+                    <a href={`/quote/${id}/edit`} className="text-blue-500 dark:text-blue-300">
+                        {id}
                     </a>
                 );
             },
@@ -121,9 +103,17 @@ export default function ProjectTable() {
             meta: 'ID',
         },
         {
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Ext. ID" />,
-            accessorKey: 'project_id_ext',
-            meta: 'Ext. ID',
+            accessorKey: 'project_id',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Project ID" />,
+            cell: ({ row }) => {
+                const id = row.getValue<number>('project_id');
+                return (
+                    <a href={`/project/${id}/edit`} className="text-blue-500 dark:text-blue-300">
+                        {id}
+                    </a>
+                );
+            },
+            meta: 'ID',
         },
         {
             accessorKey: 'project_name',
@@ -132,38 +122,28 @@ export default function ProjectTable() {
             meta: 'Name',
         },
         {
-            accessorKey: 'owner_id',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Owner" />,
+            accessorKey: 'created_by',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Taker" />,
             filterFn: 'arrIncludesSome',
-            meta: 'Owner',
+            meta: 'Taker',
         },
         {
-            accessorKey: 'shared_users',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Shared" />,
+            accessorKey: 'shared_user',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Share With" />,
             filterFn: 'arrIncludesSome',
-            meta: 'Shared',
+            meta: 'Share With',
         },
         {
-            accessorKey: 'reed',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="REED" />,
+            accessorKey: 'price_approve_id',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Price Approve" />,
             filterFn: 'arrIncludesSome',
-            meta: 'REED',
+            meta: 'Price Approve',
         },
         {
-            id: 'created_at',
-            accessorFn: (row) => row.created_at?.date,
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Created At" />,
-            cell: ({ row }) => new Date(row.getValue('created_at')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
-            sortingFn: 'datetime',
-            meta: 'Created At',
-        },
-        {
-            id: 'due_date',
-            accessorFn: (row) => row.due_date?.date,
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Due Date" />,
-            cell: ({ row }) => new Date(row.getValue('due_date')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
-            sortingFn: 'datetime',
-            meta: 'Due Date',
+            accessorKey: 'status_desc',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+            filterFn: 'arrIncludesSome',
+            meta: 'Status',
         },
         {
             accessorKey: 'architect_name',
@@ -173,16 +153,18 @@ export default function ProjectTable() {
             meta: 'Architect',
         },
         {
-            accessorKey: 'market_segment_desc',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Market Segment" />,
+            accessorKey: 'customer_name',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Customer" />,
+            cell: ({ row }) => <div className="max-w-[300px] truncate font-medium">{row.getValue('customer_name')}</div>,
             filterFn: 'arrIncludesSome',
-            meta: 'Market Segment',
+            meta: 'Customer',
         },
         {
-            accessorKey: 'status_desc',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+            accessorKey: 'contact_full_name',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Contact" />,
+            cell: ({ row }) => <div className="max-w-[300px] truncate font-medium">{row.getValue('contact_full_name')}</div>,
             filterFn: 'arrIncludesSome',
-            meta: 'Status',
+            meta: 'Contact',
         },
         {
             accessorKey: 'options',
@@ -205,7 +187,7 @@ export default function ProjectTable() {
     ];
 
     const table = useReactTable({
-        data: projects,
+        data: quotes,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -230,8 +212,8 @@ export default function ProjectTable() {
         <div>
             <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
                 <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl font-semibold tracking-tight">All Projects</h2>
-                    <p className="text-muted-foreground">Here's the list of all projects across all branches.</p>
+                    <h2 className="text-2xl font-semibold tracking-tight">Shared Quotes</h2>
+                    <p className="text-muted-foreground">Here's the list of quotes that is shared with you.</p>
                 </div>
                 <div className="flex flex-col gap-4">
                     {!isLoading ? (
@@ -240,15 +222,13 @@ export default function ProjectTable() {
                                 table={table}
                                 searchColumn="project_name"
                                 searchPlaceholder="Filter project names..."
-                                showAddButton
-                                onAddClick={() => console.log('Add clicked')}
                                 facetedFilters={[
-                                    { columnId: 'owner_id', title: 'Owner' },
-                                    { columnId: 'shared_id', title: 'Shared' },
-                                    { columnId: 'reed', title: 'REED' },
-                                    { columnId: 'architect_name', title: 'Architect' },
-                                    { columnId: 'market_segment_desc', title: 'Market Segment' },
+                                    { columnId: 'created_by', title: 'Created By' },
+                                    { columnId: 'price_approve_id', title: 'Price Approve' },
                                     { columnId: 'status_desc', title: 'Status' },
+                                    { columnId: 'architect_name', title: 'Architect' },
+                                    { columnId: 'customer_name', title: 'Customer' },
+                                    { columnId: 'contact_full_name', title: 'Contact' },
                                 ]}
                             />
 
@@ -283,7 +263,7 @@ export default function ProjectTable() {
                                         ) : (
                                             <TableRow>
                                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                    No projects found.
+                                                    No data found.
                                                 </TableCell>
                                             </TableRow>
                                         )}

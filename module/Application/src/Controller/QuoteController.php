@@ -99,8 +99,8 @@ class QuoteController extends BaseController
 
         $quote = $this->getQuoteModel()->fetchById($quote_id);
         if (! $quote || ($quote['deleted_at'])) {
-            $this->flashMessenger()->addErrorMessage("This quote is deleted.");
-            return $this->redirect()->toRoute('index', ['action' => 'home']);
+            $this->flashMessenger()->addErrorMessage("This quote has been deleted.");
+            return $this->redirect()->toRoute('index', ['action' => 'index']);
         }
         $user = $this->getUserService()->getCurrentUser();
         $project = $this->getProjectModel()->fetchById($quote['project_id']);
@@ -112,13 +112,6 @@ class QuoteController extends BaseController
         $approvalUser = $this->getUserService()->fetchaAllApprovalID();
 
         $admin = false;
-
-        $this->layout()->setVariable('quoteID', $quote_id);
-        $this->layout()->setVariable('projectID', $quote['project_id']);   //for sidebar
-        $this->layout()->setVariable('quoteStatusID', $quote['quote_status_id']);
-        $this->layout()->setVariable('approved', Quote::APPROVED);
-        $this->layout()->setVariable('waitingApprove', Quote::WAITING_APPROVAL);
-        $this->layout()->setVariable('disapproved', Quote::DISAPPROVED);
 
         if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') {
             $admin = true;
@@ -311,7 +304,7 @@ class QuoteController extends BaseController
     {
         $quote_id = $this->params()->fromRoute('id');
 
-        $quote = $this->getQuoteModel()->fetchById($quote_id);
+        $quote = $this->getQuoteModel()->fetchById($quote_id, true);
         $project = $this->getProjectModel()->fetchById($quote['project_id']);
         $customer = $this->getCustomerModel()->fetchCustomerByContact($quote['contact_id']);
         $contact = $this->getCustomerModel()->fetchContactById($quote['contact_id']);

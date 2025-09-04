@@ -76,6 +76,7 @@ class Quote
                 'updated_by'              => $user['id'],
                 'updated_at'         => new Expression('GETDATE()'),
                 'quote_type_id'      => 1,
+                'company_id'         => $user['default_company'],
             ];
 
             $this->quote->insert($info);
@@ -235,7 +236,15 @@ class Quote
         }
 
         try {
-            $this->quote->update(['deleted_at' => new Expression('GETDATE()'),], ['id' => $quote_id]);
+            $quoteItems = $this->getItem()->fetchExistItems($quote_id, 'quote');
+            if ($quoteItems && is_array($quoteItems)) {
+                foreach ($quoteItems as $item) {
+                    $this->getItem()->delete($item['id'], 'quote');
+                }
+            }
+
+            $this->quote->delete(['id' => $quote_id]);
+
             return true;
         } catch (ErrorException $e) {
             error_log("Project/delete:Database Delete Error: " . $e->getMessage());
@@ -243,10 +252,17 @@ class Quote
         }
     }
 
-    public function fetchById($quote_id)
+    public function fetchById($quote_id, bool $view = false)
     {
+        if ($view) {
+            /** @var ResultInterface $rowset */
+            $rowset = $this->p2q_view_quote_x_project_x_oe->select(['id' => $quote_id]);
+            $row = $rowset->current();
+            return $row;
+        };
+
         /** @var ResultInterface $rowset */
-        $rowset = $this->p2q_view_quote_x_project_x_oe->select(['id' => $quote_id]);
+        $rowset = $this->quote->select(['id' => $quote_id]);
         $row = $rowset->current();
         return $row;
     }

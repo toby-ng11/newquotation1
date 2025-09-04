@@ -16,6 +16,7 @@ class SpecifierController extends BaseController
 
     public function indexAction()
     {
+        $this->layout()->setTemplate('layout/default');
         $request = $this->getRequest();
 
         if ($request->isPost()) {
@@ -52,8 +53,11 @@ class SpecifierController extends BaseController
 
     public function createAction()
     {
+        $this->layout()->setTemplate('layout/default');
         $architect_id = $this->params()->fromPost('architect_id', null);
         $data = $this->params()->fromPost();
+
+        error_log(print_r($data, true));
 
         $missingFields = [];
 
@@ -128,7 +132,7 @@ class SpecifierController extends BaseController
         $specifier_id = $this->params()->fromRoute('id', null);
         $request = $this->getRequest();
 
-        if (! $specifier_id || ! $request->isXmlHttpRequest()) {
+        if (! $specifier_id) {
             return $this->json([
                 'success' => false,
                 'message' => 'Invalid request.',

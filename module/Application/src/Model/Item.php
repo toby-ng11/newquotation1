@@ -127,18 +127,10 @@ class Item
             return false;
         }
 
-
-        $user = $this->userService->getCurrentUser();
-
-        $info = [
-            'updated_by'   => $user['id'],
-            'deleted_at'           => new Expression('GETDATE()'),
-        ];
-
         switch ($sheetType) {
             case 'project':
                 try {
-                    $this->project_items->update($info, ['id' => $item_uid]);
+                    $this->project_items->delete(['id' => $item_uid]);
                     return true;
                 } catch (Exception $e) {
                     error_log("Item\delete(project):Database Insert Error: " . $e->getMessage());
@@ -147,7 +139,7 @@ class Item
                 break;
             case 'quote':
                 try {
-                    $this->quote_items->update($info, ['id' => $item_uid]);
+                    $this->quote_items->delete(['id' => $item_uid]);
                     return true;
                 } catch (Exception $e) {
                     error_log("Item\delete(quote):Database Insert Error: " . $e->getMessage());

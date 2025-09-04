@@ -70,7 +70,7 @@ $sidebarTemplate = 'sidebar/default';
                             @click.prevent="setActive($event);"
                             @mouseenter="setHover($event)"
                             @mouseleave="clearHover()"
-                            title="Opportunities Dashboard"
+                            title="Opportunity Dashboard"
                             class="top-level-entry<?= $action === 'opportunities' ? ' active' : '' ?>">Opportunities</a>
                     </li>
 
@@ -86,6 +86,19 @@ $sidebarTemplate = 'sidebar/default';
                             @mouseleave="clearHover()"
                             title="Project Dashboard"
                             class="top-level-entry<?= $action === 'project' ? ' active' : '' ?>">Project</a>
+                    </li>
+
+                    <li class="top-level-entry-container lg:w-25">
+                        <a href="/index/quotes"
+                            hx-get="/index/quotes"
+                            hx-target="#content"
+                            hx-swap="innerHTML"
+                            hx-push-url="true"
+                            @click.prevent="setActive($event);"
+                            @mouseenter="setHover($event)"
+                            @mouseleave="clearHover()"
+                            title="Quote Dashboard"
+                            class="top-level-entry<?= $action === 'quotes' ? ' active' : '' ?>">Quote</a>
                     </li>
                     <?php endif;
 
@@ -118,19 +131,6 @@ $sidebarTemplate = 'sidebar/default';
                             class="top-level-entry<?= $action === 'architect' ? ' active' : '' ?>">Architect</a>
                     </li>
                     <?php endif; ?>
-
-                    <li class="top-level-entry-container lg:w-30">
-                        <a href="/index/quotes"
-                            hx-get="/index/quotes"
-                            hx-target="#content"
-                            hx-swap="innerHTML"
-                            hx-push-url="true"
-                            @click.prevent="setActive($event); loadSidebar('/sidebar/home')"
-                            @mouseenter="setHover($event)"
-                            @mouseleave="clearHover()"
-                            title="Quote Dashboard"
-                            class="top-level-entry<?= $action === 'quotes' ? ' active' : '' ?>">Quoted Items</a>
-                    </li>
                 </ul>
 
                 <div x-ref="underline" class="nav-underline"></div>

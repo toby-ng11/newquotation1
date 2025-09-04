@@ -2,66 +2,67 @@
 
 namespace Application\Controller;
 
+use Laminas\View\Model\ViewModel;
 use Psr\Container\ContainerInterface;
 
-class RoleOverrideController extends BaseController
+class OpportunityShareController extends BaseController
 {
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
     }
 
-    // GET /role-override
+    // GET /enpoint
     public function getList()
     {
-        $table = $this->getRoleOverrideModel()->all();
+        $table = $this->getOpportunityShareModel()->all();
         return $this->json([
             'success' => true,
             'data' => iterator_to_array($table),
         ]);
     }
 
-    // GET /role-override/:id
+    // GET /enpoint/:id
     public function get(mixed $id)
     {
-        $row = $this->getRoleOverrideModel()->find($id);
+        $row = $this->getOpportunityShareModel()->find($id);
         if (! $row) {
             return $this->abort404();
         }
 
         return $this->json([
             'success' => true,
-            'role_override' => $row,
+            'opportinity' => $row,
         ]);
     }
 
-    // POST /role-override
+    // POST /enpoint
     public function create(mixed $data)
     {
-        $result = $this->getRoleOverrideModel()->create($data);
+        $result = $this->getOpportunityShareModel()->create($data);
         return $this->json([
             'success' => $result !== false,
-            'message' => $result !== false ? 'Role overridden!' : 'Error! Please check log for more details.',
+            'message' => $result !== false  ? 'Market segment added!' : 'Error! Please check log for more details.',
         ]);
     }
 
-    // PUT /role-override/:id
+    // PUT /enpoint/:id
     public function update(mixed $id, mixed $data)
     {
-        $result = $this->getRoleOverrideModel()->update($id, $data);
+        $result = $this->getOpportunityShareModel()->update($data, $id);
         return $this->json([
             'success' => $result !== false,
-            'message' => $result !== false ? 'Role overridden!' : 'Error! Please check log for more details.',
+            'message' => $result !== false ? 'Saved successfully!' : 'Error! Please check log for more details.',
         ]);
     }
 
-    // DELETE /role-override/:id
+    // DELETE /enpoint/:id
     public function delete(mixed $id)
     {
-        $result = $this->getRoleOverrideModel()->delete($id);
+        $result = $this->getOpportunityShareModel()->delete($id);
         return $this->json([
             'success' => $result !== false,
-            'message' => $result !== false ? 'Role override deleted!' : 'Error! Please check log for more details.',
+            'message' => $result !== false ? 'Deleted successfully!' : 'Error! Please check log for more details.',
         ]);
     }
 }

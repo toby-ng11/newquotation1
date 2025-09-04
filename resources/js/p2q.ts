@@ -1,5 +1,4 @@
 import 'basecoat-css/all';
-import '../css/app.css';
 
 import { mountAllTables, unmountAllTables } from '@/tables';
 import { initAddress } from '@/components/Alpine/modal/address-modal';

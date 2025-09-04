@@ -120,9 +120,8 @@ export default function WelcomePage() {
                 )}
                 {isAdmin && (
                     <FeatureCard
-                        inertia={true}
                         index={1}
-                        href="/dashboard/opportunity"
+                        href="/index/opportunities"
                         title="Opportunities"
                         description="Create and edit the opportunities, which can be converted to projects later."
                     />
@@ -151,10 +150,18 @@ export default function WelcomePage() {
                         description="Connect and collaborate with architects seamlessly to ensure design accuracy and quality."
                     />
                 )}
+                {(isAdmin || isManager || isSales) && (
+                    <FeatureCard
+                        index={5}
+                        href="/index/quotes"
+                        title="Quotes"
+                        description="View all of your quotes and share quoted by other users."
+                    />
+                )}
                 <FeatureCard
-                    index={isGuest ? 1 : 5}
+                    index={isGuest ? 1 : 6}
                     inertia={true}
-                    href="/dashboard/quoted-items"
+                    href="/dashboards/quoted-items"
                     title="Quoted Items"
                     description="Search through quotes, customers and items."
                 />

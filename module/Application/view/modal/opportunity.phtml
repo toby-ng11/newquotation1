@@ -1,6 +1,11 @@
 <div
-    x-data="projectModal()"
-    x-init="document.getElementById('architect-edit-add-project').addEventListener('click', () => open = true);"
+    x-data="opportunityModal()"
+    x-init="
+        openButtons = document.querySelectorAll('.create-opportunity-btn');
+        openButtons.forEach((button) => {
+            button.addEventListener('click', () => open = true);
+        });
+    "
     x-effect="
             if (open) {
                 document.body.classList.add('overflow-hidden');
@@ -18,29 +23,29 @@
         style="display: none;">
         <!-- Modal Box -->
         <div
-            class="bg-background ring-neutral fixed z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-xl border border-none bg-clip-padding p-6 shadow-2xl ring-4 ring-neutral-200/80 sm:max-w-5xl sm:max-h-screen dark:bg-neutral-900 dark:ring-neutral-800"
+            class="bg-background ring-neutral fixed z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-xl border border-none bg-clip-padding p-6 shadow-2xl ring-4 ring-neutral-200/80 sm:max-w-4xl sm:max-h-screen dark:bg-neutral-900 dark:ring-neutral-800"
             x-transition>
             <div class="flex flex-col gap-2 text-center sm:text-left">
-                <h2 class="leading-none font-semibold text-lg">New Project</h2>
-                <p class="text-muted-foreground text-sm">Add a new project for this architect.</p>
+                <h2 class="leading-none font-semibold text-lg">New Oppportunity</h2>
+                <p class="text-muted-foreground text-sm">Add a new opportinity that can be converted to projects later.</p>
             </div>
 
             <div class="text-popover-foreground flex h-full w-full flex-col overflow-hidden">
-                <div class="max-h-[400px] scroll-py-1 overflow-x-hidden overflow-y-auto no-scrollbar min-h-80 scroll-pt-2 scroll-pb-1.5">
-                    <form id="architect-edit-project-form" class="form" @submit.prevent="submitForm">
+                <div class="max-h-[500px] scroll-py-1 overflow-x-hidden overflow-y-auto no-scrollbar min-h-80 px-2 scroll-pt-2 scroll-pb-1.5">
+                    <form id="new-opportunity-form" class="form" @submit.prevent="submitForm">
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                             <div class="grid gap-2">
-                                <label for="project_name">Project Name</label>
-                                <input required type="text" id='project_name' name='project_name' />
+                                <label for="opp_name">Name</label>
+                                <input required type="text" id='opp_name' name='opp_name' />
                             </div>
 
                             <div class="grid gap-2">
-                                <label for='project_address'>Project Location</label>
+                                <label for='project_address'>Location</label>
                                 <input required id='project_address' name='project_address' type="text" />
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="location_id">Centura Location</label>
+                                <label for="location_id">Centura Branch</label>
                                 <select name="location_id" id="location_id">
                                     <?php foreach ($locations as $l) { ?>
                                         <option
@@ -55,7 +60,7 @@
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="status">Project Stage</label>
+                                <label for="status">Stage</label>
                                 <select required name="status" id='status'>
                                     <option value="">-- Select stage --</option>
                                     <?php foreach ($projectStatus as $s) { ?>
@@ -65,7 +70,7 @@
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="market_segment_id">Project Segment</label>
+                                <label for="market_segment_id">Category</label>
                                 <select required name="market_segment_id" id='market_segment_id'>
                                     <option value="">-- Choose market segment --</option>
                                     <?php foreach ($marketSegment as $s) { ?>
@@ -75,18 +80,48 @@
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="reed">REED ID</label>
-                                <input type="text" name='reed' original-title="REED Format" id='reed' />
+                                <label for="reed">LEED Certified Number</label>
+                                <input type="text" name='reed' id='reed' />
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="due_date">Tender Due Date</label>
+                                <label for="lead_source">Lead Source</label>
+                                <input type="text" name='lead_source' id='lead_source' placeholder="ConstructConnect, Google, email, etc." />
+                            </div>
+
+                            <div class="grid gap-2">
+                                <label for="lead_source_id">Lead Source ID</label>
+                                <input type="text" name='lead_source_id' id='lead_source_id' placeholder="ConstructConnect project ID, etc." />
+                            </div>
+
+                            <div class="grid gap-2">
+                                <label for="project_value">Project Value</label>
+                                <input type="text" name='project_value' id='project_value' />
+                            </div>
+                            <div class="grid gap-2">
+                                <label for="project_owner">Project Owner</label>
+                                <input type="text" name='project_owner' id='project_owner'
+                                    placeholder="Owner company, contractor, etc." />
+                            </div>
+
+                            <div class="grid gap-2">
+                                <label for="due_date">Start Date</label>
                                 <input readonly type="text" id="due_date" name='due_date' class="flatpickr" placeholder="Due date" />
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="require_date">Required Date</label>
+                                <label for="require_date">Completion Date</label>
                                 <input readonly type="text" id="require_date" name='require_date' class="flatpickr" placeholder="Required date" />
+                            </div>
+
+                            <div class="grid gap-2 col-span-3">
+                                <label for="project_description">Project Description</label>
+                                <textarea
+                                    type="text"
+                                    name='project_description'
+                                    id='project_description'
+                                    rows='8'>
+                                </textarea>
                             </div>
                         </div>
 
@@ -141,7 +176,7 @@
 
             <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
                 <button type="button" class="btn-outline" @click="closeModal()">Cancel</button>
-                <button type="submit" class="btn bg-blue-500 hover:bg-blue-500/90 dark:bg-blue-400 hover:dark:bg-blue-400/90" form="architect-edit-project-form">Save</button>
+                <button type="submit" class="btn bg-blue-500 hover:bg-blue-500/90 dark:bg-blue-400 hover:dark:bg-blue-400/90" form="new-opportunity-form">Save</button>
             </div>
         </div>
     </div>

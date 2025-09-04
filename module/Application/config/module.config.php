@@ -44,16 +44,149 @@ return [
                     ],
                 ],
             ],
-            'dashboard' => [
-                'type' => Segment::class,
+            'dashboards' => [
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/dashboard[/:action]',
-                    'constraints' => [
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                    ],
+                    'route'    => '/dashboards',
                     'defaults' => [
                         'controller' => Controller\DashboardController::class,
                         'action'     => 'home',
+                    ],
+                ],
+                'child_routes' => [
+                    'admin' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/admin',
+                            'defaults' => [
+                                'controller' => Controller\DashboardController::class,
+                                'action' => 'admin',
+                            ]
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'projects-table' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/projects',
+                                    'defaults' => [
+                                        'controller' => Controller\DashboardController::class,
+                                        'action' => 'adminProjects',
+                                    ]
+                                ],
+                            ],
+                        ],
+                    ],
+                    'opportunity' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/opportunity',
+                            'defaults' => [
+                                'controller' => Controller\DashboardController::class,
+                                'action' => 'opportunity',
+                            ]
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'opportunities-table' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/opportunities',
+                                    'defaults' => [
+                                        'controller' => Controller\DashboardController::class,
+                                        'action' => 'opportunityOpportunities',
+                                    ]
+                                ],
+                            ],
+                            'shared-opportunities-table' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/shared',
+                                    'defaults' => [
+                                        'controller' => Controller\DashboardController::class,
+                                        'action' => 'opportunitySharedOpportunities',
+                                    ]
+                                ],
+                            ],
+                        ],
+                    ],
+                    'project' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/project',
+                            'defaults' => [
+                                'controller' => Controller\DashboardController::class,
+                                'action' => 'project',
+                            ]
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'architect' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/architect',
+                            'defaults' => [
+                                'controller' => Controller\DashboardController::class,
+                                'action' => 'architect',
+                            ]
+                        ],
+                        'may_terminate' => true,
+                    ],
+                    'quote' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/quote',
+                            'defaults' => [
+                                'controller' => Controller\DashboardController::class,
+                                'action' => 'quote',
+                            ]
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'own' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/own',
+                                    'defaults' => [
+                                        'controller' => Controller\DashboardController::class,
+                                        'action' => 'ownQuotes',
+                                    ]
+                                ],
+                            ],
+                            'shared' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/shared',
+                                    'defaults' => [
+                                        'controller' => Controller\DashboardController::class,
+                                        'action' => 'sharedQuotes',
+                                    ]
+                                ],
+                            ],
+                        ],
+                    ],
+                    'quoted-items' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route' => '/quoted-items',
+                            'defaults' => [
+                                'controller' => Controller\DashboardController::class,
+                                'action' => 'quoteditems',
+                            ]
+                        ],
+                        'may_terminate' => true,
+                        'child_routes' => [
+                            'items' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/items',
+                                    'defaults' => [
+                                        'controller' => Controller\DashboardController::class,
+                                        'action' => 'itemsQuotedItems',
+                                    ]
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -324,11 +457,6 @@ return [
             },
             Controller\IndexController::class => function (ContainerInterface $container) {
                 return new Controller\IndexController(
-                    $container->get(Service\UserService::class),
-                    $container->get(Model\Project::class),
-                    $container->get(Model\Quote::class),
-                    $container->get(Model\ProjectNote::class),
-                    $container->get(Model\Architect::class),
                     $container
                 );
             },

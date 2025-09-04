@@ -34,7 +34,6 @@ function initSpecifier() {
             try {
                 const response = await fetch(`/specifiers/${specfierID}/delete`, {
                     method: 'POST',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 });
 
                 const data = await response.json();
@@ -69,10 +68,9 @@ function specifierModal() {
             this.isEditing = !!specifierID;
 
             try {
-                const response = await fetch(this.isEditing ? `/specifiers/${specifierID}/edit` : '/specifier', {
+                const response = await fetch(this.isEditing ? `/specifiers/${specifierID}/edit` : '/specifiers', {
                     method: 'POST',
                     body: formData,
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 });
 
                 const data = await response.json();
@@ -93,9 +91,7 @@ function specifierModal() {
         // Edit note
         async editSpecifier(specifierID: string) {
             try {
-                const response = await fetch(`/specifiers/${specifierID}`, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                });
+                const response = await fetch(`/specifiers/${specifierID}`);
                 const data = await response.json();
 
                 if (data && data.specifier) {

@@ -120,7 +120,7 @@ class Address
 
     public function addSpecifierAddress($data, $specifierID)
     {
-        if (! InputValidator::isValidData($data)) {
+        if ($data === null) {
             return false;
         }
 

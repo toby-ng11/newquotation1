@@ -13,10 +13,9 @@ $projectDueDate = $project['due_date'];
 
 $quote = $this->quote;
 $quoteID = $quote['id'];
-$quoteStatusID = $quote['quote_status_id'];
+$quoteStatusID = $quote['status_id'];
 $quoteShipRequiredDate = $quote['ship_required_date'];
 $quoteExpireDate = $quote['expire_date'];
-$oeID = $quote['order_no'];
 
 $this->headTitle('Edit Quote: ' . $quoteID);
 echo $this->headTitle();
@@ -82,9 +81,8 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
 
             <div class="hidden lg:flex lg:items-center lg:gap-12">
                 <?php if (! $isGuest): ?>
-                    <button class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                    <button class="widget-btn-add-quote btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
                         type="button"
-                        id="widget-btn-add-quote"
                         data-tooltip="Add another quote for this project">
                         <i data-lucide="file-plus-2"></i>
                         ADD QUOTE
@@ -109,7 +107,7 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
 
                 <?php
                 if ($quoteStatusID != $approved) { ?>
-                    <button class="delete-quote-btn btn-sm-ghost text-destructive-foreground hover:bg-destructive/20 font-medium text-xs tracking-tight"
+                    <button class="delete-quote-btn btn-sm-ghost text-destructive hover:bg-destructive/20 font-medium text-xs tracking-tight"
                         type="button"
                         data-tooltip="Delete this quote">
                         <i data-lucide="trash-2"></i>
@@ -160,11 +158,11 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                         <?php
                         if ($quoteStatusID != $approved) : ?>
                             <hr role="separator" />
-                            <div role="menuitem" class="text-destructive-foreground hover:bg-destructive/20">
-                                <button class="delete-quote-btn flex items-center gap-2"
+                            <div role="menuitem" class="hover:bg-destructive/20">
+                                <button class="delete-quote-btn text-destructive flex items-center gap-2"
                                     type="button"
                                     title="Delete Quote">
-                                    <i data-lucide="trash-2" class="text-destructive-foreground h-4 w-4"></i>
+                                    <i data-lucide="trash-2" class="text-destructive size-4"></i>
                                     Delete Quote
                                 </button>
                             </div>
@@ -188,17 +186,6 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                                 shared with <b><?= $this->escapeHtml($project['shared_users']) ?></b>
                         </p>
                     <?php } ?>
-                    </div>
-                </div>
-
-                <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg">
-                    <div class="flex flex-col gap-6">
-                        <p>P21 Order ID</p>
-                        <h2><?php if ($oeID != '') {
-                                echo $oeID;
-                            } else {
-                                echo 'Unavailable';
-                            } ?></h2>
                     </div>
                 </div>
 

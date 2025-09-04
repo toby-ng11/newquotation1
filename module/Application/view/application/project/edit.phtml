@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @var Laminas\View\Renderer\PhpRenderer $this
- * @var bool $owner
+ * @var bool $isOwner
  * @var bool $admin
+ * @var bool $isShareExists
  * @var array $project
  * @var array $user
  * @var array $architect
@@ -18,12 +20,23 @@
  * @var array $generalContractor
  * @var array $awardedContractor
  */
+$role = $user['p2q_system_role'] ?? '';
+
+$isAdmin   = $role === 'admin';
+$isManager = $role === 'manager';
+$isSales   = $role === 'sales';
+$isGuest   = $role === 'guest';
+
 $projectID = $project['id'];
 $this->headTitle('Edit Project: ' . $projectID . ' - ' . $project['project_name']);
+
 echo $this->headTitle();
 $projectCreateDate = $project['created_at'];
 $projectDueDate = $project['due_date'];
 $projectRequiredDate = $project['require_date'];
+
+$projectOwner = $project['owner_id'];
+$isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareExists;
 ?>
 
 <!-- Right panel -->
@@ -32,8 +45,106 @@ $projectRequiredDate = $project['require_date'];
 <!-- Main content wrapper -->
 <div class="h-full flex flex-1 flex-col gap-4 p-8">
     <h1 class="font-mono text-5xl font-semibold tracking-wide uppercase">Project</h1>
-    <p class="text-muted-foreground">Editting project #<?= $this->escapeHtml($project['project_id_ext']) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
+    <div class="flex items-center justify-between ">
+        <p class="text-muted-foreground">Editing project #<?= $this->escapeHtml($project['project_id_ext']) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
 
+        <div class="hidden lg:flex lg:items-center lg:gap-12">
+            <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                target="_blank"
+                href="/project/new"
+                data-tooltip="Add a new project">
+                <i data-lucide="plus"></i>
+                NEW PROJECT
+            </a>
+
+            <?php if (! $isGuest): ?>
+                <button class="widget-btn-add-quote btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                    type="button"
+                    data-tooltip="Make quote for this project">
+                    <i data-lucide="file-plus-2"></i>
+                    MAKE QUOTE
+                </button>
+            <?php endif; ?>
+
+            <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                href="/project/<?= $project['id'] ?>/export"
+                data-tooltip="Print this project"
+                data-align="end">
+                <i data-lucide="printer"></i>
+                PRINT
+            </a>
+
+            <?php
+            if ($isOwner) { ?>
+                <button class="delete_pro btn-sm-ghost text-destructive hover:bg-destructive/20 font-medium text-xs tracking-tight"
+                    type="button"
+                    data-tooltip="Delete this project">
+                    <i data-lucide="trash-2"></i>
+                    DELETE
+                </button>
+            <?php }
+            ?>
+        </div>
+
+        <div id="project-menu" class="dropdown-menu lg:hidden">
+            <button type="button"
+                id="project-menu-trigger"
+                aria-haspopup="menu"
+                aria-controls="project-menu-options"
+                aria-expanded="false"
+                class="btn-ghost text-muted-foreground text-xs tracking-tight uppercase">
+                <i data-lucide="ellipsis" class="w-4 h-4"></i>
+                Options
+            </button>
+            <div id="project-menu-popover" data-popover data-align="end" aria-hidden="true" class="min-w-40">
+                <div role="menu" id="project-menu-options" aria-labelledby="project-menu-trigger">
+                    <div role="menuitem">
+                        <a class="flex items-center gap-2"
+                            target="_blank"
+                            href="/project/new"
+                            title="Go to project for this quote">
+                            <i data-lucide="plus" class="text-muted-foreground h-4 w-4"></i>
+                           New Project
+                        </a>
+                    </div>
+
+                    <?php if (! $isGuest): ?>
+                    <div role="menuitem">
+                        <button class="widget-btn-add-quote flex items-center gap-2"
+                            type="button"
+                            title="Make Quote">
+                            <i data-lucide="file-plus-2" class="text-muted-foreground h-4 w-4"></i>
+                            Make quote
+                        </button>
+                    </div>
+                    <?php endif; ?>
+
+                    <div role="menuitem">
+                        <a class="flex items-center gap-2"
+                            href="/project/<?= $project['id'] ?>/export"
+                            title="Print">
+                            <i data-lucide="printer" class="text-muted-foreground h-4 w-4"></i>
+                            Print
+                        </a>
+                    </div>
+                    <?php
+                    if ($isOwner) : ?>
+                        <hr role="separator" />
+                        <div role="menuitem" class="hover:bg-destructive/20">
+                            <button class="delete_pro text-destructive flex items-center gap-2"
+                                type="button"
+                                title="Delete Project">
+                                <i data-lucide="trash-2" class="text-destructive size-4"></i>
+                                Delete Project
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="h-[1px] bg-border my-4"></div>
     <!-- Form -->
     <div class="flex flex-col gap-4 md:gap-6">
         <div class="fade-in-up" aria-labelledby="project-information">
@@ -108,9 +219,10 @@ $projectRequiredDate = $project['require_date'];
                                     <option value="">-- Choose Segment --</option>
                                     <?php foreach ($marketSegment as $s) { ?>
                                         <option
-                                        value="<?= $this->escapeHtml($s['id']) ?>"
-                                        <?php if ( $s['id'] == $project['market_segment_id']) {
-                                            echo 'selected';} ?>>
+                                            value="<?= $this->escapeHtml($s['id']) ?>"
+                                            <?php if ($s['id'] == $project['market_segment_id']) {
+                                                echo 'selected';
+                                            } ?>>
                                             <?= $this->escapeHtml($s['market_segment_desc']) ?>
                                         </option>
                                     <?php } ?>
@@ -185,7 +297,7 @@ $projectRequiredDate = $project['require_date'];
                         </div>
                     </details>
 
-                    <?php if ($owner) { ?>
+                    <?php if ($isOwner) { ?>
 
                         <div class="line"></div>
 
@@ -212,7 +324,7 @@ $projectRequiredDate = $project['require_date'];
                         <p class="leading-none font-semibold text-lg">Share</p>
                     </div>
                     <div class="widget-button">
-                        <?php if ($owner) { ?>
+                        <?php if ($isOwner) { ?>
                             <button type="button"
                                 title="Add new shared user"
                                 class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
@@ -580,7 +692,7 @@ $projectRequiredDate = $project['require_date'];
                         <p class="leading-none font-semibold text-lg">Items</p>
                     </div>
                     <div class="widget-button">
-                        <?php if ($owner) { ?>
+                        <?php if ($isOwner) { ?>
                             <button type="button"
                                 title="Add new item"
                                 class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
@@ -622,7 +734,7 @@ $projectRequiredDate = $project['require_date'];
                         <p class="leading-none font-semibold text-lg">Project Log</p>
                     </div>
                     <div class="widget-button">
-                        <?php if ($owner) { ?>
+                        <?php if ($isOwner) { ?>
                             <button
                                 type="button"
                                 title="Add new log"
@@ -662,12 +774,11 @@ $projectRequiredDate = $project['require_date'];
                         <p class="leading-none font-semibold text-lg">Project Quotes</p>
                     </div>
                     <div class="widget-button">
-                        <?php if ($owner and $admin) { ?>
+                        <?php if ($isOwner and $admin) { ?>
                             <button
                                 type="button"
                                 title="Add new quote"
-                                class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
-                                id="widget-btn-add-quote"
+                                class="widget-btn-add-quote btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
                                 data-tooltip="Make a new quote for this project">
                                 <i data-lucide="plus"></i>
                                 MAKE QUOTE
@@ -709,5 +820,5 @@ $projectRequiredDate = $project['require_date'];
 
 
 <script type="text/javascript">
-    window.isOwner = <?= $owner ? 'true' : 'false' ?>;
+    window.isOwner = <?= $isOwner ? 'true' : 'false' ?>;
 </script>

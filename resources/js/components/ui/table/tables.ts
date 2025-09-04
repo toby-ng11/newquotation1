@@ -1759,7 +1759,6 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 topStart: null,
                 topEnd: null,
                 bottomStart: null,
-                bottomEnd: null,
             },
         }));
     },

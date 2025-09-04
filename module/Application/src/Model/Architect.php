@@ -49,7 +49,7 @@ class Architect
 
     public function add($data)
     {
-        if (! InputValidator::isValidData($data)) {
+        if (! InputValidator::isValidData($data) || trim($data['architect_name']) === '') {
             return false;
         }
 
@@ -61,9 +61,9 @@ class Architect
 
         $info = [
             'architect_name'    => trim($data['architect_name']),
-            'company_id'        => trim($data['architect_company_id']),
-            'architect_type_id' => $data['architect_type_id'],
-            'class_id'          => trim($data['architect_class_id']),
+            'company_id'        => trim($data['architect_company_id'] ?? '') === '' ? 'TOR' : trim($data['architect_company_id']),
+            'architect_type_id' => trim($data['architect_type_id'] ?? '') === '' ? 11 : trim($data['architect_type_id']),
+            'class_id'          => trim($data['architect_class_id'] ?? '') === '' ? null : trim($data['architect_class_id'] ?? ''),
             'created_at'        => new Expression('GETDATE()'),
             'created_by' => $user['id'],
         ];
@@ -98,7 +98,7 @@ class Architect
 
         $info = [
             'architect_name'    => trim($data['architect_name']),
-            //'company_id'      => $data['architect_company_id'],
+            'company_id'      => trim($data['architect_company_id']) === '' ? 'TOR' : trim($data['architect_company_id']),
             'architect_type_id' => $data['architect_type_id'],
             'class_id'          => trim($data['architect_class_id']),
             'updated_at'            => new Expression('GETDATE()'),
@@ -205,7 +205,6 @@ class Architect
 
         $sql = new Sql($this->adapter);
         $select = $sql->select('architects')  // can use TableGateway instead
-            ->where(['company_id' => $company])
             ->where(['deleted_at IS NULL']);
 
         if (! $admin) {

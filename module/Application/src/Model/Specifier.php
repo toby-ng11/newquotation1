@@ -38,7 +38,7 @@ class Specifier
 
     public function add($data, $architect_id)
     {
-        if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($architect_id)) {
+        if ($data === null || $architect_id === null) {
             return false;
         }
 

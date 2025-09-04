@@ -5,44 +5,13 @@ declare(strict_types=1);
 namespace Application\Controller;
 
 use Laminas\View\Model\ViewModel;
-use Application\Service\UserService;
-use Application\Model\{
-    Architect,
-    Item,
-    Location,
-    MarketSegment,
-    Project,
-    Quote,
-    Note,
-    ProjectNote,
-    RoleOverride,
-    Status
-};
-use Application\Model\View\P21User;
 use Laminas\Http\Response;
 use Psr\Container\ContainerInterface;
 
 class IndexController extends BaseController
 {
-    protected $userService;
-    protected $project;
-    protected $quote;
-    protected $note;
-    protected $architect;
-
-    public function __construct(
-        UserService $userService,
-        Project $project,
-        Quote $quote,
-        ProjectNote $note,
-        Architect $architect,
-        ContainerInterface $container
-    ) {
-        $this->userService = $userService;
-        $this->project = $project;
-        $this->quote = $quote;
-        $this->note = $note;
-        $this->architect = $architect;
+    public function __construct(ContainerInterface $container)
+    {
         parent::__construct($container);
     }
 
@@ -51,9 +20,9 @@ class IndexController extends BaseController
         return $this->render('welcome');
     }
 
-    public function adminAction()
+    public function adminAction(): ViewModel | Response
     {
-        $user = $this->userService->getCurrentUser();
+        $user = $this->getUserService()->getCurrentUser();
         $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] !== 'admin') {
@@ -69,12 +38,12 @@ class IndexController extends BaseController
             switch ($table) {
                 case 'project':
                     $useView = $this->params()->fromQuery('view', false);
-                    $projects = $useView ? $this->project->fetchAllViews() : $this->project->fetchAll();
+                    $projects = $useView ? $this->getProjectModel()->fetchAllViews() : $this->getProjectModel()->fetchAll();
                     $view = $this->json($projects);
                     return $view;
                 case 'quote':
                     $useView = $this->params()->fromQuery('view', false);
-                    $quotes = $useView ? $this->quote->fetchAllViews($location) : $this->quote->fetchAll();
+                    $quotes = $useView ? $this->getQuoteModel()->fetchAllViews($location) : $this->getQuoteModel()->fetchAll();
                     $view = $this->json($quotes);
                     return $view;
                 case 'roleoverride':
@@ -93,7 +62,7 @@ class IndexController extends BaseController
         }
 
         $viewModel = new ViewModel([
-            'user' => $this->userService->getCurrentUser(),
+            'user' => $this->getUserService()->getCurrentUser(),
         ]);
 
         // If HTMX request, skip layout
@@ -104,9 +73,9 @@ class IndexController extends BaseController
         return $viewModel;
     }
 
-    public function projectAction()
+    public function projectAction(): ViewModel | Response
     {
-        $user = $this->userService->getCurrentUser();
+        $user = $this->getUserService()->getCurrentUser();
         $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] === 'guest') {
@@ -120,19 +89,19 @@ class IndexController extends BaseController
         if ($this->getRequest()->isXmlHttpRequest()) {
             switch ($table) {
                 case 'own':
-                    $TableView = $this->project->fetchOwnProjects($user['id']);
+                    $TableView = $this->getProjectModel()->fetchOwnProjects($user['id']);
                     return $this->json($TableView);
                 case 'assigned':
-                    $TableView = $this->project->fetchAssignedProjects($user['id']);
+                    $TableView = $this->getProjectModel()->fetchAssignedProjects($user['id']);
                     return $this->json($TableView);
                 case 'other':
-                    $TableView = $this->project->fetchOtherUsersProjects($user['id']);
+                    $TableView = $this->getProjectModel()->fetchOtherUsersProjects($user['id']);
                     return $this->json($TableView);
                 case 'quote':
-                    $TableView = $this->quote->fetchOwnQuotes($user['id']);
+                    $TableView = $this->getQuoteModel()->fetchOwnQuotes($user['id']);
                     return $this->json($TableView);
                 case 'note':
-                    $TableView = $this->note->fetchOwnNotes($user['id']);
+                    $TableView = $this->getNoteModel()->fetchOwnNotes($user['id']);
                     return $this->json($TableView);
             }
         }
@@ -149,9 +118,9 @@ class IndexController extends BaseController
         return $viewModel;
     }
 
-    public function approvalAction()
+    public function approvalAction(): ViewModel | Response
     {
-        $user = $this->userService->getCurrentUser();
+        $user = $this->getUserService()->getCurrentUser();
         $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] === 'guest' || $user['p2q_system_role'] === 'sales') {
@@ -161,20 +130,20 @@ class IndexController extends BaseController
         }
 
         $table = $this->params()->fromRoute('table', 'approved');
-        $waitingTableCount = $this->quote->countApproval(Quote::WAITING_APPROVAL);
-        $approvedTableCount = $this->quote->countApproval(Quote::APPROVED);
-        $disapprovedTableCount = $this->quote->countApproval(Quote::DISAPPROVED);
+        $waitingTableCount = $this->getQuoteModel()->countApproval($this->getQuoteModel()::WAITING_APPROVAL);
+        $approvedTableCount = $this->getQuoteModel()->countApproval($this->getQuoteModel()::APPROVED);
+        $disapprovedTableCount = $this->getQuoteModel()->countApproval($this->getQuoteModel()::DISAPPROVED);
 
         if ($this->getRequest()->isXmlHttpRequest()) {
             switch ($table) {
                 case 'waiting':
-                    $TableView = $this->quote->fetchApprovalTable(Quote::WAITING_APPROVAL);
+                    $TableView = $this->getQuoteModel()->fetchApprovalTable($this->getQuoteModel()::WAITING_APPROVAL);
                     return $this->json($TableView);
                 case 'approved':
-                    $TableView = $this->quote->fetchApprovalTable(Quote::APPROVED);
+                    $TableView = $this->getQuoteModel()->fetchApprovalTable($this->getQuoteModel()::APPROVED);
                     return $this->json($TableView);
                 case 'disapproved':
-                    $TableView = $this->quote->fetchApprovalTable(Quote::DISAPPROVED);
+                    $TableView = $this->getQuoteModel()->fetchApprovalTable($this->getQuoteModel()::DISAPPROVED);
                     return $this->json($TableView);
             }
         }
@@ -194,9 +163,9 @@ class IndexController extends BaseController
         return $viewModel;
     }
 
-    public function architectAction()
+    public function architectAction(): ViewModel | Response
     {
-        $user = $this->userService->getCurrentUser();
+        $user = $this->getUserService()->getCurrentUser();
         $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] === 'guest') {
@@ -215,19 +184,19 @@ class IndexController extends BaseController
         if ($this->getRequest()->isXmlHttpRequest()) {
             switch ($table) {
                 case 'all':
-                    $TableView = $this->architect->fetchAllTable($admin, $user['id']);
+                    $TableView = $this->getArchitectModel()->fetchAllTable($admin, $user['id']);
                     return $this->json($TableView);
                 case 'topfive':
-                    $TableView = $this->architect->fetchTopFiveTable($user['id']);
+                    $TableView = $this->getArchitectModel()->fetchTopFiveTable($user['id']);
                     return $this->json($TableView);
             }
         }
 
         $viewModel = new ViewModel([
             'user' => $user,
-            'totalArchitects' => $this->architect->countAllArchitects($admin, $user['id']),
-            'totalCompleteProjects' => $this->project->countAllCompleteProjects($admin, $user['id']),
-            'totalActiveProjects' => $this->project->countActiveProjects($admin, $user['id']),
+            'totalArchitects' => $this->getArchitectModel()->countAllArchitects($admin, $user['id']),
+            'totalCompleteProjects' => $this->getProjectModel()->countAllCompleteProjects($admin, $user['id']),
+            'totalActiveProjects' => $this->getProjectModel()->countActiveProjects($admin, $user['id']),
         ]);
 
         // If HTMX request, skip layout
@@ -238,9 +207,9 @@ class IndexController extends BaseController
         return $viewModel;
     }
 
-    public function opportunitiesAction()
+    public function opportunitiesAction(): ViewModel
     {
-        $user = $this->userService->getCurrentUser();
+        $user = $this->getUserService()->getCurrentUser();
         $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] === 'guest') {
@@ -260,17 +229,25 @@ class IndexController extends BaseController
         return $viewModel;
     }
 
-    public function quotesAction(): Response
+    public function quotesAction(): ViewModel
     {
-        $table = $this->params()->fromRoute('table', 'items'); // default to items table
+        $user = $this->getUserService()->getCurrentUser();
+        $this->layout()->setTemplate('layout/default');
 
-        switch ($table) {
-            case 'items':
-                $quotes = $this->getItemModel()->fetchItemQuoteTable();
-                $view = $this->json($quotes);
-                return $view;
-            default:
-                return $this->json([]);
+        if ($user['p2q_system_role'] === 'guest') {
+            $view = new ViewModel();
+            $view->setTemplate('error/permission');
+            return $view;
         }
+
+        $viewModel = new ViewModel([
+            'user' => $user,
+        ]);
+
+        if ($this->getRequest()->getHeader('HX-Request')) {
+            $viewModel->setTerminal(true);
+        }
+
+        return $viewModel;
     }
 }

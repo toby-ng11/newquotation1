@@ -23,9 +23,30 @@ class DashboardController extends BaseController
         return $this->render('dashboards/admin');
     }
 
+    public function adminProjectsAction(): Response
+    {
+        $useView = $this->params()->fromQuery('view', false);
+        $projects = $useView ? $this->getProjectModel()->fetchAllViews() : $this->getProjectModel()->fetchAll();
+        $view = $this->json($projects);
+        return $view;
+    }
+
     public function opportunityAction(): Response | ViewModel
     {
         return $this->render('dashboards/opportunity');
+    }
+
+    public function opportunityOpportunitiesAction(): Response
+    {
+        $opportunities = $this->getP2qViewOpportunityModel()->all();
+        return $this->json($opportunities);
+    }
+
+    public function opportunitySharedOpportunitiesAction(): Response
+    {
+        $user = $this->getUserService()->getCurrentUser();
+        $opportunities = $this->getOpportunityShareModel()->findBy(['shared_user' => $user['id']]);
+        return $this->json($opportunities);
     }
 
     public function projectAction(): Response | ViewModel
@@ -38,6 +59,20 @@ class DashboardController extends BaseController
         return $this->render('dashboards/quote');
     }
 
+    public function ownQuotesAction(): Response
+    {
+        $user = $this->getUserService()->getCurrentUser();
+        $quotes = $this->getP2qViewQuoteModel()->findBy(['created_by' => $user['id']]);
+        return $this->json($quotes);
+    }
+
+    public function sharedQuotesAction(): Response
+    {
+        $user = $this->getUserService()->getCurrentUser();
+        $quotes = $this->getP2qViewQuoteShareModel()->findBy(['shared_user' => $user['id']]);
+        return $this->json($quotes);
+    }
+
     public function architectAction(): Response | ViewModel
     {
         return $this->render('dashboards/architect');
@@ -46,5 +81,11 @@ class DashboardController extends BaseController
     public function quoteditemsAction(): Response | ViewModel
     {
         return $this->render('dashboards/quoted-items');
+    }
+
+    public function itemsQuotedItemsAction(): Response
+    {
+        $quotes = $this->getItemModel()->fetchItemQuoteTable();
+        return $this->json($quotes);
     }
 }

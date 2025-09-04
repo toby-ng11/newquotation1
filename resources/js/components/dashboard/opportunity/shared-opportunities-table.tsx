@@ -6,6 +6,7 @@ import { DataTableProjectOptions } from '@/components/table/project-options';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useTanStackQuery } from '@/hooks/use-query';
+import { Opportunity } from '@/types';
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -24,36 +25,18 @@ import {
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
-interface Project {
-    id: string;
-    legacy_id: string;
-    project_id_ext: string;
-    project_name: string;
-    owner_id: string;
-    shared_users: string;
-    reed: string;
-    created_at: {
-        date: string;
-    };
-    due_date: {
-        date: string;
-    };
-    architect_name: string;
-    market_segment_desc: string;
-    status_desc: string;
-}
 
-const multiValueFilter: FilterFn<Project> = (row, columnId, filterValue) => {
+const multiValueFilter: FilterFn<Opportunity> = (row, columnId, filterValue) => {
     if (!Array.isArray(filterValue)) return true;
     const rowValue = row.getValue(columnId);
     return filterValue.includes(rowValue);
 };
 
-export default function ProjectTable() {
-    const ENDPOINT = '/dashboards/admin/projects?view=true';
-    const qKey = ['admin', 'projects'];
+export default function SharedOpportunitiesTable() {
+    const ENDPOINT = '/dashboards/opportunity/shared';
+    const qKey = ['opportunity', 'opportunities'];
 
-    const { data: projects = [], isLoading, isRefetching, refetch } = useTanStackQuery<Project>(ENDPOINT, qKey);
+    const { data: opportunities = [], isLoading, isRefetching, refetch } = useTanStackQuery<Opportunity>(ENDPOINT, qKey);
 
     const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: true }]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -84,7 +67,7 @@ export default function ProjectTable() {
         }
     }, [columnVisibility, isReady]);
 
-    const columns: ColumnDef<Project>[] = [
+    const columns: ColumnDef<Opportunity>[] = [
         {
             id: 'select',
             header: ({ table }) => (
@@ -109,11 +92,9 @@ export default function ProjectTable() {
             header: ({ column }) => <DataTableColumnHeader column={column} title="ID" />,
             cell: ({ row }) => {
                 const id = row.getValue<number>('id');
-                const legacyId = row.original.legacy_id; // Make sure your data includes this field
-                const displayId = id <= 500 ? legacyId : id;
                 return (
-                    <a href={`/project/${id}/edit`} className="text-blue-500 dark:text-blue-300">
-                        {displayId}
+                    <a href={`/opportunities/${id}/edit`} className="text-blue-500 dark:text-blue-300">
+                        {id}
                     </a>
                 );
             },
@@ -132,10 +113,10 @@ export default function ProjectTable() {
             meta: 'Name',
         },
         {
-            accessorKey: 'owner_id',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Owner" />,
+            accessorKey: 'created_by',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Created By" />,
             filterFn: 'arrIncludesSome',
-            meta: 'Owner',
+            meta: 'Created By',
         },
         {
             accessorKey: 'shared_users',
@@ -158,12 +139,12 @@ export default function ProjectTable() {
             meta: 'Created At',
         },
         {
-            id: 'due_date',
-            accessorFn: (row) => row.due_date?.date,
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Due Date" />,
-            cell: ({ row }) => new Date(row.getValue('due_date')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
+            id: 'start_date',
+            accessorFn: (row) => row.start_date?.date,
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Start Date" />,
+            cell: ({ row }) => new Date(row.getValue('start_date')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
             sortingFn: 'datetime',
-            meta: 'Due Date',
+            meta: 'Start Date',
         },
         {
             accessorKey: 'architect_name',
@@ -174,7 +155,7 @@ export default function ProjectTable() {
         },
         {
             accessorKey: 'market_segment_desc',
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Market Segment" />,
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Category" />,
             filterFn: 'arrIncludesSome',
             meta: 'Market Segment',
         },
@@ -205,7 +186,7 @@ export default function ProjectTable() {
     ];
 
     const table = useReactTable({
-        data: projects,
+        data: opportunities,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
@@ -230,8 +211,8 @@ export default function ProjectTable() {
         <div>
             <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
                 <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl font-semibold tracking-tight">All Projects</h2>
-                    <p className="text-muted-foreground">Here's the list of all projects across all branches.</p>
+                    <h2 className="text-2xl font-semibold tracking-tight">Shared Opportunities</h2>
+                    <p className="text-muted-foreground">Here's the list of all opportunities that is shared with you.</p>
                 </div>
                 <div className="flex flex-col gap-4">
                     {!isLoading ? (
@@ -240,14 +221,12 @@ export default function ProjectTable() {
                                 table={table}
                                 searchColumn="project_name"
                                 searchPlaceholder="Filter project names..."
-                                showAddButton
-                                onAddClick={() => console.log('Add clicked')}
                                 facetedFilters={[
-                                    { columnId: 'owner_id', title: 'Owner' },
+                                    { columnId: 'created_by', title: 'Created By' },
                                     { columnId: 'shared_id', title: 'Shared' },
                                     { columnId: 'reed', title: 'REED' },
                                     { columnId: 'architect_name', title: 'Architect' },
-                                    { columnId: 'market_segment_desc', title: 'Market Segment' },
+                                    { columnId: 'market_segment_desc', title: 'Category' },
                                     { columnId: 'status_desc', title: 'Status' },
                                 ]}
                             />

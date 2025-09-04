@@ -107,7 +107,7 @@ class ProjectNote extends Model
         return $result['total'] ?? 0;
     }
 
-    public function fetchPendingFollowUps()
+    public function fetchPendingFollowUps(): array
     {
         return $this->findBy([
             "notify_at <= GETDATE()",

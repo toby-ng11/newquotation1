@@ -200,20 +200,7 @@ class ProjectController extends BaseController
         $generalContractor = $this->customer->fetchCustomerById($project['general_contractor_id']);
         $awardedContractor = $this->customer->fetchCustomerById($project['awarded_contractor_id']);
 
-        $this->layout()->setVariable('id', $project_id); //for sidebar
-
-        $owner = false;
-
         $isShareExists = $this->projectShare->isShareExists($project_id, $user['id']);
-
-        if (
-            $isShareExists ||
-            $user['id'] === $project['owner_id'] ||
-            $user['p2q_system_role'] === 'admin' ||
-            $user['p2q_system_role'] === 'manager'
-        ) {
-            $owner = true;
-        }
 
         $admin = false;
         if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') {
@@ -223,12 +210,12 @@ class ProjectController extends BaseController
         return new ViewModel([
             'id' => $project_id,
             'user' => $user,
+            'isShareExists' => $isShareExists,
             'project' => $project,
             'company' => $company,
             'location' => $location,
             'status' => $status,
             'marketSegment' => $marketSegment,
-            'owner' => $owner,
             'admin' => $admin,
             'architect' => $architect,
             'address' => $address,

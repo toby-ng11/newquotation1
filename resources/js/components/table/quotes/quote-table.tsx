@@ -54,7 +54,7 @@ export default function QuotesQuoteTable() {
     const lastSavedVisibility = useRef<VisibilityState>({});
     const [globalFilter, setGlobalFilter] = useState('');
 
-    const ENDPOINT = '/index/quotes/items';
+    const ENDPOINT = '/dashboards/quoted-items/items';
 
     const fetchData = async (force = false) => {
         setIsFetching(false);

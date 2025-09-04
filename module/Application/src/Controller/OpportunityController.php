@@ -23,7 +23,7 @@ class OpportunityController extends BaseController
     }
 
     // GET /enpoint/:id
-    public function get($id)
+    public function get(mixed $id)
     {
         $row = $this->getOpportunityModel()->find($id);
         if (! $row) {
@@ -37,19 +37,19 @@ class OpportunityController extends BaseController
     }
 
     // POST /enpoint
-    public function create($data)
+    public function create(mixed $data)
     {
         $result = $this->getOpportunityModel()->create($data);
         return $this->json([
             'success' => $result !== false,
-            'message' => $result ? 'Market segment added!' : 'Error! Please check log for more details.',
+            'message' => $result !== false ? 'Market segment added!' : 'Error! Please check log for more details.',
         ]);
     }
 
     // PUT /enpoint/:id
-    public function update($data, $id)
+    public function update(mixed $id, mixed $data)
     {
-        $result = $this->getOpportunityModel()->update($data, $id);
+        $result = $this->getOpportunityModel()->update($id, $data);
         return $this->json([
             'success' => $result !== false,
             'message' => $result ? 'Saved successfully!' : 'Error! Please check log for more details.',
@@ -57,16 +57,16 @@ class OpportunityController extends BaseController
     }
 
     // DELETE /enpoint/:id
-    public function delete($id)
+    public function delete(mixed $id)
     {
         $result = $this->getOpportunityModel()->delete($id);
         return $this->json([
             'success' => $result !== false,
-            'message' => $result ? 'Deleted successfully!' : 'Error! Please check log for more details.',
+            'message' => $result !== false ? 'Deleted successfully!' : 'Error! Please check log for more details.',
         ]);
     }
 
-    public function viewAction()
+    public function editAction()
     {
         $opportunity_id = (int) $this->params()->fromRoute('id');
         if (! $opportunity_id) {

@@ -10,15 +10,15 @@ async function initCustomer() {
     const { setupAutoComplete } = await import('@/components/autocomplete');
 
     // Add quote from quote page button
-    const addAnotherQuoteBtn = document.getElementById('widget-btn-add-quote') as HTMLButtonElement;
-    if (addAnotherQuoteBtn) {
-        addAnotherQuoteBtn.addEventListener('click', () => {
+    const addAnotherQuoteBtn = document.querySelectorAll('.widget-btn-add-quote') as NodeListOf<HTMLButtonElement>;
+    addAnotherQuoteBtn?.forEach((button) => {
+        button.addEventListener('click', () => {
             if (window.customerModalComponent) {
                 window.customerModalComponent.open = true;
                 window.customerModalComponent.isEditing = false;
             }
         });
-    }
+    });
 
     // Widget Edit button
     const customerEditBtn = document.getElementById('edit-quote-customer') as HTMLButtonElement;
@@ -180,7 +180,7 @@ function customerModal() {
         async getContactInfo(contactId?: string | null) {
             const contactSelect = document.getElementById('contact_name') as HTMLSelectElement;
             const contactID = contactId ?? contactSelect?.value?.trim();
-            if (!contactID) return;
+            if (!contactID || contactID === 'null') return;
 
             try {
                 const res = await fetch(`/customer/${contactID}/contactinfo`, {
