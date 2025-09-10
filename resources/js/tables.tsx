@@ -16,6 +16,7 @@ const mounts = [
     { id: 'quoted-item-dashboard', loader: () => import('@/pages/quoted-item/dashboard') },
     { id: 'opportunity-temp', loader: () => import('@/pages/dashboards/opportunity-temp') },
     { id: 'quotes-temp', loader: () => import('@/pages/dashboards/quotes-temp') },
+    { id: 'opportunity-edit-temp', loader: () => import('@/pages/opportunities/edit') },
 ];
 
 function mountAllTables() {

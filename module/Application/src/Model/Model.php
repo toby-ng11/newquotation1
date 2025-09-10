@@ -3,6 +3,7 @@
 namespace Application\Model;
 
 use Application\Service\UserService;
+use Application\Traits\HasModels;
 use ArrayObject;
 use Doctrine\Inflector\InflectorFactory;
 use Exception;
@@ -10,14 +11,20 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\Sql\Expression;
 use Laminas\Db\TableGateway\TableGateway;
+use Psr\Container\ContainerInterface;
 
 class Model
 {
+    use HasModels;
+
     /** @var TableGateway */
     protected $tableGateway;
 
     /** @var UserService */
     protected $userService;
+
+    /** @var ContainerInterface|null $container */
+    protected $container;
 
     /**
      * The table associated with the model.
@@ -54,11 +61,13 @@ class Model
     public function __construct(
         Adapter $adapter,
         UserService $userService,
+        ContainerInterface $container,
     ) {
         $this->table = $this->table ?? $this->inferTableName();
         $this->primaryKey = $this->primaryKey ?? 'id';
         $this->tableGateway = new TableGateway($this->table, $adapter);
         $this->userService = $userService;
+        $this->container = $container;
     }
 
     protected function inferTableName(): string

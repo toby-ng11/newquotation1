@@ -16,6 +16,7 @@ use Laminas\Session\SaveHandler\SaveHandlerInterface;
 use Application\Model\User;
 use Application\Model\Location;
 use Application\Session\UserSession;
+use Laminas\View\Model\ViewModel;
 
 class Module implements ConfigProviderInterface
 {
@@ -43,6 +44,9 @@ class Module implements ConfigProviderInterface
         Container::setDefaultManager($sessionManager);
 
         $eventManager = $e->getApplication()->getEventManager();
+
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'handleError']);
+        $eventManager->attach(MvcEvent::EVENT_RENDER_ERROR, [$this, 'handleError']);
 
         $authGuard = $serviceManager->get(AuthGuard::class);
         $eventManager->attach(MvcEvent::EVENT_DISPATCH, $authGuard, 1000);
@@ -94,6 +98,111 @@ class Module implements ConfigProviderInterface
         }, 100);
     }
 
+    public function handleError(MvcEvent $event): void
+    {
+        $error = $event->getError();
+
+         /** @var Request $request */
+        $request = $event->getRequest();
+
+        /** @var Response $response */
+        $response = $event->getResponse();
+
+        // Detect Inertia request
+        $isInertia = $request->getHeaders()->has('X-Inertia');
+
+        if ($error === \Laminas\Mvc\Application::ERROR_EXCEPTION) {
+            $exception = $event->getParam('exception');
+
+            $props = [
+                'status' => 500,
+                'message' => 'Something went wrong on the server.',
+                'display_exceptions' => true,
+                'exception' => $exception ? [
+                    'type' => get_class($exception),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                    'message' => $exception->getMessage(),
+                    'trace' => $exception->getTraceAsString(),
+                ] : null,
+            ];
+
+            $page = [
+                'component' => 'error/exception',
+                'props'     => $props,
+                'url'       => $request->getUri()->getPath(),
+                'version'   => null,
+            ];
+
+            if ($isInertia) {
+                $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+                $response->getHeaders()->addHeaderLine('X-Inertia', 'true');
+                $response->setStatusCode(500);
+                $response->setContent(json_encode($page, JSON_UNESCAPED_UNICODE));
+                $event->setResult($response);
+            } else {
+                $viewModel = $event->getViewModel();
+                $viewModel->setVariable('page', $page);
+                $event->setResult($viewModel);
+            }
+
+            $event->stopPropagation();
+        }
+
+        // else: not exception
+        if (
+            $error !== \Laminas\Mvc\Application::ERROR_ROUTER_NO_MATCH &&
+            $error !== \Laminas\Mvc\Application::ERROR_CONTROLLER_NOT_FOUND &&
+            $error !== \Laminas\Mvc\Application::ERROR_CONTROLLER_INVALID &&
+            $error !== \Laminas\Mvc\Application::ERROR_CONTROLLER_CANNOT_DISPATCH
+        ) {
+            return;
+        }
+
+        $reason = match ($error) {
+            \Laminas\Mvc\Application::ERROR_CONTROLLER_CANNOT_DISPATCH =>
+            'The requested controller was unable to dispatch the request.',
+            \Laminas\Mvc\Application::ERROR_CONTROLLER_NOT_FOUND =>
+            'The requested controller could not be mapped to an existing controller class.',
+            \Laminas\Mvc\Application::ERROR_CONTROLLER_INVALID =>
+            'The requested controller was not dispatchable.',
+            \Laminas\Mvc\Application::ERROR_ROUTER_NO_MATCH =>
+            'The requested URL could not be matched by routing.',
+        };
+
+        $props = [
+            'status'  => 404,
+            'message' => "Uh-oh! The page you're looking for seems to have wandered off. Maybe it's hiding… or maybe it never existed. Below is the reason:",
+            'reason'  => $reason,
+        ];
+
+        $page = [
+            'component' => 'error/404',
+            'props'     => $props,
+            'url'       => $request->getUri()->getPath(),
+            'version'   => null,
+        ];
+
+        if ($isInertia) {
+            $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+            $response->getHeaders()->addHeaderLine('Vary', 'X-Inertia');
+            $response->getHeaders()->addHeaderLine('X-Inertia', 'true');
+            $response->setStatusCode(404);
+            $response->setContent(json_encode($page, JSON_UNESCAPED_UNICODE));
+
+            $event->setResult($response);
+            $event->stopPropagation();
+            return;
+        }
+
+        // Initial Inertia load (server-side render of the app shell)
+        $layout = $event->getViewModel();
+        $layout->setVariable('page', $page);
+
+        $event->setResult($layout);
+        $event->stopPropagation();
+    }
+
     public function handleAppearance(MvcEvent $event): void
     {
         /** @var Request $request */
@@ -102,7 +211,7 @@ class Module implements ConfigProviderInterface
         $cookieTheme = null;
         $cookies = $request->getCookie();
 
-        if($cookies) {
+        if ($cookies) {
             $cookieTheme = $cookies['appearance'] ?? 'system';
         }
 

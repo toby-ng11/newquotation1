@@ -2,21 +2,23 @@
 
 namespace Application\Model;
 
-use Laminas\Db\Adapter\Driver\ResultInterface;
 use Laminas\Db\Sql\{Sql, Expression};
 use Application\Helper\InputValidator;
 use Application\Service\UserService;
-use Error;
 use Laminas\Db\Adapter\Adapter;
+use Psr\Container\ContainerInterface;
 
 class ProjectNote extends Model
 {
     protected $timestamps = true;
     protected $userTracked = true;
 
-    public function __construct(Adapter $adapter, UserService $userService)
-    {
-        parent::__construct($adapter, $userService);
+    public function __construct(
+        Adapter $adapter,
+        UserService $userService,
+        ContainerInterface $container,
+    ) {
+        parent::__construct($adapter, $userService, $container);
     }
 
     protected function prepareDataForCreate(array $data): array

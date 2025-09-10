@@ -4,6 +4,7 @@ namespace Application\Traits;
 
 use Application\Model\Address;
 use Application\Model\Architect;
+use Application\Model\ArchitectType;
 use Application\Model\Customer;
 use Application\Model\Item;
 use Application\Model\Location;
@@ -36,6 +37,11 @@ trait HasModels
     public function getArchitectModel(): Architect
     {
         return $this->container->get(Architect::class);
+    }
+
+    public function getArchitectTypeModel(): ArchitectType
+    {
+        return $this->container->get(ArchitectType::class);
     }
 
     public function getCustomerModel(): Customer

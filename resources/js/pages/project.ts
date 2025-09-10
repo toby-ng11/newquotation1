@@ -30,10 +30,22 @@ async function initProject() {
     // Auto expand architect details
     if (architectDetails && architectNameInput.value.trim() !== '') architectDetails.open = true;
 
+    const architectDetailsExpandButton = document.getElementById('architect-details-expand-btn') as HTMLButtonElement;
+    architectDetailsExpandButton?.addEventListener('click', () => {
+        if (!architectDetails.open) architectDetails.open = true;
+        else architectDetails.open = false;
+    });
+
     // Auto expand contractor details
     // if either general or awarded contractor field is available (check with length)
     if (contractorDetails && (generalContractorInput.value.trim() !== '' || awardedContractorInput.value.trim() !== ''))
         contractorDetails.open = true;
+
+    const contractorDetailsExpandButton = document.getElementById('contractor-details-expand-btn') as HTMLButtonElement;
+    contractorDetailsExpandButton?.addEventListener('click', () => {
+        if (!contractorDetails.open) contractorDetails.open = true;
+        else contractorDetails.open = false;
+    });
 
     // Enable save button
     if (projectForm) {
@@ -120,8 +132,8 @@ async function initProject() {
         if (!id || !prefix) return;
         try {
             const response = await fetch(`/customer/${id}/fetchbyid`, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                });
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            });
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const result = await response.json();
@@ -237,8 +249,8 @@ async function initArchitectForm() {
 
         try {
             const response = await fetch(`/architect/${id}/fetchfull`, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                });
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            });
             if (!response.ok) throw new Error('Something happened. Please try again');
 
             const architect = await response.json();
@@ -273,8 +285,8 @@ async function initArchitectForm() {
         if (!id) return;
         try {
             const response = await fetch(`/architect/${id}/address`, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                });
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            });
             if (!response.ok) throw new Error('Something happened. Please try again');
 
             const addresses = await response.json();
@@ -316,8 +328,8 @@ async function initArchitectForm() {
 
         try {
             const response = await fetch(`/architect/${addressID}/addressinfo`, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                });
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            });
             if (!response.ok) throw new Error('Something happened. Please try again');
 
             const address = await response.json();
@@ -343,8 +355,8 @@ async function initArchitectForm() {
 
         try {
             const response = await fetch(`/architect/${id}/specifiers`, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                });
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            });
             if (!response.ok) throw new Error('Network response was not ok');
 
             const specifiers = await response.json();
@@ -387,8 +399,8 @@ async function initArchitectForm() {
 
         try {
             const response = await fetch(`/architect/${specifierId}/specinfo`, {
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                });
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            });
             if (!response.ok) throw new Error('Network response was not ok');
 
             const specifier = await response.json();

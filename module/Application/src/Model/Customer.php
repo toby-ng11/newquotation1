@@ -8,6 +8,7 @@ use Laminas\Db\Sql\Select;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\Sql\Sql;
 use Exception;
+use Laminas\Db\ResultSet\ResultSet;
 
 class Customer
 {
@@ -28,7 +29,7 @@ class Customer
     public function fetchCustomerById($id)
     {
         if (! InputValidator::isValidId($id)) {
-            return false;
+            return [];
         }
 
         $sql = new Sql($this->adapter);
@@ -43,7 +44,7 @@ class Customer
     public function fetchCustomerByPattern($pattern, $limit = 10, $company = DEFAULT_COMPANY)
     {
         if (! InputValidator::isValidPattern($pattern)) {
-            return false;
+            return [];
         }
 
         $sql = new Sql($this->adapter);
@@ -67,7 +68,7 @@ class Customer
     public function fetchContactsByCustomer($customer_id)
     {
         if (! InputValidator::isValidId($customer_id)) {
-            return false;
+            return [];
         }
 
         $sql = new Sql($this->adapter);
@@ -82,7 +83,7 @@ class Customer
     public function fetchCustomerByContact($contact_id, $company = DEFAULT_COMPANY)
     {
         if (! InputValidator::isValidId($contact_id)) {
-            return false;
+            return [];
         }
 
         $sql = new Sql($this->adapter);
@@ -109,7 +110,7 @@ class Customer
     public function fetchContactByID($contact_id)
     {
         if (! InputValidator::isValidId($contact_id)) {
-            return false;
+            return [];
         }
 
         $select = $this->P21_customers_x_address_x_contacts->getSql()->select()

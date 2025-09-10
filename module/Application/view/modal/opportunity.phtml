@@ -1,3 +1,28 @@
+<?php
+
+/**
+ * @psalm-scope-this Exception
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ * @var array $locations
+ * @var array $projectStatus
+ * @var array $marketSegment
+ * @var array $companies
+ * @var array $architectTypes
+ * @var array $user
+ * @var string $defaultLocationId
+ * @var string $defaultCompany
+ */
+
+$leadSources = [
+    'ConstructConnect',
+    'Existing Client',
+    'New Client',
+    'Trade Fair',
+    'Referral',
+    'Manager Assigned',
+    'Other',
+];
+?>
 <div
     x-data="opportunityModal()"
     x-init="
@@ -23,7 +48,7 @@
         style="display: none;">
         <!-- Modal Box -->
         <div
-            class="bg-background ring-neutral fixed z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-xl border border-none bg-clip-padding p-6 shadow-2xl ring-4 ring-neutral-200/80 sm:max-w-4xl sm:max-h-screen dark:bg-neutral-900 dark:ring-neutral-800"
+            class="bg-background ring-neutral fixed z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-xl border border-none bg-clip-padding p-6 shadow-2xl ring-4 ring-neutral-200/80 sm:max-w-5xl sm:max-h-screen dark:bg-neutral-900 dark:ring-neutral-800"
             x-transition>
             <div class="flex flex-col gap-2 text-center sm:text-left">
                 <h2 class="leading-none font-semibold text-lg">New Oppportunity</h2>
@@ -31,17 +56,19 @@
             </div>
 
             <div class="text-popover-foreground flex h-full w-full flex-col overflow-hidden">
-                <div class="max-h-[500px] scroll-py-1 overflow-x-hidden overflow-y-auto no-scrollbar min-h-80 px-2 scroll-pt-2 scroll-pb-1.5">
+                <div class="max-h-[400px] scroll-py-1 overflow-x-hidden overflow-y-auto no-scrollbar min-h-80 px-2 pb-2 scroll-pt-2 scroll-pb-1.5">
                     <form id="new-opportunity-form" class="form" @submit.prevent="submitForm">
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
                             <div class="grid gap-2">
-                                <label for="opp_name">Name</label>
-                                <input required type="text" id='opp_name' name='opp_name' />
+                                <label for="opp_name" class="required">Name</label>
+                                <input required type="text" id="opp_name" name="opp_name"
+                                    placeholder="Project name" />
                             </div>
 
                             <div class="grid gap-2">
-                                <label for='project_address'>Location</label>
-                                <input required id='project_address' name='project_address' type="text" />
+                                <label for="opp_address">Address</label>
+                                <input required id="opp_address" name="opp_address" type="text"
+                                    placeholder="Project address" />
                             </div>
 
                             <div class="grid gap-2">
@@ -49,8 +76,8 @@
                                 <select name="location_id" id="location_id">
                                     <?php foreach ($locations as $l) { ?>
                                         <option
-                                            value='<?= $this->escapeHtml($l['location_id']) ?>'
-                                            <?php if ($l['location_id'] === DEFAULT_LOCATION_ID) {
+                                            value="<?= $this->escapeHtml($l['location_id']) ?>"
+                                            <?php if ($l['location_id'] === $defaultLocationId) {
                                                 echo 'selected';
                                             } ?>>
                                             <?= $l['branch_description'] ?>
@@ -60,33 +87,45 @@
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="status">Stage</label>
-                                <select required name="status" id='status'>
+                                <label for="status_id" class="required">Stage</label>
+                                <select required name="status_id" id='status_id'>
                                     <option value="">-- Select stage --</option>
                                     <?php foreach ($projectStatus as $s) { ?>
-                                        <option value='<?= $this->escapeHtml($s['id']) ?>'><?= $s['status_desc'] ?></option>
+                                        <option value='<?= $this->escapeHtml($s['id']) ?>'>
+                                            <?= $s['status_desc'] ?>
+                                        </option>
                                     <?php } ?>
                                 </select>
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="market_segment_id">Category</label>
+                                <label for="market_segment_id" class="required">Category</label>
                                 <select required name="market_segment_id" id='market_segment_id'>
                                     <option value="">-- Choose market segment --</option>
                                     <?php foreach ($marketSegment as $s) { ?>
-                                        <option value='<?= $this->escapeHtml($s['id']) ?>'><?= $s['market_segment_desc'] ?></option>
+                                        <option value="<?= $this->escapeHtml($s['id']) ?>">
+                                            <?= $s['market_segment_desc'] ?>
+                                        </option>
                                     <?php } ?>
                                 </select>
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="reed">LEED Certified Number</label>
-                                <input type="text" name='reed' id='reed' />
+                                <label for="leed_certified_number">LEED Certified Number</label>
+                                <input type="text" name='leed_certified_number' id='leed_certified_number'
+                                    placeholder="Leave blank if non-certified" />
                             </div>
 
                             <div class="grid gap-2">
                                 <label for="lead_source">Lead Source</label>
-                                <input type="text" name='lead_source' id='lead_source' placeholder="ConstructConnect, Google, email, etc." />
+                                <select name="lead_source" id="lead_source">
+                                    <option value="">-- Choose a lead source --</option>
+                                    <?php foreach ($leadSources as $source): ?>
+                                        <option value="<?= $source ?>">
+                                            <?= $source ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
 
                             <div class="grid gap-2">
@@ -96,64 +135,203 @@
 
                             <div class="grid gap-2">
                                 <label for="project_value">Project Value</label>
-                                <input type="text" name='project_value' id='project_value' />
+                                <input type="number" name='project_value' id='project_value' />
                             </div>
                             <div class="grid gap-2">
                                 <label for="project_owner">Project Owner</label>
                                 <input type="text" name='project_owner' id='project_owner'
-                                    placeholder="Owner company, contractor, etc." />
+                                    placeholder="Name of company, contractor, county, etc." />
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="due_date">Start Date</label>
-                                <input readonly type="text" id="due_date" name='due_date' class="flatpickr" placeholder="Due date" />
+                                <label for="start_date">Start Date</label>
+                                <input readonly type="text" id="start_date" name='start_date' class="flatpickr" placeholder="Pick a date" />
                             </div>
 
                             <div class="grid gap-2">
-                                <label for="require_date">Completion Date</label>
-                                <input readonly type="text" id="require_date" name='require_date' class="flatpickr" placeholder="Required date" />
+                                <label for="completion_date">Completion Date</label>
+                                <input readonly type="text" id="completion_date" name='completion_date' class="flatpickr" placeholder="Pick a date" />
+                            </div>
+
+                            <div class="grid gap-2">
+                                <label for="sample_submitted">Sample Submitted</label>
+                                <select name="sample_submitted" id="sample_submitted">
+                                    <option value="1">Yes</option>
+                                    <option value="0" selected>No</option>
+                                </select>
                             </div>
 
                             <div class="grid gap-2 col-span-3">
                                 <label for="project_description">Project Description</label>
                                 <textarea
-                                    type="text"
                                     name='project_description'
-                                    id='project_description'
-                                    rows='8'>
+                                    id='project_description'>
                                 </textarea>
                             </div>
                         </div>
 
                         <div class="h-[1px] bg-border my-4"></div>
 
-                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:gap-6">
-                            <div class="grid gap-2">
-                                <label for="address_id">Address List</label>
-                                <select name='address_id' id='address_id'>
-                                    <?php if (! empty($addressList)) :
-                                        foreach ($addressList as $a) : ?>
-                                            <option value='<?= $this->escapeHtml($a['id']) ?>'>
-                                                <?= $a['name'] . ' - ' . $a['phys_address1'] ?>
+                        <details>
+                            <summary>Architect Info ▼</summary>
+
+                            <div class="grid grid-cols-1 gap-4 pt-4 md:grid-cols-2 lg:gap-6">
+                                <input type="hidden" name='architect_id' id='architect_id' />
+                                <div class="grid gap-2">
+                                    <label for="architect_name">Architect Name</label>
+                                    <input type='text' name="architect_name" id='architect_name' class="tipN" original-title="Search by ID or Name" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="architect_company_id">Centura Company</label>
+                                    <select id="architect_company_id" name="architect_company_id">
+                                        <?php foreach ($companies as $c) { ?>
+                                            <option
+                                                value="<?= $this->escapeHtml($c['company_id']) ?>"
+                                                <?php
+                                                if ($c['company_id'] === $defaultCompany) {
+                                                    echo 'selected';
+                                                }
+                                                ?>>
+                                                <?= $this->escapeHtml($c['company_name']) ?>
                                             </option>
-                                    <?php endforeach;
-                                    endif; ?>
-                                </select>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="architect_rep_id">Architect Representative</label>
+                                    <input type="text" id="architect_rep_id" name="architect_rep_id" value='<?= $this->escapeHtml($user['id']) ?>' />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="architect_type_id">Architect Type</label>
+                                    <select id="architect_type_id" name="architect_type_id">
+                                        <option value="">-- Choose architect type --</option>
+                                        <?php foreach ($architectTypes as $architectType) { ?>
+                                            <option
+                                                value="<?= $this->escapeHtml($architectType['id']) ?>">
+                                                <?= $this->escapeHtml($architectType['architect_type_desc']) ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="architect_class_id">Architect Class</label>
+                                    <input type="text" id="architect_class_id" name="architect_class_id" readonly />
+                                </div>
                             </div>
 
-                            <div class="grid gap-2">
-                                <label for="specifier_id">Specifier</label>
-                                <select name='specifier_id' id='specifier_id'>
-                                    <?php if (! empty($specifierList)) :
-                                        foreach ($specifierList as $spec) : ?>
-                                            <option value='<?= $this->escapeHtml($spec['id']) ?>'>
-                                                <?= $spec['first_name'] . ' ' . $spec['last_name'] ?>
-                                            </option>
-                                    <?php endforeach;
-                                    endif; ?>
-                                </select>
-                            </div>
-                        </div>
+                            <div class="h-[1px] bg-border my-4"></div>
+
+                            <details>
+                                <summary>Architect Address ▼</summary>
+                                <div class="grid grid-cols-1 gap-4 pt-4 md:grid-cols-2 lg:gap-6">
+
+                                    <input type="hidden" name='address_id' id='address_id' />
+
+                                    <div class="grid gap-2 ">
+                                        <label for="address_list">Address List</label>
+                                        <select name='address_list' id='address_list'>
+                                            <option value=''>-- Please search for an architect first --</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="grid gap-2 ">
+                                        <label for="address_name">Address Nickname</label>
+                                        <input type='text' name="address_name" id='address_name'
+                                            placeholder="Office, HQ, etc. Will be set to Address 1 if blank." />
+                                    </div>
+
+                                    <div class="grid gap-2 ">
+                                        <label for="phys_address1">Address 1</label>
+                                        <input type='text' name="phys_address1" id='phys_address1' placeholder="Optional" />
+                                    </div>
+
+                                    <div class="grid gap-2">
+                                        <label for="phys_address2">Address 2</label>
+                                        <input type='text' name="phys_address2" id='phys_address2' placeholder="Optional" />
+                                    </div>
+
+                                    <div class="grid gap-2">
+                                        <label for="phys_city">City</label>
+                                        <input type='text' name="phys_city" id='phys_city' placeholder="Optional" />
+                                    </div>
+
+                                    <div class="grid gap-2">
+                                        <label for="phys_state">Province</label>
+                                        <input type='text' name="phys_state" id='phys_state' placeholder="Optional" />
+                                    </div>
+
+                                    <div class="grid gap-2">
+                                        <label for="phys_postal_code">Postal Code</label>
+                                        <input type='text' name="phys_postal_code" id='phys_postal_code' placeholder="Optional" />
+                                    </div>
+
+                                    <div class="grid gap-2">
+                                        <label for="phys_country">Country</label>
+                                        <input type='text' name="phys_country" id='phys_country' placeholder="Optional" />
+                                    </div>
+
+                                    <div class="grid gap-2">
+                                        <label for="central_phone_number">Company Phone Number</label>
+                                        <input id='central_phone_number' name='central_phone_number' type="tel" class="maskPhone" placeholder="(123) 456-7890" />
+                                    </div>
+
+                                    <div class="grid gap-2">
+                                        <label for="email_address">Email</label>
+                                        <input type="text" value="" id='email_address' name='email_address' placeholder="Optional">
+                                    </div>
+
+                                    <div class="grid gap-2">
+                                        <label for="url">URL</label>
+                                        <input type="url" value="" id='url' name='url' placeholder="Optional">
+                                    </div>
+                                </div>
+                            </details>
+
+                            <div class="h-[1px] bg-border my-4"></div>
+
+                            <details>
+                                <summary>Specifier ▼</summary>
+                                <div class="grid grid-cols-1 gap-4 pt-4 md:grid-cols-2 lg:gap-6">
+                                    <input type="hidden" id='specifier_id' name="specifier_id" />
+                                    <input type="hidden" id='specifier_address_id' name="specifier_address_id" />
+                                    <div class="grid gap-2 ">
+                                        <label for="specifier_name">Specifier List</label>
+                                        <select name='specifier_name' id='specifier_name'>
+                                            <option value=''>-- Please search for a architect first --</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="grid gap-2 ">
+                                        <label for="specifier_first_name">First Name</label>
+                                        <input type='text' id='specifier_first_name' name="specifier_first_name" class="tipN" />
+                                    </div>
+
+                                    <div class="grid gap-2 ">
+                                        <label for="specifier_last_name">Last Name</label>
+                                        <input type='text' id='specifier_last_name' name="specifier_last_name" placeholder="Optional" />
+                                    </div>
+
+                                    <div class="grid gap-2 ">
+                                        <label for="specifier_job_title">Job Title</label>
+                                        <input type='text' id='specifier_job_title' name="specifier_job_title" class="tipN" placeholder="Optional" />
+                                    </div>
+
+                                    <div class="grid gap-2 ">
+                                        <label for="specifier_phone_number">Phone Number</label>
+                                        <input type='tel' id='specifier_phone_number' name="specifier_phone_number" class="maskPhone" placeholder="(123) 456-7890" />
+                                    </div>
+
+                                    <div class="grid gap-2 ">
+                                        <label for="specifier_email">Email</label>
+                                        <input type='text' id='specifier_email' name="specifier_email" class="tipN" placeholder="Optional" />
+                                    </div>
+                                </div>
+                            </details>
+                        </details>
 
                         <div class="h-[1px] bg-border my-4"></div>
 

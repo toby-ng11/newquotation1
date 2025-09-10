@@ -6,9 +6,12 @@ namespace Application\Controller;
 
 use Application\Traits\HasModels;
 use Application\Traits\InertiaRender;
+use Laminas\Http\Header\HeaderInterface;
+use Laminas\Http\Headers;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractRestfulController;
+use Laminas\Mvc\Plugin\FlashMessenger\FlashMessenger;
 use Laminas\View\Model\ViewModel;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,6 +19,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * @method Request getRequest()
  * @method Response getResponse()
+ * @method FlashMessenger flashMessenger()
  *
  * @property \Laminas\Mvc\Controller\PluginManager $plugins
  * @property \Laminas\Http\Request $request
@@ -41,14 +45,13 @@ abstract class BaseController extends AbstractRestfulController
 
     /**
      * Render 404 page
-     *
-     * @return ViewModel
      */
-    protected function abort404()
+    protected function abort404(): Response | ViewModel
     {
-        $this->layout()->setTemplate('error/not-found');
-        $view = new ViewModel();
-        return $view;
+        return $this->render('error/404', [
+            'status' => 404,
+            'message' => 'The page you are looking for could not be found.',
+        ]);
     }
 
     /** @var ContainerInterface|null $container */
@@ -84,5 +87,24 @@ abstract class BaseController extends AbstractRestfulController
         $response->setStatusCode($symfony->getStatusCode());
 
         return $response;
+    }
+
+    protected function expectsJson(Request $request): bool
+    {
+        $headers = $request->getHeaders();
+        if (!$headers instanceof Headers) {
+            return false;
+        }
+
+        $acceptHeader = $headers->get('Accept');
+        $xRequestedWith = $headers->get('X-Requested-With');
+
+        $acceptsJson = $acceptHeader instanceof HeaderInterface
+            && stripos($acceptHeader->getFieldValue(), 'application/json') !== false;
+
+        $isAjax = $xRequestedWith instanceof HeaderInterface
+            && $xRequestedWith->getFieldValue() === 'XMLHttpRequest';
+
+        return $acceptsJson || $isAjax;
     }
 }

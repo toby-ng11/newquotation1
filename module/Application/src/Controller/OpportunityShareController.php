@@ -15,10 +15,20 @@ class OpportunityShareController extends BaseController
     // GET /enpoint
     public function getList()
     {
-        $table = $this->getOpportunityShareModel()->all();
+        $opportunityId = $this->params()->fromQuery('opp', null);
+
+        if ($opportunityId) {
+            $data = $this->getOpportunityShareModel()->findBy(['opportunity_id' => $opportunityId]);
+            return $this->json([
+                'success' => true,
+                'data' => iterator_to_array($data),
+            ]);
+        }
+
+        $data = $this->getOpportunityShareModel()->all();
         return $this->json([
             'success' => true,
-            'data' => iterator_to_array($table),
+            'data' => iterator_to_array($data),
         ]);
     }
 

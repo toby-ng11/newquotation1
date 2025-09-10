@@ -25,16 +25,16 @@ import {
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
-
 const multiValueFilter: FilterFn<Opportunity> = (row, columnId, filterValue) => {
     if (!Array.isArray(filterValue)) return true;
     const rowValue = row.getValue(columnId);
     return filterValue.includes(rowValue);
 };
 
-export default function OwnOpportunitiesTable() {
-    const ENDPOINT = '/dashboards/opportunity/opportunities';
-    const qKey = ['opportunity', 'opportunities'];
+export default function OtherUsersOpportunitiesTable() {
+    const ENDPOINT = '/dashboards/opportunity/other';
+    const qKey = ['opportunity-dash', 'other'];
+    const columnVisibilityPref = '/api/preferences/opp-dash-other-table-column-visibility';
 
     const { data: opportunities = [], isLoading, isRefetching, refetch } = useTanStackQuery<Opportunity>(ENDPOINT, qKey);
 
@@ -46,7 +46,7 @@ export default function OwnOpportunitiesTable() {
 
     // Restore saved visibility
     useEffect(() => {
-        axios.get('/api/preferences/projectTableColumnVisibility').then((res) => {
+        axios.get(columnVisibilityPref).then((res) => {
             setColumnVisibility(res.data || {});
             lastSavedVisibility.current = res.data;
             setIsReady(true);
@@ -60,7 +60,7 @@ export default function OwnOpportunitiesTable() {
         const previous = JSON.stringify(lastSavedVisibility.current);
 
         if (current !== previous) {
-            axios.post('/api/preferences/projectTableColumnVisibility', {
+            axios.post(columnVisibilityPref, {
                 value: columnVisibility,
             });
             lastSavedVisibility.current = columnVisibility;
@@ -102,14 +102,9 @@ export default function OwnOpportunitiesTable() {
             meta: 'ID',
         },
         {
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Ext. ID" />,
-            accessorKey: 'project_id_ext',
-            meta: 'Ext. ID',
-        },
-        {
-            accessorKey: 'project_name',
+            accessorKey: 'opp_name',
             header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
-            cell: ({ row }) => <div className="max-w-[300px] min-w-[300px] truncate">{row.getValue('project_name')}</div>,
+            cell: ({ row }) => <div className="max-w-[300px] min-w-[300px] truncate">{row.getValue('opp_name')}</div>,
             meta: 'Name',
         },
         {
@@ -211,19 +206,19 @@ export default function OwnOpportunitiesTable() {
         <div>
             <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
                 <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl font-semibold tracking-tight">All Opportunities</h2>
-                    <p className="text-muted-foreground">Here's the list of all your opportunities.</p>
+                    <h2 className="text-2xl font-semibold tracking-tight">Other User's Opportunities</h2>
+                    <p className="text-muted-foreground">The list of all opportunities of other users.</p>
                 </div>
                 <div className="flex flex-col gap-4">
                     {!isLoading ? (
                         <>
                             <DataTableToolbar
                                 table={table}
-                                searchColumn="project_name"
+                                searchColumn="opp_name"
                                 searchPlaceholder="Filter project names..."
                                 facetedFilters={[
                                     { columnId: 'created_by', title: 'Created By' },
-                                    { columnId: 'shared_id', title: 'Shared' },
+                                    { columnId: 'shared_users', title: 'Shared With' },
                                     { columnId: 'reed', title: 'REED' },
                                     { columnId: 'architect_name', title: 'Architect' },
                                     { columnId: 'market_segment_desc', title: 'Category' },
@@ -262,7 +257,7 @@ export default function OwnOpportunitiesTable() {
                                         ) : (
                                             <TableRow>
                                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                                    No projects found.
+                                                    No data found.
                                                 </TableCell>
                                             </TableRow>
                                         )}

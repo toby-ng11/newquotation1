@@ -1,0 +1,794 @@
+<?php
+
+/**
+ * @psalm-scope-this Exception
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ * @var bool $isOwner
+ * @var bool $isShareExists
+ * @var array $opportunity
+ * @var array $user
+ * @var array $architect
+ * @var array $architectTypes
+ * @var array $address
+ * @var array $specifier
+ * @var array $specifierAddress
+ * @var array $locations
+ * @var array $companies
+ * @var array $projectStatuses
+ * @var array $marketSegments
+ * @var array $addressList
+ * @var array $specifierList
+ * @var array $generalContractor
+ * @var array $awardedContractor
+ * @var string $defaultCompany
+ */
+
+$role = $user['p2q_system_role'] ?? '';
+$isGuest   = $role === 'guest';
+
+$this->headTitle('Edit Opportunity: ' . $opportunity['id'] . ' - ' . $opportunity['opp_name']);
+
+echo $this->headTitle();
+
+$leadSources = [
+    'ConstructConnect',
+    'Existing Client',
+    'New Client',
+    'Trade Fair',
+    'Referral',
+    'Manager Assigned',
+    'Other',
+];
+?>
+
+<!-- Right panel -->
+
+
+<!-- Main content wrapper -->
+<div class="h-full flex flex-1 flex-col gap-4 p-8">
+    <h1 class="font-mono text-5xl font-semibold tracking-wide uppercase">Opportunity</h1>
+    <div class="flex items-center justify-between ">
+        <p class="text-muted-foreground">Editing opportunity # <?= $this->escapeHtml($opportunity['id']) ?> - <?= $this->escapeHtml($opportunity['opp_name']) ?></p>
+
+        <div class="hidden lg:flex lg:items-center lg:gap-12">
+
+            <?php if (! $isGuest): ?>
+                <button class="opp-to-project-btn btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                    type="button"
+                    data-tooltip="Convert this opportunity to project">
+                    <i data-lucide="file-plus-2"></i>
+                    CONVERT TO PROJECT
+                </button>
+            <?php endif; ?>
+
+            <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                href="/opportunities/<?= $opportunity['id'] ?>/export"
+                data-tooltip="Print this opportunity">
+                <i data-lucide="printer"></i>
+                PRINT
+            </a>
+
+            <?php
+            if ($isOwner) { ?>
+                <button class="opp-delete-btn btn-sm-ghost text-destructive hover:bg-destructive/20 font-medium text-xs tracking-tight"
+                    type="button"
+                    data-tooltip="Delete this project"
+                    data-align="end">
+                    <i data-lucide="trash-2"></i>
+                    DELETE
+                </button>
+            <?php }
+            ?>
+        </div>
+
+        <div id="project-menu" class="dropdown-menu lg:hidden">
+            <button type="button"
+                id="project-menu-trigger"
+                aria-haspopup="menu"
+                aria-controls="project-menu-options"
+                aria-expanded="false"
+                class="btn-ghost text-muted-foreground text-xs tracking-tight uppercase">
+                <i data-lucide="ellipsis" class="w-4 h-4"></i>
+                Options
+            </button>
+            <div id="project-menu-popover" data-popover data-align="end" aria-hidden="true" class="min-w-40">
+                <div role="menu" id="project-menu-options" aria-labelledby="project-menu-trigger">
+                    <?php if (! $isGuest): ?>
+                        <div role="menuitem">
+                            <button class="opp-to-project-btn flex items-center gap-2"
+                                type="button"
+                                title="Convert to Project">
+                                <i data-lucide="file-plus-2" class="text-muted-foreground h-4 w-4"></i>
+                                Convert to project
+                            </button>
+                        </div>
+                    <?php endif; ?>
+
+                    <div role="menuitem">
+                        <a class="flex items-center gap-2"
+                            href="/opportunities/<?= $opportunity['id'] ?>/export"
+                            title="Print">
+                            <i data-lucide="printer" class="text-muted-foreground h-4 w-4"></i>
+                            Print
+                        </a>
+                    </div>
+                    <?php
+                    if ($isOwner) : ?>
+                        <hr role="separator" />
+                        <div role="menuitem" class="hover:bg-destructive/20">
+                            <button class="opp-delete-btn text-destructive flex items-center gap-2"
+                                type="button"
+                                title="Delete Project">
+                                <i data-lucide="trash-2" class="text-destructive size-4"></i>
+                                Delete Opportunity
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="h-[2px] bg-border my-4"></div>
+    <!-- Form -->
+    <div class="flex flex-col gap-4 md:gap-6">
+        <div class="fade-in-up">
+            <form
+                action="/opportunities/<?= $this->escapeHtml($opportunity['id']) ?>"
+                method="put"
+                class="form"
+                id="edit-opportunity-form">
+
+                <div class="widget-table bg-widget-background rounded-xl p-6">
+                    <div class="widget-header">
+                        <div class="widget-title">
+                            <p class="text-2xl font-semibold tracking-tight">Opportunity Info</p>
+                        </div>
+                    </div>
+                    <div class="h-[1px] bg-border my-4"></div>
+
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+                        <input type="hidden" id='opportunity_id' value='<?= $this->escapeHtml($opportunity['id']) ?>'>
+
+                        <div class="grid gap-2">
+                            <label for="opp_name" class="required">Name</label>
+                            <input required type="text"
+                                id="opp_name"
+                                name="opp_name"
+                                placeholder="Project name"
+                                value="<?= $this->escapeHtml($opportunity['opp_name']) ?>" />
+                        </div>
+
+                        <div class="grid gap-2">
+                            <label for="opp_address">Address</label>
+                            <input required id="opp_address" name="opp_address" type="text"
+                                placeholder="Project address"
+                                value="<?= $this->escapeHtml($opportunity['opp_address']) ?>" />
+                        </div>
+
+                        <div class="grid gap-2">
+                            <label for="location_id">Centura Branch</label>
+                            <select name="location_id" id="location_id">
+                                <?php foreach ($locations as $l) { ?>
+                                    <option
+                                        value="<?= $this->escapeHtml($l['location_id']) ?>"
+                                        <?php if ($l['location_id'] == $opportunity['centura_location_id']) {
+                                            echo 'selected';
+                                        } ?>>
+                                        <?= $this->escapeHtml($l['branch_description']) ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <div class="grid gap-2">
+                            <label for="status_id">Stage</label>
+                            <select name="status_id" id="status_id">
+                                <option value="">-- Select Status --</option>
+                                <?php foreach ($projectStatuses as $status) { ?>
+                                    <option
+                                        value="<?= $this->escapeHtml($status['id']) ?>"
+                                        <?php if ($status['id'] == $opportunity['status_id']) {
+                                            echo 'selected';
+                                        } ?>>
+                                        <?= $this->escapeHtml($status['status_desc']) ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <div class="grid gap-2">
+                            <label for='market_segment_id'>Project Segment</label>
+                            <select name="market_segment_id" id='market_segment_id' class="validate[required]">
+                                <option value="">-- Choose Segment --</option>
+                                <?php foreach ($marketSegments as $segment) { ?>
+                                    <option
+                                        value="<?= $this->escapeHtml($segment['id']) ?>"
+                                        <?php if ($segment['id'] == $opportunity['market_segment_id']) {
+                                            echo 'selected';
+                                        } ?>>
+                                        <?= $this->escapeHtml($segment['market_segment_desc']) ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <div class="grid gap-2">
+                            <label for="leed_certified_number">LEED Certified Number</label>
+                            <input type="text" name='leed_certified_number' id='leed_certified_number'
+                                placeholder="Leave blank if non-certified"
+                                value="<?= $this->escapeHtml($opportunity['leed_certified_number']) ?>" />
+                        </div>
+
+                        <div class="grid gap-2">
+                            <label for="lead_source">Lead Source</label>
+                            <select name="lead_source" id="lead_source">
+                                <option value="" <?= empty($opportunity['lead_source']) ? 'selected' : '' ?>>-- Choose a lead source --</option>
+                                <?php foreach ($leadSources as $src): ?>
+                                    <option
+                                        value="<?= $src ?>"
+                                        <?= $opportunity['lead_source'] === $src ? 'selected' : ''
+                                        ?>>
+                                        <?= $src ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="grid gap-2">
+                            <label for="lead_source_id">Lead Source ID</label>
+                            <input type="text" name="lead_source_id" id="lead_source_id"
+                                placeholder="ConstructConnect project ID, etc."
+                                value="<?= $this->escapeHtml($opportunity['lead_source_id']) ?>" />
+                        </div>
+
+                        <div class="grid gap-2">
+                            <label for="project_value">Project Value</label>
+                            <input type="number" name="project_value" id="project_value"
+                                value="<?= $this->escapeHtml($opportunity['project_value']) ?>" />
+                        </div>
+                        <div class="grid gap-2">
+                            <label for="project_owner">Project Owner</label>
+                            <input type="text" name="project_owner" id="project_owner"
+                                placeholder="Name of company, contractor, county, etc."
+                                value="<?= $this->escapeHtml($opportunity['project_owner']) ?>" />
+                        </div>
+
+                        <div class="grid gap-2">
+                            <label for="start_date">Start Date</label>
+                            <input readonly
+                                type="text"
+                                id="start_date"
+                                name="start_date"
+                                class="flatpickr"
+                                placeholder="Pick a date"
+                                value="<?= $this->escapeHtml($opportunity['start_date']?->format('Y-m-d')) ?>" />
+                        </div>
+
+                        <div class="grid gap-2">
+                            <label for="completion_date">Completion Date</label>
+                            <input readonly
+                                type="text"
+                                id="completion_date"
+                                name="completion_date"
+                                class="flatpickr"
+                                placeholder="Pick a date"
+                                value="<?= $this->escapeHtml($opportunity['completion_date']?->format('Y-m-d')) ?>" />
+                        </div>
+
+                        <div class="grid gap-2">
+                            <label for="sample_submitted">Sample Submitted</label>
+                            <select name="sample_submitted" id="sample_submitted">
+                                <option value="1"
+                                    <?= $opportunity['sample_submitted'] === 1 ? 'selected' : '' ?>>
+                                    Yes
+                                </option>
+                                <option value="0"
+                                    <?= $opportunity['sample_submitted'] === 0 ? 'selected' : '' ?>>
+                                    No
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="grid gap-2 col-span-3">
+                            <label for="project_description">Project Description</label>
+                            <textarea
+                                name="project_description"
+                                id="project_description"
+                                value="<?= $this->escapeHtml($opportunity['project_description']) ?>">
+                                </textarea>
+                        </div>
+                    </div>
+
+                    <div class="h-[1px] bg-border my-4"></div>
+
+                    <details id="architect-details">
+                        <summary>
+                            <button type="button"
+                                class="btn-sm-outline"
+                                id="architect-details-expand-btn">
+                                Architect
+                                <i data-lucide="chevron-down"></i>
+                            </button>
+                        </summary>
+                        <div class="widget-section">
+                            <div class="widget-header">
+                                <div class="widget-title">
+                                    <h4>Architect</h4>
+                                </div>
+                                <div class="widget-button">
+                                    <?php if ($architect): ?>
+                                        <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                                            target="_blank"
+                                            href="/architect/<?= $this->escapeHtml($architect['id'] ?? '') ?>/edit"
+                                            data-tooltip="Edit this architect details">
+                                            <i data-lucide="external-link"></i>
+                                            EDIT ARCHITECT
+                                        </a>
+                                    <?php endif; ?>
+                                    <button
+                                        type="button"
+                                        title="Add new architect"
+                                        class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                                        id="add-architect-project-edit"
+                                        data-tooltip="This will clear the existing project's architect">
+                                        <i data-lucide="plus"></i>
+                                        NEW ARCHITECT
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+                                <div class="grid gap-2">
+                                    <label for="architect_name">Architect Name</label>
+                                    <input type='text' name="architect_name" id='architect_name' class="tipN"
+                                        original-title="Search by ID or Name" value='<?= $architect['architect_name'] ?? '' ?>' />
+                                    <input
+                                        type="hidden"
+                                        name='architect_id'
+                                        id='architect_id'
+                                        value="<?= $this->escapeHtml($architect['id'] ?? '') ?>" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="architect_company_id">Company</label>
+                                    <select id="architect_company_id" name="architect_company_id">
+                                        <?php foreach ($companies as $c) { ?>
+                                            <option
+                                                value="<?= $this->escapeHtml($c['company_id']) ?>"
+                                                <?php if ($c['company_id'] === ($architect['company_id'] ?? $defaultCompany)) {
+                                                    echo 'selected';
+                                                } ?>>
+                                                <?= $this->escapeHtml($c['company_name']) ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="architect_rep_id">Architect Representative</label>
+                                    <input type="text" id="architect_rep_id" name="architect_rep_id"
+                                        value="<?= $this->escapeHtml($architect['architect_rep_id'] ?? '') ?>" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="architect_type_id">Architect Type</label>
+                                    <select id="architect_type_id" name="architect_type_id">
+                                        <option value="">-- Choose architect type --</option>
+                                        <?php foreach ($architectTypes as $type) { ?>
+                                            <option
+                                                value="<?= $this->escapeHtml($type['id']) ?>"
+                                                <?= $this->escapeHtml($type['id'] === ($architect['architect_type_id'] ?? '') ? 'selected' : '') ?>>
+                                                <?= $this->escapeHtml($type['architect_type_desc']) ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="architect_class_id">Architect Class</label>
+                                    <input type="text" id="architect_class_id" name="architect_class_id"
+                                        value="<?= $this->escapeHtml($architect['class_id'] ?? '') ?>">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="h-[1px] bg-border my-4"></div>
+
+                        <div class="widget-section">
+                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+                                <input
+                                    type="hidden"
+                                    name='address_id'
+                                    id='address_id'
+                                    value="<?= $this->escapeHtml($address['id'] ?? '') ?>">
+                                <div class="grid gap-2 ">
+                                    <label for="address_list">Address List</label>
+                                    <select name='address_list' id='address_list'>
+                                        <option value="new">+ Add New Address</option>
+                                        <?php if (!empty($addressList)):
+                                            foreach ($addressList as $a): ?>
+                                                <option
+                                                    value="<?= $this->escapeHtml($a['id']) ?>"
+                                                    <?= $a['id'] === $opportunity['architect_address_id'] ? 'selected' : '' ?>>
+                                                    <?= $this->escapeHtml($a['name']) ?>
+                                                </option>
+                                        <?php endforeach;
+                                        endif; ?>
+                                    </select>
+                                </div>
+
+                                <div class="grid gap-2 ">
+                                    <label for="address_name">Address Nickname</label>
+                                    <input
+                                        type='text'
+                                        name="address_name"
+                                        id='address_name'
+                                        value="<?= $this->escapeHtml($address['name'] ?? '') ?>">
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="phys_address1">Address 1</label>
+                                    <input
+                                        type='text'
+                                        name="phys_address1"
+                                        id='phys_address1'
+                                        value="<?= $this->escapeHtml($address['phys_address1'] ?? '') ?>" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="phys_address2">Address 2</label>
+                                    <input
+                                        type='text'
+                                        name="phys_address2"
+                                        id='phys_address2'
+                                        value="<?= $this->escapeHtml($address['phys_address2'] ?? '') ?>"
+                                        placeholder="Optional" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="phys_city">City</label>
+                                    <input
+                                        type='text'
+                                        name="phys_city"
+                                        id='phys_city'
+                                        value="<?= $this->escapeHtml($address['phys_city'] ?? '') ?>"
+                                        placeholder="Optional" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="phys_state">Province</label>
+                                    <input
+                                        type='text'
+                                        name="phys_state"
+                                        id='phys_state'
+                                        value="<?= $this->escapeHtml($address['phys_state'] ?? '') ?>"
+                                        placeholder="Optional" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="phys_postal_code">Postal Code</label>
+                                    <input
+                                        type='text'
+                                        name="phys_postal_code"
+                                        id='phys_postal_code'
+                                        value="<?= $this->escapeHtml($address['phys_postal_code'] ?? '') ?>"
+                                        placeholder="Optional" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="phys_country">Country</label>
+                                    <input
+                                        type='text'
+                                        name="phys_country"
+                                        id='phys_country'
+                                        value="<?= $this->escapeHtml($address['phys_country'] ?? '') ?>"
+                                        placeholder="Optional" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="central_phone_number">Company Phone Number</label>
+                                    <input
+                                        id='central_phone_number'
+                                        name='central_phone_number'
+                                        type="tel"
+                                        class="maskPhone" value="<?= $this->escapeHtml($address['central_phone_number'] ?? '') ?>"
+                                        placeholder="(123) 456-7890" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="email_address">Email</label>
+                                    <input
+                                        type="text"
+                                        id='email_address'
+                                        name='email_address'
+                                        value="<?= $this->escapeHtml($address['email_address'] ?? '') ?>"
+                                        placeholder="Optional">
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="url">URL</label>
+                                    <input
+                                        type="url"
+                                        id='url'
+                                        name='url'
+                                        value="<?= $this->escapeHtml($address['url'] ?? '') ?>"
+                                        placeholder="Optional">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="h-[1px] bg-border my-4"></div>
+
+                        <div class="widget-section">
+                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+                                <input
+                                    type="hidden"
+                                    id='specifier_id'
+                                    name="specifier_id"
+                                    value="<?= $this->escapeHtml($opportunity['specifier_id']) ?>" />
+
+                                <input
+                                    type="hidden"
+                                    id='specifier_address_id'
+                                    name="specifier_address_id"
+                                    value="<?= $this->escapeHtml($specifierAddress['id'] ?? '') ?>" />
+
+                                <div class="grid gap-2 ">
+                                    <label for="specifier_name">Specifier</label>
+                                    <select name='specifier_name' id='specifier_name'>
+                                        <option value="new">+ Add New Specifier</option>
+                                        <?php if (!empty($specifierList)):
+                                            foreach ($specifierList as $spec): ?>
+                                                <option
+                                                    value="<?= $this->escapeHtml($spec['id']) ?>"
+                                                    <?= $spec['id'] === $opportunity['specifier_id'] ? 'selected' : '' ?>>
+                                                    <?= $spec['first_name'] . ' ' . $spec['last_name'] ?>
+                                                </option>
+                                        <?php endforeach;
+                                        endif; ?>
+                                    </select>
+                                </div>
+
+                                <div class="grid gap-2 ">
+                                    <label for="specifier_first_name">First Name</label>
+                                    <input
+                                        type='text'
+                                        id='specifier_first_name'
+                                        name="specifier_first_name"
+                                        class="tipN"
+                                        value="<?= $this->escapeHtml($specifier['first_name'] ?? '') ?>" />
+                                </div>
+
+                                <div class="grid gap-2 ">
+                                    <label for="specifier_last_name">Last Name</label>
+                                    <input
+                                        type='text'
+                                        id='specifier_last_name'
+                                        name="specifier_last_name"
+                                        placeholder="Optional"
+                                        value="<?= $this->escapeHtml($specifier['last_name'] ?? '') ?>" />
+                                </div>
+
+                                <div class="grid gap-2 ">
+                                    <label for="specifier_job_title">Job Title</label>
+                                    <input
+                                        type='text'
+                                        id='specifier_job_title'
+                                        name="specifier_job_title"
+                                        class="tipN"
+                                        placeholder="Optional"
+                                        value="<?= $this->escapeHtml($specifier['job_title'] ?? '') ?>" />
+                                </div>
+
+                                <div class="grid gap-2 ">
+                                    <label for="specifier_phone_number">Phone Number</label>
+                                    <input
+                                        type='tel'
+                                        id='specifier_phone_number'
+                                        name="specifier_phone_number"
+                                        class="maskPhone"
+                                        placeholder="(123) 456-7890"
+                                        value="<?= $this->escapeHtml($specifier['central_phone_number'] ?? '') ?>" />
+                                </div>
+
+                                <div class="grid gap-2 ">
+                                    <label for="specifier_email">Email</label>
+                                    <input
+                                        type='text'
+                                        id='specifier_email'
+                                        name="specifier_email"
+                                        class="tipN"
+                                        placeholder="Optional"
+                                        value="<?= $this->escapeHtml($specifierAddress['email_address'] ?? '') ?>" />
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <div class="h-[1px] bg-border my-4"></div>
+
+                    <details id="contractor-details">
+                        <summary>
+                            <button type="button"
+                                class="btn-sm-outline"
+                                id="contractor-details-expand-btn">
+                                Contractor
+                                <i data-lucide="chevron-down"></i>
+                            </button>
+                        </summary>
+                        <div class="widget-section">
+                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+                                <div class="grid gap-2">
+                                    <label for="general_contractor_name">General Contractor</label>
+                                    <input
+                                        type="text"
+                                        id="general_contractor_name"
+                                        name="general_contractor_name"
+                                        placeholder="Add general contractor"
+                                        value='<?php if (! empty($generalContractor)) {
+                                                    echo $generalContractor['customer_name'] . ' - ' . $generalContractor['company_id'];
+                                                } ?>' />
+                                    <input type="hidden" id="general_contractor_id" name="general_contractor_id"
+                                        value="<?= $this->escapeHtml($opportunity['general_contractor_id']) ?>" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="awarded_contractor_name">Awarded Contractor</label>
+                                    <input
+                                        type="text"
+                                        id="awarded_contractor_name"
+                                        name="awarded_contractor_name"
+                                        placeholder="Add awarded contractor"
+                                        value='<?php if (!empty($awardedContractor)) {
+                                                    echo $awardedContractor['customer_name'] . ' - ' . $awardedContractor['company_id'];
+                                                } ?>' />
+                                    <input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id'
+                                        value="<?= $this->escapeHtml($opportunity['awarded_contractor_id']) ?>">
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <?php if ($isOwner) { ?>
+                        <div class="h-[1px] bg-border my-4"></div>
+
+                        <div class="widget-footer">
+                            <div class="widget-footer-button">
+                                <button disabled type="submit"
+                                    class="btn"
+                                    form="edit-opportunity-form"
+                                    title="Save project information">
+                                    Save</button>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+            </form>
+        </div>
+
+        <div id="opportunity-edit-temp"></div>
+
+        <div class="fade-in-up">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <p class="text-2xl font-semibold tracking-tight">Share</p>
+                    </div>
+                    <div class="widget-button">
+                        <?php if ($isOwner) { ?>
+                            <button type="button"
+                                title="Add new shared user"
+                                class="btn-sm-outline text-muted-foreground"
+                                id="widget-btn-add-shared-user"
+                                x-on:click="window.shareModalComponent.open = true"
+                                data-tooltip="Share this project with another user">
+                                Share
+                                <i data-lucide="plus"></i>
+                            </button>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="line"></div>
+
+                <div class="widget-section">
+                    <table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap"
+                        id="project-share-table" data-init="projectShare">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="fade-in-up">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <p class="text-2xl font-semibold tracking-tight">Opportunity Log</p>
+                    </div>
+                    <?php if ($isOwner) { ?>
+                        <button
+                            type="button"
+                            title="Add new log"
+                            class="btn-sm-outline text-muted-foreground"
+                            id="widget-btn-add-note"
+                            data-tooltip="Add a new note for this opportunity">
+                            Add Note
+                            <i data-lucide="plus"></i>
+                        </button>
+                    <?php } ?>
+                </div>
+
+                <div class="line"></div>
+
+                <div class="widget-section">
+                    <table cellpadding="0" cellspacing="0" width="100%" class="sTable display" id='note-table' data-init="projectNote">
+                        <thead>
+                            <tr>
+                                <th>Date Add</th>
+                                <th>Note</th>
+                                <th>Next Action</th>
+                                <th>Reminder Time</th>
+                                <th>Author</th>
+                                <th class="action">Options</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="fade-in-up" aria-labelledby="quote-by-project">
+            <div class="widget-table bg-widget-background rounded-xl p-6">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        <p class="text-2xl font-semibold tracking-tight">Opportunity's Projects</p>
+                    </div>
+                    <div class="widget-button">
+                        <?php if ($isOwner) { ?>
+                            <button
+                                type="button"
+                                title="Add new quote"
+                                class="widget-btn-add-quote btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                                data-tooltip="Make a new quote for this project">
+                                <i data-lucide="plus"></i>
+                                MAKE QUOTE
+                            </button>
+                        <?php } ?>
+                    </div>
+                </div>
+
+                <div class="line"></div>
+
+                <div class="widget-section">
+                    <table width="100%" class="sTable display" id='opportuntity-dash-quote-table' data-init="projectQuote">
+                        <thead>
+                            <tr>
+                                <th>Quote ID</th>
+                                <th>Customer</th>
+                                <th>Contact</th>
+                                <th>Quote Date</th>
+                                <th>Expire Date</th>
+                                <th>Ship Required Date</th>
+                                <th>Approve Status</th>
+                                <th>P21 Order ID</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?= $this->render('modal/share'); ?>
+
+    <?= $this->render('modal/note'); ?>
+
+    <?= $this->render('modal/customer'); ?>
+</div>

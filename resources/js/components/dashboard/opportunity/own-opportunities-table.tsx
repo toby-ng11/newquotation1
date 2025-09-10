@@ -25,17 +25,16 @@ import {
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
-
 const multiValueFilter: FilterFn<Opportunity> = (row, columnId, filterValue) => {
     if (!Array.isArray(filterValue)) return true;
     const rowValue = row.getValue(columnId);
     return filterValue.includes(rowValue);
 };
 
-export default function SharedOpportunitiesTable() {
-    const ENDPOINT = '/dashboards/opportunity/shared';
-    const qKey = ['opportunity-dash', 'shared'];
-    const columnVisibilityPref = '/api/preferences/opp-dash-shared-table-column-visibility';
+export default function OwnOpportunitiesTable() {
+    const ENDPOINT = '/dashboards/opportunity/opportunities';
+    const qKey = ['opportunity-dash', 'own'];
+    const columnVisibilityPref = '/api/preferences/opp-dash-own-table-column-visibility';
 
     const { data: opportunities = [], isLoading, isRefetching, refetch } = useTanStackQuery<Opportunity>(ENDPOINT, qKey);
 
@@ -115,6 +114,12 @@ export default function SharedOpportunitiesTable() {
             meta: 'Created By',
         },
         {
+            accessorKey: 'shared_users',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Shared" />,
+            filterFn: 'arrIncludesSome',
+            meta: 'Shared',
+        },
+        {
             accessorKey: 'reed',
             header: ({ column }) => <DataTableColumnHeader column={column} title="REED" />,
             filterFn: 'arrIncludesSome',
@@ -122,7 +127,7 @@ export default function SharedOpportunitiesTable() {
         },
         {
             id: 'created_at',
-            accessorFn: (row) => row.created_at?.date,
+            accessorFn: (row) => row.created_at?.date ?? null,
             header: ({ column }) => <DataTableColumnHeader column={column} title="Created At" />,
             cell: ({ row }) => new Date(row.getValue('created_at')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
             sortingFn: 'datetime',
@@ -130,9 +135,17 @@ export default function SharedOpportunitiesTable() {
         },
         {
             id: 'start_date',
-            accessorFn: (row) => row.start_date?.date,
+            accessorFn: (row) => row.start_date?.date ?? null,
             header: ({ column }) => <DataTableColumnHeader column={column} title="Start Date" />,
-            cell: ({ row }) => new Date(row.getValue('start_date')).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }),
+            cell: ({ row }) => {
+                const value = row.getValue<string | null>('start_date');
+                if (!value) return '';
+                return new Date(value).toLocaleDateString('en-CA', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                });
+            },
             sortingFn: 'datetime',
             meta: 'Start Date',
         },
@@ -201,8 +214,8 @@ export default function SharedOpportunitiesTable() {
         <div>
             <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
                 <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl font-semibold tracking-tight">Shared Opportunities</h2>
-                    <p className="text-muted-foreground">Here's the list of all opportunities that is shared with you.</p>
+                    <h2 className="text-2xl font-semibold tracking-tight">All Opportunities</h2>
+                    <p className="text-muted-foreground">Here's the list of all your opportunities.</p>
                 </div>
                 <div className="flex flex-col gap-4">
                     {!isLoading ? (
@@ -213,6 +226,7 @@ export default function SharedOpportunitiesTable() {
                                 searchPlaceholder="Filter project names..."
                                 facetedFilters={[
                                     { columnId: 'created_by', title: 'Created By' },
+                                    { columnId: 'shared_users', title: 'Shared With' },
                                     { columnId: 'reed', title: 'REED' },
                                     { columnId: 'architect_name', title: 'Architect' },
                                     { columnId: 'market_segment_desc', title: 'Category' },

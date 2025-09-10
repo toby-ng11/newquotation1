@@ -49,6 +49,13 @@ class DashboardController extends BaseController
         return $this->json($opportunities);
     }
 
+    public function opportunityOtherOpportunitiesAction(): Response
+    {
+        $user = $this->getUserService()->getCurrentUser();
+        $opportunities = $this->getP2qViewOpportunityModel()->findBy(['created_by != ?' => $user['id']]);
+        return $this->json($opportunities);
+    }
+
     public function projectAction(): Response | ViewModel
     {
         return $this->render('dashboards/project');

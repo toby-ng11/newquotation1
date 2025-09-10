@@ -108,6 +108,16 @@ return [
                                     ]
                                 ],
                             ],
+                            'other-users-opportunities-table' => [
+                                'type' => Literal::class,
+                                'options' => [
+                                    'route' => '/other',
+                                    'defaults' => [
+                                        'controller' => Controller\DashboardController::class,
+                                        'action' => 'opportunityOtherOpportunities',
+                                    ]
+                                ],
+                            ],
                         ],
                     ],
                     'project' => [
@@ -367,15 +377,39 @@ return [
                 ],
             ],
             'opportunities' => [
-                'type' => Segment::class,
+                'type' => Literal::class,
                 'options' => [
-                    'route'    => '/opportunities[/:id]',
+                    'route'    => '/opportunities',
                     'constraints' => [
                         'id' => '[0-9]+',
                     ],
                     'defaults' => [
                         'controller' => Controller\OpportunityController::class,
-                        'action'     => 'view',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'new' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/[:id][/:action]',
+                            'constraints' => [
+                                'id' => '[0-9]+',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ],
+                        ],
+                    ]
+                ]
+            ],
+            'opportunity-shares' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/opportunity-shares[/:id]',
+                    'constraints' => [
+                        'id' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\OpportunityShareController::class,
                     ],
                 ],
             ],
@@ -685,6 +719,7 @@ return [
                 return new Model\ProjectNote(
                     $dbAdapter,
                     $container->get(Service\UserService::class),
+                    $container,
                 );
             },
             Service\MailerService::class => function (ContainerInterface $container) {

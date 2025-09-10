@@ -2,6 +2,8 @@
 
 namespace Application\Controller;
 
+use Application\Config\Defaults;
+use Laminas\Http\Response;
 use Laminas\View\Model\ViewModel;
 use Psr\Container\ContainerInterface;
 
@@ -42,7 +44,7 @@ class OpportunityController extends BaseController
         $result = $this->getOpportunityModel()->create($data);
         return $this->json([
             'success' => $result !== false,
-            'message' => $result !== false ? 'Market segment added!' : 'Error! Please check log for more details.',
+            'message' => $result !== false ? 'Opportunity created!' : 'Error! Please check log for more details.',
         ]);
     }
 
@@ -66,77 +68,68 @@ class OpportunityController extends BaseController
         ]);
     }
 
-    public function editAction()
+    public function editAction(): Response | ViewModel
     {
+        $this->layout()->setTemplate('layout/default');
         $opportunity_id = (int) $this->params()->fromRoute('id');
         if (! $opportunity_id) {
             return $this->abort404();
         }
 
         $opportunity = $this->getOpportunityModel()->find($opportunity_id);
-        if (! $opportunity || ($opportunity['deleted_at'])) {
+        if (! $opportunity ) {
             $this->flashMessenger()->addErrorMessage("This opportunity is deleted.");
             return $this->redirect()->toRoute('dashboard', ['action' => 'opportunities']);
         }
 
         $user = $this->getUserService()->getCurrentUser();
-        $location = $this->getP21LocationModel()->fetchAllBranches();
-        $company = $this->getP21LocationModel()->fetchAllCompanies();
-        $status = $this->getStatusModel()->all();
-        $marketSegment = $this->getMarketSegmentModel()->all();
-        $architect = $this->getArchitectModel()->fetchArchitectById($opportunity['architect_id']);
-        $address = $this->getAddressModel()->fetchAddressesById($opportunity['architect_address_id']);
         $specifier = $this->getSpecifierModel()->fetchSpecifierById($opportunity['specifier_id']);
         $specifierAddress = null;
         if ($specifier) {
             $specifierAddress = $this->getAddressModel()->fetchSpecifierAddress($specifier['id']);
         }
 
-        $architectType = $this->getArchitectModel()->fetchArchitectType();
-        $addressList = $this->getAddressModel()->fetchAddressesByArchitect($opportunity['architect_id']);
-        $specifierList = $this->getSpecifierModel()->fetchSpecifiersByArchitect($opportunity['architect_id']);
-        $generalContractor = $this->getCustomerModel()->fetchCustomerById($opportunity['general_contractor_id']);
-        $awardedContractor = $this->getCustomerModel()->fetchCustomerById($opportunity['awarded_contractor_id']);
+        $isOwner = false;
 
-        $this->layout()->setVariable('id', $opportunity_id); //for sidebar
-
-        $owner = false;
-
-        $isShareExists = $this->projectShare->isShareExists($opportunity_id, $user['id']);
+        $isShareExists = $this->getOpportunityShareModel()->findBy([
+            'opportunity_id' => $opportunity_id,
+            'shared_user' => $user['id'],
+        ]);
 
         if (
             $isShareExists ||
-            $user['id'] === $opportunity['owner_id'] ||
+            $user['id'] === $opportunity['created_by'] ||
             $user['p2q_system_role'] === 'admin' ||
             $user['p2q_system_role'] === 'manager'
         ) {
-            $owner = true;
-        }
-
-        $admin = false;
-        if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') {
-            $admin = true;
+            $isOwner = true;
         }
 
         return new ViewModel([
-            'id' => $project_id,
             'user' => $user,
+            'defaultCompany' => Defaults::company(),
             'opportunity' => $opportunity,
-            'company' => $company,
-            'location' => $location,
-            'status' => $status,
-            'marketSegment' => $marketSegment,
-            'owner' => $owner,
-            'admin' => $admin,
-            'architect' => $architect,
-            'address' => $address,
+            'locations' => $this->getP21LocationModel()->fetchAllBranches(),
+            'companies' => $this->getP21LocationModel()->fetchAllCompanies(),
+            'projectStatuses' => $this->getStatusModel()->findBy(['project_flag' => 'Y']),
+            'marketSegments' => $this->getMarketSegmentModel()->all(),
+            'isOwner' => $isOwner,
+            'architect' => $this->getArchitectModel()->fetchArchitectById($opportunity['architect_id']),
+            'address' => $this->getAddressModel()->fetchAddressesById($opportunity['architect_address_id']),
             'specifier' => $specifier,
             'specifierAddress' => $specifierAddress,
-            'architectType' => $architectType,
-            'specifierList' => $specifierList,
-            'addressList' => $addressList,
-            'generalContractor' => $generalContractor,
-            'awardedContractor' => $awardedContractor
+            'architectTypes' => $this->getArchitectTypeModel()->all(),
+            'specifierList' => $this->getSpecifierModel()->fetchSpecifiersByArchitect($opportunity['architect_id']),
+            'addressList' => $this->getAddressModel()->fetchAddressesByArchitect($opportunity['architect_id']),
+            'generalContractor' => $this->getCustomerModel()->fetchCustomerById($opportunity['general_contractor_id']),
+            'awardedContractor' => $this->getCustomerModel()->fetchCustomerById($opportunity['awarded_contractor_id']),
         ]);
+    }
+
+    public function sharedAction()
+    {
+        $opportunity_id = (int) $this->params()->fromRoute('id');
+        $table = $this->getOpportunityShareModel()->find($opportunity_id);
+        return $this->json($table);
     }
 }

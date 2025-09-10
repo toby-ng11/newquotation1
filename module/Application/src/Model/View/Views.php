@@ -46,18 +46,18 @@ class Views
         return InflectorFactory::create()->build()->pluralize($snake);
     }
 
-    public function getTable()
+    public function getTable(): string | null
     {
         return $this->table;
     }
 
-    public function findBy($where = []): array
+    public function findBy(array $where = []): array
     {
         $rowset =  $this->tableGateway->select($where);
         return iterator_to_array($rowset, true);
     }
 
-    public function all()
+    public function all(): array
     {
         $rowset = $this->tableGateway->select();
         return iterator_to_array($rowset, true);

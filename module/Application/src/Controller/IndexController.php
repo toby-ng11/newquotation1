@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Controller;
 
+use Application\Config\Defaults;
 use Laminas\View\Model\ViewModel;
 use Laminas\Http\Response;
 use Psr\Container\ContainerInterface;
@@ -220,6 +221,13 @@ class IndexController extends BaseController
 
         $viewModel = new ViewModel([
             'user' => $user,
+            'locations' => $this->getP21LocationModel()->fetchAllBranches(),
+            'companies' => $this->getP21LocationModel()->fetchAllCompanies(),
+            'projectStatus' => $this->getStatusModel()->findBy(['project_flag' => 'Y']),
+            'marketSegment' => $this->getMarketSegmentModel()->all(),
+            'architectTypes' => $this->getArchitectTypeModel()->all(),
+            'defaultLocationId' => Defaults::locationId(),
+            'defaultCompany' => Defaults::company(),
         ]);
 
         if ($this->getRequest()->getHeader('HX-Request')) {

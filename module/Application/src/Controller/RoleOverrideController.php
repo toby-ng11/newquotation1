@@ -14,6 +14,11 @@ class RoleOverrideController extends BaseController
     // GET /role-override
     public function getList()
     {
+        $request = $this->getRequest();
+        if (!$this->expectsJson($request)) {
+            return $this->abort404();
+        }
+
         $table = $this->getRoleOverrideModel()->all();
         return $this->json([
             'success' => true,

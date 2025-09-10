@@ -15,6 +15,11 @@ class MarketSegmentController extends BaseController
     // GET /endpoint
     public function getList()
     {
+        $request = $this->getRequest();
+        if (!$this->expectsJson($request)) {
+            return $this->abort404();
+        }
+
         $table = $this->getMarketSegmentModel()->all();
         return $this->json([
             'success' => true,

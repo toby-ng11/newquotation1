@@ -32,7 +32,7 @@ export interface SharedData {
 }
 
 export interface User {
-    id: number;
+    id: string;
     name: string;
     first_name: string;
     last_name: string;
@@ -62,7 +62,7 @@ interface Opportunity {
     awarded_contractor_id?: string;
     start_date?: {
         date: string;
-    }
+    };
     completion_date?: {
         date: string;
     };
@@ -81,6 +81,13 @@ interface Opportunity {
     updated_by?: string;
 }
 
+interface OpportunityShare {
+    id: string;
+    opportunity_id?: string;
+    shared_user?: string;
+    role: string;
+}
+
 interface Quote {
     id: string;
     project_id?: string;
@@ -92,10 +99,10 @@ interface Quote {
     };
     ship_required_date?: {
         date: string;
-    }
+    };
     approve_date?: {
         date: string;
-    }
+    };
     note?: string;
     status_id?: string;
     po_no?: string;
