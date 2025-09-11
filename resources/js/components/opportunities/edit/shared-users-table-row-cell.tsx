@@ -22,8 +22,12 @@ export default function RoleCell({ endpoint, queryKey, id, role }: RoleCellProps
                 .then((response) => response.data);
         },
         onSuccess: async (data) => {
-            await queryClient.invalidateQueries({ queryKey });
-            toast.success(data.message);
+            if (data.success) {
+                await queryClient.invalidateQueries({ queryKey });
+                toast.success(data.message);
+            } else {
+                toast.error(data.message);
+            }
         },
     });
 

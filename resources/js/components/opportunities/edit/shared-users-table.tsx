@@ -1,20 +1,45 @@
 import { DataTableColumnHeader } from '@/components/table-header';
+import DataTableRowDeleteButton from '@/components/table-row-delete-button';
 import { DataTableLoadingSpinner } from '@/components/table-spinner';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useTanStackQuery } from '@/hooks/use-query';
 import { OpportunityShare } from '@/types';
+import { useQueryClient } from '@tanstack/react-query';
 import { ColumnDef, flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from '@tanstack/react-table';
+import axios from 'axios';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import RoleCell from './shared-users-table-row-cell';
+import ShareOpportunityButton from './shared-users-table-share-button';
 
 export default function OpportunitySharedUsersTable() {
     const opportunityId = window.location.pathname.split('/')[2];
     const ENDPOINT = '/opportunity-shares';
     const qKey = ['opportunity-shares', opportunityId];
 
+    const queryClient = useQueryClient();
     const { data: users = [], isLoading, isRefetching } = useTanStackQuery<OpportunityShare>(ENDPOINT + `?opp=${opportunityId}`, qKey);
 
     const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: true }]);
+
+    const handleDelete = async (rowId: string) => {
+        if (!rowId) return;
+        try {
+            const { data } = await axios.delete(`${ENDPOINT}/${rowId}`);
+
+            if (data.success) {
+                await queryClient.invalidateQueries({ queryKey: qKey });
+                toast.success(data.message);
+                return true;
+            } else {
+                toast.error(`Error saving: ${data.message}`);
+                return false;
+            }
+        } catch (error) {
+            toast.warning(`Error: ${error}.`);
+            return false;
+        }
+    };
 
     const columns: ColumnDef<OpportunityShare>[] = [
         {
@@ -32,6 +57,16 @@ export default function OpportunitySharedUsersTable() {
                 return <RoleCell endpoint={ENDPOINT} queryKey={qKey} id={rowId} role={role} />;
             },
         },
+        {
+            accessorKey: 'options',
+            header: () => null,
+            cell: ({ row }) => {
+                const rowId = row.original.id;
+                const sharedUser = row.original.shared_user;
+                return <DataTableRowDeleteButton label={`share with ${sharedUser}`} handleDelete={() => handleDelete(rowId)} />;
+            },
+            enableHiding: false,
+        },
     ];
 
     const table = useReactTable({
@@ -48,6 +83,7 @@ export default function OpportunitySharedUsersTable() {
     return (
         <div>
             <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
+                <ShareOpportunityButton endpoint={ENDPOINT} queryKey={qKey} opportunityId={opportunityId} />
                 <div className="flex flex-col gap-1">
                     <h2 className="text-2xl font-semibold tracking-tight">Shared Users</h2>
                     <p className="text-muted-foreground">Here're shared users of this opportunity.</p>

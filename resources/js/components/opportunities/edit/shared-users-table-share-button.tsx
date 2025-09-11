@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { OpportunityShare, User } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 import { LoaderCircle, Plus } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import { toast } from 'sonner';
@@ -22,30 +23,39 @@ import { toast } from 'sonner';
 interface ShareButtonProps {
     endpoint: string;
     queryKey: (string | number | boolean)[];
+    opportunityId: string;
 }
 
-export default function RoleOverrideAddButton({ endpoint, queryKey }: ShareButtonProps) {
+export default function ShareOpportunityButton({ endpoint, queryKey, opportunityId }: ShareButtonProps) {
     const queryClient = useQueryClient();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const { data, setData, post, processing, reset } = useForm<OpportunityShare>({
+    const { data, setData, processing, reset } = useForm<OpportunityShare>({
         id: '',
+        shared_user: '',
         role: '',
     });
 
     const submit: FormEventHandler = async (e) => {
         e.preventDefault();
-        post(endpoint, {
-            onSuccess: async () => {
+        try {
+            const response = await axios.post(`${endpoint}`, {
+                opportunity_id: opportunityId,
+                shared_user: data.shared_user,
+                role: data.role,
+            });
+
+            if (response.data.success) {
                 await queryClient.invalidateQueries({ queryKey });
-                toast.success('Added successfully');
+                toast.success(response.data.message);
                 setIsDialogOpen(false);
                 reset();
-            },
-            onError: (errors) => {
-                toast.error(`Error saving: ${errors.error}`);
-            },
-        });
+            } else {
+                toast.error(`Error saving: ${response.data.message}`);
+            }
+        } catch (err) {
+            toast.error(`Error saving: ${err}`);
+        }
     };
 
     const handleDialogOpenChange = (open: boolean) => {
@@ -92,7 +102,6 @@ export default function RoleOverrideAddButton({ endpoint, queryKey }: ShareButto
                                     onInputValueChange={(val) => setData('shared_user', val)}
                                     onSelect={(item) => {
                                         setData('shared_user', item.id);
-                                        setData('role', item.p2q_system_role);
                                     }}
                                 />
                             </div>
@@ -100,7 +109,7 @@ export default function RoleOverrideAddButton({ endpoint, queryKey }: ShareButto
                             <div className="grid gap-2">
                                 <Label htmlFor="role">New Role</Label>
                                 <Select value={data.role} onValueChange={(val) => setData('role', val)}>
-                                    <SelectTrigger id="role">
+                                    <SelectTrigger id="role" className="w-full">
                                         <SelectValue placeholder="Select a permission..." />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -117,7 +126,7 @@ export default function RoleOverrideAddButton({ endpoint, queryKey }: ShareButto
                                     Cancel
                                 </Button>
                             </DialogClose>
-                            <Button type="submit" disabled={processing || !data.shared_user?.trim() || !data.role.trim()}>
+                            <Button type="submit" disabled={processing || !data.shared_user?.trim() || !data.role?.trim()}>
                                 Save
                                 {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                             </Button>

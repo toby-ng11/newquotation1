@@ -95,6 +95,9 @@ export function AutoCompleteInput<T>({
 
         fetch(url, {
             method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
             signal: controller.signal,
         })
             .then(async (res) => {

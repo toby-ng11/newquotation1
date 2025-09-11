@@ -102,7 +102,7 @@ class Module implements ConfigProviderInterface
     {
         $error = $event->getError();
 
-         /** @var Request $request */
+        /** @var Request $request */
         $request = $event->getRequest();
 
         /** @var Response $response */
@@ -149,7 +149,36 @@ class Module implements ConfigProviderInterface
             $event->stopPropagation();
         }
 
-        // else: not exception
+        if ($error === 'error-unauthorized' || $response->getStatusCode() === 403) {
+
+            $props = [
+                'status'  => 403,
+                'message' => "Oops! You don't have permission to view this page.",
+            ];
+
+            $page = [
+                'component' => 'error/403',
+                'props'     => $props,
+                'url'       => $request->getUri()->getPath(),
+                'version'   => null,
+            ];
+
+            if ($isInertia) {
+                $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+                $response->getHeaders()->addHeaderLine('X-Inertia', 'true');
+                $response->setStatusCode(403);
+                $response->setContent(json_encode($page, JSON_UNESCAPED_UNICODE));
+                $event->setResult($response);
+            } else {
+                $viewModel = $event->getViewModel();
+                $viewModel->setTemplate('application/inertia/app');
+                $viewModel->setVariable('page', $page);
+                $event->setResult($viewModel);
+            }
+
+            $event->stopPropagation();
+        }
+
         if (
             $error !== \Laminas\Mvc\Application::ERROR_ROUTER_NO_MATCH &&
             $error !== \Laminas\Mvc\Application::ERROR_CONTROLLER_NOT_FOUND &&

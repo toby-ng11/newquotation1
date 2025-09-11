@@ -24,13 +24,11 @@ class IndexController extends BaseController
     public function adminAction(): ViewModel | Response
     {
         $user = $this->getUserService()->getCurrentUser();
-        $this->layout()->setTemplate('layout/default');
-
         if ($user['p2q_system_role'] !== 'admin') {
-            $view = new ViewModel();
-            $view->setTemplate('error/permission');
-            return $view;
+            return $this->abort403();
         }
+
+        $this->layout()->setTemplate('layout/default');
 
         $table = $this->params()->fromRoute('table', 'project'); // default to project
         $location = null;
@@ -77,13 +75,12 @@ class IndexController extends BaseController
     public function projectAction(): ViewModel | Response
     {
         $user = $this->getUserService()->getCurrentUser();
-        $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] === 'guest') {
-            $view = new ViewModel();
-            $view->setTemplate('error/permission');
-            return $view;
+            return $this->abort403();
         }
+
+        $this->layout()->setTemplate('layout/default');
 
         $table = $this->params()->fromRoute('table', 'own');
 
@@ -122,13 +119,12 @@ class IndexController extends BaseController
     public function approvalAction(): ViewModel | Response
     {
         $user = $this->getUserService()->getCurrentUser();
-        $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] === 'guest' || $user['p2q_system_role'] === 'sales') {
-            $view = new ViewModel();
-            $view->setTemplate('error/permission');
-            return $view;
+            return $this->abort403();
         }
+
+        $this->layout()->setTemplate('layout/default');
 
         $table = $this->params()->fromRoute('table', 'approved');
         $waitingTableCount = $this->getQuoteModel()->countApproval($this->getQuoteModel()::WAITING_APPROVAL);
@@ -167,13 +163,12 @@ class IndexController extends BaseController
     public function architectAction(): ViewModel | Response
     {
         $user = $this->getUserService()->getCurrentUser();
-        $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] === 'guest') {
-            $view = new ViewModel();
-            $view->setTemplate('error/permission');
-            return $view;
+            return $this->abort403();
         }
+
+        $this->layout()->setTemplate('layout/default');
 
         $table = $this->params()->fromRoute('table', 'all');
 
@@ -208,16 +203,15 @@ class IndexController extends BaseController
         return $viewModel;
     }
 
-    public function opportunitiesAction(): ViewModel
+    public function opportunitiesAction(): Response | ViewModel
     {
         $user = $this->getUserService()->getCurrentUser();
-        $this->layout()->setTemplate('layout/default');
 
         if ($user['p2q_system_role'] === 'guest') {
-            $view = new ViewModel();
-            $view->setTemplate('error/permission');
-            return $view;
+            return $this->abort403();
         }
+
+        $this->layout()->setTemplate('layout/default');
 
         $viewModel = new ViewModel([
             'user' => $user,
@@ -237,17 +231,14 @@ class IndexController extends BaseController
         return $viewModel;
     }
 
-    public function quotesAction(): ViewModel
+    public function quotesAction(): Response | ViewModel
     {
         $user = $this->getUserService()->getCurrentUser();
-        $this->layout()->setTemplate('layout/default');
-
         if ($user['p2q_system_role'] === 'guest') {
-            $view = new ViewModel();
-            $view->setTemplate('error/permission');
-            return $view;
+            return $this->abort403();
         }
 
+        $this->layout()->setTemplate('layout/default');
         $viewModel = new ViewModel([
             'user' => $user,
         ]);

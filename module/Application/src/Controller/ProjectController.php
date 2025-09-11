@@ -4,48 +4,13 @@ namespace Application\Controller;
 
 use Laminas\Http\Response\Stream;
 use Laminas\View\Model\ViewModel;
-use Application\Service\UserService;
-use Application\Model\{Address, Project, Location, Item, Architect, Specifier, Customer, ProjectNote, ProjectShare};
-use Application\Service\PdfExportService;
+use Psr\Container\ContainerInterface;
 
 class ProjectController extends BaseController
 {
-    protected $userService;
-    protected $pdfExportService;
-    protected $project;
-    protected $location;
-    protected $item;
-    protected $note;
-    protected $architect;
-    protected $address;
-    protected $specifier;
-    protected $customer;
-    protected $projectShare;
-
-    public function __construct(
-        UserService $userService,
-        PdfExportService $pdfExportService,
-        Project $project,
-        Location $location,
-        Item $item,
-        ProjectNote $note,
-        Architect $architect,
-        Address $address,
-        Specifier $specifier,
-        Customer $customer,
-        ProjectShare $projectShare
-    ) {
-        $this->userService = $userService;
-        $this->pdfExportService = $pdfExportService;
-        $this->project = $project;
-        $this->location = $location;
-        $this->item = $item;
-        $this->note = $note;
-        $this->architect = $architect;
-        $this->specifier = $specifier;
-        $this->address = $address;
-        $this->customer = $customer;
-        $this->projectShare = $projectShare;
+    public function __construct(ContainerInterface $container)
+    {
+        parent::__construct($container);
     }
 
     public function indexAction()
@@ -61,13 +26,18 @@ class ProjectController extends BaseController
 
     public function createAction()
     {
-        $this->layout()->setTemplate('layout/default');
+        $user = $this->getUserService()->getCurrentUser();
+
+        if ($user['p2q_system_role'] === 'guest') {
+            return $this->abort403();
+        }
+
         $request = $this->getRequest();
 
         if ($request->isPost()) {
             $data = $this->params()->fromPost();
 
-            $project_id = $this->project->save($data);
+            $project_id = $this->getProjectModel()->save($data);
 
             if ($project_id) {
                 if ($this->getRequest()->isXmlHttpRequest()) {
@@ -102,14 +72,19 @@ class ProjectController extends BaseController
 
     public function newAction()
     {
+        $user = $this->getUserService()->getCurrentUser();
+
+        if ($user['p2q_system_role'] === 'guest') {
+            return $this->abort403();
+        }
+
         $this->layout()->setTemplate('layout/default');
 
-        $user = $this->userService->getCurrentUser();
-        $company = $this->location->fetchAllCompanies();
-        $location = $this->location->fetchAllBranches();
-        $status = $this->project->fetchProjectStatus();
-        $marketSegment = $this->project->fetchProjectSegment();
-        $architectType = $this->architect->fetchArchitectType();
+        $company = $this->getP21LocationModel()->fetchAllCompanies();
+        $location = $this->getP21LocationModel()->fetchAllBranches();
+        $status = $this->getProjectModel()->fetchProjectStatus();
+        $marketSegment = $this->getProjectModel()->fetchProjectSegment();
+        $architectType = $this->getArchitectTypeModel()->all();
 
         return new ViewModel([
             'user' => $user,
@@ -123,14 +98,13 @@ class ProjectController extends BaseController
 
     public function editAction()
     {
-        $this->layout()->setTemplate('layout/default');
         $request = $this->getRequest(); // for submit edit form
 
         if ($request->isPost()) {
             $project_id = (int) $this->params()->fromRoute('id');
             $data = $this->params()->fromPost();
 
-            $result = $this->project->edit($data, $project_id);
+            $result = $this->getProjectModel()->edit($data, $project_id);
 
             if ($result) {
                 if ($request->isXmlHttpRequest()) {
@@ -176,36 +150,44 @@ class ProjectController extends BaseController
             return $this->redirect()->toRoute('project');
         }
 
-        $project = $this->project->fetchById($project_id);
+        $project = $this->getProjectModel()->fetchById($project_id);
         if (! $project || ($project['deleted_at'])) {
             $this->flashMessenger()->addErrorMessage("This project is deleted.");
             return $this->redirect()->toRoute('index', ['action' => 'project']);
         }
-        $user = $this->userService->getCurrentUser();
-        $location = $this->location->fetchAllBranches();
-        $company = $this->location->fetchAllCompanies();
-        $status = $this->project->fetchProjectStatus();
-        $marketSegment = $this->project->fetchProjectSegment();
-        $architect = $this->architect->fetchArchitectById($project['architect_id']);
-        $address = $this->address->fetchAddressesById($project['architect_address_id']);
-        $specifier = $this->specifier->fetchSpecifierById($project['specifier_id']);
+
+        $user = $this->getUserService()->getCurrentUser();
+
+        if ($user['p2q_system_role'] === 'guest') {
+            return $this->abort403();
+        }
+
+        $location = $this->getP21LocationModel()->fetchAllBranches();
+        $company = $this->getP21LocationModel()->fetchAllCompanies();
+        $status = $this->getProjectModel()->fetchProjectStatus();
+        $marketSegment = $this->getProjectModel()->fetchProjectSegment();
+        $architect = $this->getArchitectModel()->fetchArchitectById($project['architect_id']);
+        $address = $this->getAddressModel()->fetchAddressesById($project['architect_address_id']);
+        $specifier = $this->getSpecifierModel()->fetchSpecifierById($project['specifier_id']);
         $specifierAddress = null;
 
         if ($specifier) {
-            $specifierAddress = $this->address->fetchSpecifierAddress($specifier['id']);
+            $specifierAddress = $this->getAddressModel()->fetchSpecifierAddress($specifier['id']);
         }
-        $architectType = $this->architect->fetchArchitectType();
-        $addressList = $this->address->fetchAddressesByArchitect($project['architect_id']);
-        $specifierList = $this->specifier->fetchSpecifiersByArchitect($project['architect_id']);
-        $generalContractor = $this->customer->fetchCustomerById($project['general_contractor_id']);
-        $awardedContractor = $this->customer->fetchCustomerById($project['awarded_contractor_id']);
+        $architectType = $this->getArchitectModel()->fetchArchitectType();
+        $addressList = $this->getAddressModel()->fetchAddressesByArchitect($project['architect_id']);
+        $specifierList = $this->getSpecifierModel()->fetchSpecifiersByArchitect($project['architect_id']);
+        $generalContractor = $this->getCustomerModel()->fetchCustomerById($project['general_contractor_id']);
+        $awardedContractor = $this->getCustomerModel()->fetchCustomerById($project['awarded_contractor_id']);
 
-        $isShareExists = $this->projectShare->isShareExists($project_id, $user['id']);
+        $isShareExists = $this->getProjectShareModel()->isShareExists($project_id, $user['id']);
 
         $admin = false;
         if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') {
             $admin = true;
         }
+
+        $this->layout()->setTemplate('layout/default');
 
         return new ViewModel([
             'id' => $project_id,
@@ -241,7 +223,7 @@ class ProjectController extends BaseController
                 return $this->json(['success' => false, 'message' => 'Invalid project ID']);
             }
 
-            $result = $this->project->editArchitect($data, $project_id);
+            $result = $this->getProjectModel()->editArchitect($data, $project_id);
 
             // Fallback if accessed normally (non-AJAX)
             if ($result) {
@@ -296,7 +278,7 @@ class ProjectController extends BaseController
                 ]);
             }
 
-            $result = $this->project->delete($project_id);
+            $result = $this->getProjectModel()->delete($project_id);
 
             if ($result) {
                 $this->flashMessenger()->addSuccessMessage("Project deleted successfully!");
@@ -318,7 +300,7 @@ class ProjectController extends BaseController
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest()) {
             $projectId = $this->params()->fromRoute('id');
-            $shareTable = $this->projectShare->fetchDataTables($projectId);
+            $shareTable = $this->getProjectShareModel()->fetchDataTables($projectId);
             $view = $this->json($shareTable);
             return $view;
         }
@@ -333,7 +315,7 @@ class ProjectController extends BaseController
         if ($request->isXmlHttpRequest()) {
             $id = $this->params()->fromRoute('id');
             $sheetType = 'project';
-            $itemTable = $this->item->fetchDataTables($id, $sheetType);
+            $itemTable = $this->getItemModel()->fetchDataTables($id, $sheetType);
             $view = $this->json($itemTable);
             return $view;
         }
@@ -345,7 +327,7 @@ class ProjectController extends BaseController
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest()) {
             $id = $this->params()->fromRoute('id');
-            $noteTable = $this->note->fetchDataTables($id);
+            $noteTable = $this->getNoteModel()->fetchDataTables($id);
             $view = $this->json($noteTable);
             return $view;
         }
@@ -357,7 +339,7 @@ class ProjectController extends BaseController
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest()) {
             $project_id = $this->params()->fromRoute('id');
-            $projectQuotes = $this->project->fetchQuoteByProject($project_id);
+            $projectQuotes = $this->getProjectModel()->fetchQuoteByProject($project_id);
             $view = $this->json($projectQuotes);
             return $view;
         }
@@ -368,14 +350,14 @@ class ProjectController extends BaseController
     {
         $project_id = $this->params()->fromRoute('id');
 
-        $project = $this->project->fetchById($project_id);
-        $architect = $this->architect->fetchArchitectById($project['architect_id']);
-        $archAddress = $this->address->fetchAddressesById($project['architect_address_id']);
-        $specifier = $this->specifier->fetchSpecifierById($project['specifier_id']);
-        $generalContractor = $this->customer->fetchCustomerById($project['general_contractor_id']);
-        $awardedContractor = $this->customer->fetchCustomerById($project['awarded_contractor_id']);
-        $items = $this->item->fetchDataTables($project_id, 'project');
-        $branches = $this->location->fetchAllBranches();
+        $project = $this->getProjectModel()->fetchById($project_id);
+        $architect = $this->getArchitectModel()->fetchArchitectById($project['architect_id']);
+        $archAddress = $this->getAddressModel()->fetchAddressesById($project['architect_address_id']);
+        $specifier = $this->getSpecifierModel()->fetchSpecifierById($project['specifier_id']);
+        $generalContractor = $this->getCustomerModel()->fetchCustomerById($project['general_contractor_id']);
+        $awardedContractor = $this->getCustomerModel()->fetchCustomerById($project['awarded_contractor_id']);
+        $items = $this->getItemModel()->fetchDataTables($project_id, 'project');
+        $branches = $this->getP21LocationModel()->fetchAllBranches();
 
         $data = [
             'project' => $project,
@@ -388,7 +370,7 @@ class ProjectController extends BaseController
             'awardedContractor' => $awardedContractor,
         ];
 
-        $pdfContent = $this->pdfExportService->generatePdf('application/project/export', $data);
+        $pdfContent = $this->getPdfExportService()->generatePdf('application/project/export', $data);
 
         // Return PDF as a downloadable file
         $response = new Stream();

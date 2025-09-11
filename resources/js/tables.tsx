@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRoot } from 'react-dom/client';
+import { Toaster } from 'sonner';
 
 const roots = new WeakMap<HTMLElement, ReturnType<typeof createRoot>>();
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ function mountAllTables() {
                 root.render(
                     <QueryClientProvider client={queryClient}>
                         <Component />
+                        <Toaster richColors position="top-right"/>
                     </QueryClientProvider>,
                 );
             });

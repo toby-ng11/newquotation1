@@ -15,31 +15,33 @@ class OpportunityShareController extends BaseController
     // GET /enpoint
     public function getList()
     {
+        $request = $this->getRequest();
+        if (!$this->expectsJson($request)) {
+            return $this->abort404();
+        }
+
         $opportunityId = $this->params()->fromQuery('opp', null);
 
         if ($opportunityId) {
             $data = $this->getOpportunityShareModel()->findBy(['opportunity_id' => $opportunityId]);
-            return $this->json([
-                'success' => true,
-                'data' => iterator_to_array($data),
-            ]);
+            return $this->json($data);
         }
 
-        $data = $this->getOpportunityShareModel()->all();
         return $this->json([
             'success' => true,
-            'data' => iterator_to_array($data),
+            'data' => $this->getOpportunityShareModel()->all(),
         ]);
     }
 
     // GET /enpoint/:id
     public function get(mixed $id)
     {
-        $row = $this->getOpportunityShareModel()->find($id);
-        if (! $row) {
+        $request = $this->getRequest();
+        if (!$this->expectsJson($request)) {
             return $this->abort404();
         }
 
+        $row = $this->getOpportunityShareModel()->find($id);
         return $this->json([
             'success' => true,
             'opportinity' => $row,
@@ -59,7 +61,7 @@ class OpportunityShareController extends BaseController
     // PUT /enpoint/:id
     public function update(mixed $id, mixed $data)
     {
-        $result = $this->getOpportunityShareModel()->update($data, $id);
+        $result = $this->getOpportunityShareModel()->update($id, $data);
         return $this->json([
             'success' => $result !== false,
             'message' => $result !== false ? 'Saved successfully!' : 'Error! Please check log for more details.',

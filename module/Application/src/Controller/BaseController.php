@@ -33,14 +33,10 @@ abstract class BaseController extends AbstractRestfulController
 
     /**
      * Render 403 page
-     *
-     * @return ViewModel
      */
-    protected function abort403(): ViewModel
+    protected function abort403(): Response | ViewModel
     {
-        $this->layout()->setTemplate('error/permission');
-        $view = new ViewModel();
-        return $view;
+        return $this->render('error/403');
     }
 
     /**

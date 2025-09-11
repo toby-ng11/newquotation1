@@ -449,7 +449,6 @@ return [
                         'action' => 'index',
                     ],
                 ],
-                'may_terminate' => true,
                 'child_routes' => [
                     'api-preferences' => [
                         'type' => Segment::class,
@@ -474,6 +473,16 @@ return [
                             ],
                         ],
                     ],
+                    'find-user' => [
+                        'type' => Literal::class,
+                        'options' => [
+                            'route'    => '/users',
+                            'defaults' => [
+                                'controller' => Controller\Api\UserController::class,
+                                'action'     => 'users',
+                            ],
+                        ],
+                    ],
                 ]
             ],
         ],
@@ -485,14 +494,10 @@ return [
                 return new Controller\AuthController($authService);
             },
             Controller\DashboardController::class => function (ContainerInterface $container) {
-                return new Controller\DashboardController(
-                    $container
-                );
+                return new Controller\DashboardController($container);
             },
             Controller\IndexController::class => function (ContainerInterface $container) {
-                return new Controller\IndexController(
-                    $container
-                );
+                return new Controller\IndexController($container);
             },
             Controller\SidebarController::class => function () {
                 return new Controller\SidebarController();
@@ -500,20 +505,11 @@ return [
             Controller\OpportunityController::class => function (ContainerInterface $container) {
                 return new Controller\OpportunityController($container);
             },
+            Controller\OpportunityShareController::class => function (ContainerInterface $container) {
+                return new Controller\OpportunityShareController($container);
+            },
             Controller\ProjectController::class => function (ContainerInterface $container) {
-                return new Controller\ProjectController(
-                    $container->get(Service\UserService::class),
-                    $container->get(Service\PdfExportService::class),
-                    $container->get(Model\Project::class),
-                    $container->get(Model\Location::class),
-                    $container->get(Model\Item::class),
-                    $container->get(Model\ProjectNote::class),
-                    $container->get(Model\Architect::class),
-                    $container->get(Model\Address::class),
-                    $container->get(Model\Specifier::class),
-                    $container->get(Model\Customer::class),
-                    $container->get(Model\ProjectShare::class)
-                );
+                return new Controller\ProjectController($container);
             },
             Controller\ProjectShareController::class => function (ContainerInterface $container) {
                 return new Controller\ProjectShareController(
@@ -522,9 +518,7 @@ return [
                 );
             },
             Controller\QuoteController::class => function (ContainerInterface $container) {
-                return new Controller\QuoteController(
-                    $container
-                );
+                return new Controller\QuoteController($container);
             },
             Controller\UserController::class => function (ContainerInterface $container) {
                 return new Controller\UserController(
@@ -538,14 +532,7 @@ return [
                 );
             },
             Controller\ArchitectController::class => function (ContainerInterface $container) {
-                return new Controller\ArchitectController(
-                    $container->get(Service\UserService::class),
-                    $container->get(Model\Architect::class),
-                    $container->get(Model\Address::class),
-                    $container->get(Model\Specifier::class),
-                    $container->get(Model\Location::class),
-                    $container->get(Model\Project::class)
-                );
+                return new Controller\ArchitectController($container);
             },
             Controller\ItemController::class => function (ContainerInterface $container) {
                 return new Controller\ItemController(
@@ -568,9 +555,7 @@ return [
                 );
             },
             Controller\RoleOverrideController::class => function (ContainerInterface $container) {
-                return new Controller\RoleOverrideController(
-                    $container
-                );
+                return new Controller\RoleOverrideController($container);
             },
             Controller\Api\PreferenceController::class => function (ContainerInterface $container) {
                 return new Controller\Api\PreferenceController(
@@ -579,9 +564,7 @@ return [
                 );
             },
             Controller\Api\UserController::class => function (ContainerInterface $container) {
-                return new Controller\Api\UserController(
-                    $container->get(Service\UserService::class),
-                );
+                return new Controller\Api\UserController($container);
             },
         ],
     ],
@@ -590,14 +573,12 @@ return [
         'display_exceptions'       => true,
         'layout'                   => 'layout/inertia',
         'doctype'                  => 'HTML5',
-        'not_found_template'       => 'error/not-found',
-        'exception_template'       => 'error/index',
+        'not_found_template'       => 'layout/inertia',
+        'exception_template'       => 'layout/inertia',
         'template_map' => [
             'layout/inertia'          => __DIR__ . '/../view/layout/inertia.phtml',
             'layout/layout'           => __DIR__ . '/../view/layout/default.phtml',
             'layout/nonheader'        => __DIR__ . '/../view/layout/nonheader.phtml',
-            'error/404'               => __DIR__ . '/../view/error/404.phtml',
-            'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',

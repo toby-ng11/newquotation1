@@ -3,36 +3,16 @@
 namespace Application\Controller;
 
 use Laminas\View\Model\ViewModel;
-use Application\Model\{Architect, Specifier, Address, Location, Project};
-use Application\Service\UserService;
 use Exception;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Psr\Container\ContainerInterface;
 
 class ArchitectController extends BaseController
 {
-    protected $userService;
-    protected $architect;
-    protected $specifier;
-    protected $address;
-    protected $location;
-    protected $project;
-
-    public function __construct(
-        UserService $userService,
-        Architect $architect,
-        Address $address,
-        Specifier $specifier,
-        Location $location,
-        Project $project
-    ) {
-        $this->userService = $userService;
-        $this->architect = $architect;
-        $this->address = $address;
-        $this->specifier = $specifier;
-        $this->location = $location;
-        $this->project = $project;
+    public function __construct(ContainerInterface $container) {
+        parent::__construct($container);
     }
 
     public function indexAction()
@@ -41,7 +21,7 @@ class ArchitectController extends BaseController
 
         if ($request->isXmlHttpRequest()) {
             $pattern = $this->params()->fromQuery('search', '');
-            $user = $this->userService->getCurrentUser();
+            $user = $this->getUserService()->getCurrentUser();
             $admin = false;
             if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') {
                 $admin = true;
@@ -51,7 +31,7 @@ class ArchitectController extends BaseController
                 return $this->json(['error' => 'Pattern is required']);
             }
 
-            $architect = $this->architect->fetchArchitectByPattern($admin, $pattern, $user['id']);
+            $architect = $this->getArchitectModel()->fetchArchitectByPattern($admin, $pattern, $user['id']);
 
             return $this->json($architect);
         }
@@ -61,6 +41,12 @@ class ArchitectController extends BaseController
 
     public function editAction()
     {
+        $user = $this->getUserService()->getCurrentUser();
+
+        if ($user['p2q_system_role'] === 'guest') {
+            return $this->abort403();
+        }
+
         $this->layout()->setTemplate('layout/default');
         $request = $this->getRequest(); // for submit edit form
 
@@ -75,7 +61,7 @@ class ArchitectController extends BaseController
                 ]);
             }
 
-            $result = $this->architect->edit($data, $architect_id);
+            $result = $this->getArchitectModel()->edit($data, $architect_id);
 
             if ($result) {
                 return $this->json([
@@ -95,22 +81,21 @@ class ArchitectController extends BaseController
             return $this->redirect()->toRoute('index', ['action' => 'architect']);
         }
 
-        $architect = $this->architect->fetchArchitectById($architect_id);
+        $architect = $this->getArchitectModel()->fetchArchitectById($architect_id);
 
         if (! $architect) {
             $this->flashMessenger()->addErrorMessage("This architect doesn't exist.");
             return $this->redirect()->toRoute('index', ['action' => 'architect']);
         }
 
-        $user = $this->userService->getCurrentUser();
-        $location = $this->location->fetchAllBranches();
-        $projectStatus = $this->project->fetchProjectStatus();
-        $marketSegment = $this->project->fetchProjectSegment();
+        $location = $this->getP21LocationModel()->fetchAllBranches();
+        $projectStatus = $this->getProjectModel()->fetchProjectStatus();
+        $marketSegment = $this->getProjectModel()->fetchProjectSegment();
 
-        $architectType = $this->architect->fetchArchitectType();
-        $addressList = $this->address->fetchAddressesByArchitect($architect_id);
-        $specifierList = $this->specifier->fetchSpecifiersByArchitect($architect_id);
-        $company = $this->location->fetchAllCompanies();
+        $architectType = $this->getArchitectModel()->fetchArchitectType();
+        $addressList = $this->getAddressModel()->fetchAddressesByArchitect($architect_id);
+        $specifierList = $this->getSpecifierModel()->fetchSpecifiersByArchitect($architect_id);
+        $company = $this->getP21LocationModel()->fetchAllCompanies();
 
         return new ViewModel([
             'id' => $architect_id,
@@ -138,7 +123,7 @@ class ArchitectController extends BaseController
             }
 
             try {
-                $result = $this->architect->delete($architect_id);
+                $result = $this->getArchitectModel()->delete($architect_id);
 
                 if ($result) {
                     $this->flashMessenger()->addSuccessMessage("Architect deleted!");
@@ -167,7 +152,7 @@ class ArchitectController extends BaseController
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest()) {
             $architect_id = $this->params()->fromRoute('id');
-            $specifiers = $this->specifier->fetchSpecifiersByArchitect($architect_id);
+            $specifiers = $this->getSpecifierModel()->fetchSpecifiersByArchitect($architect_id);
             $view = $this->json($specifiers);
             return $view;
         }
@@ -184,7 +169,7 @@ class ArchitectController extends BaseController
                 return $this->json(['error' => 'ID is required']);
             }
 
-            $architect = $this->architect->fetchArchitectById($id);
+            $architect = $this->getArchitectModel()->fetchArchitectById($id);
 
             return $this->json($architect);
         }
@@ -201,7 +186,7 @@ class ArchitectController extends BaseController
                 return $this->json(['error' => 'ID is required']);
             }
 
-            $address = $this->address->fetchAddressesByArchitect($id);
+            $address = $this->getAddressModel()->fetchAddressesByArchitect($id);
 
             return $this->json($address);
         }
@@ -218,7 +203,7 @@ class ArchitectController extends BaseController
                 return $this->json(['error' => 'ID is required']);
             }
 
-            $address = $this->address->fetchAddressesById($id);
+            $address = $this->getAddressModel()->fetchAddressesById($id);
 
             return $this->json($address);
         }
@@ -235,7 +220,7 @@ class ArchitectController extends BaseController
                 return $this->json(['error' => 'ID is required']);
             }
 
-            $architect = $this->specifier->fetchSpecifiersByArchitect($id);
+            $architect = $this->getSpecifierModel()->fetchSpecifiersByArchitect($id);
 
             return $this->json($architect);
         }
@@ -252,7 +237,7 @@ class ArchitectController extends BaseController
                 return $this->json(['error' => 'ID is required']);
             }
 
-            $architect = $this->specifier->fetchSpecifierById($id);
+            $architect = $this->getSpecifierModel()->fetchSpecifierById($id);
 
             return $this->json($architect);
         }
@@ -271,7 +256,7 @@ class ArchitectController extends BaseController
             return $this->json(['error' => 'ID is required']);
         }
 
-        $projects = $this->architect->fetchProjectsByArchitect($id, $selectedIDsArray);
+        $projects = $this->getArchitectModel()->fetchProjectsByArchitect($id, $selectedIDsArray);
 
         if ($isExport === 'excel') {
             $spreadsheet = new Spreadsheet();

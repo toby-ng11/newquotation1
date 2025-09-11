@@ -17,7 +17,7 @@ class PdfExportService
         $this->renderer = $renderer;
     }
 
-    public function generatePdf(mixed $viewTemplate, mixed $data): string|null
+    public function generatePdf(mixed $viewTemplate, mixed $data): string
     {
         $defaultConfig = (new ConfigVariables())->getDefaults();
         $fontDirs = $defaultConfig['fontDir'];
