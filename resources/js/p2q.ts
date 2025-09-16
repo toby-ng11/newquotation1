@@ -1,6 +1,5 @@
 import 'basecoat-css/all';
 
-import { mountAllTables, unmountAllTables } from '@/tables';
 import { initAddress } from '@/components/Alpine/modal/address-modal';
 import { initCustomer } from '@/components/Alpine/modal/customer-modal';
 import { initItem } from '@/components/Alpine/modal/item-modal';
@@ -23,6 +22,8 @@ import { InitTheme } from '@/components/ui/theme/Theme';
 import { initArchitect } from '@/pages/architect';
 import { initArchitectForm, initProject } from '@/pages/project';
 import { $dialogMakeQuote, initQuote } from '@/pages/quote';
+import { mountAllTables, unmountAllTables } from '@/tables';
+import { initOpportunityNote } from './components/Alpine/modal/opportunity-note-modal';
 
 initAlpine();
 
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initFlatpickr();
     initRoleOverride();
     initShare();
+    initOpportunityNote();
     initItem();
     initNote();
     initCustomer();

@@ -1,17 +1,29 @@
 <?php
-$user = $this->user;
-$role = $this->escapeHtml($user['p2q_system_role']) ?? '';
 
-$isAdmin   = $role === 'admin';
-$isManager = $role === 'manager';
-$isSales   = $role === 'sales';
-$isGuest   = $role === 'guest';
+/**
+ * @psalm-scope-this Exception
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ * @var array $user
+ * @var array $quote
+ * @var 1 $quote_status_waiting
+ * @var 2 $quote_status_approved
+ * @var 3 $quote_status_disapproved
+ * @var array $project
+ * @var array $projectSharedUsers
+ * @var array $customer
+ * @var array $contact
+ * @var array $companies
+ * @var array $branches
+ * @var bool $admin
+ * @var array $approval
+ * @var array $leadtime
+ * @var array $type
+ * @var bool $hasItemNotInLocation
+ */
 
-$admin = $this->admin;
-$project = $this->project;
-$projectDueDate = $project['due_date'];
+$role = $this->escapeHtml($user['p2q_system_role']);
+$isGuest = $role === 'guest';
 
-$quote = $this->quote;
 $quoteID = $quote['id'];
 $quoteStatusID = $quote['status_id'];
 $quoteShipRequiredDate = $quote['ship_required_date'];
@@ -20,14 +32,9 @@ $quoteExpireDate = $quote['expire_date'];
 $this->headTitle('Edit Quote: ' . $quoteID);
 echo $this->headTitle();
 
-$contact = $this->contact;
-$customer = $this->customer;
-$contactList = $this->contactList;
-
-$waitingApprove = $this->quote_status_waiting;
-$approved = $this->quote_status_approved;
-$disapproved = $this->quote_status_disapproved;
-$notSubmit = $this->quote_status_not_submitted;
+$waitingApprove = $quote_status_waiting;
+$approved = $quote_status_approved;
+$disapproved = $quote_status_disapproved;
 $disabledSave = 'disabled';
 
 // All button HTML
@@ -52,389 +59,432 @@ $btnSubmitApprove =
 // Initialize button group
 $buttons = '';
 
-$maintainenceMode = 0;
-
-if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
-    <div class="h-full flex flex-1 flex-col gap-4 p-8">
-        <header>
-            <h1 class="text-2xl font-semibold tracking-tight">An error has occured :&#40;</h1>
-            <h2>Maybe this page is currently in maintainence mode. Please check back later. Sorry for the inconvenience!</h2>
-        </header>
-    </div>
-    <?php } else {
-
-    if (!$project): ?>
-        <div class="border-destructive/40 bg-destructive/10 shadow-destructive/10 mx-6 mt-6 max-w-md rounded-md border p-4 shadow-md">
-            <div class="text-destructive flex flex-row items-center gap-2 text-sm font-medium">
-                <i class="w-4 h-4" data-lucide="info"></i>
-                This quote's project has been deleted.
-            </div>
+if (!$project): ?>
+    <div class="border-destructive/40 bg-destructive/10 shadow-destructive/10 mx-6 mt-6 max-w-md rounded-md border p-4 shadow-md">
+        <div class="text-destructive flex flex-row items-center gap-2 text-sm font-medium">
+            <i class="w-4 h-4" data-lucide="info"></i>
+            This quote's project has been deleted.
         </div>
-    <?php endif; ?>
+    </div>
+<?php endif; ?>
 
-    <!-- Title area -->
-    <div class="h-full flex flex-1 flex-col gap-4 p-8">
-        <h1 class="font-mono text-5xl font-semibold tracking-wide uppercase">Quote</h1>
+<!-- Title area -->
+<div class="h-full flex flex-1 flex-col gap-4 p-8">
+    <h1 class="font-mono text-5xl font-semibold tracking-wide uppercase">Quote</h1>
 
-        <div class="flex items-center justify-between ">
-            <p class="text-muted-foreground font-medium tracking-tight">Quote #<?= $this->escapeHtml($quoteID) ?> of Project #<?= $this->escapeHtml($project['id']) ?></p>
+    <div class="flex items-center justify-between ">
+        <p class="text-muted-foreground font-medium tracking-tight">Quote #<?= $this->escapeHtml($quoteID) ?> of Project #<?= $this->escapeHtml($project['id']) ?></p>
 
-            <div class="hidden lg:flex lg:items-center lg:gap-12">
-                <?php if (! $isGuest): ?>
-                    <button class="widget-btn-add-quote btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
-                        type="button"
-                        data-tooltip="Add another quote for this project">
-                        <i data-lucide="file-plus-2"></i>
-                        ADD QUOTE
-                    </button>
-
-                    <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
-                        target="_blank"
-                        href="/project/<?= $project['id'] ?>/edit"
-                        data-tooltip="Go to this quote's project">
-                        <i data-lucide="external-link"></i>
-                        GO TO PROJECT
-                    </a>
-                <?php endif; ?>
+        <div class="hidden lg:flex lg:items-center lg:gap-12">
+            <?php if (! $isGuest): ?>
+                <button class="widget-btn-add-quote btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                    type="button"
+                    data-tooltip="Add another quote for this project">
+                    <i data-lucide="file-plus-2"></i>
+                    ADD QUOTE
+                </button>
 
                 <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
-                    href="/quote/<?= $quoteID ?>/export"
-                    data-tooltip="Print this quote"
-                    data-align="end">
-                    <i data-lucide="printer"></i>
-                    PRINT
+                    target="_blank"
+                    href="/project/<?= $project['id'] ?>/edit"
+                    data-tooltip="Go to this quote's project">
+                    <i data-lucide="external-link"></i>
+                    GO TO PROJECT
                 </a>
+            <?php endif; ?>
 
-                <?php
-                if ($quoteStatusID != $approved) { ?>
-                    <button class="delete-quote-btn btn-sm-ghost text-destructive hover:bg-destructive/20 font-medium text-xs tracking-tight"
-                        type="button"
-                        data-tooltip="Delete this quote">
-                        <i data-lucide="trash-2"></i>
-                        DELETE
-                    </button>
-                <?php }
-                ?>
-            </div>
+            <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                href="/quote/<?= $quoteID ?>/export"
+                data-tooltip="Print this quote"
+                data-align="end">
+                <i data-lucide="printer"></i>
+                PRINT
+            </a>
 
-            <div id="quote-menu" class="dropdown-menu lg:hidden">
-                <button type="button"
-                    id="quote-menu-trigger"
-                    aria-haspopup="menu"
-                    aria-controls="quote-menu-options"
-                    aria-expanded="false"
-                    class="btn-ghost text-muted-foreground text-xs tracking-tight uppercase">
-                    <i data-lucide="ellipsis" class="w-4 h-4"></i>
-                    Options
+            <?php
+            if ($quoteStatusID != $approved) { ?>
+                <button class="delete-quote-btn btn-sm-ghost text-destructive hover:bg-destructive/20 font-medium text-xs tracking-tight"
+                    type="button"
+                    data-tooltip="Delete this quote">
+                    <i data-lucide="trash-2"></i>
+                    DELETE
                 </button>
-                <div id="quote-menu-popover" data-popover data-align="end" aria-hidden="true" class="min-w-40">
-                    <div role="menu" id="quote-menu-options" aria-labelledby="quote-menu-trigger">
-                        <div role="menuitem">
-                            <button class="flex items-center gap-2"
-                                type="button"
-                                id="options-btn-add-quote"
-                                title="Make Quote">
-                                <i data-lucide="file-plus-2" class="text-muted-foreground h-4 w-4"></i>
-                                Add Quote
-                            </button>
-                        </div>
-                        <div role="menuitem">
-                            <a class="flex items-center gap-2"
-                                target="_blank"
-                                href="/project/<?= $project['id'] ?>/edit"
-                                title="Go to project for this quote">
-                                <i data-lucide="external-link" class="text-muted-foreground h-4 w-4"></i>
-                                Go to Project
-                            </a>
-                        </div>
-                        <div role="menuitem">
-                            <a class="flex items-center gap-2"
-                                href="/quote/<?= $quoteID ?>/export"
-                                title="Print this quote">
-                                <i data-lucide="printer" class="text-muted-foreground h-4 w-4"></i>
-                                Print Quote
-                            </a>
-                        </div>
-                        <?php
-                        if ($quoteStatusID != $approved) : ?>
-                            <hr role="separator" />
-                            <div role="menuitem" class="hover:bg-destructive/20">
-                                <button class="delete-quote-btn text-destructive flex items-center gap-2"
-                                    type="button"
-                                    title="Delete Quote">
-                                    <i data-lucide="trash-2" class="text-destructive size-4"></i>
-                                    Delete Quote
-                                </button>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
+            <?php }
+            ?>
         </div>
 
-        <div class="h-[1px] bg-border my-4"></div>
-
-        <div class="flex flex-col gap-4 md:flex-row">
-            <div class="flex flex-auto flex-col gap-4">
-                <div class="feature fade-in-up bg-widget-background rounded-xl p-6 shadow-lg">
-                    <div class="flex flex-col gap-6">
-                        <p class="font-bold"><?= $this->escapeHtml($project['project_name']) ?></p>
-                        <p class="text-sm"><?= $this->escapeHtml($project['project_address']) ?>
-                            </br>
-                            by <b><?= $this->escapeHtml($project['owner_id']) ?></b>
-                            <?php if ($project['shared_users'] != null) { ?>
-                                shared with <b><?= $this->escapeHtml($project['shared_users']) ?></b>
-                        </p>
-                    <?php } ?>
+        <div id="quote-menu" class="dropdown-menu lg:hidden">
+            <button type="button"
+                id="quote-menu-trigger"
+                aria-haspopup="menu"
+                aria-controls="quote-menu-options"
+                aria-expanded="false"
+                class="btn-ghost text-muted-foreground text-xs tracking-tight uppercase">
+                <i data-lucide="ellipsis" class="w-4 h-4"></i>
+                Options
+            </button>
+            <div id="quote-menu-popover" data-popover data-align="end" aria-hidden="true" class="min-w-40">
+                <div role="menu" id="quote-menu-options" aria-labelledby="quote-menu-trigger">
+                    <div role="menuitem">
+                        <button class="flex items-center gap-2"
+                            type="button"
+                            id="options-btn-add-quote"
+                            title="Make Quote">
+                            <i data-lucide="file-plus-2" class="text-muted-foreground h-4 w-4"></i>
+                            Add Quote
+                        </button>
                     </div>
-                </div>
-
-                <?php if ($quoteStatusID != 0 and ($quote['deleted_at'] === null)) {
-                    switch ($quoteStatusID) {
-                        case $approved: ?>
-                            <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg quote-status status-approved">
-                                <div class="flex flex-col gap-6">
-                                    <p>Quote status</p>
-                                    <h2>Approved</h2>
-                                </div>
-                            </div>
-                        <?php break;
-                        case $waitingApprove: ?>
-                            <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg quote-status status-waiting">
-                                <div class="flex flex-col gap-6">
-                                    <p>Quote status</p>
-                                    <h2>Waiting for approval</h2>
-                                </div>
-                            </div>
-                        <?php break;
-                        case $disapproved: ?>
-                            <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg quote-status status-disapproved">
-                                <div class="flex flex-col gap-6">
-                                    <p>Quote status</p>
-                                    <h2>Disapproved</h2>
-                                </div>
-                            </div>
-                        <?php break;
-                        default: ?>
-                            <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg quote-status status-notsubmitted">
-                                <div class="flex flex-col gap-6">
-                                    <p>Quote status</p>
-                                    <h2>Draft</h2>
-                                </div>
-                            </div>
-                    <?php break;
-                    }
-                } else {
-                    ?>
-                    <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg quote-status status-disapproved">
-                        <div class="flex flex-col gap-6">
-                            <p>Quote status</p>
-                            <h2>Deleted</h2>
-                        </div>
+                    <div role="menuitem">
+                        <a class="flex items-center gap-2"
+                            target="_blank"
+                            href="/project/<?= $project['id'] ?>/edit"
+                            title="Go to project for this quote">
+                            <i data-lucide="external-link" class="text-muted-foreground h-4 w-4"></i>
+                            Go to Project
+                        </a>
                     </div>
-                <?php
-                } ?>
-
-                <div class="feature fade-in-up bg-widget-background rounded-xl p-6 shadow-lg">
-                    <?php if (! $isGuest): ?>
-                        <div class="absolute top-4 right-4 z-10">
-                            <button
+                    <div role="menuitem">
+                        <a class="flex items-center gap-2"
+                            href="/quote/<?= $quoteID ?>/export"
+                            title="Print this quote">
+                            <i data-lucide="printer" class="text-muted-foreground h-4 w-4"></i>
+                            Print Quote
+                        </a>
+                    </div>
+                    <?php
+                    if ($quoteStatusID != $approved) : ?>
+                        <hr role="separator" />
+                        <div role="menuitem" class="hover:bg-destructive/20">
+                            <button class="delete-quote-btn text-destructive flex items-center gap-2"
                                 type="button"
-                                title="Edit Customer"
-                                class="btn-sm-outline shadow-sm"
-                                id="edit-quote-customer"
-                                data-id="<?= $this->escapeHtml($quote['contact_id']) ?>">
-                                <i data-lucide="pencil"></i>
-                                Edit
+                                title="Delete Quote">
+                                <i data-lucide="trash-2" class="text-destructive size-4"></i>
+                                Delete Quote
                             </button>
                         </div>
                     <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <div class="flex gap-4">
-                        <div class="flex flex-col w-[50%] gap-6 border-r pr-2">
-                            <p class="font-mono text-2xl font-semibold uppercase">Customer</p>
+    <div class="h-[1px] bg-border my-4"></div>
+
+    <div class="flex flex-col gap-4 md:flex-row">
+        <div class="flex flex-auto flex-col gap-4">
+            <div class="feature fade-in-up bg-widget-background rounded-xl p-6 shadow-lg">
+                <div class="flex flex-col gap-6">
+                    <p class="font-bold"><?= $this->escapeHtml($project['project_name']) ?></p>
+                    <p class="text-sm"><?= $this->escapeHtml($project['project_address']) ?>
+                        </br>
+                        by <b><?= $this->escapeHtml($project['created_by']) ?></b>
+                        <?php if ($projectSharedUsers) { ?>
+                            shared with <b><?= $this->escapeHtml($projectSharedUsers) ?></b>
+                    </p>
+                <?php } ?>
+                </div>
+            </div>
+
+            <?php if ($quoteStatusID != 0 and ($quote['deleted_at'] === null)) {
+                switch ($quoteStatusID) {
+                    case $approved: ?>
+                        <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg quote-status status-approved">
+                            <div class="flex flex-col gap-6">
+                                <p>Quote status</p>
+                                <h2>Approved</h2>
+                            </div>
+                        </div>
+                    <?php break;
+                    case $waitingApprove: ?>
+                        <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg quote-status status-waiting">
+                            <div class="flex flex-col gap-6">
+                                <p>Quote status</p>
+                                <h2>Waiting for approval</h2>
+                            </div>
+                        </div>
+                    <?php break;
+                    case $disapproved: ?>
+                        <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg quote-status status-disapproved">
+                            <div class="flex flex-col gap-6">
+                                <p>Quote status</p>
+                                <h2>Disapproved</h2>
+                            </div>
+                        </div>
+                    <?php break;
+                    default: ?>
+                        <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg quote-status status-notsubmitted">
+                            <div class="flex flex-col gap-6">
+                                <p>Quote status</p>
+                                <h2>Draft</h2>
+                            </div>
+                        </div>
+                <?php break;
+                }
+            } else {
+                ?>
+                <div class="feature fade-in-up rounded-xl bg-widget-background p-6 shadow-lg quote-status status-disapproved">
+                    <div class="flex flex-col gap-6">
+                        <p>Quote status</p>
+                        <h2>Deleted</h2>
+                    </div>
+                </div>
+            <?php
+            } ?>
+
+            <div class="feature fade-in-up bg-widget-background rounded-xl p-6 shadow-lg">
+                <?php if (! $isGuest): ?>
+                    <div class="absolute top-4 right-4 z-10">
+                        <button
+                            type="button"
+                            title="Edit Customer"
+                            class="btn-sm-outline shadow-sm"
+                            id="edit-quote-customer"
+                            data-id="<?= $this->escapeHtml($quote['contact_id']) ?>">
+                            <i data-lucide="pencil"></i>
+                            Edit
+                        </button>
+                    </div>
+                <?php endif; ?>
+
+                <div class="flex gap-4">
+                    <div class="flex flex-col w-[50%] gap-6 border-r pr-2">
+                        <p class="font-mono text-2xl font-semibold uppercase">Customer</p>
+                        <?php if (!$customer): ?>
+                            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                                <p class="text-sm text-gray-800">
+                                    This customer doesn't exist in this quote's company.
+                                    Please change the quote company to be the same as quoted customer (<b><?= $this->escapeHtml($contact['company_id']) ?></b>).
+                                </p>
+                            </div>
+                        <?php else: ?>
                             <p>Customer #<?= $this->escapeHtml($customer['customer_id']) ?> </p>
                             <address class="text-sm"><b><?= $this->escapeHtml($customer['customer_name']) ?></b> <br>
                                 at <b><?= $this->escapeHtml($customer['company_id']) ?></b> of <b><?= $this->escapeHtml($customer['salesrep_full_name']) ?></b>.
                             </address>
-                        </div>
-
-                        <div class="flex flex-col gap-6">
-                            <p class="font-mono text-2xl font-semibold uppercase">Contact</p>
-                            <p>Contact #<?= $this->escapeHtml($contact['contact_id']) ?> </p>
-                            <address class="text-sm"><b><?= $this->escapeHtml($contact['first_name'] . ' ' . $contact['last_name']) ?></b> <br>
-                                <?= $this->escapeHtml(implode(', ', array_filter([
-                                    $contact['phys_address1'] ?? '',
-                                    $contact['phys_address2'] ?? ''
-                                ]))) ?>
-                                <br>
-                                <?= $this->escapeHtml(implode(', ', array_filter([
-                                    $contact['phys_city'] ?? '',
-                                    $contact['phys_state'] ?? '',
-                                    $contact['phys_postal_code'] ?? '',
-                                    $contact['phys_country'] ?? '',
-                                ]))) ?>
-                                <?php if (!empty($contact['central_phone_number'])) : ?>
-                                    <br><?= $this->escapeHtml($contact['central_phone_number']) ?>
-                                <?php endif;
-
-                                if (!empty($contact['email_address'])) : ?>
-                                    <br><?= $this->escapeHtml($contact['email_address']) ?>
-                                <?php endif; ?>
-                            </address>
-                        </div>
+                        <?php endif; ?>
                     </div>
 
+                    <div class="flex flex-col gap-6">
+                        <p class="font-mono text-2xl font-semibold uppercase">Contact</p>
+                        <p>Contact #<?= $this->escapeHtml($contact['contact_id']) ?> </p>
+                        <address class="text-sm"><b><?= $this->escapeHtml($contact['first_name'] . ' ' . $contact['last_name']) ?></b> <br>
+                            <?= $this->escapeHtml(implode(', ', array_filter([
+                                $contact['phys_address1'] ?? '',
+                                $contact['phys_address2'] ?? ''
+                            ]))) ?>
+                            <br>
+                            <?= $this->escapeHtml(implode(', ', array_filter([
+                                $contact['phys_city'] ?? '',
+                                $contact['phys_state'] ?? '',
+                                $contact['phys_postal_code'] ?? '',
+                                $contact['phys_country'] ?? '',
+                            ]))) ?>
+                            <?php if (!empty($contact['central_phone_number'])) : ?>
+                                <br><?= $this->escapeHtml($contact['central_phone_number']) ?>
+                            <?php endif;
 
+                            if (!empty($contact['email_address'])) : ?>
+                                <br><?= $this->escapeHtml($contact['email_address']) ?>
+                            <?php endif; ?>
+                        </address>
+                    </div>
                 </div>
-            </div>
 
-            <?php if (! $isGuest): ?>
-                <div class="fade-in-up flex-auto" aria-labelledby="quote-detail">
-                    <form
-                        action="/quote/<?= $this->escapeHtml($quoteID) ?>/edit"
-                        method='post'
-                        class="form"
-                        id="quote-content"
-                        data-save-btn="#form-btn-save-quote"
-                        data-form="#quoteForm">
-                        <div class="widget-table bg-widget-background rounded-xl p-6" id="customer_info">
-                            <div class="widget-header">
-                                <div class="widget-title">
-                                    <h2>Quote details</h2>
+
+            </div>
+        </div>
+
+        <?php if (! $isGuest): ?>
+            <div class="fade-in-up flex-auto" aria-labelledby="quote-detail">
+                <form
+                    action="/quote/<?= $this->escapeHtml($quoteID) ?>/edit"
+                    method='post'
+                    class="form"
+                    id="quote-content"
+                    data-save-btn="#form-btn-save-quote"
+                    data-form="#quoteForm">
+                    <div class="widget-table bg-widget-background rounded-xl p-6" id="customer_info">
+                        <div class="widget-header">
+                            <div class="widget-title">
+                                <h2>Quote details</h2>
+                            </div>
+                        </div>
+
+                        <div class="h-[1px] bg-border my-4"></div>
+
+                        <div class="widget-section">
+                            <div class="formRow">
+                                <input
+                                    type="hidden"
+                                    id='project_id'
+                                    name='project_id'
+                                    value="<?= $this->escapeHtml($project['id']) ?>" />
+
+                                <input
+                                    type="hidden"
+                                    id='lead_time_id'
+                                    name='lead_time_id'
+                                    value="<?= $this->escapeHtml($quote['lead_time_id']) ?>" />
+
+                                <input
+                                    type="hidden"
+                                    name='contact_id'
+                                    value="<?= $this->escapeHtml($quote['contact_id']) ?>" />
+
+                                <div class="grid gap-2">
+                                    <label for='quote_id'>Quote ID</label>
+                                    <input id='quote_id' type="text" value='<?= $this->escapeHtml($quoteID) ?>' readonly />
+                                </div>
+                                <div class="grid gap-2">
+                                    <label for='quote_type'>Type</label>
+                                    <select name="quote_type_id" id="quote_type">
+                                        <option value="">Select Quote type</option>
+                                        <?php foreach ($type as $t): ?>
+                                            <option
+                                                value="<?= $this->escapeHtml($t['id']) ?>"
+                                                <?= $t['id'] == $quote['quote_type_id'] ? 'selected' : '' ?>>
+                                                <?= $this->escapeHtml($t['type_desc']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for='quote_company'>Company</label>
+                                    <select name="company_id" id="quote_company">
+                                        <option value="">Select quote's company</option>
+                                        <?php foreach ($companies as $company): ?>
+                                            <option
+                                                value="<?= $this->escapeHtml($company['company_id']) ?>"
+                                                <?= $company['company_id'] === $quote['company_id'] ? 'selected' : '' ?>>
+                                                <?= $this->escapeHtml($company['company_name']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for='quote_branch'>Branch</label>
+                                    <select name="branch_id" id="quote_branch">
+                                        <option value="">Select quote's branch</option>
+                                        <?php foreach ($branches as $branch): ?>
+                                            <option
+                                                value="<?= $this->escapeHtml($branch['location_id']) ?>"
+                                                <?= $branch['location_id'] === $quote['branch_id'] ? 'selected' : '' ?>>
+                                                <?= $this->escapeHtml($branch['branch_description']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for='ship_required_date'>Ship Required Date</label>
+                                    <input
+                                        id='ship_required_date'
+                                        type="text"
+                                        class="flatpickr validate[required]"
+                                        name='ship_required_date'
+                                        value="<?php if ($quoteShipRequiredDate && $quoteShipRequiredDate > new DateTime('2000-01-01')) {
+                                                    echo $quoteShipRequiredDate->format('Y-m-d');
+                                                } ?>" />
+                                </div>
+
+                                <div class="grid gap-2">
+                                    <label for="quote_date">Expire Date</label>
+                                    <input
+                                        id="expire_date"
+                                        name="expire_date"
+                                        type="text"
+                                        class="flatpickr"
+                                        value='<?= $this->escapeHtml($quoteExpireDate->format('Y-m-d') ?? '') ?>' />
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="h-[1px] bg-border my-4"></div>
+                        <div class="h-[1px] bg-border my-4"></div>
 
+                        <div class="widget-section">
+                            <div class="formRow">
+                                <div class="grid gap-2">
+                                    <label for="quote-note">Quote Note</label>
+                                    <textarea
+                                        id="quote-note"
+                                        rows="5"
+                                        cols=""
+                                        name="note"
+                                        placeholder="Add quote note here...">
+                                <?= $this->escapeHtml($quote['note']) ?>
+                            </textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <?php if ($admin): ?>
+                            <div class="line"></div>
                             <div class="widget-section">
                                 <div class="formRow">
-                                    <input
-                                        type="hidden"
-                                        id='project_id'
-                                        name='project_id'
-                                        value="<?= $this->escapeHtml($project['id']) ?>" />
-
-                                    <input
-                                        type="hidden"
-                                        id='lead_time_id'
-                                        name='lead_time_id'
-                                        value="<?= $this->escapeHtml($quote['lead_time_id']) ?>" />
-
-                                    <input
-                                        type="hidden"
-                                        name='contact_id'
-                                        value="<?= $this->escapeHtml($quote['contact_id']) ?>" />
-
-                                    <div class="grid gap-2">
-                                        <label for='quote_id'>Quote ID</label>
-                                        <input id='quote_id' type="text" value='<?= $this->escapeHtml($quoteID) ?>' readonly />
-                                    </div>
-                                    <div class="grid gap-2">
-                                        <label for='quote_type'>Type</label>
-                                        <select name="quote_type_id" id='quote_type' class="validate[required]">
-                                            <option value="">Select Quote type</option>
-                                            <?php foreach ($this->type as $t): ?>
+                                    <div class="grid gap-2 required-field">
+                                        <label for="price_approve_id">Quote Approval</label>
+                                        <select name="price_approve_id" id="price_approve_id" class="validate[required]">
+                                            <option value="">Select Approval</option>
+                                            <?php foreach ($approval as $a) { ?>
                                                 <option
-                                                    value="<?= $this->escapeHtml($t['id']) ?>"
-                                                    <?= $t['id'] == $quote['quote_type_id'] ? 'selected' : '' ?>>
-                                                    <?= $this->escapeHtml($t['type_desc']) ?>
+                                                    value="<?= $this->escapeHtml($a['id']) ?>"
+                                                    <?php if ($a['id'] == $quote['price_approve_id']) {
+                                                        echo 'selected';
+                                                    } ?>>
+                                                    <?= $this->escapeHtml($a['name'] . ' - ' . $a['default_company']) ?>
                                                 </option>
-                                            <?php endforeach; ?>
+                                            <?php } ?>
                                         </select>
                                     </div>
 
-                                    <div class="grid gap-2">
-                                        <label for='ship_required_date'>Ship Required Date</label>
-                                        <input
-                                            id='ship_required_date'
-                                            type="text"
-                                            class="flatpickr validate[required]"
-                                            name='ship_required_date'
-                                            value="<?php if ($quoteShipRequiredDate && $quoteShipRequiredDate > new DateTime('2000-01-01')) {
-                                                        echo $quoteShipRequiredDate->format('Y-m-d');
-                                                    } ?>" />
-                                    </div>
-
-                                    <div class="grid gap-2">
-                                        <label for="quote_date">Expire Date</label>
-                                        <input
-                                            id="expire_date"
-                                            name="expire_date"
-                                            type="text"
-                                            class="flatpickr"
-                                            value='<?= $this->escapeHtml($quoteExpireDate->format('Y-m-d') ?? '') ?>' />
-                                    </div>
-
-                                    <div class="grid gap-2">
-                                        <label for='market_segment'>Project segment</label>
-                                        <input
-                                            readonly
-                                            id="market_segment"
-                                            type="text"
-                                            value='<?= $this->escapeHtml($project['market_segment_desc']) ?>' />
-                                    </div>
-
-                                    <div class="grid gap-2">
-                                        <label for='architect_rep_id'>Architectural Representative</label>
-                                        <input
-                                            readonly
-                                            id='architect_rep_id'
-                                            name='architect_rep_id'
-                                            type="text"
-                                            value='<?= $this->escapeHtml($project['architect_rep_id']) ?? 'No architect was assigned.' ?>' />
+                                    <div class="grid gap-2 required-field">
+                                        <label for="lead_time_id">Lead Time</label>
+                                        <select name="lead_time_id" id="lead_time_id" class="validate[required]">
+                                            <option value="">Select Lead Time</option>
+                                            <?php foreach ($leadtime as $a) { ?>
+                                                <option
+                                                    value="<?= $this->escapeHtml($a['id']) ?>"
+                                                    <?php if ($quote['lead_time_id'] == $a['id']) {
+                                                        echo 'selected';
+                                                    } ?>>
+                                                    <?= $this->escapeHtml($a['lead_time_desc']) ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="h-[1px] bg-border my-4"></div>
-
-                            <div class="widget-section">
-                                <div class="formRow">
-                                    <div class="grid gap-2">
-                                        <label for="quote-note">Quote Note</label>
-                                        <textarea
-                                            id="quote-note"
-                                            rows="5"
-                                            cols=""
-                                            name="note"
-                                            placeholder="Add quote note here...">
-                                <?= $this->escapeHtml($quote['note']) ?>
-                            </textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <?php if ($admin): ?>
+                            <?php else: if ($quoteStatusID === $approved): ?>
                                 <div class="line"></div>
                                 <div class="widget-section">
                                     <div class="formRow">
                                         <div class="grid gap-2 required-field">
                                             <label for="price_approve_id">Quote Approval</label>
-                                            <?php if (! $isGuest) { ?>
+                                            <?php if ($user['p2q_system_role'] === 'guest') { ?>
+                                                <select name="price_approve_id" id="price_approve_id">
+                                                    <?php foreach ($approval as $a) { ?>
+                                                        <?php if ($a['id'] == $quote['price_approve_id']) { ?>
+                                                            <option value="<?= $this->escapeHtml($a['id']) ?>"
+                                                                selected>
+                                                                <?= $this->escapeHtml($a['name'] . ' - ' . $a['default_company']) ?>
+                                                            </option>
+                                                    <?php }
+                                                    } ?>
+                                                </select>
+                                            <?php } else { ?>
                                                 <select name="price_approve_id" id="price_approve_id" class="validate[required]">
                                                     <option value="">Select Approval</option>
-                                                    <?php foreach ($this->approval as $a) { ?>
+                                                    <?php foreach ($approval as $a) { ?>
                                                         <option
                                                             value="<?= $this->escapeHtml($a['id']) ?>"
                                                             <?php if ($a['id'] == $quote['price_approve_id']) {
                                                                 echo 'selected';
                                                             } ?>>
-                                                            <?= $this->escapeHtml($user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']) ?>
+                                                            <?= $this->escapeHtml($a['name'] . ' - ' . $a['default_company']) ?>
                                                         </option>
                                                     <?php } ?>
-                                                </select>
-                                            <?php } else { ?>
-                                                <select name="price_approve_id" id="price_approve_id">
-                                                    <?php foreach ($this->approval as $a) { ?>
-                                                        <?php if ($a['id'] == $quote['price_approve_id']) { ?>
-                                                            <option
-                                                                value="<?= $this->escapeHtml($a['id']) ?>"
-                                                                selected>
-                                                                <?= $this->escapeHtml($user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']) ?>
-                                                            </option>
-                                                    <?php }
-                                                    } ?>
                                                 </select>
                                             <?php } ?>
                                         </div>
@@ -443,10 +493,10 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                                             <label for="lead_time_id">Lead Time</label>
                                             <select name="lead_time_id" id="lead_time_id" class="validate[required]">
                                                 <option value="">Select Lead Time</option>
-                                                <?php foreach ($this->leadtime as $a) { ?>
+                                                <?php foreach ($leadtime as $a) { ?>
                                                     <option
-                                                        value="<?= $this->escapeHtml($a['id']) ?>"
-                                                        <?php if ($quote['lead_time_id'] == $a['id']) {
+                                                        value="<?= $this->escapeHtml($a['lead_time_id']) ?>"
+                                                        <?php if ($quote['lead_time_id'] == $a['lead_time_id']) {
                                                             echo 'selected';
                                                         } ?>>
                                                         <?= $this->escapeHtml($a['lead_time_desc']) ?>
@@ -456,166 +506,124 @@ if ($maintainenceMode != 0 and $user['sale_role'] != 'admin') { ?>
                                         </div>
                                     </div>
                                 </div>
-                                <?php else: if ($quoteStatusID === $approved): ?>
-                                    <div class="line"></div>
-                                    <div class="widget-section">
-                                        <div class="formRow">
-                                            <div class="grid gap-2 required-field">
-                                                <label for="price_approve_id">Quote Approval</label>
-                                                <?php if (! $isGuest) { ?>
-                                                    <select name="price_approve_id" id="price_approve_id" class="validate[required]">
-                                                        <option value="">Select Approval</option>
-                                                        <?php foreach ($this->approval as $a) { ?>
-                                                            <option
-                                                                value="<?= $this->escapeHtml($a['id']) ?>"
-                                                                <?php if ($a['id'] == $quote['price_approve_id']) {
-                                                                    echo 'selected';
-                                                                } ?>>
-                                                                <?= $this->escapeHtml($user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']) ?>
-                                                            </option>
-                                                        <?php } ?>
-                                                    </select>
-                                                <?php } else { ?>
-                                                    <select name="price_approve_id" id="price_approve_id">
-                                                        <?php foreach ($this->approval as $a) { ?>
-                                                            <?php if ($a['id'] == $quote['price_approve_id']) { ?>
-                                                                <option value="<?= $this->escapeHtml($a['id']) ?>"
-                                                                    selected>
-                                                                    <?= $this->escapeHtml($user['first_name'][0] . $user['last_name'][0] . ' / ' . $a['name'] . ' - ' . $a['default_company']) ?>
-                                                                </option>
-                                                        <?php }
-                                                        } ?>
-                                                    </select>
-                                                <?php } ?>
-                                            </div>
+                        <?php endif;
+                        endif; ?>
 
-                                            <div class="grid gap-2 required-field">
-                                                <label for="lead_time_id">Lead Time</label>
-                                                <select name="lead_time_id" id="lead_time_id" class="validate[required]">
-                                                    <option value="">Select Lead Time</option>
-                                                    <?php foreach ($this->leadtime as $a) { ?>
-                                                        <option
-                                                            value="<?= $this->escapeHtml($a['lead_time_id']) ?>"
-                                                            <?php if ($quote['lead_time_id'] == $a['lead_time_id']) {
-                                                                echo 'selected';
-                                                            } ?>>
-                                                            <?= $this->escapeHtml($a['lead_time_desc']) ?>
-                                                        </option>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                            <?php endif;
-                            endif; ?>
-
-                            <?php
-                            if (!$admin) {
-                                switch ($quoteStatusID) {
-                                    case $waitingApprove:
-                                        if ($quote['submit_by'] === $user['id']) {
-                                            $buttons = $btnSave . $btnUndoSubmit;
-                                        } else {
-                                            $buttons = $btnSave;
-                                        }
-                                        break;
-                                    case $disapproved:
-                                        $buttons = $btnSave . $btnSubmitAgain;
-                                        break;
-                                    case $approved:
-                                        // No buttons for user if approved
-                                        break;
-                                    default:
-                                        $buttons = $btnSave . $btnSubmit;
-                                        break;
-                                }
-                            } else {
-                                // Admin logic
-                                switch ($quoteStatusID) {
-                                    case $waitingApprove:
-                                        if ($quote['submit_by'] === $user['id']) {
-                                            $buttons = $btnSave . $btnUndoSubmit . $btnDisapprove . $btnApprove;
-                                        } else {
-                                            $buttons = $btnSave . $btnDisapprove . $btnApprove;
-                                        }
-                                        break;
-                                    case $approved:
-                                        $buttons = $btnSave . $btnUndoApprove;
-                                        break;
-                                    case $disapproved:
-                                        $buttons = $btnSave . $btnSubmitAgain;
-                                        break;
-                                    default:
-                                        $buttons = $btnSave . $btnSubmitApprove;
-                                        break;
-                                }
+                        <?php
+                        if (!$admin) {
+                            switch ($quoteStatusID) {
+                                case $waitingApprove:
+                                    if ($quote['submit_by'] === $user['id']) {
+                                        $buttons = $btnSave . $btnUndoSubmit;
+                                    } else {
+                                        $buttons = $btnSave;
+                                    }
+                                    break;
+                                case $disapproved:
+                                    $buttons = $btnSave . $btnSubmitAgain;
+                                    break;
+                                case $approved:
+                                    // No buttons for user if approved
+                                    break;
+                                default:
+                                    $buttons = $btnSave . $btnSubmit;
+                                    break;
                             }
+                        } else {
+                            // Admin logic
+                            switch ($quoteStatusID) {
+                                case $waitingApprove:
+                                    if ($quote['submit_by'] === $user['id']) {
+                                        $buttons = $btnSave . $btnUndoSubmit . $btnDisapprove . $btnApprove;
+                                    } else {
+                                        $buttons = $btnSave . $btnDisapprove . $btnApprove;
+                                    }
+                                    break;
+                                case $approved:
+                                    $buttons = $btnSave . $btnUndoApprove;
+                                    break;
+                                case $disapproved:
+                                    $buttons = $btnSave . $btnSubmitAgain;
+                                    break;
+                                default:
+                                    $buttons = $btnSave . $btnSubmitApprove;
+                                    break;
+                            }
+                        }
 
-                            // Render if buttons exist
-                            if (!empty($buttons)): ?>
-                                <div class="line"></div>
-                                <div class="widget-footer">
-                                    <div class="widget-footer-button">
-                                        <?= $buttons ?>
-                                    </div>
+                        // Render if buttons exist
+                        if (!empty($buttons)): ?>
+                            <div class="line"></div>
+                            <div class="widget-footer">
+                                <div class="widget-footer-button">
+                                    <?= $buttons ?>
                                 </div>
-                            <?php endif;
-                            ?>
-                        </div>
-                    </form>
+                            </div>
+                        <?php endif;
+                        ?>
+                    </div>
+                </form>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <div class="fade-in-up" aria-labelledby="items">
+        <div class="widget-table bg-widget-background rounded-xl p-6">
+            <div class="widget-header">
+                <div class="widget-title">
+                    <h2>Items</h2>
+                </div>
+                <?php if (! $isGuest): ?>
+                    <div class="widget-button">
+                        <button
+                            type="button"
+                            title="Add new item"
+                            class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                            id="widget-btn-add-item"
+                            data-tooltip="Add a new item for this quote">
+                            <i data-lucide="plus"></i>
+                            ADD ITEM
+                        </button>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="line"></div>
+
+            <?php if ($hasItemNotInLocation): ?>
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded mt-2">
+                    <p class="text-sm text-gray-800">
+                        This quote is having some items that is quoted in another branch.
+                        Since items availability and price may vary between branches, please review the list carefully and remove or re-add items as needed.
+                    </p>
                 </div>
             <?php endif; ?>
-        </div>
 
-        <div class="fade-in-up" aria-labelledby="items">
-            <div class="widget-table bg-widget-background rounded-xl p-6">
-                <div class="widget-header">
-                    <div class="widget-title">
-                        <h2>Items</h2>
-                    </div>
-                    <?php if (! $isGuest): ?>
-                        <div class="widget-button">
-                            <button
-                                type="button"
-                                title="Add new item"
-                                class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
-                                id="widget-btn-add-item"
-                                data-tooltip="Add a new item for this quote">
-                                <i data-lucide="plus"></i>
-                                ADD ITEM
-                            </button>
-                        </div>
-                    <?php endif; ?>
-                </div>
-
-                <div class="line"></div>
-
-                <div class="widget-section">
-                    <table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="item-table" data-init="item">
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Quantity</th>
-                                <th>Unit Price</th>
-                                <th>UOM</th>
-                                <th>Stock Status</th>
-                                <th>Total Price</th>
-                                <th>Note</th>
-                                <th>Options</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+            <div class="widget-section">
+                <table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap" id="item-table" data-init="item">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>UOM</th>
+                            <th>Stock Status</th>
+                            <th>Total Price</th>
+                            <th>Location</th>
+                            <th>Note</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
-
-        <?= $this->render('modal/item'); ?>
-
-        <?= $this->render('modal/customer'); ?>
-
     </div>
-<?php }
-?>
+
+    <?= $this->render('modal/item'); ?>
+
+    <?= $this->render('modal/customer'); ?>
+
+</div>
 
 <script type="text/javascript">
     window.isGuest = <?= $isGuest ? 'true' : 'false' ?>;

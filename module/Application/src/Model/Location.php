@@ -3,6 +3,7 @@
 namespace Application\Model;
 
 use Application\Helper\InputValidator;
+use Laminas\Db\ResultSet\AbstractResultSet;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\Select;
@@ -35,6 +36,21 @@ class Location
 
         /** @var ResultSet $rowset */
         $rowset = $this->location->selectWith($select);
+        return $rowset->toArray();
+    }
+
+    public function fetchBranchesFromCompany(string $company_id): array
+    {
+        $select = $this->location->getSql()->select()
+            ->where(['company_id' => $company_id])
+            ->order('location_id ASC');
+
+        /** @var AbstractResultSet $rowset */
+        $rowset = $this->location->selectWith($select);
+        if ($rowset->count() === 1) {
+            return $rowset->current() ?? [];
+        }
+
         return $rowset->toArray();
     }
 

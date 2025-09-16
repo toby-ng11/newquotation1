@@ -10,6 +10,7 @@ import { createElement, Pencil, Trash2 } from 'lucide';
 let adminRoleOverrideTable: Api<any>;
 let adminAllUsersTable: Api<any>;
 let projectNoteTable: Api<any>;
+let opportunityNoteTable: Api<any>;
 let itemTable: Api<any>;
 let projectShareTable: Api<any>;
 let architectProjectsTable: Api<any>;
@@ -28,100 +29,6 @@ function createActionButton(icon: any, className: string, dataId: string, title:
 
 const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
     /* ------ ADMIN PORTAL ------ */
-    adminProject: (el) => {
-        return new DataTable(el, {
-            ajax: {
-                url: '/index/admin/project?view=true',
-                dataSrc: '',
-            } as AjaxSettings,
-            processing: true,
-            //responsive: true,
-            //serverSide: true, // experimetal: server-side processing
-            columns: [
-                {
-                    data: 'project_id',
-                    render: function (data) {
-                        return '<a href="/project/' + data + '/edit" class="text-blue-500 dark:text-blue-300">' + data + '</a>';
-                    },
-                },
-                {
-                    data: 'project_id_ext',
-                },
-                {
-                    data: 'project_name',
-                },
-                {
-                    data: 'owner_id',
-                },
-                {
-                    data: 'shared_users',
-                },
-                {
-                    data: 'created_at.date',
-                    render: function (data) {
-                        let date = new Date(data);
-                        return date.toLocaleDateString();
-                    },
-                },
-                {
-                    data: 'due_date.date',
-                    render: function (data) {
-                        let date = new Date(data);
-                        let today = new Date();
-                        if (date <= today) {
-                            return '<span class="red">' + date.toLocaleDateString() + '</span>';
-                        } else {
-                            return date.toLocaleDateString();
-                        }
-                    },
-                },
-                {
-                    data: 'architect_name',
-                },
-                {
-                    data: 'market_segment_desc',
-                },
-                {
-                    data: 'status_desc',
-                },
-                {
-                    data: 'project_id',
-                    render: function (data) {
-                        return (
-                            '<a target="_blank" href="/project/' +
-                            data +
-                            '/edit?open=make-quote"><span class="button-wrap"><span class="icon icon-money"></span></span></a>'
-                        );
-                    },
-                },
-            ],
-            columnDefs: [
-                {
-                    targets: '_all',
-                    className: 'dt-head-center',
-                },
-                {
-                    targets: [0, 1, 3, 4, 5, 6, 8, 9],
-                    className: 'dt-body-center',
-                },
-            ],
-            //"responsive": true,
-            order: [[0, 'desc']],
-            fixedColumns: {
-                start: 1,
-                end: 1,
-            },
-            scrollX: true,
-            layout: {
-                topStart: function () {
-                    let info = document.createElement('div');
-                    info.innerHTML = '<p class="leading-none font-semibold text-lg">All projects</p>';
-                    return info;
-                },
-                bottomStart: 'pageLength',
-            },
-        });
-    },
     adminQuote: (el) => {
         return new DataTable('#admin-quote-table', {
             ajax: {
@@ -143,6 +50,9 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     render(data) {
                         return `<div class="min-w-[300px] max-w-[300px] truncate">${data}</div>`;
                     },
+                },
+                {
+                    data: 'created_by',
                 },
                 {
                     data: 'market_segment_desc',
@@ -1204,6 +1114,127 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
             },
         });
     },
+    /* ------ OPPORTUNITY EDIT ------ */
+    opportunityNote: () => {
+        return (opportunityNoteTable = new DataTable('#opportunity-note-table', {
+            ajax: {
+                url: `/opportunity-notes?opp=${sheetID}`,
+                dataSrc: '',
+            } as AjaxSettings,
+            processing: true,
+            responsive: true,
+            columns: [
+                {
+                    data: 'created_at.date',
+                    render: function (data) {
+                        let date = new Date(data);
+                        return '<p><b>' + date.toLocaleDateString('en-CA') + '</b></p>';
+                    },
+                },
+                {
+                    data: 'title',
+                    render: function (data, _, row) {
+                        function formatTextWithLinks(text: string) {
+                            if (!text) return '';
+                            let formatted = text.replace(/(?:\r\n|\r|\n)/g, '<br>');
+                            return formatted.replace(
+                                /(https:\/\/[^\s<]+)/g,
+                                '<a href="$1" target="_blank" class="text-blue-500 visited:text-blue-500 underline">$1</a>',
+                            );
+                        }
+                        if (data == '') {
+                            return '<p>' + formatTextWithLinks(row.content) + '</p>';
+                        } else if (row.content == null) {
+                            // this is for old quote system rendering
+                            return '<p>' + data + '</p>';
+                        } else {
+                            return '<p><b>' + data + '</b></br>' + formatTextWithLinks(row.content) + '</p>';
+                        }
+                    },
+                },
+                {
+                    data: 'next_action',
+                    render: function (data) {
+                        if (!data) {
+                            return '';
+                        } else {
+                            let formattedText = data?.replace(/(?:\r\n|\r|\n)/g, '<br>');
+                            return '<p>' + formattedText + '</p>';
+                        }
+                    },
+                },
+                {
+                    data: 'notified_at.date',
+                    render: function (data, _, row) {
+                        const isSent = row.is_notified === 'Y';
+                        if (!data) {
+                            return '--';
+                        }
+                        let date = new Date(data).toLocaleString('en-CA');
+                        if (isSent) {
+                            return `<span title="Reminder already sent">${date} <span class="tag tag-sent">Sent</span></span>`;
+                        }
+                        return date;
+                    },
+                },
+                {
+                    data: 'created_by',
+                    render: function (data) {
+                        if (data != null) {
+                            return '<p><b>' + data + '</b></p>';
+                        } else {
+                            return data;
+                        }
+                    },
+                },
+                {
+                    data: 'id',
+                    render: function (data, _, row) {
+                        if (!window.canEdit) return null;
+
+                        const isSent = row.notified_flag === 'Y';
+                        const buttons = [];
+
+                        if (!isSent) {
+                            buttons.push(`
+                <a href="#" title="Edit this note" class="opp-note-edit" data-id="${data}">
+                  <span class="button-wrap">
+                    <span class="icon icon-edit"></span>
+                  </span>
+                </a>
+              `);
+                        }
+
+                        // Always show delete
+                        buttons.push(`
+              <a href="#" title="Delete this note" class="opp-note-delete" data-id="${data}">
+                <span class="button-wrap">
+                  <span class="icon icon-delete"></span>
+                </span>
+              </a>
+            `);
+
+                        return `<div class="row-button">${buttons.join('')}</div>`;
+                    },
+                },
+            ],
+            columnDefs: [
+                {
+                    targets: '_all',
+                    className: 'dt-head-center',
+                },
+                {
+                    targets: [0, 3, 4, 5],
+                    className: 'dt-body-center',
+                },
+            ],
+            order: [[0, 'desc']],
+            scrollX: true,
+            fixedColumns: {
+                end: 1,
+            },
+        }));
+    },
     /* ------ PROJECT + QUOTE EDIT ------ */
     projectNote: () => {
         return (projectNoteTable = new DataTable('#note-table', {
@@ -1276,7 +1307,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 {
                     data: 'id',
                     render: function (data, type, row) {
-                        if (!window.isOwner) return null;
+                        if (!window.canEdit) return null;
 
                         const isSent = row.notified_flag === 'Y';
                         const buttons = [];
@@ -1439,6 +1470,12 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     },
                 },
                 {
+                    data: 'location_id',
+                    render: function (data) {
+                        return '<b>' + data + '</b>';
+                    },
+                },
+                {
                     data: 'note',
                     render: function (data) {
                         let formattedText = data.replace(/(?:\r\n|\r|\n)/g, '<br>');
@@ -1479,7 +1516,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                     className: 'dt-head-center',
                 },
                 {
-                    targets: [0, 1, 2, 3, 4, 5],
+                    targets: [0, 1, 2, 3, 4, 5, 6],
                     className: 'dt-body-center',
                 },
             ],
@@ -1489,7 +1526,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                 bottomStart: null,
                 bottomEnd: 'info',
             },
-            order: [[7, 'desc']], // sort by item uid, newest item on top
+            order: [[8, 'desc']], // sort by item uid, newest item on top
             paging: false,
             scrollX: true,
             fixedColumns: {
@@ -1886,6 +1923,7 @@ export {
     architectProjectsTable,
     architectSpecifiersTable,
     itemTable,
+    opportunityNoteTable,
     projectNoteTable,
     projectShareTable,
 };

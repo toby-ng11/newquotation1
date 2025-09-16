@@ -5,11 +5,13 @@ namespace Application\Traits;
 use Application\Model\Address;
 use Application\Model\Architect;
 use Application\Model\ArchitectType;
+use Application\Model\CompanyInfo;
 use Application\Model\Customer;
 use Application\Model\Item;
 use Application\Model\Location;
 use Application\Model\MarketSegment;
 use Application\Model\Opportunity;
+use Application\Model\OpportunityNote;
 use Application\Model\OpportunityShare;
 use Application\Model\Project;
 use Application\Model\ProjectNote;
@@ -72,6 +74,11 @@ trait HasModels
     public function getOpportunityShareModel(): OpportunityShare
     {
         return $this->container->get(OpportunityShare::class);
+    }
+
+    public function getOpportunityNoteModel(): OpportunityNote
+    {
+        return $this->container->get(OpportunityNote::class);
     }
 
     public function getProjectModel(): Project
@@ -147,5 +154,10 @@ trait HasModels
     public function getPdfExportService(): PdfExportService
     {
         return $this->container->get(PdfExportService::class);
+    }
+
+    public function getCompanyInfoModel(): CompanyInfo
+    {
+        return $this->container->get(CompanyInfo::class);
     }
 }

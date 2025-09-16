@@ -3,6 +3,8 @@ import { sheetID } from '@/components/init';
 import { projectShareTable } from '@/components/ui/table/tables';
 import { resetForm } from '@/components/utils';
 
+const ENDPOINT = '/project-shares';
+
 async function initShare() {
     const { setupAutoComplete } = await import('@/components/autocomplete');
 
@@ -38,13 +40,12 @@ async function initShare() {
             const projectShareId = deleteBtn.dataset.id;
             if (!projectShareId) return;
 
-            const confirmed = confirm('Are you sure you want to delete this specifier?');
+            const confirmed = confirm('Are you sure you want to unshare this project?');
             if (!confirmed) return;
 
             try {
-                const response = await fetch(`/projectshare/${projectShareId}/delete`, {
-                    method: 'POST',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                const response = await fetch(`${ENDPOINT}/${projectShareId}`, {
+                    method: 'DELETE',
                 });
 
                 const data = await response.json();
@@ -56,7 +57,7 @@ async function initShare() {
                     showFlashMessage(data.message || data.success);
                 }
             } catch (err) {
-                alert('Error deleting specifier.');
+                alert('Error deleting share.');
                 console.error(err);
             }
         }
@@ -79,7 +80,7 @@ function shareModal() {
             this.isEditing = !!projectShareId;
 
             try {
-                const response = await fetch(this.isEditing ? `/projectshare/${projectShareId}/edit` : '/projectshare', {
+                const response = await fetch(this.isEditing ? `/ENDPOINT/${projectShareId}/edit` : '/ENDPOINT', {
                     method: 'POST',
                     body: formData,
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
@@ -103,7 +104,7 @@ function shareModal() {
         // Edit note
         async editShare(projectShareId: string) {
             try {
-                const response = await fetch(`/projectshare/${projectShareId}`, {
+                const response = await fetch(`/ENDPOINT/${projectShareId}`, {
                     headers: { 'X-Requested-With': 'XMLHttpRequest' },
                 });
                 const data = await response.json();

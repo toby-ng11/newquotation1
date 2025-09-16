@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Config\Defaults;
 use Laminas\Http\Response\Stream;
 use Laminas\View\Model\ViewModel;
 use Psr\Container\ContainerInterface;
@@ -144,22 +145,36 @@ class ProjectController extends BaseController
             }
         }
 
+        $user = $this->getUserService()->getCurrentUser();
+
+        if ($user['p2q_system_role'] === 'guest') {
+            return $this->abort403();
+        }
+
         $project_id = (int) $this->params()->fromRoute('id');
 
         if (! $project_id) {
             return $this->redirect()->toRoute('project');
         }
-
         $project = $this->getProjectModel()->fetchById($project_id);
+
+        $shareRecord  = $this->getProjectShareModel()->findBy([
+            'project_id' => $project_id,
+            'shared_user' => $user['id'],
+        ]);
+        $canSee = (
+            $user['id'] === $project['created_by'] ||
+            in_array($user['p2q_system_role'], ['admin', 'manager'], true) ||
+            !empty($shareRecord)
+        );
+
+        if (!$canSee) {
+            return $this->abort403();
+        }
+
         if (! $project || ($project['deleted_at'])) {
             $this->flashMessenger()->addErrorMessage("This project is deleted.");
             return $this->redirect()->toRoute('index', ['action' => 'project']);
-        }
-
-        $user = $this->getUserService()->getCurrentUser();
-
-        if ($user['p2q_system_role'] === 'guest') {
-            return $this->abort403();
         }
 
         $location = $this->getP21LocationModel()->fetchAllBranches();
@@ -180,25 +195,26 @@ class ProjectController extends BaseController
         $generalContractor = $this->getCustomerModel()->fetchCustomerById($project['general_contractor_id']);
         $awardedContractor = $this->getCustomerModel()->fetchCustomerById($project['awarded_contractor_id']);
 
-        $isShareExists = $this->getProjectShareModel()->isShareExists($project_id, $user['id']);
+        $sharedRole = $shareRecord['role'] ?? null;
 
-        $admin = false;
-        if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') {
-            $admin = true;
-        }
+        $canEdit = (
+            $sharedRole === 'editor' ||
+            $user['id'] === $project['created_by'] ||
+            in_array($user['p2q_system_role'], ['admin', 'manager'], true)
+        );
 
         $this->layout()->setTemplate('layout/default');
 
         return new ViewModel([
             'id' => $project_id,
             'user' => $user,
-            'isShareExists' => $isShareExists,
+            'defaultCompany' => Defaults::company(),
+            'canEdit' => $canEdit,
             'project' => $project,
             'company' => $company,
             'location' => $location,
             'status' => $status,
             'marketSegment' => $marketSegment,
-            'admin' => $admin,
             'architect' => $architect,
             'address' => $address,
             'specifier' => $specifier,
@@ -300,7 +316,7 @@ class ProjectController extends BaseController
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest()) {
             $projectId = $this->params()->fromRoute('id');
-            $shareTable = $this->getProjectShareModel()->fetchDataTables($projectId);
+            $shareTable = $this->getProjectShareModel()->findBy(['project_id' => $projectId]);
             $view = $this->json($shareTable);
             return $view;
         }

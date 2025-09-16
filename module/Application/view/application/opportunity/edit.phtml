@@ -673,53 +673,14 @@ $leadSources = [
             <div class="widget-table bg-widget-background rounded-xl p-6">
                 <div class="widget-header">
                     <div class="widget-title">
-                        <p class="text-2xl font-semibold tracking-tight">Share</p>
-                    </div>
-                    <div class="widget-button">
-                        <?php if ($isOwner) { ?>
-                            <button type="button"
-                                title="Add new shared user"
-                                class="btn-sm-outline text-muted-foreground"
-                                id="widget-btn-add-shared-user"
-                                x-on:click="window.shareModalComponent.open = true"
-                                data-tooltip="Share this project with another user">
-                                Share
-                                <i data-lucide="plus"></i>
-                            </button>
-                        <?php } ?>
-                    </div>
-                </div>
-
-                <div class="line"></div>
-
-                <div class="widget-section">
-                    <table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap"
-                        id="project-share-table" data-init="projectShare">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Role</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="fade-in-up">
-            <div class="widget-table bg-widget-background rounded-xl p-6">
-                <div class="widget-header">
-                    <div class="widget-title">
                         <p class="text-2xl font-semibold tracking-tight">Opportunity Log</p>
                     </div>
                     <?php if ($isOwner) { ?>
                         <button
                             type="button"
                             title="Add new log"
-                            class="btn-sm-outline text-muted-foreground"
-                            id="widget-btn-add-note"
+                            class="add-opportunity-log btn-sm-icon-outline text-muted-foreground"
                             data-tooltip="Add a new note for this opportunity">
-                            Add Note
                             <i data-lucide="plus"></i>
                         </button>
                     <?php } ?>
@@ -728,7 +689,7 @@ $leadSources = [
                 <div class="line"></div>
 
                 <div class="widget-section">
-                    <table cellpadding="0" cellspacing="0" width="100%" class="sTable display" id='note-table' data-init="projectNote">
+                    <table cellpadding="0" cellspacing="0" width="100%" class="sTable display" id='opportunity-note-table' data-init="opportunityNote">
                         <thead>
                             <tr>
                                 <th>Date Add</th>
@@ -786,9 +747,9 @@ $leadSources = [
         </div>
     </div>
 
-    <?= $this->render('modal/share'); ?>
-
-    <?= $this->render('modal/note'); ?>
-
-    <?= $this->render('modal/customer'); ?>
+    <?= $this->render('modal/opportunity-note'); ?>
 </div>
+
+<script type="text/javascript">
+    window.isOwner = <?= $isOwner ? 'true' : 'false' ?>;
+</script>

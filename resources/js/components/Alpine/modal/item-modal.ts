@@ -56,6 +56,11 @@ async function initItem() {
         }
     });
 
+    const projectBranch = document.getElementById('location_id') as HTMLInputElement;
+    const quoteBranch = document.getElementById('quote_branch') as HTMLInputElement;
+
+    const itemUrl = `/item/index` ;
+
     // Autocomplete for Item ID
     if (document.querySelector('#dialog-item-form #item_code')) {
         setupAutoComplete({

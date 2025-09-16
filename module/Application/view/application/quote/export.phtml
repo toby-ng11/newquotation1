@@ -3,6 +3,7 @@
 /**
  * @var Laminas\View\Renderer\PhpRenderer $this
  * @var array $quote
+ * @var array $companyInfo
  * @var array $customer
  * @var array $contact
  * @var array $project
@@ -133,13 +134,7 @@
     <div class="main-page">
         <div class="contact-header" style="text-align: right; font-size: 8px;">
             <p style="margin: 0; line-height: 10px">
-                950 LAWRENCE AVENUE WEST<br>
-                TORONTO, ONTARIO, CANADA M6A 1C4<br>
-                ORDER DESK: 416-785-5151<br>
-                OFFICE: 416-785-5165<br>
-                WATTS: 1-800-263-9400<br>
-                FAX: 416-783-0636<br>
-                www.centura.ca
+                <?= $companyInfo['company_info'] ?>
             </p>
         </div>
 

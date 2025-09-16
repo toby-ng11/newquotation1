@@ -1,13 +1,15 @@
 <?php
 
 /**
+ * @psalm-scope-this Exception
  * @var Laminas\View\Renderer\PhpRenderer $this
- * @var bool $isOwner
+ * @var bool $canEdit
  * @var bool $admin
- * @var bool $isShareExists
+ * @var array $isShareExists
  * @var array $project
  * @var array $user
  * @var array $architect
+ * @var array $architectType
  * @var array $address
  * @var array $specifier
  * @var array $specifierAddress
@@ -19,13 +21,8 @@
  * @var array $specifierList
  * @var array $generalContractor
  * @var array $awardedContractor
+ * @var string $defaultCompany
  */
-$role = $user['p2q_system_role'] ?? '';
-
-$isAdmin   = $role === 'admin';
-$isManager = $role === 'manager';
-$isSales   = $role === 'sales';
-$isGuest   = $role === 'guest';
 
 $projectID = $project['id'];
 $this->headTitle('Edit Project: ' . $projectID . ' - ' . $project['project_name']);
@@ -35,8 +32,6 @@ $projectCreateDate = $project['created_at'];
 $projectDueDate = $project['due_date'];
 $projectRequiredDate = $project['require_date'];
 
-$projectOwner = $project['owner_id'];
-$isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareExists;
 ?>
 
 <!-- Right panel -->
@@ -57,7 +52,7 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
                 NEW PROJECT
             </a>
 
-            <?php if (! $isGuest): ?>
+            <?php if (($canEdit and $user['p2q_system_role'] === 'admin') or ($canEdit and $user['p2q_system_role'] === 'manager')): ?>
                 <button class="widget-btn-add-quote btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
                     type="button"
                     data-tooltip="Make quote for this project">
@@ -75,7 +70,7 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
             </a>
 
             <?php
-            if ($isOwner) { ?>
+            if ($canEdit) { ?>
                 <button class="delete_pro btn-sm-ghost text-destructive hover:bg-destructive/20 font-medium text-xs tracking-tight"
                     type="button"
                     data-tooltip="Delete this project">
@@ -104,19 +99,19 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
                             href="/project/new"
                             title="Go to project for this quote">
                             <i data-lucide="plus" class="text-muted-foreground h-4 w-4"></i>
-                           New Project
+                            New Project
                         </a>
                     </div>
 
-                    <?php if (! $isGuest): ?>
-                    <div role="menuitem">
-                        <button class="widget-btn-add-quote flex items-center gap-2"
-                            type="button"
-                            title="Make Quote">
-                            <i data-lucide="file-plus-2" class="text-muted-foreground h-4 w-4"></i>
-                            Make quote
-                        </button>
-                    </div>
+                    <?php if (($canEdit and $user['p2q_system_role'] === 'admin') or ($canEdit and $user['p2q_system_role'] === 'manager')): ?>
+                        <div role="menuitem">
+                            <button class="widget-btn-add-quote flex items-center gap-2"
+                                type="button"
+                                title="Make Quote">
+                                <i data-lucide="file-plus-2" class="text-muted-foreground h-4 w-4"></i>
+                                Make quote
+                            </button>
+                        </div>
                     <?php endif; ?>
 
                     <div role="menuitem">
@@ -128,7 +123,7 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
                         </a>
                     </div>
                     <?php
-                    if ($isOwner) : ?>
+                    if ($canEdit) : ?>
                         <hr role="separator" />
                         <div role="menuitem" class="hover:bg-destructive/20">
                             <button class="delete_pro text-destructive flex items-center gap-2"
@@ -231,7 +226,7 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
 
                             <div class="grid gap-2 form-worksheet-owner">
                                 <label for="owner_id">Worksheet Owner</label>
-                                <input id="owner_id" name="owner_id" type="text" value="<?= $this->escapeHtml($project['owner_id']) ?>"
+                                <input id="owner_id" name="owner_id" type="text" value="<?= $this->escapeHtml($project['created_by']) ?>"
                                     readonly />
                             </div>
 
@@ -297,7 +292,7 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
                         </div>
                     </details>
 
-                    <?php if ($isOwner) { ?>
+                    <?php if ($canEdit) { ?>
 
                         <div class="line"></div>
 
@@ -315,43 +310,6 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
                     <?php } ?>
                 </div>
             </form>
-        </div>
-
-        <div class="fade-in-up">
-            <div class="widget-table bg-widget-background rounded-xl p-6">
-                <div class="widget-header">
-                    <div class="widget-title">
-                        <p class="leading-none font-semibold text-lg">Share</p>
-                    </div>
-                    <div class="widget-button">
-                        <?php if ($isOwner) { ?>
-                            <button type="button"
-                                title="Add new shared user"
-                                class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
-                                id="widget-btn-add-shared-user"
-                                x-on:click="window.shareModalComponent.open = true"
-                                data-tooltip="Share this project with another user">
-                                <i data-lucide="plus"></i>
-                                SHARE
-                            </button>
-                        <?php } ?>
-                    </div>
-                </div>
-
-                <div class="line"></div>
-
-                <div class="widget-section">
-                    <table cellpadding="0" cellspacing="0" width="100%" class="sTable display nowrap"
-                        id="project-share-table" data-init="projectShare">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Role</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
         </div>
 
         <div class="fade-in-up" aria-labelledby="architect-information">
@@ -416,7 +374,7 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
                                             <?php foreach ($company as $l) { ?>
                                                 <option
                                                     value="<?= $this->escapeHtml($l['company_id']) ?>"
-                                                    <?php if ($l['company_id'] === ($architect['company_id'] ?? DEFAULT_COMPANY)) {
+                                                    <?php if ($l['company_id'] === ($architect['company_id'] ?? $defaultCompany)) {
                                                         echo 'selected';
                                                     } ?>>
                                                     <?= $this->escapeHtml($l['company_name']) ?>
@@ -435,7 +393,7 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
                                         <label for="architect_type_id">Architect Type</label>
                                         <select id="architect_type_id" name="architect_type_id">
                                             <option value="">-- Choose architect type --</option>
-                                            <?php foreach ($this->architectType as $a) { ?>
+                                            <?php foreach ($architectType as $a) { ?>
                                                 <option
                                                     value="<?= $this->escapeHtml($a['id']) ?>"
                                                     <?= $this->escapeHtml($a['id'] === ($architect['architect_type_id'] ?? '') ? 'selected' : '') ?>>
@@ -685,6 +643,8 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
             </div>
         </div>
 
+        <div id="project-edit-temp"></div>
+
         <div class="fade-in-up" aria-labelledby="quoted-items">
             <div class="widget-table bg-widget-background rounded-xl p-6">
                 <div class="widget-header">
@@ -692,7 +652,7 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
                         <p class="leading-none font-semibold text-lg">Items</p>
                     </div>
                     <div class="widget-button">
-                        <?php if ($isOwner) { ?>
+                        <?php if ($canEdit) { ?>
                             <button type="button"
                                 title="Add new item"
                                 class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
@@ -718,6 +678,7 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
                                 <th>UOM</th>
                                 <th>Stock Status</th>
                                 <th>Total Price</th>
+                                <th>Location</th>
                                 <th>Note</th>
                                 <th>Options</th>
                             </tr>
@@ -734,7 +695,7 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
                         <p class="leading-none font-semibold text-lg">Project Log</p>
                     </div>
                     <div class="widget-button">
-                        <?php if ($isOwner) { ?>
+                        <?php if ($canEdit) { ?>
                             <button
                                 type="button"
                                 title="Add new log"
@@ -774,7 +735,7 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
                         <p class="leading-none font-semibold text-lg">Project Quotes</p>
                     </div>
                     <div class="widget-button">
-                        <?php if ($isOwner and $admin) { ?>
+                        <?php if (($canEdit and $user['p2q_system_role'] === 'admin') or ($canEdit and $user['p2q_system_role'] === 'manager')) { ?>
                             <button
                                 type="button"
                                 title="Add new quote"
@@ -809,8 +770,6 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
         </div>
     </div>
 
-    <?= $this->render('modal/share'); ?>
-
     <?= $this->render('modal/item'); ?>
 
     <?= $this->render('modal/note'); ?>
@@ -820,5 +779,5 @@ $isOwner = $isAdmin || $isManager || $projectOwner === $user['id'] || $isShareEx
 
 
 <script type="text/javascript">
-    window.isOwner = <?= $isOwner ? 'true' : 'false' ?>;
+    window.canEdit = <?= $canEdit ? 'true' : 'false' ?>;
 </script>

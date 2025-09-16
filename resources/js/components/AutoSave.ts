@@ -11,7 +11,7 @@ function enableAutoSave() {
     enabled = true;
 }
 
-function initAutoSave(formElement: HTMLFormElement, saveCallback: () => void, delay = 5000) {
+function initAutoSave(formElement: HTMLFormElement, saveCallback: () => void, delay = 50000) {
     if (!formElement || typeof saveCallback !== 'function') return;
 
     let autoSaveTimer: ReturnType<typeof setTimeout> | undefined = undefined;

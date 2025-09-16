@@ -105,12 +105,13 @@ class QuoteController extends BaseController
         $user = $this->getUserService()->getCurrentUser();
         $project = $this->getProjectModel()->fetchById($quote['project_id']);
         $quoteType = $this->getQuoteModel()->fetchQuoteType();
-        $customer = $this->getCustomerModel()->fetchCustomerByContact($quote['contact_id']);
+        $customer = $this->getCustomerModel()->fetchCustomerByContact($quote['contact_id'], $quote['company_id']);
         $contact = $this->getCustomerModel()->fetchContactById($quote['contact_id']);
-        $contactList = $this->getCustomerModel()->fetchContactsByCustomer($customer['customer_id']);
+        $contactList = $this->getCustomerModel()->fetchContactsByCustomer($customer['customer_id'] ?? null);
         $leadtime = $this->getQuoteModel()->fetchLeadTimes();
-        $approvalUser = $this->getUserService()->fetchaAllApprovalID();
-
+        $approvalUser = $this->getUserModel()->fetchaAllApprovalID($quote['company_id']);
+        $projectSharedUsers = $this->getProjectShareModel()->findBy(['project_id' => $quote['project_id']]);
+        $hasItemNotInLocation = $this->getItemModel()->hasItemNotInLocation('quote', $quote_id, $quote['branch_id']);
         $admin = false;
 
         if ($user['p2q_system_role'] === 'admin' || $user['p2q_system_role'] === 'manager') {
@@ -121,7 +122,10 @@ class QuoteController extends BaseController
             'user' => $user,
             'admin' => $admin,
             'quote' => $quote,
+            'companies' => $this->getP21LocationModel()->fetchAllCompanies(),
+            'branches' => $this->getP21LocationModel()->fetchBranchesFromCompany($quote['company_id']),
             'project' => $project,
+            'projectSharedUsers' => implode(', ', array_column($projectSharedUsers, 'shared_user')),
             'type' => $quoteType,
             'customer' => $customer,
             'contact' => $contact,
@@ -131,7 +135,8 @@ class QuoteController extends BaseController
             'quote_status_approved' => Quote::APPROVED,
             'quote_status_disapproved' => Quote::DISAPPROVED,
             'approval' => $approvalUser,
-            'leadtime' => $leadtime
+            'leadtime' => $leadtime,
+            'hasItemNotInLocation' => $hasItemNotInLocation,
         ]);
     }
 
@@ -304,24 +309,27 @@ class QuoteController extends BaseController
     {
         $quote_id = $this->params()->fromRoute('id');
 
-        $quote = $this->getQuoteModel()->fetchById($quote_id, true);
-        $project = $this->getProjectModel()->fetchById($quote['project_id']);
-        $customer = $this->getCustomerModel()->fetchCustomerByContact($quote['contact_id']);
+        $quote = $this->getQuoteModel()->fetchById($quote_id);
+        $companyId = $quote['company_id'] ?? 'TOR';
+        $companyInfo = $this->getCompanyInfoModel()->find($companyId);
+        $project = $this->getProjectModel()->fetchById($quote['project_id'], true);
+        $customer = $this->getCustomerModel()->fetchCustomerByContact($quote['contact_id'], $companyId);
         $contact = $this->getCustomerModel()->fetchContactById($quote['contact_id']);
         $quoteType = $this->getQuoteModel()->fetchQuoteType();
         $items = $this->getItemModel()->fetchDataTables($quote_id, 'quote');
         $branches = $this->getP21LocationModel()->fetchAllBranches();
-        $approvalUsers = $this->getUserService()->fetchaAllApprovalID();
+        $approvalUser = $this->getUserModel()->fetchaAllApprovalID($quote['company_id']);
 
         $data = [
             'quote' => $quote,
+            'companyInfo' => $companyInfo,
             'project' => $project,
             'customer' => $customer,
             'contact' => $contact,
             'type' => $quoteType,
             'items' => $items,
             'branches' => $branches,
-            'approvalList' => $approvalUsers
+            'approvalList' => $approvalUser
         ];
 
         $pdfContent = $this->getPdfExportService()->generatePdf('application/quote/export', $data);

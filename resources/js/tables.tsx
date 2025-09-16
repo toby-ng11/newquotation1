@@ -18,6 +18,7 @@ const mounts = [
     { id: 'opportunity-temp', loader: () => import('@/pages/dashboards/opportunity-temp') },
     { id: 'quotes-temp', loader: () => import('@/pages/dashboards/quotes-temp') },
     { id: 'opportunity-edit-temp', loader: () => import('@/pages/opportunities/edit') },
+    { id: 'project-edit-temp', loader: () => import('@/pages/projects/edit') },
 ];
 
 function mountAllTables() {

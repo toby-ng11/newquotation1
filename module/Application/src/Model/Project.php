@@ -305,15 +305,22 @@ class Project
         return iterator_to_array($rowset, true);
     }
 
-    public function fetchById($id)
+    public function fetchById($id, bool $view = false)
     {
         if (! InputValidator::isValidId($id)) {
-            return false;
+            return;
+        }
+
+        if ($view) {
+            /** @var ResultSet $rowset */
+            $rowset = $this->p2q_view_projects->select(['id' => $id]);
+            $row = $rowset->current();
+            return $row;
         }
 
         $id = (int) $id;
         /** @var ResultSet $rowset */
-        $rowset = $this->p2q_view_projects->select(['id' => $id]);
+        $rowset = $this->project->select(['id' => $id]);
         $row = $rowset->current();
         return $row;
     }

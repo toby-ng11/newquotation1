@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { OpportunityShare } from '@/types';
+import { ProjectShare } from '@/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { toast } from 'sonner';
@@ -14,7 +14,7 @@ interface RoleCellProps {
 export default function RoleCell({ endpoint, queryKey, id, role }: RoleCellProps) {
     const queryClient = useQueryClient();
     const updateRole = useMutation({
-        mutationFn: async (data: OpportunityShare) => {
+        mutationFn: async (data: ProjectShare) => {
             return await axios
                 .put(endpoint + '/' + data.id, {
                     role: data.role,

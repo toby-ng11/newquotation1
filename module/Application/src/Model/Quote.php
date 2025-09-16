@@ -77,6 +77,7 @@ class Quote
                 'updated_at'         => new Expression('GETDATE()'),
                 'quote_type_id'      => 1,
                 'company_id'         => $user['default_company'],
+                'branch_id'          => $user['default_location_id'],
             ];
 
             $this->quote->insert($info);
@@ -93,7 +94,7 @@ class Quote
             $projectItems = $this->getItem()->fetchExistItems($data['project_id'], 'project');
             if ($projectItems && is_array($projectItems)) {
                 foreach ($projectItems as $item) {
-                    $this->getItem()->add($item, $newQuoteID, 'quote');
+                    $this->getItem()->add($item, $newQuoteID, 'quote', false);
                 }
             }
 
@@ -150,10 +151,15 @@ class Quote
             'ship_required_date' => $data['ship_required_date'] ?? new Expression('GETDATE()'),
             'price_approve_id'   => $data['price_approve_id'] ?? null,
             'lead_time_id'       => !empty($data['lead_time_id']) ? $data['lead_time_id'] : null,
-            'note'               => $data['note'],
+            'note'               => ! empty(trim($data['note'])) ? trim($data['note']) : null,
             'updated_at'         => new Expression('GETDATE()'),
-            'updated_by'              => $user['id'],
+            'updated_by'         => $user['id'],
+            'company_id'         => empty($data['company_id']) ? $user['default_company'] : $data['company_id'],
         ];
+
+        if ($info['company_id']) {
+            $info['branch_id'] = $this->container->get(Location::class)->fetchBranchesFromCompany($info['company_id'])[0]['location_id'];
+        }
 
         if (array_key_exists('request_action', $data)) {
             switch ($data['request_action']) {

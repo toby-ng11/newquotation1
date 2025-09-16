@@ -11,6 +11,8 @@ use Laminas\Db\Adapter\Driver\ResultInterface;
 use Laminas\Db\Sql\{Sql, Expression};
 use Exception;
 use Application\Service\UserService;
+use Laminas\Db\ResultSet\AbstractResultSet;
+use Laminas\Db\Sql\Predicate\NotIn;
 
 class Item
 {
@@ -31,7 +33,7 @@ class Item
         $this->quote_items = $quote_items;
     }
 
-    public function add($data, $id, $sheetType)
+    public function add($data, $id, $sheetType, bool $withLocation = true)
     {
         if (! InputValidator::isValidData($data) || ! InputValidator::isValidData($sheetType) || ! InputValidator::isValidId($id)) {
             return false;
@@ -52,6 +54,12 @@ class Item
             'updated_at' => new Expression('GETDATE()'),
         ];
 
+        if ($withLocation) {
+            $info['location_id'] = $user['default_location_id'];
+        } else {
+            $info['location_id'] = $data['location_id'];
+        }
+
         switch ($sheetType) {
             case 'project':
                 $info['project_id'] = $id;
@@ -62,7 +70,6 @@ class Item
                     error_log("Item\add(project):Database Insert Error: " . $e->getMessage());
                     return false;
                 }
-                break;
             case 'quote':
                 $info['quote_id'] = $id;
                 try {
@@ -72,7 +79,6 @@ class Item
                     error_log("Item\add(quote):Database Insert Error: " . $e->getMessage());
                     return false;
                 }
-                break;
             default:
                 return false;
         }
@@ -106,7 +112,6 @@ class Item
                     error_log("Item/edit(project):Database Insert Error: " . $e->getMessage());
                     return false;
                 }
-                break;
             case 'quote':
                 try {
                     $this->quote_items->update($info, ['id' => $item_uid]);
@@ -115,7 +120,6 @@ class Item
                     error_log("Item/edit(quote):Database Insert Error: " . $e->getMessage());
                     return false;
                 }
-                break;
             default:
                 return false;
         }
@@ -136,7 +140,6 @@ class Item
                     error_log("Item\delete(project):Database Insert Error: " . $e->getMessage());
                     return false;
                 }
-                break;
             case 'quote':
                 try {
                     $this->quote_items->delete(['id' => $item_uid]);
@@ -145,7 +148,6 @@ class Item
                     error_log("Item\delete(quote):Database Insert Error: " . $e->getMessage());
                     return false;
                 }
-                break;
             default:
                 return false;
         }
@@ -342,5 +344,35 @@ class Item
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
         return iterator_to_array($result, true);
+    }
+
+    public function hasItemNotInLocation(string $sheetType, string $sheetId, string $locationId): bool
+    {
+        if (! $sheetType || ! $sheetId || ! $locationId) {
+            return false;
+        }
+
+        switch ($sheetType) {
+            case 'project':
+
+                /** @var AbstractResultSet $rowset */
+                $rowset = $this->project_items->select([
+                    'project_id' => $sheetId,
+                    new NotIn('location_id', [$locationId]),
+                ]);
+                return count($rowset->toArray()) > 0;
+
+            case 'quote':
+
+                /** @var AbstractResultSet $rowset */
+                $rowset = $this->quote_items->select([
+                    'quote_id' => $sheetId,
+                    new NotIn('location_id', [$locationId]),
+                ]);
+                return count($rowset->toArray()) > 0;
+
+            default:
+                return false;
+        }
     }
 }

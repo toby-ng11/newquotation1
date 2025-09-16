@@ -91,13 +91,15 @@ class OpportunityController extends BaseController
 
         $isOwner = false;
 
-        $isShareExists = $this->getOpportunityShareModel()->findBy([
+        $isShared = $this->getOpportunityShareModel()->findBy([
             'opportunity_id' => $opportunity_id,
             'shared_user' => $user['id'],
         ]);
 
+        $sharedRole = ! empty($isShared) ? $isShared['role'] : false;
+
         if (
-            $isShareExists ||
+            $sharedRole === 'editor' ||
             $user['id'] === $opportunity['created_by'] ||
             $user['p2q_system_role'] === 'admin' ||
             $user['p2q_system_role'] === 'manager'

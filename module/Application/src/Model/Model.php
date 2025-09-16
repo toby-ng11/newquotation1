@@ -8,6 +8,7 @@ use ArrayObject;
 use Doctrine\Inflector\InflectorFactory;
 use Exception;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\ResultSet\AbstractResultSet;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\Sql\Expression;
 use Laminas\Db\TableGateway\TableGateway;
@@ -92,8 +93,14 @@ class Model
 
     public function findBy(array $where): array
     {
+        /** @var AbstractResultSet $rowset */
         $rowset =  $this->tableGateway->select($where);
-        return iterator_to_array($rowset, true);
+
+        if ($rowset->count() === 1) {
+            return $rowset->current() ?? [];
+        }
+
+        return $rowset->toArray();
     }
 
     public function all(): array

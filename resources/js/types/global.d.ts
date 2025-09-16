@@ -1,44 +1,52 @@
 export {};
 
+type OpportunityNoteModalComponent = {
+    open: boolean;
+    isEditing: boolean;
+    submitForm: () => Promise<void>;
+    editNote: (noteID: string) => Promise<void>;
+    closeModal: () => void;
+};
+
 type NoteModalComponent = {
     open: boolean;
     isEditing: boolean;
     submitForm: () => Promise<void>;
-    editNote: (noteID : string) => Promise<void>;
+    editNote: (noteID: string) => Promise<void>;
     closeModal: () => void;
-}
+};
 
 type roleOverrideModalComponent = {
     open: boolean;
     isEditing: boolean;
     submitForm: () => Promise<void>;
-    editRoleOverride: (roleOverrideId : string) => Promise<void>;
+    editRoleOverride: (roleOverrideId: string) => Promise<void>;
     closeModal: () => void;
-}
+};
 
 type shareModalComponent = {
     open: boolean;
     isEditing: boolean;
     submitForm: () => Promise<void>;
-    editShare: (projectShareId : string) => Promise<void>;
+    editShare: (projectShareId: string) => Promise<void>;
     closeModal: () => void;
-}
+};
 
 type SpecifierModalComponent = {
     open: boolean;
     isEditing: boolean;
     submitForm: () => Promise<void>;
-    editSpecifier: (specifierID : string) => Promise<void>;
+    editSpecifier: (specifierID: string) => Promise<void>;
     closeModal: () => void;
-}
+};
 
 type AddressModalComponent = {
     open: boolean;
     isEditing: boolean;
     submitForm: () => Promise<void>;
-    editAddress: (addressID : string) => Promise<void>;
+    editAddress: (addressID: string) => Promise<void>;
     closeModal: () => void;
-}
+};
 
 type ItemModalComponent = {
     open: boolean;
@@ -57,20 +65,21 @@ type CustomerModalComponent = {
     submitForm: () => Promise<void>;
     closeModal: () => void;
     getCustomerContacts: (customerID: string) => Promise<void>;
-    getContactInfo: (contactId? : string | null) => Promise<void>;
+    getContactInfo: (contactId?: string | null) => Promise<void>;
 };
 
 declare global {
     interface Window {
-        isOwner: boolean; // project/edit.phtml
+        canEdit: boolean; // project/edit.phtml
         isGuest: boolean; //quote/edit.phtml
         Alpine: any;
+        opportunityNoteModalComponent?: OpportunityNoteModalComponent;
         noteModalComponent?: NoteModalComponent;
         specifierModalComponent?: SpecifierModalComponent;
         addressModalComponent?: AddressModalComponent;
         itemModalComponent?: ItemModalComponent;
         customerModalComponent?: CustomerModalComponent;
         shareModalComponent?: shareModalComponent;
-        roleOverrideModalComponent? : roleOverrideModalComponent;
+        roleOverrideModalComponent?: roleOverrideModalComponent;
     }
 }

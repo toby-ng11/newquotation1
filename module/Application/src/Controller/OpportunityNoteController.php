@@ -4,7 +4,7 @@ namespace Application\Controller;
 
 use Psr\Container\ContainerInterface;
 
-class OpportunityShareController extends BaseController
+class OpportunityNoteController extends BaseController
 {
     public function __construct(ContainerInterface $container)
     {
@@ -22,13 +22,13 @@ class OpportunityShareController extends BaseController
         $opportunityId = $this->params()->fromQuery('opp', null);
 
         if ($opportunityId) {
-            $data = $this->getOpportunityShareModel()->findBy(['opportunity_id' => $opportunityId]);
+            $data = $this->getOpportunityNoteModel()->findBy(['opportunity_id' => $opportunityId]);
             return $this->json($data);
         }
 
         return $this->json([
             'success' => true,
-            'data' => $this->getOpportunityShareModel()->all(),
+            'data' => $this->getOpportunityNoteModel()->all(),
         ]);
     }
 
@@ -40,45 +40,14 @@ class OpportunityShareController extends BaseController
             return $this->abort404();
         }
 
-        $row = $this->getOpportunityShareModel()->find($id);
-        return $this->json([
-            'success' => true,
-            'opportinity' => $row,
-        ]);
+        $row = $this->getOpportunityNoteModel()->find($id);
+        return $this->json($row);
     }
 
     // POST /enpoint
     public function create(mixed $data)
     {
-        $user = $this->getUserService()->getCurrentUser();
-        if ($user['id'] === $data['shared_user']) {
-            return $this->json([
-                'success' => false,
-                'message' => "You can't share with yourself.",
-            ]);
-        }
-
-        $opportunity = $this->getOpportunityModel()->find($data['project_id']);
-        if ($data['shared_user'] === $opportunity['created_by']) {
-            return $this->json([
-                'success' => false,
-                'message' => "You can't share with the owner.",
-            ]);
-        }
-
-        $existShare = $this->getOpportunityShareModel()->findBy([
-            'opportunity_id' => $data['opportunity_id'],
-            'shared_user' => $data['shared_user'],
-        ]);
-
-        if (! empty($existShare)) {
-            return $this->json([
-                'success' => false,
-                'message' => 'This user is already shared.',
-            ]);
-        }
-
-        $result = $this->getOpportunityShareModel()->create($data);
+        $result = $this->getOpportunityNoteModel()->create($data);
         return $this->json([
             'success' => $result !== false,
             'message' => $result !== false  ? 'Share successfully!' : 'Error! Please check log for more details.',
@@ -88,7 +57,7 @@ class OpportunityShareController extends BaseController
     // PUT /enpoint/:id
     public function update(mixed $id, mixed $data)
     {
-        $result = $this->getOpportunityShareModel()->update($id, $data);
+        $result = $this->getOpportunityNoteModel()->update($id, $data);
         return $this->json([
             'success' => $result !== false,
             'message' => $result !== false ? 'Saved successfully!' : 'Error! Please check log for more details.',
@@ -98,7 +67,7 @@ class OpportunityShareController extends BaseController
     // DELETE /enpoint/:id
     public function delete(mixed $id)
     {
-        $result = $this->getOpportunityShareModel()->delete($id);
+        $result = $this->getOpportunityNoteModel()->delete($id);
         return $this->json([
             'success' => $result !== false,
             'message' => $result !== false ? 'Deleted successfully!' : 'Error! Please check log for more details.',

@@ -4,6 +4,7 @@ import { customerModal } from '@/components/Alpine/modal/customer-modal';
 import { itemModal } from '@/components/Alpine/modal/item-modal';
 import { noteModal } from '@/components/Alpine/modal/note-modal';
 import { opportunityModal } from '@/components/Alpine/modal/opportunity-modal';
+import { opportunityNoteModal } from '@/components/Alpine/modal/opportunity-note-modal';
 import { projectModal } from '@/components/Alpine/modal/project-modal';
 import { roleOverrideModal } from '@/components/Alpine/modal/role-override-modal';
 import { shareModal } from '@/components/Alpine/modal/share-modal';
@@ -26,6 +27,7 @@ export function initAlpine() {
         Alpine.data('shareModal', shareModal);
         Alpine.data('roleOverrideModal', roleOverrideModal);
         Alpine.data('opportunityModal', opportunityModal);
+        Alpine.data('opportunityNoteModal', opportunityNoteModal);
     });
 
     Alpine.start();

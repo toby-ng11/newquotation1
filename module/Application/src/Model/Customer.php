@@ -96,14 +96,14 @@ class Customer
         $contact = $result->current(); // Get single row
 
         if (! $contact) {
-            return false;
+            return;
         }
 
         try {
             return $this->fetchCustomerById($contact['customer_id']);
         } catch (Exception $e) {
             error_log($e->getMessage());
-            return false;
+            return;
         }
     }
 
@@ -125,7 +125,8 @@ class Customer
                 'phys_city',
                 'phys_state',
                 'phys_postal_code',
-                'phys_country'
+                'phys_country',
+                'company_id'
             ])
             ->where(['contact_id' => $contact_id]);
 

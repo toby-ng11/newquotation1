@@ -88,6 +88,29 @@ interface OpportunityShare {
     role: string;
 }
 
+interface OpportunityNote {
+    id: string;
+    opportunity_id?: string;
+    title?: string;
+    content?: string;
+    next_action?: string;
+    created_by?: string;
+    created_at?: {
+        date: string;
+    };
+    notified_at?: {
+        date: string;
+    };
+    is_notified?: string;
+}
+
+interface ProjectShare {
+    id: string;
+    opportunity_id?: string;
+    shared_user?: string;
+    role: string;
+}
+
 interface Quote {
     id: string;
     project_id?: string;

@@ -254,18 +254,16 @@ return [
                     ]
                 ]
             ],
-            'project-share' => [
+            'project-shares' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route'    => '/projectshare[/:id[/:action]]',
+                    'route'    => '/project-shares[/:id]',
+                    'constraints' => [
+                        'id' => '[0-9]+',
+                    ],
                     'defaults' => [
                         'controller' => Controller\ProjectShareController::class,
-                        'action'     => 'index',
                     ],
-                    'constraints' => [
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'     => '[0-9]+',
-                    ]
                 ],
             ],
             'quote' => [
@@ -413,6 +411,18 @@ return [
                     ],
                 ],
             ],
+            'opportunity-notes' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route'    => '/opportunity-notes[/:id]',
+                    'constraints' => [
+                        'id' => '[0-9]+',
+                    ],
+                    'defaults' => [
+                        'controller' => Controller\OpportunityNoteController::class,
+                    ],
+                ],
+            ],
             'role-override' => [
                 'type' => Segment::class,
                 'options' => [
@@ -508,14 +518,14 @@ return [
             Controller\OpportunityShareController::class => function (ContainerInterface $container) {
                 return new Controller\OpportunityShareController($container);
             },
+            Controller\OpportunityNoteController::class => function (ContainerInterface $container) {
+                return new Controller\OpportunityNoteController($container);
+            },
             Controller\ProjectController::class => function (ContainerInterface $container) {
                 return new Controller\ProjectController($container);
             },
             Controller\ProjectShareController::class => function (ContainerInterface $container) {
-                return new Controller\ProjectShareController(
-                    $container->get(Model\ProjectShare::class),
-                    $container
-                );
+                return new Controller\ProjectShareController($container);
             },
             Controller\QuoteController::class => function (ContainerInterface $container) {
                 return new Controller\QuoteController($container);
@@ -666,14 +676,6 @@ return [
                     new TableGateway('p2q_view_projects', $dbAdapter),
                     new TableGateway('p2q_view_projects_lite', $dbAdapter),
                     new TableGateway('p2q_view_projects_share', $dbAdapter),
-                    $container
-                );
-            },
-            Model\ProjectShare::class => function (ContainerInterface $container) {
-                $dbAdapter = $container->get(Adapter::class);
-                return new Model\ProjectShare(
-                    $dbAdapter,
-                    new TableGateway('project_shares', $dbAdapter),
                     $container
                 );
             },
