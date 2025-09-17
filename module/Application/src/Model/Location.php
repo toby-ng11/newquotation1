@@ -54,6 +54,17 @@ class Location
         return $rowset->toArray();
     }
 
+    public function fetchCompanyByBranch(string $branch_id): array {
+        $select = $this->location->getSql()->select()
+            ->columns(['company_id'])
+            ->quantifier(Select::QUANTIFIER_DISTINCT)
+            ->where(['location_id' => $branch_id]);
+
+        /** @var AbstractResultSet $rowset */
+        $rowset = $this->location->selectWith($select);
+        return $rowset->toArray()[0];
+    }
+
     public function fetchLocationIdFromCompany(string|null $company_id): array
     {
         if (! InputValidator::isValidPattern($company_id)) {

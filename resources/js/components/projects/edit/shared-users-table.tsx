@@ -54,6 +54,8 @@ export default function ProjectSharedUsersTable() {
                 const rowId = original.id;
                 const role = original.role;
 
+                if (!window.canEdit) return role;
+
                 return <RoleCell endpoint={ENDPOINT} queryKey={qKey} id={rowId} role={role} />;
             },
         },
@@ -61,6 +63,7 @@ export default function ProjectSharedUsersTable() {
             accessorKey: 'options',
             header: () => null,
             cell: ({ row }) => {
+                if (!window.canEdit) return null;
                 const rowId = row.original.id;
                 const sharedUser = row.original.shared_user;
                 return <DataTableRowDeleteButton label={`share with ${sharedUser}`} handleDelete={() => handleDelete(rowId)} />;
@@ -83,7 +86,7 @@ export default function ProjectSharedUsersTable() {
     return (
         <div>
             <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
-                <ShareProjectButton endpoint={ENDPOINT} queryKey={qKey} projectId={projectId} />
+                {window.canEdit ?? <ShareProjectButton endpoint={ENDPOINT} queryKey={qKey} projectId={projectId} />}
                 <div className="flex flex-col gap-1">
                     <h2 className="text-2xl font-semibold tracking-tight">Shared Users</h2>
                     <p className="text-muted-foreground">Here're shared users of this opportunity.</p>

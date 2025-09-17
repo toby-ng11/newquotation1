@@ -39,6 +39,14 @@ $projectRequiredDate = $project['require_date'];
 
 <!-- Main content wrapper -->
 <div class="h-full flex flex-1 flex-col gap-4 p-8">
+    <?php if (!$canEdit): ?>
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded mb-2">
+            <p class="text-sm text-gray-800">
+                You are viewing this project as read-only. If you believe this is a mistake, please contact an admin or a manager.
+            </p>
+        </div>
+    <?php endif; ?>
+
     <h1 class="font-mono text-5xl font-semibold tracking-wide uppercase">Project</h1>
     <div class="flex items-center justify-between ">
         <p class="text-muted-foreground">Editing project #<?= $this->escapeHtml($project['project_id_ext']) ?> - <?= $this->escapeHtml($project['project_name']) ?></p>
@@ -330,31 +338,33 @@ $projectRequiredDate = $project['require_date'];
                         <details id="architect-details">
                             <summary>Architect & Specifier</summary>
                             <div class="widget-section">
-                                <div class="widget-header">
-                                    <div class="widget-title">
-                                        <h4>Architect</h4>
+                                <?php if ($canEdit): ?>
+                                    <div class="widget-header">
+                                        <div class="widget-title">
+                                            <h4>Architect</h4>
+                                        </div>
+                                        <div class="widget-button">
+                                            <?php if ($architect): ?>
+                                                <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                                                    target="_blank"
+                                                    href="/architect/<?= $this->escapeHtml($architect['id'] ?? '') ?>/edit"
+                                                    data-tooltip="Edit this architect details">
+                                                    <i data-lucide="external-link"></i>
+                                                    EDIT ARCHITECT
+                                                </a>
+                                            <?php endif; ?>
+                                            <button
+                                                type="button"
+                                                title="Add new architect"
+                                                class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                                                id="add-architect-project-edit"
+                                                data-tooltip="This will clear the existing project's architect">
+                                                <i data-lucide="plus"></i>
+                                                NEW ARCHITECT
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="widget-button">
-                                        <?php if ($architect): ?>
-                                            <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
-                                                target="_blank"
-                                                href="/architect/<?= $this->escapeHtml($architect['id'] ?? '') ?>/edit"
-                                                data-tooltip="Edit this architect details">
-                                                <i data-lucide="external-link"></i>
-                                                EDIT ARCHITECT
-                                            </a>
-                                        <?php endif; ?>
-                                        <button
-                                            type="button"
-                                            title="Add new architect"
-                                            class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
-                                            id="add-architect-project-edit"
-                                            data-tooltip="This will clear the existing project's architect">
-                                            <i data-lucide="plus"></i>
-                                            NEW ARCHITECT
-                                        </button>
-                                    </div>
-                                </div>
+                                <?php endif; ?>
 
                                 <div class="formRow">
                                     <div class="grid gap-2">
@@ -625,18 +635,20 @@ $projectRequiredDate = $project['require_date'];
                                 </div>
                             </div>
 
-                            <div class="line"></div>
-                            <div class="widget-footer">
-                                <div class="widget-footer-button">
-                                    <button disabled id="form-btn-save-architect-project" type="submit" title="Save architect information"
-                                        class="button action save-architect-button small">
-                                        <span class="button-wrap text-[10px] font-bold">
-                                            <span class="icon icon-save"></span>
-                                            Save
-                                        </span>
-                                    </button>
+                            <?php if ($canEdit): ?>
+                                <div class="line"></div>
+                                <div class="widget-footer">
+                                    <div class="widget-footer-button">
+                                        <button disabled id="form-btn-save-architect-project" type="submit" title="Save architect information"
+                                            class="button action save-architect-button small">
+                                            <span class="button-wrap text-[10px] font-bold">
+                                                <span class="icon icon-save"></span>
+                                                Save
+                                            </span>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php endif; ?>
                         </details>
                     </form>
                 </div>

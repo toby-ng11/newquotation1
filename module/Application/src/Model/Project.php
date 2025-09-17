@@ -142,8 +142,9 @@ class Project
             $newProjectId = $this->project->getLastInsertValue();
 
             if ($newProjectId) {
+                $company = $this->container->get(Location::class)->fetchCompanyByBranch($data['location_id']);
                 $updateData = [
-                    'project_id_ext' => DEFAULT_COMPANY . '_' . $newProjectId,
+                    'project_id_ext' => $company['company_id'] . '_' . $newProjectId,
                 ];
 
                 $this->project->update($updateData, ['id' => $newProjectId]);
@@ -257,12 +258,7 @@ class Project
         }
 
         try {
-            $this->project->update(
-                [
-                    'deleted_at' => new Expression('GETDATE()')
-                ],
-                ['id' => $project_id]
-            );
+            $this->project->delete(['id' => $project_id]);
             return true;
         } catch (Exception $e) {
             error_log("Project/delete:Database Delete Error: " . $e->getMessage());

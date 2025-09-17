@@ -70,7 +70,12 @@ class OpportunityController extends BaseController
 
     public function editAction(): Response | ViewModel
     {
-        $this->layout()->setTemplate('layout/default');
+        $user = $this->getUserService()->getCurrentUser();
+
+        if ($user['p2q_system_role'] === 'guest') {
+            return $this->abort403();
+        }
+
         $opportunity_id = (int) $this->params()->fromRoute('id');
         if (! $opportunity_id) {
             return $this->abort404();
@@ -82,7 +87,29 @@ class OpportunityController extends BaseController
             return $this->redirect()->toRoute('dashboard', ['action' => 'opportunities']);
         }
 
-        $user = $this->getUserService()->getCurrentUser();
+        $shareRecord  = $this->getOpportunityShareModel()->findBy([
+            'opportunity_id' => $opportunity_id,
+            'shared_user' => $user['id'],
+        ]);
+
+        $canSee = (
+            $user['id'] === $opportunity['created_by'] ||
+            in_array($user['p2q_system_role'], ['admin', 'manager'], true) ||
+            !empty($shareRecord)
+        );
+
+        if (!$canSee) {
+            return $this->abort403();
+        }
+
+        $sharedRole = $shareRecord['role'] ?? null;
+
+        $canEdit = (
+            $sharedRole === 'editor' ||
+            $user['id'] === $opportunity['created_by'] ||
+            in_array($user['p2q_system_role'], ['admin', 'manager'], true)
+        );
+
         $specifier = $this->getSpecifierModel()->fetchSpecifierById($opportunity['specifier_id']);
         $specifierAddress = null;
         if ($specifier) {
@@ -107,9 +134,11 @@ class OpportunityController extends BaseController
             $isOwner = true;
         }
 
+        $this->layout()->setTemplate('layout/default');
         return new ViewModel([
             'user' => $user,
             'defaultCompany' => Defaults::company(),
+            'canEdit' => $canEdit,
             'opportunity' => $opportunity,
             'locations' => $this->getP21LocationModel()->fetchAllBranches(),
             'companies' => $this->getP21LocationModel()->fetchAllCompanies(),
@@ -126,12 +155,5 @@ class OpportunityController extends BaseController
             'generalContractor' => $this->getCustomerModel()->fetchCustomerById($opportunity['general_contractor_id']),
             'awardedContractor' => $this->getCustomerModel()->fetchCustomerById($opportunity['awarded_contractor_id']),
         ]);
-    }
-
-    public function sharedAction()
-    {
-        $opportunity_id = (int) $this->params()->fromRoute('id');
-        $table = $this->getOpportunityShareModel()->find($opportunity_id);
-        return $this->json($table);
     }
 }

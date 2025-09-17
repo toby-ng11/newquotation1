@@ -53,7 +53,7 @@ class Quote
         return $this->container->get(Project::class);
     }
 
-    public function create($data): ?int
+    public function create($data)
     {
         if (! $data) {
             return  false;
@@ -119,8 +119,8 @@ class Quote
 
         $data = [
             'quote_id_ext' => $this->formatQuoteIdExt($project['project_id_ext'], $allQuotes),
-            'job_name' => substr($project['project_name'], 0, 40),
-            'po_no' => substr('P2Q - ' . $quote_id, 0, 40),
+            'job_name' => mb_substr($project['project_name'], 0, 40, 'UTF-8'),
+            'po_no' => mb_substr('P2Q - ' . $quote_id, 0, 40, 'UTF-8'),
         ];
 
         try {
