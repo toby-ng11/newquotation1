@@ -149,8 +149,8 @@ class Quote
             'contact_id'         => $data['contact_id'],
             'expire_date'        => $data['expire_date'] ?? new Expression('DATEADD(month, 2, GETDATE())'),
             'ship_required_date' => $data['ship_required_date'] ?? new Expression('GETDATE()'),
-            'price_approve_id'   => $data['price_approve_id'] ?? null,
-            'lead_time_id'       => !empty($data['lead_time_id']) ? $data['lead_time_id'] : null,
+            'price_approve_id'   => ! empty($data['price_approve_id']) ? $data['price_approve_id'] : null,
+            'lead_time_id'       => ! empty($data['lead_time_id']) ? $data['lead_time_id'] : null,
             'note'               => ! empty(trim($data['note'])) ? trim($data['note']) : null,
             'updated_at'         => new Expression('GETDATE()'),
             'updated_by'         => $user['id'],
@@ -201,6 +201,13 @@ class Quote
                     $info['approved_by'] = $user['id'];
                     break;
             }
+        }
+
+        if ($info['price_approve_id'] === null) {
+            $info['status_id'] = Quote::WAITING_APPROVAL;
+            $info['lead_time_id'] = null;
+            $info['approve_date'] = null;
+            $info['approved_by'] = null;
         }
 
         try {

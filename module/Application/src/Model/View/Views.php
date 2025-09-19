@@ -51,7 +51,7 @@ class Views
         return $this->table;
     }
 
-    public function findBy(array $where = []): array
+    public function where(array $where = []): array
     {
         $rowset =  $this->tableGateway->select($where);
         return iterator_to_array($rowset, true);

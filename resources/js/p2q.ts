@@ -24,6 +24,7 @@ import { initArchitectForm, initProject } from '@/pages/project';
 import { $dialogMakeQuote, initQuote } from '@/pages/quote';
 import { mountAllTables, unmountAllTables } from '@/tables';
 import { initOpportunityNote } from './components/Alpine/modal/opportunity-note-modal';
+import { initOpportunity } from './pages/opportunity-edit';
 
 initAlpine();
 
@@ -43,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initItem();
     initNote();
     initCustomer();
+    initOpportunity();
     initProject();
     initQuote();
     initArchitectForm();
@@ -85,6 +87,7 @@ document.body.addEventListener('htmx:afterSwap', function (e: Event) {
     // only re-init if content is replaced in #content or similar
     scrollOffset();
     initLucide();
+    initFlatpickr();
     if (target.querySelector('#options-button')) {
         initSidebarToggle();
     }

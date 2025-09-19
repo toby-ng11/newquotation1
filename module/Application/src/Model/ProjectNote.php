@@ -111,7 +111,7 @@ class ProjectNote extends Model
 
     public function fetchPendingFollowUps(): array
     {
-        return $this->findBy([
+        return $this->where([
             "notify_at <= GETDATE()",
             "notify_at > DATEADD(MINUTE, -1, GETDATE())",
             "(is_notified IS NULL OR is_notified = 'N')",

@@ -79,6 +79,19 @@ interface Opportunity {
     };
     created_by?: string;
     updated_by?: string;
+    is_coverted?: string;
+}
+
+interface OpportunityFile {
+    id: string;
+    opportunity_id: string;
+    original_name: string;
+    file_name: string;
+    mime_type: string;
+    file_size: string;
+    created_at?: {
+        date: string;
+    };
 }
 
 interface OpportunityShare {

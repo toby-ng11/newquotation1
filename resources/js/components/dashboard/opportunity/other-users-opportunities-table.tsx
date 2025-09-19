@@ -3,6 +3,7 @@ import { DataTablePagination } from '@/components/table-pagination';
 import { DataTableLoadingSpinner } from '@/components/table-spinner';
 import { DataTableToolbar } from '@/components/table-toolbar';
 import { DataTableProjectOptions } from '@/components/table/project-options';
+import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useTanStackQuery } from '@/hooks/use-query';
@@ -108,6 +109,15 @@ export default function OtherUsersOpportunitiesTable() {
             meta: 'Name',
         },
         {
+            id: 'is_converted',
+            accessorKey: 'is_converted',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Converted?" />,
+            cell: ({ getValue }) => {
+                const value = getValue<number>();
+                return value === 1 ? <Badge className="bg-green-100 text-green-700">Yes</Badge> : <Badge variant="secondary">No</Badge>;
+            },
+        },
+        {
             accessorKey: 'created_by',
             header: ({ column }) => <DataTableColumnHeader column={column} title="Created By" />,
             filterFn: 'arrIncludesSome',
@@ -207,7 +217,7 @@ export default function OtherUsersOpportunitiesTable() {
             <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
                 <div className="flex flex-col gap-1">
                     <h2 className="text-2xl font-semibold tracking-tight">Other User's Opportunities</h2>
-                    <p className="text-muted-foreground">The list of all opportunities of other users.</p>
+                    <p className="text-muted-foreground">The list of all opportunities of other users. Only admins or managers can see this.</p>
                 </div>
                 <div className="flex flex-col gap-4">
                     {!isLoading ? (
@@ -218,8 +228,9 @@ export default function OtherUsersOpportunitiesTable() {
                                 searchPlaceholder="Filter project names..."
                                 facetedFilters={[
                                     { columnId: 'created_by', title: 'Created By' },
+                                    { columnId: 'is_converted', title: 'Converted?' },
                                     { columnId: 'shared_users', title: 'Shared With' },
-                                    { columnId: 'reed', title: 'REED' },
+                                    { columnId: 'leed_certified_id', title: 'LEED' },
                                     { columnId: 'architect_name', title: 'Architect' },
                                     { columnId: 'market_segment_desc', title: 'Category' },
                                     { columnId: 'status_desc', title: 'Status' },

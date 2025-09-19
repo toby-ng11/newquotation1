@@ -4,7 +4,9 @@ namespace Application\Model;
 
 use Application\Helper\InputValidator;
 use Application\Service\UserService;
+use ArrayObject;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\ResultSet\AbstractResultSet;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Sql\{Sql, Expression, Select};
@@ -190,6 +192,122 @@ class Project
         }
     }
 
+    public function editExtra(array $data, int $project_id) {
+        if (! $data || ! $project_id) return;
+
+        $user = $this->getUserService()->getCurrentUser();
+
+        $info = [
+            'general_contractor_id' => ! empty($data['general_contractor_id']) ? $data['general_contractor_id'] : null,
+            'awarded_contractor_id' => ! empty($data['awarded_contractor_id']) ? $data['awarded_contractor_id'] : null,
+            'require_date'          => ! empty($data['require_date']) ? $data['require_date'] : new Expression('GETDATE()'),
+            'due_date'              => ! empty($data['due_date']) ? $data['due_date'] : new Expression('GETDATE()'),
+            'updated_by'               => $user['id'],
+            'updated_at'            => new Expression('GETDATE()'),
+        ];
+
+        try {
+            $this->project->update($info, ['id' => $project_id]);
+            return true;
+        } catch (Exception $e) {
+            error_log("Project/editExtra:Database Update Error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function saveFromOpportunity(array $data)
+    {
+        if (! $data) return;
+
+        $user = $this->getUserService()->getCurrentUser();
+
+        /** @var AbstractResultSet $existProject */
+        $existProject = $this->project->select(['opportunity_id' => $data['id']]);
+        $project = $existProject->current();
+
+        if ($project !== null) {
+            $info = [ //update from opportunity form
+                'project_name'          => $data['opp_name'],
+                'project_address'       => $data['opp_address'],
+                'centura_location_id'   => $data['centura_location_id'],
+                'reed'                  => $data['leed_certified_number'],
+                'market_segment_id'     => $data['market_segment_id'],
+                'status_id'             => $data['status_id'],
+                'updated_by'            => $user['id'],
+                'updated_at'            => new Expression('GETDATE()'),
+            ];
+
+            if ($data['architect_id']) {
+                $info['architect_id'] = $data['architect_id'];
+            }
+
+            if ($data['architect_address_id']) {
+                $info['architect_address_id'] = $data['architect_address_id'];
+            }
+
+            if ($data['specifier_id']) {
+                $info['specifier_id'] = $data['specifier_id'];
+            }
+
+            try {
+                $this->project->update($info, ['id' => $project['id']]);
+                return true;
+            } catch (Exception $e) {
+                error_log("Project/update from opportunity: Database Update Error: " . $e->getMessage());
+                return false;
+            }
+        } else {
+            $info = [
+                'project_name'          => $data['opp_name'],
+                'project_address'       => $data['opp_address'],
+                'centura_location_id'   => $data['centura_location_id'],
+                'reed'                  => $data['leed_certified_number'],
+                'market_segment_id'     => $data['market_segment_id'],
+                'status_id'             => $data['status_id'],
+                'architect_id'          => $data['architect_id'],
+                'architect_address_id'  => $data['architect_address_id'],
+                'specifier_id'          => $data['specifier_id'],
+                'created_by'            => $user['id'],
+                'created_at'            => new Expression('GETDATE()'),
+                'require_date'          => new Expression('GETDATE()'),
+                'due_date'              => new Expression('GETDATE()'),
+                'opportunity_id'        => $data['id'],
+            ];
+
+            try {
+                $this->project->insert($info);
+                $newProjectId = $this->project->getLastInsertValue();
+
+                if ($newProjectId) {
+                    $company = $this->container->get(Location::class)->fetchCompanyByBranch($info['centura_location_id']);
+                    $updateData = [
+                        'project_id_ext' => $company['company_id'] . '_' . $newProjectId,
+                    ];
+
+                    $this->project->update($updateData, ['id' => $newProjectId]);
+                }
+
+                $opportunityShares = $this->container->get(OpportunityShare::class)->where([
+                    'opportunity_id' => $data['id']
+                ]);
+
+                foreach ($opportunityShares as $shareRecord) {
+                    $shareData = [
+                        'project_id' => $newProjectId,
+                        'Shared_user' => $shareRecord['shared_user'],
+                        'role' => $shareRecord['role'],
+                    ];
+                    $this->container->get(ProjectShare::class)->create($shareData);
+                }
+
+                return $newProjectId;
+            } catch (Exception $e) {
+                error_log("Project\convert:Database insert Error: " . $e->getMessage());
+                return false;
+            }
+        }
+    }
+
     public function editArchitect($data, $project_id)
     {
         if (! InputValidator::isValidData($data) || ! InputValidator::isValidId($project_id)) {
@@ -319,6 +437,23 @@ class Project
         $rowset = $this->project->select(['id' => $id]);
         $row = $rowset->current();
         return $row;
+    }
+
+    public function fetchByOpportunity(int $opportunity_id): array
+    {
+        if (! $opportunity_id) {
+            return [];
+        }
+
+        /** @var ResultSet $rowset */
+        $rowset = $this->project->select(['opportunity_id' => $opportunity_id]);
+
+        $row = $rowset->current();
+        if ($row instanceof ArrayObject) {
+            return $row->getArrayCopy();
+        }
+
+        return is_array($row) ? $row : [];
     }
 
     public function fetchOwnProjects($user_id)

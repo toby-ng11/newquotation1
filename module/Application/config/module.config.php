@@ -378,9 +378,6 @@ return [
                 'type' => Literal::class,
                 'options' => [
                     'route'    => '/opportunities',
-                    'constraints' => [
-                        'id' => '[0-9]+',
-                    ],
                     'defaults' => [
                         'controller' => Controller\OpportunityController::class,
                     ],
@@ -391,6 +388,28 @@ return [
                         'type' => Segment::class,
                         'options' => [
                             'route' => '/[:id][/:action]',
+                            'constraints' => [
+                                'id' => '[0-9]+',
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ],
+                        ],
+                    ]
+                ]
+            ],
+            'opportunitiy-files' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/opportunity-files',
+                    'defaults' => [
+                        'controller' => Controller\OpportunityFileController::class,
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'item' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/:id[/:action]',
                             'constraints' => [
                                 'id' => '[0-9]+',
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
@@ -514,6 +533,9 @@ return [
             },
             Controller\OpportunityController::class => function (ContainerInterface $container) {
                 return new Controller\OpportunityController($container);
+            },
+            Controller\OpportunityFileController::class => function (ContainerInterface $container) {
+                return new Controller\OpportunityFileController($container);
             },
             Controller\OpportunityShareController::class => function (ContainerInterface $container) {
                 return new Controller\OpportunityShareController($container);

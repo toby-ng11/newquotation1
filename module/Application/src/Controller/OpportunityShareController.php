@@ -22,7 +22,7 @@ class OpportunityShareController extends BaseController
         $opportunityId = $this->params()->fromQuery('opp', null);
 
         if ($opportunityId) {
-            $data = $this->getOpportunityShareModel()->findBy(['opportunity_id' => $opportunityId]);
+            $data = $this->getOpportunityShareModel()->where(['opportunity_id' => $opportunityId]);
             return $this->json($data);
         }
 
@@ -58,7 +58,7 @@ class OpportunityShareController extends BaseController
             ]);
         }
 
-        $opportunity = $this->getOpportunityModel()->find($data['project_id']);
+        $opportunity = $this->getOpportunityModel()->find($data['opportunity_id']);
         if ($data['shared_user'] === $opportunity['created_by']) {
             return $this->json([
                 'success' => false,
@@ -66,7 +66,7 @@ class OpportunityShareController extends BaseController
             ]);
         }
 
-        $existShare = $this->getOpportunityShareModel()->findBy([
+        $existShare = $this->getOpportunityShareModel()->where([
             'opportunity_id' => $data['opportunity_id'],
             'shared_user' => $data['shared_user'],
         ]);

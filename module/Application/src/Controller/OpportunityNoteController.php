@@ -22,7 +22,7 @@ class OpportunityNoteController extends BaseController
         $opportunityId = $this->params()->fromQuery('opp', null);
 
         if ($opportunityId) {
-            $data = $this->getOpportunityNoteModel()->findBy(['opportunity_id' => $opportunityId]);
+            $data = $this->getOpportunityNoteModel()->where(['opportunity_id' => $opportunityId]);
             return $this->json($data);
         }
 

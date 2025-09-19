@@ -91,15 +91,10 @@ class Model
         return $this->primaryKey ?? 'id';
     }
 
-    public function findBy(array $where): array
+    public function where(array $where): array
     {
         /** @var AbstractResultSet $rowset */
-        $rowset =  $this->tableGateway->select($where);
-
-        if ($rowset->count() === 1) {
-            return $rowset->current() ?? [];
-        }
-
+        $rowset = $this->tableGateway->select($where);
         return $rowset->toArray();
     }
 

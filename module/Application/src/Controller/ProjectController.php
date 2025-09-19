@@ -3,9 +3,11 @@
 namespace Application\Controller;
 
 use Application\Config\Defaults;
+use Laminas\Http\Response;
 use Laminas\Http\Response\Stream;
 use Laminas\View\Model\ViewModel;
 use Psr\Container\ContainerInterface;
+
 
 class ProjectController extends BaseController
 {
@@ -158,10 +160,11 @@ class ProjectController extends BaseController
         }
         $project = $this->getProjectModel()->fetchById($project_id);
 
-        $shareRecord  = $this->getProjectShareModel()->findBy([
+        $shareRecord  = $this->getProjectShareModel()->where([
             'project_id' => $project_id,
             'shared_user' => $user['id'],
         ]);
+
         $canSee = (
             $user['id'] === $project['created_by'] ||
             in_array($user['p2q_system_role'], ['admin', 'manager'], true) ||
@@ -195,7 +198,7 @@ class ProjectController extends BaseController
         $generalContractor = $this->getCustomerModel()->fetchCustomerById($project['general_contractor_id']);
         $awardedContractor = $this->getCustomerModel()->fetchCustomerById($project['awarded_contractor_id']);
 
-        $sharedRole = $shareRecord['role'] ?? null;
+        $sharedRole = $shareRecord[0]['role'] ?? null;
 
         $canEdit = (
             $sharedRole === 'editor' ||
@@ -211,6 +214,7 @@ class ProjectController extends BaseController
             'defaultCompany' => Defaults::company(),
             'canEdit' => $canEdit,
             'project' => $project,
+            'opportunity' => $project['opportunity_id'] ? $this->getOpportunityModel()->find($project['opportunity_id']) : [],
             'company' => $company,
             'location' => $location,
             'status' => $status,
@@ -225,6 +229,31 @@ class ProjectController extends BaseController
             'generalContractor' => $generalContractor,
             'awardedContractor' => $awardedContractor
         ]);
+    }
+
+    public function extraAction(): Response | ViewModel
+    {
+        $request = $this->getRequest();
+
+        if ($request->isPost()) {
+            $project_id = (int) $this->params()->fromRoute('id');
+            $data = $this->params()->fromPost();
+
+            $result = $this->getProjectModel()->editExtra($data, $project_id);
+
+            if ($result) {
+                $this->flashMessenger()->addSuccessMessage("Project saved!");
+                return $this->redirect()->toRoute('project', [
+                    'action' => 'edit',
+                    'id' => $project_id
+                ]);
+            } else {
+                $this->flashMessenger()->addErrorMessage("Save failed. Please try again.");
+                return $this->redirect()->toRoute('project', ['action' => 'edit', 'id' => $project_id]);
+            }
+        }
+
+        return $this->abort404();
     }
 
     public function editarchitectAction()
@@ -316,7 +345,7 @@ class ProjectController extends BaseController
         $request = $this->getRequest();
         if ($request->isXmlHttpRequest()) {
             $projectId = $this->params()->fromRoute('id');
-            $shareTable = $this->getProjectShareModel()->findBy(['project_id' => $projectId]);
+            $shareTable = $this->getProjectShareModel()->where(['project_id' => $projectId]);
             $view = $this->json($shareTable);
             return $view;
         }

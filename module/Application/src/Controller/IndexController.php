@@ -217,7 +217,7 @@ class IndexController extends BaseController
             'user' => $user,
             'locations' => $this->getP21LocationModel()->fetchAllBranches(),
             'companies' => $this->getP21LocationModel()->fetchAllCompanies(),
-            'projectStatus' => $this->getStatusModel()->findBy(['project_flag' => 'Y']),
+            'projectStatus' => $this->getStatusModel()->where(['project_flag' => 'Y']),
             'marketSegment' => $this->getMarketSegmentModel()->all(),
             'architectTypes' => $this->getArchitectTypeModel()->all(),
             'defaultLocationId' => Defaults::locationId(),

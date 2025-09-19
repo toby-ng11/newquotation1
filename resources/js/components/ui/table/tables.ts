@@ -1142,11 +1142,8 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
                                 '<a href="$1" target="_blank" class="text-blue-500 visited:text-blue-500 underline">$1</a>',
                             );
                         }
-                        if (data == '') {
+                        if (!data) {
                             return '<p>' + formatTextWithLinks(row.content) + '</p>';
-                        } else if (row.content == null) {
-                            // this is for old quote system rendering
-                            return '<p>' + data + '</p>';
                         } else {
                             return '<p><b>' + data + '</b></br>' + formatTextWithLinks(row.content) + '</p>';
                         }
@@ -1537,7 +1534,7 @@ const tableConfigs: Record<string, (el: HTMLElement) => Api<any>> = {
     projectQuote: () => {
         return new DataTable('#project-quote-table', {
             ajax: {
-                url: `/project/${projectID}/quotetable`,
+                url: `/project/${window.projectId}/quotetable`,
                 dataSrc: '',
             } as AjaxSettings,
             processing: true,

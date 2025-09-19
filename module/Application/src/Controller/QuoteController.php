@@ -65,7 +65,6 @@ class QuoteController extends BaseController
 
     public function editAction()
     {
-        $this->layout()->setTemplate('layout/default');
         $request = $this->getRequest(); // for submit edit form
 
         if ($request->isPost()) {
@@ -95,6 +94,8 @@ class QuoteController extends BaseController
             }
         }
 
+        $user = $this->getUserService()->getCurrentUser();
+
         $quote_id = $this->params()->fromRoute('id');
 
         $quote = $this->getQuoteModel()->fetchById($quote_id);
@@ -102,7 +103,7 @@ class QuoteController extends BaseController
             $this->flashMessenger()->addErrorMessage("This quote has been deleted.");
             return $this->redirect()->toRoute('index', ['action' => 'index']);
         }
-        $user = $this->getUserService()->getCurrentUser();
+
         $project = $this->getProjectModel()->fetchById($quote['project_id']);
         $quoteType = $this->getQuoteModel()->fetchQuoteType();
         $customer = $this->getCustomerModel()->fetchCustomerByContact($quote['contact_id'], $quote['company_id']);
@@ -110,7 +111,7 @@ class QuoteController extends BaseController
         $contactList = $this->getCustomerModel()->fetchContactsByCustomer($customer['customer_id'] ?? null);
         $leadtime = $this->getQuoteModel()->fetchLeadTimes();
         $approvalUser = $this->getUserModel()->fetchaAllApprovalID($quote['company_id']);
-        $projectSharedUsers = $this->getProjectShareModel()->findBy(['project_id' => $quote['project_id']]);
+        $projectSharedUsers = $this->getProjectShareModel()->where(['project_id' => $quote['project_id']]);
         $hasItemNotInLocation = $this->getItemModel()->hasItemNotInLocation('quote', $quote_id, $quote['branch_id']);
         $admin = false;
 
@@ -118,9 +119,24 @@ class QuoteController extends BaseController
             $admin = true;
         }
 
+        $shareRecord  = $this->getProjectShareModel()->where([
+            'project_id' => $quote['project_id'],
+            'shared_user' => $user['id'],
+        ]);
+        $sharedRole = $shareRecord[0]['role'] ?? null;
+
+        $canEdit = (
+            $sharedRole === 'editor' ||
+            $user['id'] === $project['created_by'] ||
+            $user['id'] === $quote['created_by'] ||
+            in_array($user['p2q_system_role'], ['admin', 'manager'], true)
+        );
+
+        $this->layout()->setTemplate('layout/default');
         return new ViewModel([
             'user' => $user,
             'admin' => $admin,
+            'canEdit' => $canEdit,
             'quote' => $quote,
             'companies' => $this->getP21LocationModel()->fetchAllCompanies(),
             'branches' => $this->getP21LocationModel()->fetchBranchesFromCompany($quote['company_id']),

@@ -15,10 +15,6 @@ const saveButton = document.getElementById('form-btn-save-project') as HTMLButto
 async function initProject() {
     const { setupAutoComplete } = await import('@/components/autocomplete');
 
-    if (projectForm && projectForm.dataset.page === 'edit') {
-        initAutoSave(projectForm, () => saveProject(true));
-    }
-
     // Autocomplete for architect_rep
     setupAutoComplete({
         fieldName: '#architect_rep_id',

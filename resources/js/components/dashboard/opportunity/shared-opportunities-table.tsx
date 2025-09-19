@@ -3,6 +3,7 @@ import { DataTablePagination } from '@/components/table-pagination';
 import { DataTableLoadingSpinner } from '@/components/table-spinner';
 import { DataTableToolbar } from '@/components/table-toolbar';
 import { DataTableProjectOptions } from '@/components/table/project-options';
+import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useTanStackQuery } from '@/hooks/use-query';
@@ -109,6 +110,15 @@ export default function SharedOpportunitiesTable() {
             meta: 'Name',
         },
         {
+            id: 'is_converted',
+            accessorKey: 'is_converted',
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Converted?" />,
+            cell: ({ getValue }) => {
+                const value = getValue<number>();
+                return value === 1 ? <Badge className="bg-green-100 text-green-700">Yes</Badge> : <Badge variant="secondary">No</Badge>;
+            },
+        },
+        {
             accessorKey: 'created_by',
             header: ({ column }) => <DataTableColumnHeader column={column} title="Created By" />,
             filterFn: 'arrIncludesSome',
@@ -213,7 +223,8 @@ export default function SharedOpportunitiesTable() {
                                 searchPlaceholder="Filter project names..."
                                 facetedFilters={[
                                     { columnId: 'created_by', title: 'Created By' },
-                                    { columnId: 'reed', title: 'REED' },
+                                    { columnId: 'is_converted', title: 'Converted?' },
+                                    { columnId: 'leed_certified_id', title: 'LEED' },
                                     { columnId: 'architect_name', title: 'Architect' },
                                     { columnId: 'market_segment_desc', title: 'Category' },
                                     { columnId: 'status_desc', title: 'Status' },

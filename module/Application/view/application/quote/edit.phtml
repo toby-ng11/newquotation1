@@ -19,6 +19,7 @@
  * @var array $leadtime
  * @var array $type
  * @var bool $hasItemNotInLocation
+ * @var bool $canEdit
  */
 
 $role = $this->escapeHtml($user['p2q_system_role']);
@@ -70,6 +71,14 @@ if (!$project): ?>
 
 <!-- Title area -->
 <div class="h-full flex flex-1 flex-col gap-4 p-8">
+    <?php if (!$canEdit): ?>
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded mb-2">
+            <p class="text-sm text-gray-800">
+                You are viewing this quote as read-only. If you believe this is a mistake, please contact an admin or a manager.
+            </p>
+        </div>
+    <?php endif; ?>
+
     <h1 class="font-mono text-5xl font-semibold tracking-wide uppercase">Quote</h1>
 
     <div class="flex items-center justify-between ">
@@ -102,7 +111,7 @@ if (!$project): ?>
             </a>
 
             <?php
-            if ($quoteStatusID != $approved) { ?>
+            if ($canEdit) { ?>
                 <button class="delete-quote-btn btn-sm-ghost text-destructive hover:bg-destructive/20 font-medium text-xs tracking-tight"
                     type="button"
                     data-tooltip="Delete this quote">
@@ -152,7 +161,7 @@ if (!$project): ?>
                         </a>
                     </div>
                     <?php
-                    if ($quoteStatusID != $approved) : ?>
+                    if ($canEdit) : ?>
                         <hr role="separator" />
                         <div role="menuitem" class="hover:bg-destructive/20">
                             <button class="delete-quote-btn text-destructive flex items-center gap-2"
@@ -232,7 +241,7 @@ if (!$project): ?>
             } ?>
 
             <div class="feature fade-in-up bg-widget-background rounded-xl p-6 shadow-lg">
-                <?php if (! $isGuest): ?>
+                <?php if ($canEdit): ?>
                     <div class="absolute top-4 right-4 z-10">
                         <button
                             type="button"
@@ -412,9 +421,7 @@ if (!$project): ?>
                                         rows="5"
                                         cols=""
                                         name="note"
-                                        placeholder="Add quote note here...">
-                                <?= $this->escapeHtml($quote['note']) ?>
-                            </textarea>
+                                        placeholder="Add quote note here..."><?= $this->escapeHtml($quote['note']) ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -526,7 +533,10 @@ if (!$project): ?>
                                     // No buttons for user if approved
                                     break;
                                 default:
-                                    $buttons = $btnSave . $btnSubmit;
+                                    if ($canEdit):
+                                        $buttons = $btnSave . $btnSubmit;
+                                    else: $buttons = "";
+                                    endif;
                                     break;
                             }
                         } else {
@@ -573,7 +583,7 @@ if (!$project): ?>
                 <div class="widget-title">
                     <h2>Items</h2>
                 </div>
-                <?php if (! $isGuest): ?>
+                <?php if ($canEdit): ?>
                     <div class="widget-button">
                         <button
                             type="button"
@@ -626,5 +636,5 @@ if (!$project): ?>
 </div>
 
 <script type="text/javascript">
-    window.isGuest = <?= $isGuest ? 'true' : 'false' ?>;
+    window.canEdit = <?= $canEdit ? 'true' : 'false' ?>;
 </script>

@@ -86,10 +86,10 @@ export default function ProjectSharedUsersTable() {
     return (
         <div>
             <div className="widget-table bg-widget-background flex flex-1 flex-col gap-4 rounded-xl p-6">
-                {window.canEdit ?? <ShareProjectButton endpoint={ENDPOINT} queryKey={qKey} projectId={projectId} />}
+                {window.isOwner && <ShareProjectButton endpoint={ENDPOINT} queryKey={qKey} projectId={projectId} />}
                 <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl font-semibold tracking-tight">Shared Users</h2>
-                    <p className="text-muted-foreground">Here're shared users of this opportunity.</p>
+                    <h2 className="font-mono text-2xl font-semibold uppercase">Shared Users</h2>
+                    <p className="text-muted-foreground">Here're shared users of this opportunity. Only project creator can control this.</p>
                 </div>
                 <div className="flex flex-col gap-4">
                     {!isLoading ? (

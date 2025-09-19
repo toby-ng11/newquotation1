@@ -17,9 +17,9 @@ export function opportunityModal() {
                 const data = await response.json();
 
                 if (data.success) {
-                    showFlashMessage(data.message, data.success);
                     resetForm(form);
                     this.open = false;
+                    window.location.href = `/opportunities/${data.opportunity_id}/edit`;
                 } else {
                     showFlashMessage(data.message, data.success);
                 }
@@ -29,8 +29,6 @@ export function opportunityModal() {
             }
         },
         closeModal() {
-            const form = document.getElementById('new-opportunity-form') as HTMLFormElement;
-            resetForm(form);
             this.open = false;
         },
     };

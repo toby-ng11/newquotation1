@@ -22,7 +22,7 @@ class ProjectShareController extends BaseController
         $projectId = $this->params()->fromQuery('project', null);
 
         if ($projectId) {
-            $data = $this->getProjectShareModel()->findBy(['project_id' => $projectId]);
+            $data = $this->getProjectShareModel()->where(['project_id' => $projectId]);
             return $this->json($data);
         }
 
@@ -66,7 +66,7 @@ class ProjectShareController extends BaseController
             ]);
         }
 
-        $existShare = $this->getProjectShareModel()->findBy([
+        $existShare = $this->getProjectShareModel()->where([
             'project_id' => $data['project_id'],
             'shared_user' => $data['shared_user'],
         ]);

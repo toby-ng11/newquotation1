@@ -3,9 +3,11 @@
 /**
  * @psalm-scope-this Exception
  * @var Laminas\View\Renderer\PhpRenderer $this
- * @var bool $isOwner
+ * @var bool $canEdit
  * @var bool $isShareExists
+ * @var bool $isConverted
  * @var array $opportunity
+ * @var array $project
  * @var array $user
  * @var array $architect
  * @var array $architectTypes
@@ -52,13 +54,22 @@ $leadSources = [
 
         <div class="hidden lg:flex lg:items-center lg:gap-12">
 
-            <?php if (! $isGuest): ?>
+            <?php if (! $isGuest && ! $isConverted): ?>
                 <button class="opp-to-project-btn btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
                     type="button"
                     data-tooltip="Convert this opportunity to project">
                     <i data-lucide="file-plus-2"></i>
                     CONVERT TO PROJECT
                 </button>
+            <?php endif; ?>
+
+            <?php if ($isConverted): ?>
+                <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
+                    href="/project/<?= $project['id'] ?>/edit"
+                    data-tooltip="Go to project details">
+                    <i data-lucide="external-link"></i>
+                    GO TO PROJECT
+                </a>
             <?php endif; ?>
 
             <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
@@ -69,10 +80,10 @@ $leadSources = [
             </a>
 
             <?php
-            if ($isOwner) { ?>
+            if ($canEdit) { ?>
                 <button class="opp-delete-btn btn-sm-ghost text-destructive hover:bg-destructive/20 font-medium text-xs tracking-tight"
                     type="button"
-                    data-tooltip="Delete this project"
+                    data-tooltip="Delete this opportunity"
                     data-align="end">
                     <i data-lucide="trash-2"></i>
                     DELETE
@@ -93,7 +104,7 @@ $leadSources = [
             </button>
             <div id="project-menu-popover" data-popover data-align="end" aria-hidden="true" class="min-w-40">
                 <div role="menu" id="project-menu-options" aria-labelledby="project-menu-trigger">
-                    <?php if (! $isGuest): ?>
+                    <?php if (! $isGuest && ! $isConverted): ?>
                         <div role="menuitem">
                             <button class="opp-to-project-btn flex items-center gap-2"
                                 type="button"
@@ -101,6 +112,17 @@ $leadSources = [
                                 <i data-lucide="file-plus-2" class="text-muted-foreground h-4 w-4"></i>
                                 Convert to project
                             </button>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($isConverted): ?>
+                        <div role="menuitem">
+                            <a class="flex items-center gap-2"
+                                href="/project/<?= $project['id'] ?>/edit"
+                                title="Go to project">
+                                <i data-lucide="external-link" class="text-muted-foreground h-4 w-4"></i>
+                                Go to project
+                            </a>
                         </div>
                     <?php endif; ?>
 
@@ -113,7 +135,7 @@ $leadSources = [
                         </a>
                     </div>
                     <?php
-                    if ($isOwner) : ?>
+                    if ($canEdit) : ?>
                         <hr role="separator" />
                         <div role="menuitem" class="hover:bg-destructive/20">
                             <button class="opp-delete-btn text-destructive flex items-center gap-2"
@@ -132,17 +154,27 @@ $leadSources = [
     <div class="h-[2px] bg-border my-4"></div>
     <!-- Form -->
     <div class="flex flex-col gap-4 md:gap-6">
+
+        <?php if ($isConverted): ?>
+            <div class="bg-gray-50 border-l-4 border-gray-400 text-gray-700 p-4 rounded-md mb-4">
+                <p class="text-sm">
+                    This opportunity has been converted to project: <b><?= $this->escapeHtml($project['project_id_ext']) ?></b>.
+                </p>
+            </div>
+        <?php endif; ?>
+
         <div class="fade-in-up">
             <form
-                action="/opportunities/<?= $this->escapeHtml($opportunity['id']) ?>"
-                method="put"
+                action="/opportunities?opp=<?= $this->escapeHtml($opportunity['id']) ?>"
+                method="post"
                 class="form"
-                id="edit-opportunity-form">
+                id="edit-opportunity-form"
+                onsubmit="handleSubmit()">
 
                 <div class="widget-table bg-widget-background rounded-xl p-6">
                     <div class="widget-header">
                         <div class="widget-title">
-                            <p class="text-2xl font-semibold tracking-tight">Opportunity Info</p>
+                            <p class="font-mono text-2xl font-semibold uppercase">Info</p>
                         </div>
                     </div>
                     <div class="h-[1px] bg-border my-4"></div>
@@ -161,7 +193,7 @@ $leadSources = [
 
                         <div class="grid gap-2">
                             <label for="opp_address">Address</label>
-                            <input required id="opp_address" name="opp_address" type="text"
+                            <input id="opp_address" name="opp_address" type="text"
                                 placeholder="Project address"
                                 value="<?= $this->escapeHtml($opportunity['opp_address']) ?>" />
                         </div>
@@ -255,6 +287,17 @@ $leadSources = [
                         </div>
 
                         <div class="grid gap-2">
+                            <label for="start_date">Bid Date</label>
+                            <input readonly
+                                type="text"
+                                id="bid_date"
+                                name="bid_date"
+                                class="flatpickr-time"
+                                placeholder="Pick a date and time"
+                                value="<?= $this->escapeHtml($opportunity['bid_date']?->format('Y-m-d H:i:s')) ?>" />
+                        </div>
+
+                        <div class="grid gap-2">
                             <label for="start_date">Start Date</label>
                             <input readonly
                                 type="text"
@@ -280,11 +323,11 @@ $leadSources = [
                             <label for="sample_submitted">Sample Submitted</label>
                             <select name="sample_submitted" id="sample_submitted">
                                 <option value="1"
-                                    <?= $opportunity['sample_submitted'] === 1 ? 'selected' : '' ?>>
+                                    <?= (int) $opportunity['sample_submitted'] === 1 ? 'selected' : '' ?>>
                                     Yes
                                 </option>
                                 <option value="0"
-                                    <?= $opportunity['sample_submitted'] === 0 ? 'selected' : '' ?>>
+                                    <?= (int) $opportunity['sample_submitted'] === 0 ? 'selected' : '' ?>>
                                     No
                                 </option>
                             </select>
@@ -295,8 +338,7 @@ $leadSources = [
                             <textarea
                                 name="project_description"
                                 id="project_description"
-                                value="<?= $this->escapeHtml($opportunity['project_description']) ?>">
-                                </textarea>
+                                placeholder="Project description goes here..."><?= $this->escapeHtml($opportunity['project_description']); ?></textarea>
                         </div>
                     </div>
 
@@ -321,9 +363,9 @@ $leadSources = [
                                         <a class="btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
                                             target="_blank"
                                             href="/architect/<?= $this->escapeHtml($architect['id'] ?? '') ?>/edit"
-                                            data-tooltip="Edit this architect details">
+                                            data-tooltip="View/Edit this architect details">
                                             <i data-lucide="external-link"></i>
-                                            EDIT ARCHITECT
+                                            ARCHITECT DETAILS
                                         </a>
                                     <?php endif; ?>
                                     <button
@@ -606,59 +648,16 @@ $leadSources = [
                         </div>
                     </details>
 
-                    <div class="h-[1px] bg-border my-4"></div>
-
-                    <details id="contractor-details">
-                        <summary>
-                            <button type="button"
-                                class="btn-sm-outline"
-                                id="contractor-details-expand-btn">
-                                Contractor
-                                <i data-lucide="chevron-down"></i>
-                            </button>
-                        </summary>
-                        <div class="widget-section">
-                            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-                                <div class="grid gap-2">
-                                    <label for="general_contractor_name">General Contractor</label>
-                                    <input
-                                        type="text"
-                                        id="general_contractor_name"
-                                        name="general_contractor_name"
-                                        placeholder="Add general contractor"
-                                        value='<?php if (! empty($generalContractor)) {
-                                                    echo $generalContractor['customer_name'] . ' - ' . $generalContractor['company_id'];
-                                                } ?>' />
-                                    <input type="hidden" id="general_contractor_id" name="general_contractor_id"
-                                        value="<?= $this->escapeHtml($opportunity['general_contractor_id']) ?>" />
-                                </div>
-
-                                <div class="grid gap-2">
-                                    <label for="awarded_contractor_name">Awarded Contractor</label>
-                                    <input
-                                        type="text"
-                                        id="awarded_contractor_name"
-                                        name="awarded_contractor_name"
-                                        placeholder="Add awarded contractor"
-                                        value='<?php if (!empty($awardedContractor)) {
-                                                    echo $awardedContractor['customer_name'] . ' - ' . $awardedContractor['company_id'];
-                                                } ?>' />
-                                    <input type="hidden" id='awarded_contractor_id' name='awarded_contractor_id'
-                                        value="<?= $this->escapeHtml($opportunity['awarded_contractor_id']) ?>">
-                                </div>
-                            </div>
-                        </div>
-                    </details>
-
-                    <?php if ($isOwner) { ?>
+                    <?php if ($canEdit) { ?>
                         <div class="h-[1px] bg-border my-4"></div>
 
                         <div class="widget-footer">
                             <div class="widget-footer-button">
-                                <button disabled type="submit"
+                                <button type="submit"
                                     class="btn"
                                     form="edit-opportunity-form"
-                                    title="Save project information">
+                                    title="Save project information"
+                                    id="save-opp-button">
                                     Save</button>
                             </div>
                         </div>
@@ -667,15 +666,17 @@ $leadSources = [
             </form>
         </div>
 
-        <div id="opportunity-edit-temp"></div>
+        <?php if ($opportunity['created_by'] === $user['id']): ?>
+            <div id="opportunity-edit-temp"></div>
+        <?php endif; ?>
 
         <div class="fade-in-up">
             <div class="widget-table bg-widget-background rounded-xl p-6">
                 <div class="widget-header">
                     <div class="widget-title">
-                        <p class="text-2xl font-semibold tracking-tight">Opportunity Log</p>
+                        <p class="font-mono text-2xl font-semibold uppercase">Log</p>
                     </div>
-                    <?php if ($isOwner) { ?>
+                    <?php if ($canEdit) { ?>
                         <button
                             type="button"
                             title="Add new log"
@@ -705,51 +706,59 @@ $leadSources = [
             </div>
         </div>
 
-        <div class="fade-in-up" aria-labelledby="quote-by-project">
-            <div class="widget-table bg-widget-background rounded-xl p-6">
-                <div class="widget-header">
-                    <div class="widget-title">
-                        <p class="text-2xl font-semibold tracking-tight">Opportunity's Projects</p>
+        <div class="flex flex-col gap-4 lg:grid lg:grid-cols-3 md:gap-6">
+            <div class="fade-in-up flex flex-col space-y-2 bg-widget-background rounded-xl p-6 shadow-lg">
+                <p class="font-mono text-2xl font-semibold uppercase">Project</p>
+                <?php if ($project): ?>
+                    <div class="h-[1px] bg-border mb-4"></div>
+                    <div class="flex flex-col">
+                        <p><b>P2Q ID: </b><?= $this->escapeHtml($project['project_id_ext']) ?></p>
+                        <p><b>Tender Closure Date: </b><?= $project['require_date'] ? $project['require_date']->format('Y-m-d') : 'N/A' ?></p>
+                        <p><b>Tender Due Date: </b><?= $project['due_date'] ? $project['due_date']->format('Y-m-d') : 'N/A' ?></p>
+                        <p><b>General Contractor: </b><?= $generalContractor ? $this->escapeHtml($generalContractor['customer_id'] . ' - ' . $generalContractor['customer_name']) : 'N/A' ?></p>
+                        <p><b>Awarded Contractor: </b><?= $awardedContractor ? $this->escapeHtml($awardedContractor['customer_id'] . ' - ' . $awardedContractor['customer_name']) : 'N/A' ?></p>
                     </div>
-                    <div class="widget-button">
-                        <?php if ($isOwner) { ?>
-                            <button
-                                type="button"
-                                title="Add new quote"
-                                class="widget-btn-add-quote btn-sm-ghost text-muted-foreground font-medium text-xs tracking-tight"
-                                data-tooltip="Make a new quote for this project">
-                                <i data-lucide="plus"></i>
-                                MAKE QUOTE
-                            </button>
-                        <?php } ?>
-                    </div>
-                </div>
+                <?php else: ?>
+                    <p>No project for this opportunity yet.</p>
+                <?php endif; ?>
+            </div>
 
-                <div class="line"></div>
-
-                <div class="widget-section">
-                    <table width="100%" class="sTable display" id='opportuntity-dash-quote-table' data-init="projectQuote">
-                        <thead>
-                            <tr>
-                                <th>Quote ID</th>
-                                <th>Customer</th>
-                                <th>Contact</th>
-                                <th>Quote Date</th>
-                                <th>Expire Date</th>
-                                <th>Ship Required Date</th>
-                                <th>Approve Status</th>
-                                <th>P21 Order ID</th>
-                            </tr>
-                        </thead>
-                    </table>
+            <div class="fade-in-up col-span-2">
+                <div class="widget-table flex flex-col space-y-2 bg-widget-background rounded-xl p-6">
+                    <p class="font-mono text-2xl font-semibold uppercase">Quotes</p>
+                    <?php if ($project): ?>
+                        <div class="line"></div>
+                        <div class="widget-section">
+                            <table width="100%" class="sTable display" id='project-quote-table' data-init="projectQuote">
+                                <thead>
+                                    <tr>
+                                        <th>Quote ID</th>
+                                        <th>Customer</th>
+                                        <th>Contact</th>
+                                        <th>Quote Date</th>
+                                        <th>Expire Date</th>
+                                        <th>Ship Required Date</th>
+                                        <th>Approve Status</th>
+                                        <th>P21 Order ID</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <p>Please convert this opportunity to a project first.</p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 
     <?= $this->render('modal/opportunity-note'); ?>
+
+    <?= $this->render('modal/opportunity-confirm-convert'); ?>
 </div>
 
 <script type="text/javascript">
-    window.isOwner = <?= $isOwner ? 'true' : 'false' ?>;
+    window.canEdit = <?= $canEdit ? 'true' : 'false' ?>;
+    window.isOwner = <?= ($opportunity['created_by'] === $user['id']) ? 'true' : 'false' ?>;
+    window.projectId = "<?= $project ? $project['id'] : null ?>";
 </script>

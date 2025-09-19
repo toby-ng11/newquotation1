@@ -118,7 +118,7 @@ export default function WelcomePage() {
                         description="Gain full control over user roles, permissions, and platform settings through the Admin Portal."
                     />
                 )}
-                {isAdmin && (
+                {(isAdmin || isManager || isSales) && (
                     <FeatureCard
                         index={1}
                         href="/index/opportunities"

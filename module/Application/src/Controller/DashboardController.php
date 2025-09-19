@@ -38,21 +38,22 @@ class DashboardController extends BaseController
 
     public function opportunityOpportunitiesAction(): Response
     {
-        $opportunities = $this->getP2qViewOpportunityModel()->all();
+        $user = $this->getUserService()->getCurrentUser();
+        $opportunities = $this->getP2qViewOpportunityModel()->where(['created_by' => $user['id']]);
         return $this->json($opportunities);
     }
 
     public function opportunitySharedOpportunitiesAction(): Response
     {
         $user = $this->getUserService()->getCurrentUser();
-        $opportunities = $this->getOpportunityShareModel()->findBy(['shared_user' => $user['id']]);
+        $opportunities = $this->getP2qViewOpportunitiesShareModel()->where(['shared_user' => $user['id']]);
         return $this->json($opportunities);
     }
 
     public function opportunityOtherOpportunitiesAction(): Response
     {
         $user = $this->getUserService()->getCurrentUser();
-        $opportunities = $this->getP2qViewOpportunityModel()->findBy(['created_by != ?' => $user['id']]);
+        $opportunities = $this->getP2qViewOpportunityModel()->where(['created_by != ?' => $user['id']]);
         return $this->json($opportunities);
     }
 
@@ -69,14 +70,14 @@ class DashboardController extends BaseController
     public function ownQuotesAction(): Response
     {
         $user = $this->getUserService()->getCurrentUser();
-        $quotes = $this->getP2qViewQuoteModel()->findBy(['created_by' => $user['id']]);
+        $quotes = $this->getP2qViewQuoteModel()->where(['created_by' => $user['id']]);
         return $this->json($quotes);
     }
 
     public function sharedQuotesAction(): Response
     {
         $user = $this->getUserService()->getCurrentUser();
-        $quotes = $this->getP2qViewQuoteShareModel()->findBy(['shared_user' => $user['id']]);
+        $quotes = $this->getP2qViewQuoteShareModel()->where(['shared_user' => $user['id']]);
         return $this->json($quotes);
     }
 

@@ -11,6 +11,7 @@ use Application\Model\Item;
 use Application\Model\Location;
 use Application\Model\MarketSegment;
 use Application\Model\Opportunity;
+use Application\Model\OpportunityFile;
 use Application\Model\OpportunityNote;
 use Application\Model\OpportunityShare;
 use Application\Model\Project;
@@ -69,6 +70,11 @@ trait HasModels
     public function getOpportunityModel(): Opportunity
     {
         return $this->container->get(Opportunity::class);
+    }
+
+    public function getOpportunityFileModel(): OpportunityFile
+    {
+        return $this->container->get(OpportunityFile::class);
     }
 
     public function getOpportunityShareModel(): OpportunityShare
